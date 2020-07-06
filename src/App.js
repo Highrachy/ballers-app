@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import 'assets/sass/App.scss';
+import Header from 'components/layout/Header';
 
 function App() {
   const [message, setMessage] = React.useState(null);
@@ -21,7 +22,12 @@ function App() {
       });
   }, []);
 
-  return <h1>{message === null ? 'Loading...' : message}</h1>;
+  return (
+    <>
+      <Header />
+      <h1>{message === null ? 'Loading...' : message}</h1>
+    </>
+  );
 }
 
 export default App;
