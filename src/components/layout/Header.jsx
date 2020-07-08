@@ -26,7 +26,9 @@ const Header = () => (
           </Nav>
           <Nav>
             <Nav.Link href="#home">Sign In</Nav.Link>
-            <Nav.Link href="#home">Register for Free</Nav.Link>
+            <Nav.Link href="#home" className="btn btn-secondary">
+              Register for Free
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </div>
