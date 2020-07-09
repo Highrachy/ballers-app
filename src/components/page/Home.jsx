@@ -10,8 +10,10 @@ import Fluid from 'assets/img/icons/fluid.png';
 import PhoneImage from 'assets/img/phone.png';
 import PrevArrow from 'assets/img/icons/btn-prev.png';
 import NextArrow from 'assets/img/icons/btn-next.png';
-import { Card } from 'react-bootstrap';
+import { Card, Accordion } from 'react-bootstrap';
 import Slider from 'react-slick';
+import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
+import AccordionContext from 'react-bootstrap/AccordionContext';
 
 const Home = () => (
   <>
@@ -20,6 +22,7 @@ const Home = () => (
     <AboutSection />
     <BenefitsSection />
     <HowItWorksSection />
+    <FAQsSection />
   </>
 );
 
@@ -242,4 +245,80 @@ const HowItWorksSection = () => (
     </div>
   </section>
 );
+
+const FAQsSection = () => {
+  const FAQs = [
+    {
+      question: 'What is BALL?',
+      answer:
+        'BALL is an acronym for Become A Landlord. It is an online platform that you can use to plan your income properly and define a clear step-by-step process that will take you from your current financial position to owning your dream home.',
+    },
+    {
+      question: <>What is special about BALL?</>,
+      answer:
+        'BALL is the only platform that gives you the flexibility to make convenient contributions towards owning your home inline with your income. BALL also avails you with a myriad of benefits including additional income via our referral program, and access to vast real estate knowledge via our community.',
+    },
+    {
+      question: 'Why should I subscribe to the BALL platform?',
+      answer:
+        'BALL is not for everyone, but if you are keen on owning your home in the shortest possible time with the least amount of stress then you should sign up.',
+    },
+    {
+      question: <>What is the minimum amount to invest?</>,
+      answer:
+        'You can begin your subscription with as low as N50,000.00 with additional monthly payments of N10,000.00',
+    },
+    {
+      question: <>How long does it take for me to own a home?</>,
+      answer:
+        '  The duration is based on several parameters including your disposable income, availability of savings that can be contributed at the beginning of the BALLing experience, type of home and Location of the property. However, if you have a substantial amount saved and can make significant monthly contributions, you can be handed the keys to your new home in less than 2 years.',
+    },
+  ];
+
+  const ContextAwareToggle = ({ children, eventKey, callback }) => {
+    const currentEventKey = React.useContext(AccordionContext);
+
+    const decoratedOnClick = useAccordionToggle(
+      eventKey,
+      () => callback && callback(eventKey)
+    );
+
+    const isCurrentEventKey = currentEventKey === eventKey;
+
+    return (
+      <>
+        <span className="accordion-icon">{isCurrentEventKey ? '-' : '+'}</span>
+        <h5 onClick={decoratedOnClick}>{children} </h5>
+      </>
+    );
+  };
+
+  return (
+    <section className="container-fluid">
+      <h6 class="text-green">FAQs</h6>
+      <h2>
+        Your questions <br /> Answered
+      </h2>
+      <div className="row">
+        <div className="col-lg-9 col-sm-10 col-12 offset-lg-3 offset-sm-2 mt-5 faqs-section">
+          <Accordion defaultActiveKey={0}>
+            {FAQs.map((faq, index) => (
+              <Card>
+                <Accordion.Toggle as={Card.Header} eventKey={index}>
+                  <ContextAwareToggle eventKey={index}>
+                    {faq.question}
+                  </ContextAwareToggle>
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey={index}>
+                  <Card.Body>{faq.answer}</Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            ))}
+          </Accordion>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default Home;

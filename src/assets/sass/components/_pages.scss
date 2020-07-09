@@ -12,6 +12,7 @@
   height: 39rem;
 }
 
+// Image Timeline
 ul.timeline {
   list-style-type: none;
   position: relative;
@@ -48,6 +49,7 @@ ul.timeline > li.timeline__border:after {
   z-index: 500;
 }
 
+//  Slick Carousel
 .slick-slide {
   border-radius: 0.3rem;
   padding: 4rem 2.5rem 1rem;
@@ -69,4 +71,56 @@ ul.timeline > li.timeline__border:after {
 .slick-arrow {
   width: 2rem;
   height: 2rem;
+}
+
+// FAQs
+.faqs-section {
+  .accordion > .card {
+    border: none;
+    border-bottom: 1px solid rgba(2, 3, 6, 0.125);
+
+    .accordion-icon {
+      color: $gray-400;
+      float: right;
+      font-size: 3.5rem;
+      font-weight: 300;
+      margin-top: -2.5rem;
+      height: 1rem;
+      padding-right: 3rem;
+    }
+
+    .card-header {
+      padding: 2.5rem 0 2rem;
+      background: white;
+      margin-bottom: 0;
+      border: none;
+
+      h5 {
+        position: relative;
+        padding-left: 3rem;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+          color: lighten($primary, 15);
+        }
+
+        &:before {
+          content: '';
+          display: block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: $primary;
+          position: absolute;
+          left: 0;
+          top: 0.6rem;
+        }
+      }
+    }
+
+    .card-body {
+      padding: 0 0 3rem 3rem;
+    }
+  }
 }
