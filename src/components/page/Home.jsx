@@ -8,6 +8,8 @@ import Credible from 'assets/img/icons/credible.png';
 import Investment from 'assets/img/icons/investment.png';
 import Fluid from 'assets/img/icons/fluid.png';
 import PhoneImage from 'assets/img/phone.png';
+import PrevArrow from 'assets/img/icons/btn-prev.png';
+import NextArrow from 'assets/img/icons/btn-next.png';
 import { Card } from 'react-bootstrap';
 import Slider from 'react-slick';
 
@@ -118,22 +120,55 @@ const BenefitsSection = () => {
       image: Investment,
     },
     {
-      title: 'Fluidity &amp; Flexibility',
+      title: 'Fluidity & Flexibility',
       body:
         'You can choose any amount to contribute once you have started and  you can pause or exit the scheme if so desired.',
       image: Fluid,
     },
   ];
+  const CarouselArrow = ({ className, style, onClick, image }) => (
+    <img
+      src={image}
+      className={className}
+      onClick={onClick}
+      style={{ ...style, display: 'block' }}
+      alt="previous arrow"
+    />
+  );
+
   var settings = {
-    dots: true,
+    speed: 1500,
     infinite: true,
-    speed: 500,
-    slidesToShow: 3,
+    centerMode: true,
+    autoplay: true,
+    autoplaySpeed: 5000,
     slidesToScroll: 1,
+    centerPadding: '0',
+    slidesToShow: 3,
+    responsive: [
+      {
+        breakpoint: 992,
+        settings: {
+          centerMode: true,
+          centerPadding: '1.5rem',
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 576,
+        settings: {
+          centerMode: true,
+          centerPadding: '0',
+          slidesToShow: 1,
+        },
+      },
+    ],
+    prevArrow: <CarouselArrow image={PrevArrow} />,
+    nextArrow: <CarouselArrow image={NextArrow} />,
   };
 
   return (
-    <section className="benefits bg-blue">
+    <section className="benefits bg-blue pb-5">
       <div className="text-center">
         <h6 className="text-green">BENEFITS</h6>
         <h3>Why Ballers is Special</h3>
@@ -141,7 +176,7 @@ const BenefitsSection = () => {
       <div className="container-fluid">
         <Slider {...settings}>
           {BALLERS_BENEFITS.map((benefit, index) => (
-            <Card width="150px" key={index}>
+            <Card key={index}>
               <Card.Img
                 variant="top"
                 src={benefit.image}
@@ -149,7 +184,7 @@ const BenefitsSection = () => {
                 alt={benefit.title}
               />
               <Card.Body>
-                <Card.Title>{benefit.title}</Card.Title>
+                <h6 className="text-secondary mb-3">{benefit.title}</h6>
                 <Card.Text>{benefit.body}</Card.Text>
               </Card.Body>
             </Card>
