@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Barlow:300,400,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Barlow:300,400,500,700&display=swap');
 $text-font: 'Barlow';
 $headings-font: 'Barlow';
 
@@ -68,7 +68,7 @@ $font-family-sans-serif: $text-font, -apple-system, BlinkMacSystemFont,
   'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 // stylelint-enable value-keyword-case
 
-$font-weight-bold: 600;
+$font-weight-bold: 500;
 $font-weight-bolder: 700;
 
 // $font-weight-base: $font-weight-normal !default;
@@ -88,6 +88,9 @@ $headings-font-family: $text-font, -apple-system, BlinkMacSystemFont, 'Segoe UI'
 $headings-font-weight: 700;
 // $headings-line-height: 1.2 !default;
 $headings-color: $blue;
+
+$lead-font-size: 1.3rem;
+$lead-font-weight: 400;
 
 // Links
 //
@@ -112,38 +115,11 @@ $navbar-light-toggler-border-color: transparent;
 
 $btn-padding-y: 0.8rem;
 $btn-padding-x: 2rem;
-// $btn-font-family: $input-btn-font-family !default;
-// $btn-font-size: $input-btn-font-size !default;
-// $btn-line-height: $input-btn-line-height !default;
-// $btn-white-space: null !default; // Set to `nowrap` to prevent text wrapping
-
-// $btn-padding-y-sm: $input-btn-padding-y-sm !default;
-// $btn-padding-x-sm: $input-btn-padding-x-sm !default;
-// $btn-font-size-sm: $input-btn-font-size-sm !default;
-// $btn-line-height-sm: $input-btn-line-height-sm !default;
-
-// $btn-padding-y-lg: $input-btn-padding-y-lg !default;
-// $btn-padding-x-lg: $input-btn-padding-x-lg !default;
-// $btn-font-size-lg: $input-btn-font-size-lg !default;
-// $btn-line-height-lg: $input-btn-line-height-lg !default;
-
-// $btn-border-width: $input-btn-border-width !default;
-
-// $btn-font-weight: $font-weight-normal !default;
-// $btn-box-shadow: inset 0 1px 0 rgba($white, 0.15), 0 1px 1px rgba($black, 0.075) !default;
-// $btn-focus-width: $input-btn-focus-width !default;
-// $btn-focus-box-shadow: $input-btn-focus-box-shadow !default;
-// $btn-disabled-opacity: 0.65 !default;
-// $btn-active-box-shadow: inset 0 3px 5px rgba($black, 0.125) !default;
-
-// $btn-link-disabled-color: $gray-600 !default;
-
-// $btn-block-spacing-y: 0.5rem !default;
 
 // // Allows for customizing button radius independently from global border radius
 $btn-border-radius: 3px;
-// $btn-border-radius-lg: $border-radius-lg !default;
-// $btn-border-radius-sm: $border-radius-sm !default;
+$btn-border-radius-lg: 6px;
+$btn-border-radius-sm: 3px;
 
 $btn-transition: color 0.3s ease-out, background-color 0.3s ease-out,
   border-color 0.3s ease-out, box-shadow 0.3s ease-out !default;

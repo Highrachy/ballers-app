@@ -1,10 +1,14 @@
-h6.text-green {
+.header-secondary {
   color: $green;
   font-size: 1.12rem;
   margin: 0;
   padding: 2.5rem 0 1.5rem;
-  font-weight: 500;
+  font-weight: $font-weight-bold;
   letter-spacing: 0.1rem;
+}
+
+.text-green {
+  color: $green;
 }
 
 .text-normal {

@@ -110,7 +110,7 @@ ul.timeline > li.timeline__border:after {
       h5 {
         position: relative;
         padding-left: 3rem;
-        font-weight: 600;
+        font-weight: $font-weight-bold;
         cursor: pointer;
 
         &:hover {
@@ -135,4 +135,25 @@ ul.timeline > li.timeline__border:after {
       padding: 0 0 3rem 3rem;
     }
   }
+}
+
+.title-section {
+  background: url('../../img/backgrounds/title-section.png');
+  background-size: cover;
+  height: 30rem;
+  padding: 10rem;
+  text-align: center;
+
+  p {
+    font-size: 1.2rem;
+  }
+}
+
+.core-values-card {
+  background-color: #fff;
+  border-radius: 0.3rem;
+  padding: 3rem 3rem 5rem;
+  text-align: left;
+  display: inline-block;
+  margin: 1rem;
 }
