@@ -12,7 +12,10 @@ import Eronss from 'assets/img/team/eronss.jpg';
 const AboutUs = () => (
   <>
     <Header />
-    <TitleSection />
+    <TitleSection
+      name="About BALL"
+      content="The only realistic burden free process of owning your ideal home."
+    />
     <OurGoalAndPromise />
     <OurCoreValues />
     <OurTeam />

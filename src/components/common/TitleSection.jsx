@@ -1,12 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const TitleSection = () => (
+const TitleSection = ({ name, content }) => (
   <section className="title-section">
-    <h1>About BALL</h1>
-    <p>
-      The only realistic burden free process <br /> of owning your ideal home.
-    </p>
+    <h1>{name}</h1>
+    <p className="px-8">{content}</p>
   </section>
 );
+
+TitleSection.propTypes = {
+  name: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+};
 
 export default TitleSection;
