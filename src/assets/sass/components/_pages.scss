@@ -4,12 +4,24 @@
   z-index: -100;
 }
 
-.bg-blue {
+.bg-light-blue {
   background-color: $light-bg;
+}
+
+.bg-dark-blue {
+  background-color: $blue;
 }
 
 .home-image {
   height: 39rem;
+}
+
+.community-gallery {
+  background-image: url(../../img/backgrounds/deep-dive.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  text-align: center;
+  padding: 2rem 0 5rem;
 }
 
 // Image Timeline
@@ -56,8 +68,8 @@ ul.timeline > li.timeline__border:after {
 
   .card {
     border: none;
-    padding: 3.5rem 2rem;
-    height: 27rem;
+    padding: 4rem 2rem;
+    height: 30rem;
     text-align: center;
   }
 

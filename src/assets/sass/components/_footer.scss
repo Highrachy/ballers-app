@@ -1,0 +1,29 @@
+.ballers-logo-footer {
+  width: 6rem;
+  height: 4rem;
+}
+
+.highrachy-logo-footer {
+  width: 6rem;
+  height: 2rem;
+}
+
+.footer {
+  &-content {
+    padding: 3rem 0;
+  }
+  h5,
+  a {
+    color: white;
+  }
+
+  h5 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+  }
+  .highrachy-text {
+    color: $primary;
+    font-size: 0.8rem;
+  }
+}

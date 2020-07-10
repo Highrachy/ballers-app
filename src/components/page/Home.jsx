@@ -14,6 +14,7 @@ import { Card, Accordion } from 'react-bootstrap';
 import Slider from 'react-slick';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import AccordionContext from 'react-bootstrap/AccordionContext';
+import Footer from 'components/layout/Footer';
 
 const Home = () => (
   <>
@@ -23,6 +24,8 @@ const Home = () => (
     <BenefitsSection />
     <HowItWorksSection />
     <FAQsSection />
+    <CommunityGallery />
+    <Footer />
   </>
 );
 
@@ -75,7 +78,7 @@ const HoldingSection = () => (
 );
 
 const AboutSection = () => (
-  <section className="container-fluid bg-blue">
+  <section className="container-fluid bg-light-blue">
     <div className="row my-4">
       <div className="col-sm-6 col-12 text-center">
         <img src={HomeImage} className="img-fluid home-image" alt="home" />
@@ -171,7 +174,7 @@ const BenefitsSection = () => {
   };
 
   return (
-    <section className="benefits bg-blue pb-5">
+    <section className="benefits bg-light-blue pb-5">
       <div className="text-center">
         <h6 className="text-green">BENEFITS</h6>
         <h3>Why Ballers is Special</h3>
@@ -320,5 +323,15 @@ const FAQsSection = () => {
     </section>
   );
 };
+
+const CommunityGallery = () => (
+  <section className="community-gallery mt-6">
+    <h6 className="text-green mb-5">COMMUNITY GALLERY</h6>
+    <h2 className="mb-7">
+      Take a deep dive into <br /> what your home looks like
+    </h2>
+    <button className="btn btn-secondary">SIGN UP NOW</button>
+  </section>
+);
 
 export default Home;
