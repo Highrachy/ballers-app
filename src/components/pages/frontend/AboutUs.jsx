@@ -1,11 +1,14 @@
 import React from 'react';
+import Header from 'components/layout/Header';
+import CommunityGallery from 'components/common/CommunityGallery';
+import Footer from 'components/layout/Footer';
 
-const AboutUs = () => {
-  return (
-    <div>
-      <h1>About Us</h1>
-    </div>
-  );
-};
+const AboutUs = () => (
+  <>
+    <Header />
+    <CommunityGallery />
+    <Footer />
+  </>
+);
 
 export default AboutUs;

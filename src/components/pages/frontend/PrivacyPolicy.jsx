@@ -1,11 +1,14 @@
 import React from 'react';
+import Header from 'components/layout/Header';
+import CommunityGallery from 'components/common/CommunityGallery';
+import Footer from 'components/layout/Footer';
 
-const PrivacyPolicy = () => {
-  return (
-    <div>
-      <h1>PrivacyPolicy</h1>
-    </div>
-  );
-};
+const PrivacyPolicy = () => (
+  <>
+    <Header />
+    <CommunityGallery />
+    <Footer />
+  </>
+);
 
 export default PrivacyPolicy;
