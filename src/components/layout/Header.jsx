@@ -1,6 +1,15 @@
 import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import BallersLogo from 'assets/img/logo/ballers-logo.png';
+import { Link } from '@reach/router';
+
+const MENUS = [
+  { name: 'Home', to: '/' },
+  { name: 'About Us', to: '/about-us' },
+  { name: 'A-Z of Ball', to: '/a-z-of-ball' },
+  { name: 'FAQs', to: '/faqs' },
+  { name: 'Contact Us', to: '/contact-us' },
+];
 
 const Header = () => (
   <>
@@ -13,16 +22,14 @@ const Header = () => (
             alt="Ballers logo"
           />
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar.Toggle aria-controls="ballers-nav" />
+        <Navbar.Collapse id="ballers-nav">
           <Nav className="mr-auto">
-            <Nav.Link className="active font-weight-bold" href="#home">
-              Home
-            </Nav.Link>
-            <Nav.Link href="#link">About Us</Nav.Link>
-            <Nav.Link href="#link">A-Z of BALL</Nav.Link>
-            <Nav.Link href="#link">FAQs</Nav.Link>
-            <Nav.Link href="#link">Contact Us</Nav.Link>
+            {MENUS.map(({ name, to }) => (
+              <Nav.Link getProps={isActive} as={Link} to={to}>
+                {name}
+              </Nav.Link>
+            ))}
           </Nav>
           <Nav>
             <Nav.Link href="#home">Sign In</Nav.Link>
@@ -35,5 +42,9 @@ const Header = () => (
     </Navbar>
   </>
 );
+
+const isActive = ({ isCurrent }) => {
+  return isCurrent ? { className: 'active font-weight-bold nav-link' } : null;
+};
 
 export default Header;
