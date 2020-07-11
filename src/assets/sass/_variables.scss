@@ -9,8 +9,8 @@ $gray-100: #fafafa;
 $gray-200: #f2f5fa;
 $gray-300: #e5e5e5;
 $gray-400: #c4c4c4; // faq border
-$gray-500: #979797;
-$gray-600: #5a6679; //text-muted
+$gray-500: #979797; //text-muted
+$gray-600: #5a6679; // text-color
 $gray-700: #51596c;
 $gray-800: #343a40;
 $gray-900: #022b69;
@@ -92,6 +92,8 @@ $headings-color: $blue;
 $lead-font-size: 1.3rem;
 $lead-font-weight: 400;
 
+$text-muted: $gray-500;
+
 // Links
 //
 // Style anchor elements.
@@ -109,12 +111,51 @@ $navbar-light-active-color: $purple;
 $navbar-light-toggler-icon-bg: none;
 $navbar-light-toggler-border-color: transparent;
 
+// Buttons + Forms
+//
+// Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
+
+$input-btn-padding-y: 0.8rem;
+$input-btn-padding-x: 2rem;
+
+$input-height: auto;
+$input-bg: $white !default;
+$input-disabled-bg: $gray-200 !default;
+
+$input-color: $primary;
+$input-border-color: #babbbd;
+$input-box-shadow: none;
+$input-focus-bg: #f6f8ff;
+$input-focus-border-color: $secondary;
+$input-focus-color: $secondary;
+$input-focus-box-shadow: none;
+$input-placeholder-color: $input-border-color;
+// $input-btn-font-family:       null !default;
+// $input-btn-font-size:         $font-size-base !default;
+// $input-btn-line-height:       $line-height-base !default;
+
+// $input-btn-focus-width:       .2rem !default;
+// $input-btn-focus-color:       rgba($component-active-bg, .25) !default;
+// $input-btn-focus-box-shadow:  0 0 0 $input-btn-focus-width $input-btn-focus-color !default;
+
+// $input-btn-padding-y-sm:      .25rem !default;
+// $input-btn-padding-x-sm:      .5rem !default;
+// $input-btn-font-size-sm:      $font-size-sm !default;
+// $input-btn-line-height-sm:    $line-height-sm !default;
+
+// $input-btn-padding-y-lg:      .5rem !default;
+// $input-btn-padding-x-lg:      1rem !default;
+// $input-btn-font-size-lg:      $font-size-lg !default;
+// $input-btn-line-height-lg:    $line-height-lg !default;
+
+// $input-btn-border-width:      $border-width !default;
+
 // Buttons
 //
 // For each of Bootstrap's buttons, define text, background, and border color.
 
-$btn-padding-y: 0.8rem;
-$btn-padding-x: 2rem;
+$btn-padding-y: $input-btn-padding-y;
+$btn-padding-x: $input-btn-padding-x;
 
 // // Allows for customizing button radius independently from global border radius
 $btn-border-radius: 3px;

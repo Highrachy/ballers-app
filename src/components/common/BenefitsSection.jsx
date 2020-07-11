@@ -52,7 +52,7 @@ const BenefitsSection = () => {
     />
   );
 
-  var settings = {
+  const settings = {
     speed: 1500,
     infinite: true,
     centerMode: true,
