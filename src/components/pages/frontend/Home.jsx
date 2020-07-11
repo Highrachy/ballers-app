@@ -7,6 +7,7 @@ import Footer from 'components/layout/Footer';
 import BenefitsSection from 'components/common/BenefitsSection';
 import FAQsAccordion from 'components/common/FAQsAccordion';
 import CommunityGallery from 'components/common/CommunityGallery';
+import FAQsContent from 'content/faqs';
 
 const Home = () => (
   <>
@@ -140,37 +141,13 @@ const HowItWorksSection = () => (
 );
 
 const FAQsSection = () => {
-  const FAQs = [
-    {
-      question: 'What is BALL?',
-      answer:
-        'BALL is an acronym for Become A Landlord. It is an online platform that you can use to plan your income properly and define a clear step-by-step process that will take you from your current financial position to owning your dream home.',
-    },
-    {
-      question: <>What is special about BALL?</>,
-      answer:
-        'BALL is the only platform that gives you the flexibility to make convenient contributions towards owning your home inline with your income. BALL also avails you with a myriad of benefits including additional income via our referral program, and access to vast real estate knowledge via our community.',
-    },
-    {
-      question: 'Why should I subscribe to the BALL platform?',
-      answer:
-        'BALL is not for everyone, but if you are keen on owning your home in the shortest possible time with the least amount of stress then you should sign up.',
-    },
-    {
-      question: <>What is the minimum amount to invest?</>,
-      answer:
-        'You can begin your subscription with as low as N50,000.00 with additional monthly payments of N10,000.00',
-    },
-    {
-      question: <>How long does it take for me to own a home?</>,
-      answer:
-        '  The duration is based on several parameters including your disposable income, availability of savings that can be contributed at the beginning of the BALLing experience, type of home and Location of the property. However, if you have a substantial amount saved and can make significant monthly contributions, you can be handed the keys to your new home in less than 2 years.',
-    },
-  ];
-
+  const FAQs = Object.values(FAQsContent).reduce((result, { faqs }, index) => {
+    const homeFAQs = faqs.filter(({ showOnHomePage }) => showOnHomePage);
+    return [...result, ...homeFAQs];
+  }, []);
   return (
     <section className="container-fluid">
-      <h6 class="header-secondary">FAQs</h6>
+      <h6 className="header-secondary">FAQs</h6>
       <h2>
         Your questions <br /> Answered
       </h2>

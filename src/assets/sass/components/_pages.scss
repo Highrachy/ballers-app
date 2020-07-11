@@ -468,7 +468,7 @@ ul.timeline > li.timeline__border:after {
     }
 
     h6 {
-      color: $gray-700;
+      color: $gray-500;
     }
 
     img {
@@ -486,6 +486,10 @@ ul.timeline > li.timeline__border:after {
       img {
         opacity: 0.8;
       }
+    }
+
+    &:focus {
+      outline: none !important;
     }
   }
 }

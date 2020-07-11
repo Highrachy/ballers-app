@@ -1,43 +1,103 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import Header from 'components/layout/Header';
 import CommunityGallery from 'components/common/CommunityGallery';
 import Footer from 'components/layout/Footer';
 import TitleSection from 'components/common/TitleSection';
 import SearchIcon from 'assets/img/icons/search-icon.png';
-import ProfileIcon from 'assets/img/icons/profile-icon.png';
-import GettingStartedIcon from 'assets/img/icons/geting-started-icon.png';
-import SecurityIcon from 'assets/img/icons/security-icon.png';
-import PaymentIcon from 'assets/img/icons/payment-icon.png';
 import Slider from 'react-slick';
 import FAQsAccordion from 'components/common/FAQsAccordion';
 import PhoneIcon from 'assets/img/icons/phone-icon.png';
 import MailIcon from 'assets/img/icons/mail-icon.png';
+import FAQsContent from 'content/faqs';
 
-const FAQs = () => (
-  <>
-    <Header />
-    <TitleSection
-      name="Frequently Asked Questions"
-      content={
-        <>
-          Are you looking for an answer to your questions about BALL?
-          <br />
-          Here we have compiled an overview of frequently asked questions we
-          receive from our BALLers
-        </>
-      }
-    >
-      <FAQSearch />
-    </TitleSection>
-    <FAQCategory />
-    <AllFAQs />
-    <MoreQuestions />
-    <CommunityGallery />
-    <Footer />
-  </>
-);
+const FAQs = () => {
+  const categories = Object.keys(FAQsContent);
+  const [category, setCategory] = React.useState(categories[0]);
+  const [foundFAQs, setFoundFAQs] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState(null);
+  const myRef = React.createRef();
 
-const FAQSearch = () => {
+  const updateCategory = (category) => {
+    setCategory(category);
+    setFoundFAQs([]);
+    setSearchTerm(null);
+  };
+
+  const processFoundFAQs = (faqs, searchTerm) => {
+    setFoundFAQs(faqs);
+    setCategory(null);
+    setSearchTerm(searchTerm);
+    window.scrollTo({ behavior: 'smooth', top: myRef.current.offsetTop });
+  };
+
+  return (
+    <>
+      <Header />
+      <TitleSection
+        name="Frequently Asked Questions"
+        content={
+          <>
+            Are you looking for an answer to your questions about BALL?
+            <br />
+            Here we have compiled an overview of frequently asked questions we
+            receive from our BALLers
+          </>
+        }
+      >
+        <FAQSearch processFoundFAQs={processFoundFAQs} />
+      </TitleSection>
+      <FAQCategory
+        categories={categories}
+        currentCategory={category}
+        updateCategory={updateCategory}
+        searchResultCount={foundFAQs.length}
+      />
+      <AllFAQs
+        faqs={FAQsContent[category]}
+        searchResult={foundFAQs}
+        searchTerm={searchTerm}
+        myRef={myRef}
+      />
+      <MoreQuestions />
+      <CommunityGallery />
+      <Footer />
+    </>
+  );
+};
+
+const FAQSearch = ({ processFoundFAQs }) => {
+  const [value, setValue] = React.useState('');
+
+  const searchFAQs = () => {
+    const searchResult = Object.values(FAQsContent).reduce(
+      (result, { faqs, name }) => {
+        const foundFAQs = faqs.filter(({ question, answer }) => {
+          const processedQuestion = question.props
+            ? question.props.children
+            : question;
+          const processedAnswer = answer.props ? answer.props.children : answer;
+
+          const searchTerms = value.split(' ');
+
+          return searchTerms.find((term) => {
+            const searchTerm = term.toLowerCase();
+            return (
+              processedQuestion.toLowerCase().includes(searchTerm) ||
+              processedAnswer.toLowerCase().includes(searchTerm) ||
+              name.toLowerCase().includes(searchTerm)
+            );
+          });
+        });
+        return [...result, ...foundFAQs];
+      },
+      []
+    );
+    processFoundFAQs(searchResult, value);
+    setValue('');
+  };
+
   return (
     <section className="col-lg-8 col-sm-10 col-11 mx-auto mt-4">
       <form className="faqs-search-form mx-auto">
@@ -52,10 +112,18 @@ const FAQSearch = () => {
             type="text"
             className="form-control"
             placeholder="Search for a question..."
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
             aria-label="Search for a question..."
           />
           <div className="input-group-append">
-            <button className="btn btn-secondary" type="button">
+            <button
+              className={classNames('btn btn-secondary', {
+                disabled: !value || value.length < 3,
+              })}
+              type="button"
+              onClick={searchFAQs}
+            >
               Search
             </button>
           </div>
@@ -65,26 +133,16 @@ const FAQSearch = () => {
   );
 };
 
-const FAQCategory = () => {
-  const CATEGORY = [
-    {
-      name: 'Profile',
-      icon: ProfileIcon,
-    },
-    {
-      name: 'Getting Started',
-      icon: GettingStartedIcon,
-    },
-    {
-      name: 'Payment',
-      icon: PaymentIcon,
-    },
-    {
-      name: 'Security',
-      icon: SecurityIcon,
-    },
-  ];
+FAQSearch.propTypes = {
+  processFoundFAQs: PropTypes.func.isRequired,
+};
 
+const FAQCategory = ({
+  categories,
+  currentCategory,
+  searchResultCount,
+  updateCategory,
+}) => {
   const settings = {
     speed: 500,
     infinite: true,
@@ -124,6 +182,9 @@ const FAQCategory = () => {
       },
     ],
   };
+
+  if (searchResultCount > 0) return null;
+
   return (
     <section className="faq-category bg-light-blue py-5">
       <p className="text-center">
@@ -131,14 +192,18 @@ const FAQCategory = () => {
       </p>
       <div className="container-fluid">
         <Slider {...settings} className="faq-category-slide">
-          {CATEGORY.map((category, index) => (
-            <div className="active" key={index}>
+          {categories.map((category, index) => (
+            <div
+              className={classNames({ active: category === currentCategory })}
+              key={index}
+              onClick={() => updateCategory(category)}
+            >
               <img
-                src={category.icon}
+                src={FAQsContent[category].icon}
                 className="img-fluid"
-                alt={`${category.name} icon`}
+                alt={`${FAQsContent[category].name} icon`}
               />
-              <h6>{category.name}</h6>
+              <h6>{FAQsContent[category].name}</h6>
             </div>
           ))}
         </Slider>
@@ -147,54 +212,53 @@ const FAQCategory = () => {
   );
 };
 
-const AllFAQs = () => {
-  const FAQs = [
-    {
-      question: 'What is BALL?',
-      answer:
-        'BALL is an acronym for Become A Landlord. It is an online platform that you can use to plan your income properly and define a clear step-by-step process that will take you from your current financial position to owning your dream home.',
-    },
-    {
-      question: <>What is special about BALL?</>,
-      answer:
-        'BALL is the only platform that gives you the flexibility to make convenient contributions towards owning your home inline with your income. BALL also avails you with a myriad of benefits including additional income via our referral program, and access to vast real estate knowledge via our community.',
-    },
-    {
-      question: 'Why should I subscribe to the BALL platform?',
-      answer:
-        'BALL is not for everyone, but if you are keen on owning your home in the shortest possible time with the least amount of stress then you should sign up.',
-    },
-    {
-      question: <>What is the minimum amount to invest?</>,
-      answer:
-        'You can begin your subscription with as low as N50,000.00 with additional monthly payments of N10,000.00',
-    },
-    {
-      question: <>How long does it take for me to own a home?</>,
-      answer:
-        '  The duration is based on several parameters including your disposable income, availability of savings that can be contributed at the beginning of the BALLing experience, type of home and Location of the property. However, if you have a substantial amount saved and can make significant monthly contributions, you can be handed the keys to your new home in less than 2 years.',
-    },
-  ];
+FAQCategory.propTypes = {
+  categories: PropTypes.array.isRequired,
+  currentCategory: PropTypes.string.isRequired,
+  searchResultCount: PropTypes.number.isRequired,
+  updateCategory: PropTypes.func.isRequired,
+};
 
+const AllFAQs = ({ faqs, myRef, searchResult, searchTerm }) => {
+  const faqsToShow =
+    searchResult.length > 0 ? searchResult : (faqs && faqs.faqs) || [];
   return (
-    <section className="container-fluid py-6">
+    <section className="container-fluid py-6" ref={myRef}>
       <div className="row">
         <div className="offset-lg-2 col-lg-8">
-          <h2 className="text-center">Getting Started</h2>
-          <p className="lead text-center">
-            This are questions on the general topic on about BALL.
-            <br /> Please go through this section if you need your questions
-            answered.
-          </p>
+          {!searchTerm ? (
+            <>
+              <h2 className="text-center">{faqs.name}</h2>
+              <p className="lead text-center">{faqs.description}</p>
+            </>
+          ) : (
+            <h2 className="text-center">
+              {searchResult.length > 0
+                ? 'Search Results'
+                : 'No Search Result Found'}{' '}
+              for <span className="text-secondary">{searchTerm}</span>
+            </h2>
+          )}
           <div className="row">
             <div className="mt-5 col-12 faqs-section">
-              <FAQsAccordion faqs={FAQs} />
+              <FAQsAccordion faqs={faqsToShow} />
             </div>
           </div>
         </div>
       </div>
     </section>
   );
+};
+
+AllFAQs.propTypes = {
+  faqs: PropTypes.object.isRequired,
+  myRef: PropTypes.object.isRequired,
+  searchResult: PropTypes.array.isRequired,
+  searchTerm: PropTypes.string,
+};
+
+FAQs.defaultProps = {
+  searchTerm: null,
 };
 
 const MoreQuestions = () => (

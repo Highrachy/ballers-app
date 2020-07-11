@@ -26,7 +26,7 @@ const FAQsAccordion = ({ faqs }) => {
   return (
     <Accordion defaultActiveKey={0}>
       {faqs.map((faq, index) => (
-        <Card>
+        <Card key={index}>
           <Accordion.Toggle as={Card.Header} eventKey={index}>
             <ContextAwareToggle eventKey={index}>
               {faq.question}

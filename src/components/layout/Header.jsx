@@ -26,7 +26,7 @@ const Header = () => (
         <Navbar.Collapse id="ballers-nav">
           <Nav className="mr-auto">
             {MENUS.map(({ name, to }) => (
-              <Nav.Link getProps={isActive} as={Link} to={to}>
+              <Nav.Link getProps={isActive} as={Link} to={to} key={name}>
                 {name}
               </Nav.Link>
             ))}
