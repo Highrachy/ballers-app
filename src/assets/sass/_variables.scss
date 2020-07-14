@@ -5,7 +5,7 @@ $headings-font: 'Barlow';
 // Color system
 
 $white: #fff;
-$gray-100: #fafafa;
+$gray-100: #f9f9fa;
 $gray-200: #f2f5fa;
 $gray-300: #e5e5e5;
 $gray-400: #c4c4c4; // faq border
@@ -93,6 +93,7 @@ $lead-font-size: 1.3rem;
 $lead-font-weight: 400;
 
 $text-muted: $gray-500;
+$faded-border: rgba(2, 3, 6, 0.125);
 
 // Links
 //
@@ -116,20 +117,20 @@ $navbar-light-toggler-border-color: transparent;
 // Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
 
 $input-btn-padding-y: 0.8rem;
-$input-btn-padding-x: 2rem;
+$input-btn-padding-x: 1.2rem;
 
 $input-height: auto;
-$input-bg: $white !default;
-$input-disabled-bg: $gray-200 !default;
+$input-bg: rgba(232, 237, 255, 0.38);
+$input-disabled-bg: $gray-100;
 
 $input-color: $primary;
-$input-border-color: #babbbd;
+$input-border-color: rgba(87, 117, 250, 0.17);
 $input-box-shadow: none;
 $input-focus-bg: #f6f8ff;
 $input-focus-border-color: $secondary;
-$input-focus-color: $secondary;
+$input-focus-color: lighten($primary, 10%);
 $input-focus-box-shadow: none;
-$input-placeholder-color: $input-border-color;
+$input-placeholder-color: lighten($text-muted, 25%);
 // $input-btn-font-family:       null !default;
 // $input-btn-font-size:         $font-size-base !default;
 // $input-btn-line-height:       $line-height-base !default;
@@ -155,7 +156,7 @@ $input-placeholder-color: $input-border-color;
 // For each of Bootstrap's buttons, define text, background, and border color.
 
 $btn-padding-y: $input-btn-padding-y;
-$btn-padding-x: $input-btn-padding-x;
+$btn-padding-x: 2rem;
 
 // // Allows for customizing button radius independently from global border radius
 $btn-border-radius: 3px;

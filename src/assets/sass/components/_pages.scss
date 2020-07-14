@@ -24,6 +24,20 @@
   padding: 2rem 0 5rem;
 }
 
+.property-search__home {
+  padding: 1.2rem;
+  position: absolute;
+  background: white;
+  width: 50rem;
+  border: 1px solid rgba($faded-border, 0.06);
+  border-radius: 0.5rem;
+  box-shadow: 0px 5px 40px rgba(192, 204, 218, 0.3);
+}
+
+.dotted-polka {
+  margin-left: -3rem;
+}
+
 // Image Timeline
 ul.timeline {
   list-style-type: none;
@@ -89,7 +103,7 @@ ul.timeline > li.timeline__border:after {
 .faqs-section {
   .accordion > .card {
     border: none;
-    border-bottom: 1px solid rgba(2, 3, 6, 0.125);
+    border-bottom: 1px solid $faded-border;
 
     .accordion-icon {
       color: $gray-400;
@@ -430,6 +444,7 @@ ul.timeline > li.timeline__border:after {
   .form-control {
     border: none;
     padding: 0.5rem 1rem;
+    background: white;
     &:focus {
       background: white;
     }
@@ -505,4 +520,13 @@ ul.timeline > li.timeline__border:after {
   img {
     height: 2.5rem;
   }
+}
+
+.select-holder {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+  margin-bottom: 0;
+  margin-right: 1rem;
 }

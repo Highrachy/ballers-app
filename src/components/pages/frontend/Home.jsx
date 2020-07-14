@@ -8,6 +8,7 @@ import BenefitsSection from 'components/common/BenefitsSection';
 import FAQsAccordion from 'components/common/FAQsAccordion';
 import CommunityGallery from 'components/common/CommunityGallery';
 import FAQsContent from 'content/faqs';
+import SearchForProperty from 'components/common/SearchForProperty';
 
 const Home = () => (
   <>
@@ -32,36 +33,14 @@ const HoldingSection = () => (
         <p className="mt-4 text-muted">
           We make owning a home simpler and achievable.
         </p>
-        <div className="dotted-polka">
-          <PolkaDot width="100" />
-        </div>
-        {/* <section className="card mt-n8">
-            <div className="input-group mb-3">
-              <input
-                className="form-control rounded mx-0"
-                type="text"
-                placeholder="Email"
-                aria-label="Email"
-              />
-              <input
-                className="form-control rounded mx-0"
-                type="text"
-                placeholder="Email"
-                aria-label="Email"
-              />
-              <input
-                className="form-control rounded mx-1"
-                type="text"
-                placeholder="Password"
-                aria-label="Password"
-              />
-              <button className="btn btn-secondary" type="button">
-                Register
-              </button>
-            </div>
-          </section> */}
 
-        <p className="holding-small">
+        <section className="property-search__home">
+          <SearchForProperty />
+        </section>
+        <div className="dotted-polka">
+          <PolkaDot width="100" height="150" />
+        </div>
+        <p className="text-black mt-2 mb-6">
           The only realistic burden free process of owning your ideal home.
         </p>
       </section>
