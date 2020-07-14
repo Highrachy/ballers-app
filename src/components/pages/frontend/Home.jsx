@@ -26,37 +26,40 @@ const Home = () => (
 const HoldingSection = () => (
   <section>
     <div className="row mr-0 ml-0">
-      <section className="col-md-6 pl-6">
-        <h1 className="mt-6">
-          Become <br /> a LandLord
-        </h1>
-        <p className="mt-4 text-muted">
-          We make owning a home simpler and achievable.
-        </p>
+      <section className="col-md-6 pl-lg-6">
+        <div className="home-hero">
+          <h1>
+            Become <br className="d-none d-lg-block" /> a LandLord
+          </h1>
+          <p className="mt-4 text-muted">
+            We make owning a home simpler and achievable.
+          </p>
+        </div>
 
         <section className="property-search__home">
           <SearchForProperty />
         </section>
         <div className="dotted-polka">
-          <PolkaDot width="100" height="150" />
+          <PolkaDot width="100" height="150" className="d-none d-lg-block" />
         </div>
-        <p className="text-black mt-2 mb-6">
+        <p className="text-black mt-2 mb-6 d-none d-lg-block">
           The only realistic burden free process of owning your ideal home.
         </p>
       </section>
-      <section className="col-md-6 home-bg"></section>
+      <section className="col-md-6 home-bg  mb-n4"></section>
     </div>
   </section>
 );
 
 const AboutSection = () => (
-  <section className="container-fluid bg-light-blue">
+  <section className="container-fluid bg-light-blue mb-n4">
     <div className="row my-4">
-      <div className="col-sm-6 col-12 text-center">
+      <div className="col-sm-6 col-12 text-center mb-n4">
+        <h6 className="header-secondary d-lg-none d-block">ABOUT BALL</h6>
         <img src={HomeImage} className="img-fluid home-image" alt="home" />
       </div>
-      <div className="col-sm-6 col-12 about">
-        <h6 className="header-secondary">ABOUT BALL</h6>
+      <div className="col-sm-6 col-12 pb-5">
+        <h6 className="header-secondary d-none d-lg-block">ABOUT BALL</h6>
         <h2>
           Game-changing service <br /> that makes owning <br /> your home easier
         </h2>

@@ -8,7 +8,7 @@ const TitleSection = ({ name, content, children }) => (
     }`}
   >
     <h2 className="pb-3">{name}</h2>
-    <p className="px-8 pb-4">{content}</p>
+    <p className="px-lg-8 pb-4">{content}</p>
     {children}
   </section>
 );

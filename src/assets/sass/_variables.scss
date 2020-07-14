@@ -16,6 +16,8 @@ $gray-800: #343a40;
 $gray-900: #022b69;
 $black: #020306;
 
+$text-color: $gray-600;
+
 $blue: #161d3f;
 $indigo: #6610f2 !default;
 $purple: #5775fa;
@@ -60,7 +62,7 @@ $spacers: (
 // Typography
 //
 // Font, line-height, and color for body text, headings, and more.
-$body-color: $gray-600;
+$body-color: $text-color;
 
 // stylelint-disable value-keyword-case
 $font-family-sans-serif: $text-font, -apple-system, BlinkMacSystemFont,

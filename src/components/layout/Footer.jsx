@@ -9,8 +9,8 @@ import BallersLogo from 'assets/img/logo/ballers-logo.png';
 const Footer = () => (
   <footer className="footer">
     <div className="row">
-      <div className="col-lg-9 col-sm-12 footer-content bg-dark-blue pl-6">
-        <div className="row">
+      <div className="col-lg-9 col-sm-12 footer-content bg-dark-blue pl-lg-6">
+        <div className="row m-0">
           <div className="col-lg-3 col-sm-6">
             <h5>Community</h5>
             <ul className="list-unstyled">
@@ -45,27 +45,39 @@ const Footer = () => (
             </ul>
           </div>
           <div className="col-lg-3 col-sm-6">
-            <h5>Contact Us</h5>
+            <h5 className="pb-2 pb-lg-0">Contact Us</h5>
             <ul className="list-unstyled">
               <li>
                 <a href="/">
-                  <img src={LinkedInLogo} alt="linkedin" className="sm-icon" />
+                  <img
+                    src={LinkedInLogo}
+                    alt="linkedin"
+                    className="footer-icon"
+                  />
                 </a>{' '}
                 &nbsp;
                 <a href="/">
                   <img
                     src={InstagramLogo}
                     alt="instagram"
-                    className="sm-icon"
+                    className="footer-icon"
                   />
                 </a>{' '}
                 &nbsp;
                 <a href="/">
-                  <img src={FacebookLogo} alt="facebook" className="sm-icon" />
+                  <img
+                    src={FacebookLogo}
+                    alt="facebook"
+                    className="footer-icon"
+                  />
                 </a>{' '}
                 &nbsp;
                 <a href="/">
-                  <img src={TwitterLogo} alt="twitter" className="sm-icon" />
+                  <img
+                    src={TwitterLogo}
+                    alt="twitter"
+                    className="footer-icon"
+                  />
                 </a>
               </li>
               <li>&nbsp;</li>
@@ -88,17 +100,17 @@ const Footer = () => (
           </div>
         </div>
       </div>
-      <div className="col-lg-3 col-sm-12 bg-light-blue footer-content pl-5">
+      <div className="col-lg-3 col-sm-12 bg-light-blue footer-content pl-lg-5">
         <img
           src={BallersLogo}
           alt="ballers logo"
           className="ballers-logo-footer"
         />
-        <p className="my-4 pr-6">
+        <p className="my-4 px-7 px-lg-0 pr-lg-6 footer-bottom-text">
           We make owning a home simpler and achievable.
         </p>
         <h5 className="highrachy-text">
-          An initiative of{' '}
+          <span>An initiative of </span>
           <img
             src={HighrachyLogo}
             alt="highrachy logo"

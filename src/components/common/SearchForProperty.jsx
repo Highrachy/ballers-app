@@ -48,9 +48,9 @@ const customStyles = {
     return {
       ...provided,
       backgroundColor: state.isDisabled
-        ? '#f2f5fa'
+        ? '#f5f5f5'
         : 'rgba(232, 237, 255, 0.38)',
-      borderColor: state.isDisabled ? '#e5e5e5' : 'rgba(87, 117, 250, 0.2)',
+      borderColor: state.isDisabled ? '#dddddd' : 'rgba(87, 117, 250, 0.2)',
       borderRadius: 3,
       cursor: 'default',
       minHeight: 56,
@@ -77,7 +77,7 @@ const customStyles = {
   placeholder: (provided, state) => {
     return {
       ...provided,
-      color: state.isDisabled ? '#c4c4c4' : '#979797',
+      color: state.isDisabled ? '#b4b4b4' : '#979797',
     };
   },
 

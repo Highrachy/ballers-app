@@ -16,22 +16,71 @@
   height: 39rem;
 }
 
+.home-hero {
+  text-align: center;
+  margin-top: 2.5rem;
+  @include media-breakpoint-up(lg) {
+    margin-top: 5rem;
+    text-align: left;
+  }
+  @include media-breakpoint-down(lg) {
+    p {
+      font-size: 1.25rem;
+      padding: 0 7rem;
+      color: $text-color !important;
+      line-height: 1.6;
+    }
+  }
+}
+
+.home-bg {
+  min-height: 30rem;
+  @include media-breakpoint-down(lg) {
+    margin-top: -10rem;
+  }
+}
+
 .community-gallery {
   background-image: url(../../img/backgrounds/deep-dive.png);
-  background-size: 100% 100%;
+  background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
   padding: 2rem 0 5rem;
 }
 
 .property-search__home {
-  padding: 1.2rem;
-  position: absolute;
+  @include media-breakpoint-up(lg) {
+    position: absolute;
+    width: 50rem;
+    padding: 1.2rem;
+  }
+
+  padding: 2rem;
   background: white;
-  width: 50rem;
   border: 1px solid rgba($faded-border, 0.06);
   border-radius: 0.5rem;
   box-shadow: 0px 5px 40px rgba(192, 204, 218, 0.3);
+
+  .input-group {
+    flex-direction: column;
+    @include media-breakpoint-up(lg) {
+      flex-direction: row;
+    }
+  }
+
+  .select-holder {
+    position: relative;
+    min-width: 0;
+    margin-right: 0;
+    margin-bottom: 1rem;
+
+    @include media-breakpoint-up(lg) {
+      width: 1%;
+      flex: 1 1 auto;
+      margin-bottom: 0;
+      margin-right: 1rem;
+    }
+  }
 }
 
 .dotted-polka {
@@ -97,6 +146,21 @@ ul.timeline > li.timeline__border:after {
 .slick-arrow {
   width: 2rem;
   height: 2rem;
+  z-index: 50000;
+
+  &.slick-next {
+    right: 0;
+    @include media-breakpoint-up(lg) {
+      right: -1rem;
+    }
+  }
+
+  &.slick-prev {
+    left: 0;
+    @include media-breakpoint-up(lg) {
+      left: -1rem;
+    }
+  }
 }
 
 // FAQs
@@ -125,6 +189,8 @@ ul.timeline > li.timeline__border:after {
         position: relative;
         padding-left: 3rem;
         font-weight: $font-weight-bold;
+        padding: 0 5rem 0 3rem;
+        line-height: 1.6;
         cursor: pointer;
 
         &:hover {
@@ -146,7 +212,7 @@ ul.timeline > li.timeline__border:after {
     }
 
     .card-body {
-      padding: 0 0 3rem 3rem;
+      padding: 0 5rem 3rem 3rem;
     }
   }
 }
@@ -154,8 +220,12 @@ ul.timeline > li.timeline__border:after {
 .title-section {
   background: url('../../img/backgrounds/title-section.png');
   background-size: cover;
-  height: 30rem;
-  padding: 10rem;
+  height: 22rem;
+  padding: 2rem;
+  @include media-breakpoint-up(lg) {
+    height: 30rem;
+    padding: 10rem;
+  }
   text-align: center;
 
   &.with-extra-content {
@@ -471,6 +541,17 @@ ul.timeline > li.timeline__border:after {
   cursor: pointer;
 
   div {
+    h6 {
+      color: $gray-400;
+    }
+
+    img {
+      height: 2rem;
+      display: block;
+      margin: 1rem auto;
+      opacity: 0.25;
+    }
+
     &.active {
       opacity: 1 !important;
       h6 {
@@ -480,17 +561,6 @@ ul.timeline > li.timeline__border:after {
       img {
         opacity: 1 !important;
       }
-    }
-
-    h6 {
-      color: $gray-500;
-    }
-
-    img {
-      height: 2rem;
-      display: block;
-      margin: 1rem auto;
-      opacity: 0.4;
     }
 
     &:hover {
@@ -520,13 +590,4 @@ ul.timeline > li.timeline__border:after {
   img {
     height: 2.5rem;
   }
-}
-
-.select-holder {
-  position: relative;
-  flex: 1 1 auto;
-  width: 1%;
-  min-width: 0;
-  margin-bottom: 0;
-  margin-right: 1rem;
 }
