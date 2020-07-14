@@ -40,7 +40,7 @@ const FAQs = () => {
         content={
           <>
             Are you looking for an answer to your questions about BALL?
-            <br />
+            <br className="d-none d-lg-block" />
             Here we have compiled an overview of frequently asked questions we
             receive from our BALLers
           </>
@@ -154,9 +154,7 @@ const FAQCategory = ({
     centerPadding: '0',
     slidesToShow: 4,
     dots: true,
-    customPaging: function (i) {
-      return '<span class="faq-slider-dot" id=' + i + '>&nbsp;</span>';
-    },
+    appendDots: (dots) => <span className="faq-slider-dot">{dots}</span>,
     useTransform: true,
     cssEase: 'ease-in-out',
     responsive: [

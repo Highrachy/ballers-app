@@ -10,8 +10,9 @@ export default {
     icon: GettingStartedIcon,
     description: (
       <>
-        This are questions on the general topic on about BALL. <br /> Please go
-        through this section if you need your questions answered.
+        This are questions on the general topic on about BALL.{' '}
+        <br className="d-none d-lg-block" /> Please go through this section if
+        you need your questions answered.
       </>
     ),
     faqs: [
@@ -106,8 +107,9 @@ export default {
     icon: SecurityIcon,
     description: (
       <>
-        These are security related questions about BALL. Please go <br />{' '}
-        through this section if you need your questions answered.
+        These are security related questions about BALL. Please go{' '}
+        <br className="d-none d-lg-block" /> through this section if you need
+        your questions answered.
       </>
     ),
     faqs: [
@@ -124,8 +126,9 @@ export default {
     icon: ProfileIcon,
     description: (
       <>
-        These are profile related questions about BALL. Please go <br /> through
-        this section if you need your questions answered.
+        These are profile related questions about BALL. Please go{' '}
+        <br className="d-none d-lg-block" /> through this section if you need
+        your questions answered.
       </>
     ),
     faqs: [

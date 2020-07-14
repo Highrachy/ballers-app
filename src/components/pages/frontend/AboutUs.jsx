@@ -127,29 +127,29 @@ const OurTeam = () => (
     </h2>
     <div className="row">
       <div className="col-lg-3 col-sm-6 col-12 mb-5">
-        <img src={Nnamdi} class="img-fluid" alt="Nnamdi Ijei" />
+        <img src={Nnamdi} className="img-fluid" alt="Nnamdi Ijei" />
         <h5 className="mt-3 mb-0">Nnamdi Ijei</h5>
         <p className="text-green font-weight-bold">CEO</p>
       </div>
       <div className="col-lg-3 col-sm-6 col-12 mb-5">
-        <img src={Leonard} class="img-fluid" alt="Leonard Isiekwenagbu" />
+        <img src={Leonard} className="img-fluid" alt="Leonard Isiekwenagbu" />
         <h5 className="mt-3 mb-0">Leonard Isiekwenagbu</h5>
         <p className="text-green font-weight-bold">BUSINESS DEVELOPMENT</p>
       </div>
       <div className="col-lg-3 col-sm-6 col-12 mb-5">
-        <img src={Haruna} class="img-fluid" alt="Haruna Popoola" />
+        <img src={Haruna} className="img-fluid" alt="Haruna Popoola" />
         <h5 className="mt-3 mb-0">Haruna Popoola</h5>
         <p className="text-green font-weight-bold">LEAD DEVELOPER</p>
       </div>
       <div className="col-lg-3 col-sm-6 col-12 mb-5">
-        <img src={Samuel} class="img-fluid" alt="Samuel Sola-Eniafe" />
+        <img src={Samuel} className="img-fluid" alt="Samuel Sola-Eniafe" />
         <h5 className="mt-3 mb-0">Samuel Sola-Eniafe</h5>
         <p className="text-green font-weight-bold">SOFTWARE DEVELOPER</p>
       </div>
     </div>
     <div className="row">
       <div className="col-lg-3 col-sm-6 col-12 mb-5">
-        <img src={Eronss} class="img-fluid" alt="Eronss Okoji" />
+        <img src={Eronss} className="img-fluid" alt="Eronss Okoji" />
         <h5 className="mt-3 mb-0">Eronss Okoji</h5>
         <p className="text-green font-weight-bold">PRODUCT DESIGNER</p>
       </div>

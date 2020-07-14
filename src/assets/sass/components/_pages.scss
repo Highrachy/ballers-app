@@ -220,20 +220,24 @@ ul.timeline > li.timeline__border:after {
 .title-section {
   background: url('../../img/backgrounds/title-section.png');
   background-size: cover;
-  height: 22rem;
-  padding: 2rem;
-  @include media-breakpoint-up(lg) {
-    height: 30rem;
-    padding: 10rem;
-  }
+  height: 24rem;
+  padding: 6rem 3rem 8rem;
   text-align: center;
 
   &.with-extra-content {
-    padding: 6rem 10rem 10rem;
+    height: 30rem;
+    padding: 5rem 3rem;
   }
+  @include media-breakpoint-up(lg) {
+    height: 30rem;
+    padding: 10rem;
 
-  p {
-    font-size: 1.2rem;
+    &.with-extra-content {
+      padding: 6rem 10rem 10rem;
+    }
+    p {
+      font-size: 1.2rem;
+    }
   }
 }
 
@@ -535,7 +539,10 @@ ul.timeline > li.timeline__border:after {
   border-radius: 0.3rem;
   box-shadow: 0px 4px 10px rgba(196, 196, 196, 0.3);
   text-align: center;
-  margin: 1rem;
+  margin: 1rem 4rem;
+  @include media-breakpoint-up(lg) {
+    margin: 1rem;
+  }
   padding: 2rem;
   transition: all 0.3s ease-out;
   cursor: pointer;
@@ -576,6 +583,23 @@ ul.timeline > li.timeline__border:after {
     &:focus {
       outline: none !important;
     }
+  }
+}
+// #cbd4ff
+.slick-dots li {
+  width: 10px;
+  background-color: #cbd4ff;
+  height: 4px;
+  border-radius: 5px;
+  transition: all 0.3ms ease-out;
+
+  &.slick-active {
+    width: 20px;
+    background-color: $purple;
+  }
+
+  button:before {
+    font-size: 0;
   }
 }
 
