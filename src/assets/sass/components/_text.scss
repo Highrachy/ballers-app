@@ -14,3 +14,30 @@
 .text-normal {
   font-size: 1.2rem;
 }
+
+.text-link {
+  color: $primary;
+
+  &:hover {
+    color: $secondary;
+  }
+}
+
+.text-height-0 {
+  line-height: 1 !important;
+}
+.text-height-1 {
+  line-height: 1.25 !important;
+}
+.text-height-2 {
+  line-height: 1.5 !important;
+}
+.text-height-3 {
+  line-height: 1.75 !important;
+}
+.text-height-4 {
+  line-height: 2 !important;
+}
+.text-height-5 {
+  line-height: 2.5 !important;
+}
