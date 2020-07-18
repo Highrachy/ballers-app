@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Field } from 'formik';
+import { Field, getIn } from 'formik';
 import { connect } from 'formik';
 import classNames from 'classnames';
 import {
@@ -9,8 +9,10 @@ import {
   feedback,
 } from 'components/forms/form-helper';
 import Label from './Label';
+import NumberFormat from 'react-number-format';
 
-const Input = ({
+// https://www.npmjs.com/package/react-number-format
+const InputFormat = ({
   autoComplete,
   formGroupClassName,
   formik,
@@ -34,9 +36,7 @@ const Input = ({
 }) => {
   return (
     <div
-      className={classNames('form-group mb-4', formGroupClassName, {
-        row: inline,
-      })}
+      className={classNames('form-group', formGroupClassName, { row: inline })}
     >
       <Label
         className={labelClassName}
@@ -44,25 +44,34 @@ const Input = ({
         name={name}
         optional={optional}
         text={label}
-        tooltipHeader={tooltipHeader}
         tooltipPosition={tooltipPosition}
         tooltipText={tooltipText}
       />
       <div className={inputSizeClassName}>
-        <Field
-          aria-describedby={name}
-          autoComplete={autoComplete}
-          className={classNames(
-            'form-control',
-            inputClassName,
-            getValidityClass(formik, name, showFeedback)
-          )}
-          id={name}
-          name={name}
-          type={type}
-          placeholder={placeholder || label}
-          {...props}
-        />
+        <Field name={name}>
+          {({ field, form }) => {
+            return (
+              <NumberFormat
+                {...props}
+                className={classNames(
+                  'form-control',
+                  inputClassName,
+                  getValidityClass(formik, name, showFeedback)
+                )}
+                id={name}
+                name={name}
+                onBlur={field.onBlur}
+                onValueChange={(number) =>
+                  form.setFieldValue(name, number.value)
+                }
+                prefix="&#8358; "
+                thousandSeparator={true}
+                placeholder={placeholder || label}
+                value={getIn(formik.values, name)}
+              />
+            );
+          }}
+        </Field>
       </div>
       <FeedbackMessage
         formik={formik}
@@ -77,7 +86,7 @@ const Input = ({
 
 // NB: Wrap multiple fields in .form-row and give formGroupClassname the size e.g form-group col-md-6
 
-Input.defaultProps = {
+InputFormat.defaultProps = {
   autoComplete: 'off',
   formGroupClassName: null,
   helpText: null,
@@ -97,7 +106,7 @@ Input.defaultProps = {
   type: null,
 };
 
-Input.propTypes = {
+InputFormat.propTypes = {
   autoComplete: PropTypes.string,
   formGroupClassName: PropTypes.string,
   formik: PropTypes.object.isRequired,
@@ -119,8 +128,8 @@ Input.propTypes = {
   showFeedback: PropTypes.oneOf(Object.keys(feedback)),
   tooltipHeader: PropTypes.string,
   tooltipPosition: PropTypes.string,
-  tooltipText: PropTypes.any,
+  tooltipText: PropTypes.string,
   type: PropTypes.string,
 };
 
-export default connect(Input);
+export default connect(InputFormat);

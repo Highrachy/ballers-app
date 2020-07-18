@@ -17,15 +17,15 @@ const Button = ({
     onClick={onClick}
     type="button"
   >
-    {loading ? (
+    {!loading ? (
       <>
         <Spinner
           as="span"
-          animation="grow"
+          animation="border"
           size="sm"
           role="status"
           aria-hidden="true"
-        />
+        />{' '}
         {loadingText || children}
       </>
     ) : (

@@ -17,7 +17,11 @@ import {
   // agreement,
   createSchema,
   optionalValidation,
+  multiSelectValidation,
 } from './schemas/schema-helpers';
+import InputFormat from './InputFormat';
+import Select from './Select';
+import RadioSelect from './RadioSelect';
 
 const FormComponents = () => (
   <>
@@ -40,6 +44,12 @@ const Content = () => (
   </div>
 );
 
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
+];
+
 const registerSchema = {
   firstName: stringValidation('First Name'),
   lastName: stringValidation('Last Name'),
@@ -47,17 +57,19 @@ const registerSchema = {
   email,
   password: strongPassword,
   message: stringValidation('Message'),
+  state: multiSelectValidation('State'),
+  country: stringValidation('Country'),
   // agreement,
 };
 
 const Forms = () => (
   <Formik
-    initialValues={setInitialValues(registerSchema)}
+    initialValues={setInitialValues(registerSchema, { state: ['vanilla'] })}
     onSubmit={(values, actions) => {
       setTimeout(() => {
         console.log('values', values);
         actions.setSubmitting(false);
-      }, 400);
+      }, 4000);
     }}
     render={({ isSubmitting, handleSubmit, ...props }) => (
       <Form>
@@ -83,7 +95,7 @@ const Forms = () => (
             placeholder="Valid Email"
             tooltipText="A valid email address, needed for login"
           />
-          <Input
+          <InputFormat
             formGroupClassName="col-md-6"
             label="Phone Number"
             name="phoneNumber"
@@ -97,6 +109,38 @@ const Forms = () => (
           type="password"
           tooltipText={<p className="text-danger">Your Password :-)</p>}
         />
+        <div className="form-row">
+          <Select
+            formGroupClassName="col-md-6"
+            label="State"
+            name="state"
+            isMulti
+            placeholder="Select State"
+            options={options}
+            tooltipText="A valid email address, needed for login"
+          />
+          <Select
+            formGroupClassName="col-md-6"
+            label="Country"
+            name="country"
+            options={options}
+            optional
+          />
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <RadioSelect
+              label="Testing 123"
+              name="sex"
+              options={[
+                { label: 'Male', value: 'male' },
+                { label: 'Female', value: 'female' },
+              ]}
+              tooltipText="Testing Radio"
+            />
+          </div>
+        </div>
         <Textarea
           label="Message"
           name="message"
