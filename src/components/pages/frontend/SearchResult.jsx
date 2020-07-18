@@ -3,7 +3,7 @@ import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 import SearchPropertyForm from 'components/common/SearchPropertyForm';
 import Map from 'components/common/Map';
-import { OFFICE_LOCATION } from 'helpers/constants';
+import { OFFICE_LOCATION } from 'utils/constants';
 import { ReactComponent as ApartmentIcon } from 'assets/img/icons/house-gray.svg';
 import { ReactComponent as LocationIcon } from 'assets/img/icons/location-gray.svg';
 import { ReactComponent as RangeLine } from 'assets/img/dashed-line.svg';

@@ -13,6 +13,7 @@ import Register from 'components/pages/auth/Register';
 import ForgotPassword from 'components/pages/auth/ForgotPassword';
 import ResetPassword from 'components/pages/auth/ResetPassword';
 import SearchResult from 'components/pages/frontend/SearchResult';
+import FormComponents from 'components/forms/FormComponents';
 
 const FrontPageRouter = () => (
   <Router>
@@ -31,6 +32,7 @@ const FrontPageRouter = () => (
     <ResetPassword path="reset-password/:token" />
     <Register path="register" />
     <SearchResult path="search" />
+    <FormComponents path="forms" />
   </Router>
 );
 

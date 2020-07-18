@@ -9,7 +9,7 @@ import TwitterLogo from 'assets/img/icons/twitter.png';
 import InstagramLogo from 'assets/img/icons/instagram.png';
 import LinkedInLogo from 'assets/img/icons/linkedin.png';
 import Map from 'components/common/Map';
-import { OFFICE_LOCATION } from 'helpers/constants';
+import { OFFICE_LOCATION } from 'utils/constants';
 
 const ContactUs = () => (
   <>
