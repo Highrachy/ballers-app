@@ -7,7 +7,17 @@ import TitleSection from 'components/common/TitleSection';
 import { Formik, Form } from 'formik';
 import Input from 'components/forms/Input';
 import Button from 'components/forms/Button';
-import { DisplayFormikState } from './form-helper';
+import { DisplayFormikState, setInitialValues } from './form-helper';
+import Textarea from './Textarea';
+import {
+  stringValidation,
+  phoneNumber,
+  email,
+  strongPassword,
+  // agreement,
+  createSchema,
+  optionalValidation,
+} from './schemas/schema-helpers';
 
 const FormComponents = () => (
   <>
@@ -30,12 +40,19 @@ const Content = () => (
   </div>
 );
 
+const registerSchema = {
+  firstName: stringValidation('First Name'),
+  lastName: stringValidation('Last Name'),
+  phoneNumber: optionalValidation(phoneNumber),
+  email,
+  password: strongPassword,
+  message: stringValidation('Message'),
+  // agreement,
+};
+
 const Forms = () => (
   <Formik
-    initialValues={{
-      email: 'harunpopson@yahoo.com',
-      password: '123456',
-    }}
+    initialValues={setInitialValues(registerSchema)}
     onSubmit={(values, actions) => {
       setTimeout(() => {
         console.log('values', values);
@@ -55,8 +72,21 @@ const Forms = () => (
             formGroupClassName="col-md-6"
             label="Last Name"
             name="lastName"
-            placeholder="Last Name"
-            tooltipText="$$$ Here is the Last Name"
+            tooltipText="Here is the Last Name"
+          />
+        </div>
+        <div className="form-row">
+          <Input
+            formGroupClassName="col-md-6"
+            label="Email"
+            name="email"
+            placeholder="Valid Email"
+            tooltipText="A valid email address, needed for login"
+          />
+          <Input
+            formGroupClassName="col-md-6"
+            label="Phone Number"
+            name="phoneNumber"
             optional
           />
         </div>
@@ -66,6 +96,12 @@ const Forms = () => (
           placeholder="Password"
           type="password"
           tooltipText={<p className="text-danger">Your Password :-)</p>}
+        />
+        <Textarea
+          label="Message"
+          name="message"
+          placeholder="Your Message..."
+          tooltipText={<p className="text-danger">Enter your content</p>}
         />
         <Button
           className="btn-danger"
@@ -77,7 +113,7 @@ const Forms = () => (
         <DisplayFormikState {...props} />
       </Form>
     )}
-    // validationSchema={{}}
+    validationSchema={createSchema(registerSchema)}
   />
 );
 

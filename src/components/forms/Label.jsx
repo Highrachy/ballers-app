@@ -20,7 +20,7 @@ const Label = ({
 
       {/* Optional / Compulsory Fields */}
       {optional ? (
-        <em className="optional float-right">(optional)</em>
+        <em className="optional-form-field">(optional)</em>
       ) : (
         <small> * </small>
       )}

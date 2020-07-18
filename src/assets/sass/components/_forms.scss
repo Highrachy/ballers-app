@@ -1,0 +1,21 @@
+label {
+  color: $primary;
+}
+
+.invalid-feedback {
+  display: block;
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid,
+.was-validated .form-control:valid,
+.form-control.is-valid {
+  background-size: 1.2rem;
+}
+
+.optional-form-field {
+  float: right;
+  font-size: 0.8rem;
+  padding-top: 0.25rem;
+  color: $text-muted;
+}

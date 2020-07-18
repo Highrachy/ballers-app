@@ -10,7 +10,7 @@ import {
 } from 'components/forms/form-helper';
 import Label from './Label';
 
-const Input = ({
+const TextArea = ({
   autoComplete,
   formGroupClassName,
   formik,
@@ -29,14 +29,11 @@ const Input = ({
   tooltipHeader,
   tooltipText,
   tooltipPosition,
-  type,
-  ...props
+  ...others
 }) => {
   return (
     <div
-      className={classNames('form-group mb-4', formGroupClassName, {
-        row: inline,
-      })}
+      className={classNames('form-group', formGroupClassName, { row: inline })}
     >
       <Label
         className={labelClassName}
@@ -57,11 +54,11 @@ const Input = ({
             inputClassName,
             getValidityClass(formik, name, showFeedback)
           )}
+          component="textarea"
           id={name}
           name={name}
-          type={type}
-          placeholder={placeholder || label}
-          {...props}
+          placeholder={placeholder}
+          {...others}
         />
       </div>
       <FeedbackMessage
@@ -75,9 +72,7 @@ const Input = ({
   );
 };
 
-// NB: Wrap multiple fields in .form-row and give formGroupClassname the size e.g form-group col-md-6
-
-Input.defaultProps = {
+TextArea.defaultProps = {
   autoComplete: 'off',
   formGroupClassName: null,
   helpText: null,
@@ -89,14 +84,14 @@ Input.defaultProps = {
   labelClassName: null,
   labelLink: null,
   optional: false,
+  placeholder: null,
   showFeedback: feedback.ALL,
   tooltipHeader: null,
   tooltipText: null,
   tooltipPosition: 'right',
-  type: null,
 };
 
-Input.propTypes = {
+TextArea.propTypes = {
   autoComplete: PropTypes.string,
   formGroupClassName: PropTypes.string,
   formik: PropTypes.object.isRequired,
@@ -114,11 +109,11 @@ Input.propTypes = {
   }),
   name: PropTypes.string.isRequired,
   optional: PropTypes.bool,
+  placeholder: PropTypes.string,
   showFeedback: PropTypes.oneOf(Object.keys(feedback)),
   tooltipHeader: PropTypes.string,
   tooltipPosition: PropTypes.string,
   tooltipText: PropTypes.any,
-  type: PropTypes.string,
 };
 
-export default connect(Input);
+export default connect(TextArea);
