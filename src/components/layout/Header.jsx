@@ -32,8 +32,10 @@ const Header = () => (
             ))}
           </Nav>
           <Nav>
-            <Nav.Link href="#home">Sign In</Nav.Link>
-            <Nav.Link href="#home" className="btn btn-secondary">
+            <Nav.Link to="/login" as={Link}>
+              Sign In
+            </Nav.Link>
+            <Nav.Link as={Link} to="/register" className="btn btn-secondary">
               Register for Free
             </Nav.Link>
           </Nav>

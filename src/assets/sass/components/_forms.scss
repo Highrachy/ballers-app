@@ -19,3 +19,12 @@ label {
   padding-top: 0.25rem;
   color: $text-muted;
 }
+
+.form-row .form-group {
+  &:first-child {
+    padding-right: 1rem;
+  }
+  &:last-child {
+    padding-left: 1rem;
+  }
+}

@@ -8,6 +8,7 @@ const Button = ({
   className,
   loading,
   loadingText,
+  showLoadingText,
   children,
   onClick,
   color,
@@ -17,7 +18,7 @@ const Button = ({
     onClick={onClick}
     type="button"
   >
-    {!loading ? (
+    {loading ? (
       <>
         <Spinner
           as="span"
@@ -26,7 +27,7 @@ const Button = ({
           role="status"
           aria-hidden="true"
         />{' '}
-        {loadingText || children}
+        {showLoadingText && (loadingText || children)}
       </>
     ) : (
       children
@@ -40,6 +41,7 @@ Button.propTypes = {
   color: PropTypes.oneOf(COLOR_STYLE),
   loading: PropTypes.bool,
   loadingText: PropTypes.any,
+  showLoadingText: PropTypes.bool,
   onClick: PropTypes.func,
 };
 
@@ -49,6 +51,7 @@ Button.defaultProps = {
   color: COLOR_STYLE[1],
   loading: false,
   loadingText: null,
+  showLoadingText: true,
   onClick: () => {},
 };
 

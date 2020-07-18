@@ -22,6 +22,7 @@ import {
 import InputFormat from './InputFormat';
 import Select from './Select';
 import RadioSelect from './RadioSelect';
+import CheckboxGroup from './CheckboxGroup';
 
 const FormComponents = () => (
   <>
@@ -141,6 +142,22 @@ const Forms = () => (
             />
           </div>
         </div>
+
+        <div className="row">
+          <div className="col-12">
+            <CheckboxGroup
+              inline
+              label="Preference"
+              name="pref"
+              options={[
+                { label: 'Receive Newsletter' },
+                { value: 'Love Newsletter' },
+              ]}
+              // options can contain either value or label
+            />
+          </div>
+        </div>
+
         <Textarea
           label="Message"
           name="message"
@@ -151,6 +168,7 @@ const Forms = () => (
           className="btn-danger"
           loading={isSubmitting}
           onClick={handleSubmit}
+          showLoadingText={false}
         >
           Register
         </Button>

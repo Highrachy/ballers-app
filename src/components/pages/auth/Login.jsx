@@ -1,155 +1,222 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import Header from 'components/layout/Header';
+import Footer from 'components/layout/Footer';
+import { getProxy } from 'utils/helpers';
+import { Link } from '@reach/router';
+import { Formik, Form } from 'formik';
+import Axios from 'axios';
+import Input from 'components/forms/Input';
+import { feedback } from 'components/forms/form-helper';
+import Button from 'components/forms/Button';
+import { createSchema } from 'components/forms/schemas/schema-helpers';
+import { loginSchema } from 'components/forms/schemas/userSchema';
+import AlertMessage from 'components/utils/AlertMessage';
 
-const Login = () => {
+const Login = () => (
+  <>
+    <Header />
+    <Content />
+    <Footer />
+  </>
+);
+const Content = ({ redirectTo, sid, token }) => {
   return (
-    <div className="account-pages my-5">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-xl-10">
-            <div className="card">
-              <div className="card-body p-0">
-                <div className="row">
-                  <div className="col-md-6 p-5">
-                    <div className="mx-auto mb-5">
-                      <a href="index.html">
-                        <img src="assets/images/logo.png" alt="" height={24} />
-                        <h3 className="d-inline align-middle ml-1 text-logo">
-                          Shreyu
-                        </h3>
-                      </a>
-                    </div>
-                    <h6 className="h5 mb-0 mt-4">Welcome back!</h6>
-                    <p className="text-muted mt-1 mb-4">
-                      Enter your email address and password to access admin
-                      panel.
-                    </p>
-                    <form action="#" className="authentication-form">
-                      <div className="form-group">
-                        <label className="form-control-label">
-                          Email Address
-                        </label>
-                        <div className="input-group input-group-merge">
-                          <div className="input-group-prepend">
-                            <span className="input-group-text">
-                              <i className="icon-dual" data-feather="mail" />
-                            </span>
-                          </div>
-                          <input
-                            type="email"
-                            className="form-control"
-                            id="email"
-                            placeholder="hello@coderthemes.com"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group mt-4">
-                        <label className="form-control-label">Password</label>
-                        <a
-                          href="pages-recoverpw.html"
-                          className="float-right text-muted text-unline-dashed ml-1"
-                        >
-                          Forgot your password?
-                        </a>
-                        <div className="input-group input-group-merge">
-                          <div className="input-group-prepend">
-                            <span className="input-group-text">
-                              <i className="icon-dual" data-feather="lock" />
-                            </span>
-                          </div>
-                          <input
-                            type="password"
-                            className="form-control"
-                            id="password"
-                            placeholder="Enter your password"
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group mb-4">
-                        <div className="custom-control custom-checkbox">
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="checkbox-signin"
-                            defaultChecked
-                          />
-                          <label
-                            className="custom-control-label"
-                            htmlFor="checkbox-signin"
-                          >
-                            Remember me
-                          </label>
-                        </div>
-                      </div>
-                      <div className="form-group mb-0 text-center">
-                        <button
-                          className="btn btn-primary btn-block"
-                          type="submit"
-                        >
-                          {' '}
-                          Log In
-                        </button>
-                      </div>
-                    </form>
-                    <div className="py-3 text-center">
-                      <span className="font-size-16 font-weight-bold">Or</span>
-                    </div>
-                    <div className="row">
-                      <div className="col-6">
-                        <a href className="btn btn-white">
-                          <i className="uil uil-google icon-google mr-2" />
-                          With Google
-                        </a>
-                      </div>
-                      <div className="col-6 text-right">
-                        <a href className="btn btn-white">
-                          <i className="uil uil-facebook mr-2 icon-fb" />
-                          With Facebook
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-6 d-none d-md-inline-block">
-                    <div className="auth-page-sidebar">
-                      <div className="overlay" />
-                      <div className="auth-user-testimonial">
-                        <p className="font-size-24 font-weight-bold text-white mb-1">
-                          I simply love it!
-                        </p>
-                        <p className="lead">
-                          "It's a elegent templete. I love it very much!"
-                        </p>
-                        <p>- Admin User</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>{' '}
-              {/* end card-body */}
-            </div>
-            {/* end card */}
-            <div className="row mt-3">
-              <div className="col-12 text-center">
-                <p className="text-muted">
-                  Don't have an account?{' '}
-                  <a
-                    href="pages-register.html"
-                    className="text-primary font-weight-bold ml-1"
-                  >
-                    Sign Up
-                  </a>
+    <section>
+      <div className="container-fluid bg-light">
+        <div className="row">
+          <div className="col-lg-5 mx-auto">
+            <div className="card p-5 my-6">
+              <section>
+                <h4>Login</h4>
+                <p className="mb-5">
+                  Sign in to access your profile, rewards and contributions.
                 </p>
-              </div>{' '}
-              {/* end col */}
+                <LoginForm redirectTo={redirectTo} sid={sid} token={token} />
+              </section>
+              <section className="auth__social-media">
+                <a
+                  className="auth__social-media--icons"
+                  href={`${getProxy()}/api/v1/auth/google`}
+                >
+                  <span className="icon-google" />
+                </a>
+                {/* <a
+                  className="auth__social-media--icons"
+                  href={`${getProxy()}/api/v1/auth/facebook`}
+                >
+                  <span className="icon-facebook-official" />
+                </a> */}
+              </section>
+              <section className="auth__footer">
+                <div className="register mt-6 text-center">
+                  Not Registered?{' '}
+                  <Link className="auth__link" to="/register">
+                    {' '}
+                    Create Account
+                  </Link>
+                </div>
+              </section>
             </div>
-            {/* end row */}
-          </div>{' '}
-          {/* end col */}
+          </div>
         </div>
-        {/* end row */}
+        <p />
       </div>
-      {/* end container */}
-    </div>
+    </section>
   );
 };
 
+Content.propTypes = {
+  redirectTo: PropTypes.string.isRequired,
+  sid: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+};
+
+const LoginForm = ({ redirectTo, sid, token }) => {
+  const [message, setMessage] = React.useState(null);
+  // const { userState, userDispatch } = React.useContext(UserContext);
+
+  // CHECK TOKEN ACTIVATION
+  React.useEffect(() => {
+    token &&
+      Axios.get('/api/v1/users/activate', { params: { token } })
+        .then(function (response) {
+          const { status, data } = response;
+          // handle success
+          if (status === 200) {
+            console.log('data', data);
+            // setMessage({
+            //   type: 'success',
+            //   message: data.message,
+            // });
+          }
+        })
+        .catch(function (error) {
+          // setMessage({
+          //   message: error.response.data.message,
+          // });
+        });
+  }, [token]);
+
+  // CHECK IF SOCIAL MEDIA LOGIN
+  // React.useEffect(() => {
+  //   sid &&
+  //     axios
+  //       .get('/api/v1/who-am-i', {
+  //         headers: {
+  //           'x-access-token': sid,
+  //         },
+  //       })
+  //       .then(function (response) {
+  //         const { status, data } = response;
+
+  //         // handle success
+  //         if (status === 200) {
+  //           if (data.type === USER_TYPES.unknown) {
+  //             navigate(`/complete-registration/${sid}`);
+  //           } else {
+  //             userDispatch({ type: 'user-social-media-login', user: data });
+  //             storeToken(sid);
+  //             storeUserType(data.type);
+  //           }
+  //         }
+  //       })
+  //       .catch(function (error) {
+  //         console.log('error', error);
+  //         setMessage({
+  //           message: error.response.data.message,
+  //         });
+  //       });
+  // }, [sid, userDispatch]);
+
+  // CHECK IF USER HAS SIGNED IN
+  // React. useEffect(() => {
+  //   if (
+  //     userState &&
+  //     userState.isLoggedIn &&
+  //     userState.type !== USER_TYPES.unknown
+  //   ) {
+  //     const dashboardUrl = `/${DASHBOARD_PAGE[userState.type]}/dashboard`;
+  //     navigate(redirectTo || dashboardUrl);
+  //   }
+  // }, [userState, redirectTo]);
+
+  return (
+    <Formik
+      initialValues={{
+        email: '',
+        password: '',
+      }}
+      onSubmit={(values, actions) => {
+        // post to api
+        setMessage({ message: 'Testing ' });
+        // Axios.post('/api/v1/users/login', values)
+        //   .then(function (response) {
+        //     const { status, data } = response;
+        //     if (status === 200) {
+        //       console.log('data', data);
+        //       setMessage('Testing');
+        //       // userDispatch({ type: 'user-login', user: data.user });
+        //       // storeToken(data.token);
+        //       // storeUserType(data.user.type);
+        //     }
+        //   })
+        //   .catch(function (error) {
+        //     // setMessage({
+        //     //   message: error.response.data.message,
+        //     // });
+        //   });
+        actions.setSubmitting(false);
+      }}
+      render={({ isSubmitting, handleSubmit }) => {
+        const submitFormWithEnterKey = (event) => {
+          if (event.keyCode === 13) {
+            handleSubmit();
+          }
+        };
+        return (
+          <Form>
+            <AlertMessage {...message} />
+            <Input
+              label="Email"
+              name="email"
+              onKeyDown={(e) => submitFormWithEnterKey(e)}
+              placeholder="Email Address"
+              showFeedback={feedback.NONE}
+              tabIndex={1}
+            />
+            <Input
+              label="Password"
+              labelClassName="d-block"
+              labelLink={{
+                to: '/forgot-password',
+                text: 'Forgot Password',
+              }}
+              name="password"
+              onKeyDown={(evt) => submitFormWithEnterKey(evt)}
+              placeholder="Password"
+              showFeedback={feedback.NONE}
+              tabIndex={2}
+              type="password"
+            />
+            <Button loading={isSubmitting} onClick={handleSubmit}>
+              Sign in
+            </Button>
+          </Form>
+        );
+      }}
+      validationSchema={createSchema(loginSchema)}
+    />
+  );
+};
+
+LoginForm.propTypes = {
+  redirectTo: PropTypes.string,
+  sid: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+};
+
+LoginForm.defaultProps = {
+  redirectTo: '',
+};
 export default Login;

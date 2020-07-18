@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect, Field, getIn } from 'formik';
+import { connect, Field } from 'formik';
 import classNames from 'classnames';
 import { FeedbackMessage, feedback } from 'components/forms/form-helper';
 import Humanize from 'humanize-plus';
@@ -9,8 +9,7 @@ import Label from './Label';
 
 const genId = (name, value) => `${name}-${value}`.replace(/\./g, '-');
 
-const Radio = ({
-  checked,
+const Checkbox = ({
   custom,
   formGroupLabelClassName,
   inline,
@@ -19,33 +18,48 @@ const Radio = ({
   label,
   value,
 }) => {
-  const radioId = genId(name, value);
+  const checkBoxId = genId(name, value);
   return (
     <div
       className={classNames(
         { 'form-check': !inline && !custom },
         { 'form-check-inline': inline && !custom },
-        { 'custom-control custom-radio': custom },
+        { 'custom-control custom-checkbox': custom },
         { ' custom-control-inline': inline && custom }
       )}
     >
-      <Field
-        checked={checked}
-        className={classNames(
-          inputClassName,
-          {
-            'form-check-input': !custom,
-          },
-          {
-            'custom-control-input': custom,
-          }
-        )}
-        id={radioId}
-        name={name}
-        type="radio"
-        value={value}
-      />
-
+      <Field name={name}>
+        {({ field, form }) => {
+          const fieldValue = field.value || [];
+          return (
+            <input
+              checked={fieldValue.includes(value)}
+              className={classNames(
+                inputClassName,
+                {
+                  'form-check-input': !custom,
+                },
+                {
+                  'custom-control-input': custom,
+                }
+              )}
+              id={checkBoxId}
+              name={name}
+              onChange={() => {
+                if (fieldValue.includes(value)) {
+                  const nextValue = fieldValue.filter((val) => val !== value);
+                  form.setFieldValue(name, nextValue);
+                } else {
+                  const nextValue = fieldValue.concat(value);
+                  form.setFieldValue(name, nextValue);
+                }
+              }}
+              type="checkbox"
+              value={value}
+            />
+          );
+        }}
+      </Field>
       <label
         className={classNames(
           formGroupLabelClassName,
@@ -56,8 +70,8 @@ const Radio = ({
             'form-check-label': !custom,
           }
         )}
-        htmlFor={radioId}
-        id={`${radioId}-label `}
+        htmlFor={checkBoxId}
+        id={`${checkBoxId}-label `}
       >
         {label}
       </label>
@@ -65,24 +79,22 @@ const Radio = ({
   );
 };
 
-Radio.propTypes = {
-  checked: PropTypes.bool,
+Checkbox.propTypes = {
   custom: PropTypes.bool.isRequired,
   formGroupLabelClassName: PropTypes.string.isRequired,
   inline: PropTypes.bool.isRequired,
   inputClassName: PropTypes.string.isRequired,
-  label: PropTypes.string,
+  label: PropTypes.node,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.any,
 };
 
-Radio.defaultProps = {
-  checked: false,
+Checkbox.defaultProps = {
   label: null,
   value: null,
 };
 
-const RadioSelect = ({
+const CheckboxGroup = ({
   custom,
   formGroupLabelClassName,
   formik,
@@ -96,22 +108,18 @@ const RadioSelect = ({
   name,
   optional,
   options,
-  radioSizeClassName,
+  checkboxSizeClassName,
   showFeedback,
   tooltipHeader,
   tooltipPosition,
   tooltipText,
-  ...props
 }) => {
-  console.log('showFeedback', props);
-  const fieldValue = getIn(formik.values, name);
-  const radioGroup = options.map(({ label, value }) => {
+  const checkedGroup = options.map(({ label, value }) => {
     if (!(label || value)) return null;
     const optionValue = value || dashedLowerCase(label);
     const optionLabel = label || Humanize.capitalize(value);
     return (
-      <Radio
-        checked={fieldValue === optionValue}
+      <Checkbox
         custom={custom}
         formGroupLabelClassName={formGroupLabelClassName}
         formik={formik}
@@ -120,6 +128,7 @@ const RadioSelect = ({
         key={optionValue}
         label={optionLabel}
         name={name}
+        showFeedback={showFeedback}
         value={optionValue}
       />
     );
@@ -128,34 +137,35 @@ const RadioSelect = ({
   return (
     <>
       {label ? (
-        <RadioSelect.withLabel
+        <CheckboxGroup.WithLabel
+          checkboxSizeClassName={checkboxSizeClassName}
           label={label}
           labelClassName={labelClassName}
           labelSizeClassName={labelSizeClassName}
           name={name}
           optional={optional}
-          radioSizeClassName={radioSizeClassName}
           tooltipHeader={tooltipHeader}
           tooltipPosition={tooltipPosition}
           tooltipText={tooltipText}
         >
-          {radioGroup}
-        </RadioSelect.withLabel>
+          {checkedGroup}
+        </CheckboxGroup.WithLabel>
       ) : (
-        radioGroup
+        checkedGroup
       )}
       <FeedbackMessage
         formik={formik}
         helpText={helpText}
-        showFeedback={showFeedback}
         name={name}
+        showFeedback={showFeedback}
         validMessage={isValidMessage}
       />
     </>
   );
 };
 
-RadioSelect.propTypes = {
+CheckboxGroup.propTypes = {
+  checkboxSizeClassName: PropTypes.string,
   custom: PropTypes.bool,
   formGroupLabelClassName: PropTypes.string,
   formik: PropTypes.object.isRequired,
@@ -169,14 +179,13 @@ RadioSelect.propTypes = {
   name: PropTypes.string.isRequired,
   optional: PropTypes.bool,
   options: PropTypes.array.isRequired,
-  radioSizeClassName: PropTypes.string,
   showFeedback: PropTypes.oneOf(Object.keys(feedback)),
   tooltipHeader: PropTypes.string,
   tooltipPosition: PropTypes.string,
   tooltipText: PropTypes.string,
 };
 
-RadioSelect.defaultProps = {
+CheckboxGroup.defaultProps = {
   custom: false,
   formGroupLabelClassName: '',
   helpText: null,
@@ -186,22 +195,21 @@ RadioSelect.defaultProps = {
   label: null,
   labelClassName: null,
   labelSizeClassName: 'col-sm-2',
-  optional: false,
-  radioSizeClassName: 'col-sm-10',
+  checkboxSizeClassName: 'col-sm-10',
   showFeedback: feedback.ALL,
   tooltipHeader: null,
   tooltipPosition: 'right',
   tooltipText: null,
 };
 
-RadioSelect.withLabel = ({
+CheckboxGroup.WithLabel = ({
   children,
   label,
   labelClassName,
   labelSizeClassName,
   name,
   optional,
-  radioSizeClassName,
+  checkboxSizeClassName,
   tooltipHeader,
   tooltipText,
   tooltipPosition,
@@ -220,28 +228,28 @@ RadioSelect.withLabel = ({
             tooltipText={tooltipText}
           />
         </legend>
-        <div className={radioSizeClassName}>{children}</div>
+        <div className={checkboxSizeClassName}>{children}</div>
       </div>
     </fieldset>
   );
 };
 
-RadioSelect.withLabel.propTypes = {
+CheckboxGroup.WithLabel.propTypes = {
+  checkboxSizeClassName: PropTypes.string.isRequired,
   children: PropTypes.array.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.node.isRequired,
   labelClassName: PropTypes.string,
   labelSizeClassName: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   optional: PropTypes.bool.isRequired,
-  radioSizeClassName: PropTypes.string.isRequired,
   tooltipHeader: PropTypes.string.isRequired,
   tooltipPosition: PropTypes.string.isRequired,
   tooltipText: PropTypes.string,
 };
 
-RadioSelect.withLabel.defaultProps = {
+CheckboxGroup.WithLabel.defaultProps = {
   labelClassName: null,
   tooltipText: null,
 };
 
-export default connect(RadioSelect);
+export default connect(CheckboxGroup);
