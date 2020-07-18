@@ -8,7 +8,7 @@ import BenefitsSection from 'components/common/BenefitsSection';
 import FAQsAccordion from 'components/common/FAQsAccordion';
 import CommunityGallery from 'components/common/CommunityGallery';
 import FAQsContent from 'content/faqs';
-import SearchForProperty from 'components/common/SearchForProperty';
+import SearchPropertyForm from 'components/common/SearchPropertyForm';
 
 const Home = () => (
   <>
@@ -37,7 +37,7 @@ const HoldingSection = () => (
         </div>
 
         <section className="property-search__home">
-          <SearchForProperty />
+          <SearchPropertyForm />
         </section>
         <div className="dotted-polka">
           <PolkaDot width="100" height="150" className="d-none d-lg-block" />

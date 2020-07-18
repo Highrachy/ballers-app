@@ -16,7 +16,11 @@ const Map = ({ coordinates, zoom }) => {
 
 const Marker = () => (
   <>
-    <OverlayTrigger trigger="hover" placement="top" overlay={popover}>
+    <OverlayTrigger
+      trigger={['hover', 'focus']}
+      placement="top"
+      overlay={popover}
+    >
       <div className="pin"></div>
     </OverlayTrigger>
     <div className="pulse"></div>

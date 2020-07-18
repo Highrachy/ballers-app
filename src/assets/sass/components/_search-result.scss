@@ -1,0 +1,104 @@
+.property-search-holder {
+  position: fixed;
+  background: white;
+  margin-top: -3px;
+  z-index: 1;
+}
+
+.search-result-section {
+  padding-top: 9rem !important;
+  margin-top: -3px;
+  background: $search-bg;
+}
+
+.search-result-price-range {
+  overflow: hidden;
+}
+
+.eligibility-section {
+  margin-top: 7rem;
+  padding-top: 5rem;
+  border-top: 1px solid rgba(87, 117, 250, 0.17);
+}
+
+.eligibility-form {
+  section {
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: $light-bg;
+    border-radius: 0.3rem;
+    p {
+      color: $primary;
+      font-weight: 300;
+    }
+  }
+
+  .option-btn {
+    background: $purple-bg;
+    border-color: $purple-bg;
+    color: $secondary !important;
+
+    &.active {
+      background: $secondary;
+      border-color: $secondary;
+      color: white !important;
+      font-weight: bold;
+    }
+  }
+
+  .bg-orange {
+    background-color: $orange-bg;
+    label {
+      color: $orange;
+    }
+    .rangeslider-horizontal .rangeslider__fill {
+      background-color: $orange;
+    }
+  }
+
+  .bg-blue {
+    background-color: #e8eeff;
+  }
+
+  .bg-green {
+    background-color: $green-bg;
+    label {
+      color: $green;
+    }
+    .rangeslider-horizontal .rangeslider__fill {
+      background-color: $green;
+    }
+  }
+
+  .input-group {
+    background: $white;
+    border-radius: 3px;
+    border: 1px solid $input-border-color;
+    padding: 0 !important;
+
+    &:focus {
+      border: 1px solid $primary;
+    }
+  }
+
+  .input-group-text,
+  .form-control {
+    background-color: #fff;
+    color: #022b69;
+    border-color: transparent !important;
+  }
+
+  .input-group-text {
+    padding-right: 0 !important;
+  }
+
+  .form-control {
+    padding-left: 0.5rem;
+  }
+  // .form-control {
+  //   border-left-color: white;
+  //   &:focus {
+  //     border-left-color: $input-border-color;
+  //   }
+  // }
+}
