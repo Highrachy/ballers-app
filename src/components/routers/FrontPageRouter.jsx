@@ -14,6 +14,7 @@ import ForgotPassword from 'components/pages/auth/ForgotPassword';
 import ResetPassword from 'components/pages/auth/ResetPassword';
 import SearchResult from 'components/pages/frontend/SearchResult';
 import FormComponents from 'components/forms/FormComponents';
+import Dashboard from 'components/pages/user/Dashboard';
 
 const FrontPageRouter = () => (
   <Router>
@@ -33,6 +34,7 @@ const FrontPageRouter = () => (
     <Register path="register" />
     <SearchResult path="search" />
     <FormComponents path="forms" />
+    <Dashboard path="test" />
   </Router>
 );
 

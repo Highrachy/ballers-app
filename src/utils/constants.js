@@ -11,3 +11,8 @@ export const COLOR_STYLE = [
   'light',
   'dark',
 ];
+
+export const USER_TYPES = {
+  admin: 0,
+  user: 1,
+};

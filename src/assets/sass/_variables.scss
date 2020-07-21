@@ -11,7 +11,7 @@ $gray-300: #e5e5e5;
 $gray-400: #c4c4c4; // faq border
 $gray-500: #979797; //text-muted
 $gray-600: #5a6679; // text-color
-$gray-700: #51596c;
+$gray-700: #4f4f4f;
 $gray-800: #343a40;
 $gray-900: #022b69;
 $black: #020306;
@@ -99,6 +99,10 @@ $lead-font-weight: 400;
 
 $text-muted: $gray-500;
 $faded-border: rgba(2, 3, 6, 0.125);
+
+//Sidebar
+$sidebar-width: 18rem;
+$sidebar-bg: $white;
 
 // Links
 //
