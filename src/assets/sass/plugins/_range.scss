@@ -55,7 +55,7 @@
 * Rangeslider - Horizontal slider
 */
 .rangeslider-horizontal {
-  height: 10px;
+  height: 6px;
   border-radius: 10px;
 }
 .rangeslider-horizontal .rangeslider__fill {
@@ -65,9 +65,9 @@
   top: 0;
 }
 .rangeslider-horizontal .rangeslider__handle {
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
 }

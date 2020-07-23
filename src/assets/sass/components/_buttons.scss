@@ -1,3 +1,13 @@
-.btn {
+.btn-primary,
+.btn-secondary {
   color: white !important;
+}
+
+.btn-link,
+a {
+  color: $primary;
+  text-decoration: none !important;
+  &:hover {
+    color: $secondary;
+  }
 }
