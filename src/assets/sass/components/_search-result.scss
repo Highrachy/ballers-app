@@ -136,3 +136,57 @@
   //   }
   // }
 }
+
+.awesome-text {
+  font-size: 1.2rem;
+  color: $primary;
+
+  span {
+    color: $secondary;
+    font-weight: 600;
+  }
+}
+
+.search-result-tab-content {
+  text-align: left;
+  padding-right: 3rem;
+  margin: 1.5rem 1.2rem 5rem;
+}
+
+.search-result-tab-accordion {
+  .card {
+    border: none;
+    border-bottom: 1px solid $faded-border;
+  }
+
+  .card-header {
+    padding: 2.5rem 0 1.5rem;
+
+    h5 {
+      color: $primary;
+      font-size: 1.2rem;
+      font-weight: $font-weight-bold;
+      cursor: pointer;
+
+      &:hover {
+        color: lighten($primary, 15);
+      }
+    }
+  }
+
+  .card-body {
+    margin-top: -2rem;
+  }
+
+  .accordion-icon {
+    &-close {
+      transform: rotate(0deg);
+      transition: all 0.3s ease-out;
+    }
+
+    &-open {
+      transform: rotate(180deg);
+      transition: all 0.3s ease-out;
+    }
+  }
+}

@@ -142,15 +142,30 @@ ul.timeline > li.timeline__border:after {
   z-index: 500;
 }
 
+.accordion > .card {
+  border: none;
+  border-bottom: 1px solid $faded-border !important;
+
+  .accordion-icon {
+    float: right;
+  }
+
+  .card-header {
+    background: white;
+    margin-bottom: 0;
+    border: none;
+    text-align: left;
+  }
+
+  .card-body {
+    text-align: left;
+  }
+}
 // FAQs
 .faqs-section {
   .accordion > .card {
-    border: none;
-    border-bottom: 1px solid $faded-border;
-
     .accordion-icon {
       color: $gray-400;
-      float: right;
       font-size: 3.5rem;
       font-weight: 300;
       margin-top: -2.5rem;
@@ -189,7 +204,6 @@ ul.timeline > li.timeline__border:after {
         }
       }
     }
-
     .card-body {
       padding: 0 5rem 3rem 3rem;
     }

@@ -19,8 +19,13 @@ import {
   Card,
 } from 'react-bootstrap';
 import { QuestionMarkIcon } from 'components/utils/Icons';
-import { ArrowLeftIcon } from 'components/utils/Icons';
+import { ArrowLeftIcon, ArrowDownIcon } from 'components/utils/Icons';
 import NumberFormat from 'react-number-format';
+import {
+  recommendBallersPlan,
+  FREQUENCY_IN_WORDS,
+} from 'utils/search-result-helpers';
+import { ContextAwareToggle } from 'components/common/FAQsAccordion';
 
 const SearchResult = () => (
   <>
@@ -42,7 +47,40 @@ const SearchForm = () => (
 );
 
 const SearchResultContent = () => {
-  const showResultCard = (inputs) => console.log('inputs', inputs);
+  const testObject = {
+    averagePropertyCost: 20000000,
+    frequency: 1,
+    initial: 363587,
+    output: [
+      {
+        title: `Rent-to-own`,
+        advice: `Build equity to start rent to own`,
+      },
+      {
+        title: `Hybrid`,
+        advice: `A whole new solution that combines solutions to make owning your home a whole lot easier`,
+      },
+      { title: 'Ineligible', advice: "You're almost there, keep contributing" },
+    ],
+    periodic: 8507,
+  };
+  const [showResultCard, setshowResultCard] = React.useState(true);
+  const [result, setResult] = React.useState(testObject);
+
+  const findEligibilityResult = ({ initial, frequency, periodic }) => {
+    const averagePropertyCost = 20000000;
+    const recommendations = recommendBallersPlan({
+      initial,
+      frequency,
+      periodic,
+      averagePropertyCost,
+    });
+    setResult(recommendations);
+
+    setshowResultCard(true);
+    console.log('result', recommendations);
+  };
+
   return (
     <div className="container-fluid search-result-section">
       <div className="row">
@@ -73,8 +111,13 @@ const SearchResultContent = () => {
               </div>
             </div>
           </section>
-          <DefineYourEligibility showResultCard={showResultCard} />
-          <ResultCard />
+          {showResultCard ? (
+            <ResultCard result={result} />
+          ) : (
+            <DefineYourEligibility
+              findEligibilityResult={findEligibilityResult}
+            />
+          )}
         </div>
         <div
           className="col-lg-4 fixed-map"
@@ -126,7 +169,7 @@ const RangeInput = ({ name, min, max, step, title, handleChange, inputs }) => (
   </>
 );
 
-const DefineYourEligibility = ({ showResultCard }) => {
+const DefineYourEligibility = ({ findEligibilityResult }) => {
   const [inputs, setInputs] = React.useState({
     initial: 0,
     periodic: 0,
@@ -230,7 +273,7 @@ const DefineYourEligibility = ({ showResultCard }) => {
             className="btn btn-secondary"
             name="calculate-investment"
             disabled={!enableCalculateButton}
-            onClick={() => showResultCard(inputs)}
+            onClick={() => findEligibilityResult(inputs)}
           >
             Calculate
           </button>
@@ -240,46 +283,63 @@ const DefineYourEligibility = ({ showResultCard }) => {
   );
 };
 
-const ResultCard = () => {
+const ResultCard = ({ result }) => {
   return (
     <div className="search-result__card result-card">
       <h3>Awesome!</h3>
-      <div className="lead text-center">
+      <section className="text-center awesome-text mb-5">
         With an initial investment off{' '}
-        <span className="text-secondary">NGN 8,000,000</span>
+        <span>NGN {commaNumber(result.initial)}</span>
         <br />
-        and a <span className="text-secondary">Monthly</span> contribution of{' '}
-        <span className="text-secondary">NGN 500,000</span>
+        and a <span>{FREQUENCY_IN_WORDS[result.frequency]}</span> contribution
+        of <span>NGN {commaNumber(result.periodic)}</span>
         <br />
         You’re a plan away from owning your home.
-      </div>
-      <Tabs defaultActiveKey="mortgage" id="uncontrolled-tab-example">
-        <Tab eventKey="mortgage" title="Mortgage">
-          <h6>Mortgage</h6>
-          <p className="lead">
-            You start BALLing and contribute to meet the requirement of initial
-            payment of &lt; 5%. However, you will be paying the remaining amount
-            as rent within a period of 10years
-          </p>
-        </Tab>
-        <Tab
-          eventKey="rent-to-own"
-          title={
-            <TabTitle title="Rent to Own" content="Testing Rent to own 123" />
-          }
-        >
-          <>
-            <h6>Rent to Own </h6>
-            <p>
-              You start BALLing and contribute to meet the requirement of
-              initial payment of &lt; 5%. However, you will be paying the
-              remaining amount as rent within a period of 10years
-            </p>
-          </>
-        </Tab>
-      </Tabs>
+      </section>
 
-      <div className="button-container">
+      <div className="row">
+        <div className="offset-lg-1 col-lg-10">
+          <Tabs defaultActiveKey={0}>
+            {result.output.map(({ title, advice }, index) => (
+              <Tab
+                key={index}
+                eventKey={index}
+                title={<TabTitle title={`${title} Package`} content={advice} />}
+              >
+                <div className="search-result-tab-content">{advice}</div>
+              </Tab>
+            ))}
+          </Tabs>
+
+          <Accordion
+            className="search-result-tab-accordion"
+            defaultActiveKey={0}
+          >
+            {result.output.map(({ title, advice }, index) => (
+              <Card key={index}>
+                <Accordion.Toggle
+                  as={Card.Header}
+                  variant="link"
+                  eventKey={index}
+                >
+                  <ContextAwareToggle
+                    iconOpen={<ArrowDownIcon />}
+                    iconClose={<ArrowDownIcon />}
+                    eventKey={index}
+                  >
+                    <TabTitle title={title} content={advice} />
+                  </ContextAwareToggle>
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey={index}>
+                  <Card.Body>{advice}</Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            ))}
+          </Accordion>
+        </div>
+      </div>
+
+      <div className="button-container mb-3">
         <button className="btn btn-link">
           <ArrowLeftIcon /> Redefine your Eligibility status
         </button>
@@ -288,27 +348,9 @@ const ResultCard = () => {
           Create a free account
         </a>
       </div>
-      <p className="">Open a free account and own your dream home</p>
-
-      <br />
-      <Accordion defaultActiveKey="0">
-        <Card>
-          <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
-            Click me!
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>Hello! I'm the body</Card.Body>
-          </Accordion.Collapse>
-        </Card>
-        <Card>
-          <Accordion.Toggle as={Card.Header} variant="link" eventKey="1">
-            Click me!
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="1">
-            <Card.Body>Hello! I'm another body</Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
+      <small className="text-primary">
+        Open a free account and own your dream home
+      </small>
     </div>
   );
 };

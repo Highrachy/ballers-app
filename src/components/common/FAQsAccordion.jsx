@@ -4,25 +4,49 @@ import { Card, Accordion } from 'react-bootstrap';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 
+export const ContextAwareToggle = ({
+  children,
+  eventKey,
+  callback,
+  iconClose,
+  iconOpen,
+}) => {
+  const currentEventKey = React.useContext(AccordionContext);
+
+  const decoratedOnClick = useAccordionToggle(
+    eventKey,
+    () => callback && callback(eventKey)
+  );
+
+  const isCurrentEventKey = currentEventKey === eventKey;
+
+  return (
+    <>
+      {isCurrentEventKey ? (
+        <span className="accordion-icon accordion-icon-open">{iconOpen}</span>
+      ) : (
+        <span className="accordion-icon accordion-icon-close">{iconClose}</span>
+      )}
+      <h5 onClick={decoratedOnClick}>{children} </h5>
+    </>
+  );
+};
+
+ContextAwareToggle.propTypes = {
+  children: PropTypes.any.isRequired,
+  eventKey: PropTypes.any.isRequired,
+  callback: PropTypes.func,
+  iconClose: PropTypes.any,
+  iconOpen: PropTypes.any,
+};
+
+ContextAwareToggle.defaultProps = {
+  callback: () => {},
+  iconClose: '*',
+  iconOpen: '-',
+};
+
 const FAQsAccordion = ({ faqs }) => {
-  const ContextAwareToggle = ({ children, eventKey, callback }) => {
-    const currentEventKey = React.useContext(AccordionContext);
-
-    const decoratedOnClick = useAccordionToggle(
-      eventKey,
-      () => callback && callback(eventKey)
-    );
-
-    const isCurrentEventKey = currentEventKey === eventKey;
-
-    return (
-      <>
-        <span className="accordion-icon">{isCurrentEventKey ? '-' : '+'}</span>
-        <h5 onClick={decoratedOnClick}>{children} </h5>
-      </>
-    );
-  };
-
   return (
     <Accordion defaultActiveKey={0}>
       {faqs.map((faq, index) => (
