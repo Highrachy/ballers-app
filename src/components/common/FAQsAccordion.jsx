@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Accordion } from 'react-bootstrap';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import AccordionContext from 'react-bootstrap/AccordionContext';
+import { Fade } from 'react-awesome-reveal';
 
 export const ContextAwareToggle = ({
   children,
@@ -42,25 +43,27 @@ ContextAwareToggle.propTypes = {
 
 ContextAwareToggle.defaultProps = {
   callback: () => {},
-  iconClose: '*',
+  iconClose: '+',
   iconOpen: '-',
 };
 
 const FAQsAccordion = ({ faqs }) => {
   return (
     <Accordion defaultActiveKey={0}>
-      {faqs.map((faq, index) => (
-        <Card key={index}>
-          <Accordion.Toggle as={Card.Header} eventKey={index}>
-            <ContextAwareToggle eventKey={index}>
-              {faq.question}
-            </ContextAwareToggle>
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey={index}>
-            <Card.Body>{faq.answer}</Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      ))}
+      <Fade cascade damping={0.6} delay={3000}>
+        {faqs.map((faq, index) => (
+          <Card key={index}>
+            <Accordion.Toggle as={Card.Header} eventKey={index}>
+              <ContextAwareToggle eventKey={index}>
+                {faq.question}
+              </ContextAwareToggle>
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={index}>
+              <Card.Body>{faq.answer}</Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        ))}
+      </Fade>
     </Accordion>
   );
 };

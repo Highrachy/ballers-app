@@ -23,4 +23,8 @@ TitleSection.defaultProps = {
   children: null,
 };
 
+export const EmptyTitleSection = ({ children }) => (
+  <section className="title-section__background">{children}</section>
+);
+
 export default TitleSection;

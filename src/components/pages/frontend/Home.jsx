@@ -9,6 +9,7 @@ import FAQsAccordion from 'components/common/FAQsAccordion';
 import CommunityGallery from 'components/common/CommunityGallery';
 import FAQsContent from 'content/faqs';
 import SearchPropertyForm from 'components/common/SearchPropertyForm';
+import { Flash, Slide } from 'react-awesome-reveal';
 
 const Home = () => (
   <>
@@ -78,44 +79,52 @@ const HowItWorksSection = () => (
   <section className="container-fluid my-4">
     <div className="row">
       <div className="col-lg-4 mt-6">
-        <img src={PhoneImage} alt="phone" className="img-fluid" />
+        <Slide direction="left">
+          <img src={PhoneImage} alt="phone" className="img-fluid" />
+        </Slide>
       </div>
       <div className="col-lg-6 offset-lg-2">
-        <h6 className="header-secondary">HOW IT WORKS</h6>
-        <h3>BALLing is as easy as ABC</h3>
+        <Slide direction="right">
+          <h6 className="header-secondary">HOW IT WORKS</h6>
+          <h3>BALLing is as easy as ABC</h3>
+        </Slide>
 
         <ul className="timeline mt-5">
-          <li className="timeline__border">
-            <h5 className="text-secondary font-weight-normal">
-              <span className="font-weight-bold text-secondary h3">A</span>pply
-              now
-            </h5>
-            <p className="pr-8 pb-4">
-              Take control of your destiny and create a worthy legacy by filling
-              our short registration form.
-            </p>
-          </li>
-          <li className="timeline__border">
-            <h5 className="text-secondary font-weight-normal">
-              <span className="font-weight-bold text-secondary h3">B</span>egin
-              periodic contribution
-            </h5>
-            <p className="pr-8 pb-4">
-              Cultivate the habit of contribution today and reap the rewards
-              forever with BALLers.
-            </p>
-          </li>
-          <li>
-            <h5 className="text-secondary font-weight-normal">
-              <span className="font-weight-bold text-secondary h3">C</span>
-              onvert to home ownership
-            </h5>
-            <p className="pr-8 pb-4">
-              Convert structure to extended mortgage plan at affordable rates
-              from 6% per annum.
-            </p>
-            <button className="btn btn-secondary">SIGN UP NOW</button>
-          </li>
+          <Flash cascade damping={1} delay={3000}>
+            <li className="timeline__border">
+              <h5 className="text-secondary font-weight-normal">
+                <span className="font-weight-bold text-secondary h3">A</span>
+                pply now
+              </h5>
+              <p className="pr-8 pb-4">
+                Take control of your destiny and create a worthy legacy by
+                filling our short registration form.
+              </p>
+            </li>
+            <li className="timeline__border">
+              <h5 className="text-secondary font-weight-normal">
+                <span className="font-weight-bold text-secondary h3">B</span>
+                egin periodic contribution
+              </h5>
+              <p className="pr-8 pb-4">
+                Cultivate the habit of contribution today and reap the rewards
+                forever with BALLers.
+              </p>
+            </li>
+            <li>
+              <h5 className="text-secondary font-weight-normal">
+                <span className="font-weight-bold text-secondary h3">C</span>
+                onvert to home ownership
+              </h5>
+              <p className="pr-8 pb-4">
+                Convert structure to extended mortgage plan at affordable rates
+                from 6% per annum.
+              </p>
+            </li>
+            <li className="timeline-no-border">
+              <button className="btn btn-secondary">SIGN UP NOW</button>
+            </li>
+          </Flash>
         </ul>
       </div>
     </div>

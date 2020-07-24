@@ -12,28 +12,33 @@ import Button from 'components/forms/Button';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { loginSchema } from 'components/forms/schemas/userSchema';
 import AlertMessage from 'components/utils/AlertMessage';
+import { EmptyTitleSection } from 'components/common/TitleSection';
 
 const Login = () => (
   <>
     <Header />
-    <Content />
+    <EmptyTitleSection>
+      <Content />
+    </EmptyTitleSection>
     <Footer />
   </>
 );
 const Content = ({ redirectTo, sid, token }) => {
   return (
     <section>
-      <div className="container-fluid bg-light">
+      <div className="container-fluid">
         <div className="row">
-          <div className="col-lg-5 mx-auto">
+          <div className="col-lg-5 auth__text">
+            <h1>
+              Welcome <br /> Back
+            </h1>
+            <p className="lead">
+              Sign in to access your profile, rewards and contributions.
+            </p>
+          </div>
+          <div className="offset-lg-2 col-lg-5">
             <div className="card p-5 my-6">
-              <section>
-                <h4>Login</h4>
-                <p className="mb-5">
-                  Sign in to access your profile, rewards and contributions.
-                </p>
-                <LoginForm redirectTo={redirectTo} sid={sid} token={token} />
-              </section>
+              <LoginForm redirectTo={redirectTo} sid={sid} token={token} />
               <section className="auth__social-media">
                 <a
                   className="auth__social-media--icons"

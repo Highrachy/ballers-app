@@ -15,7 +15,7 @@ const Label = ({
 }) => {
   const sanitizedLabelLink = { to: null, text: null, ...labelLink };
   return (
-    <label className={`w-100 ${className}`} htmlFor={name}>
+    <label className={`form-label ${className}`} htmlFor={name}>
       {text}
 
       {/* Optional / Compulsory Fields */}
@@ -66,7 +66,7 @@ Label.propTypes = {
   tooltipText: PropTypes.any,
 };
 Label.defaultProps = {
-  className: null,
+  className: '',
   labelLink: {
     to: '',
     text: '',

@@ -45,7 +45,7 @@ const Header = () => (
   </>
 );
 
-const isActive = ({ isCurrent }) => {
+export const isActive = ({ isCurrent }) => {
   return isCurrent ? { className: 'active font-weight-bold nav-link' } : null;
 };
 

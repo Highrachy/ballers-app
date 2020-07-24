@@ -2,6 +2,10 @@ label {
   color: $primary;
 }
 
+.form-label {
+  font-size: 0.75rem;
+}
+
 .invalid-feedback {
   display: block;
 }

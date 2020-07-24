@@ -16,28 +16,34 @@ import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { registerSchema } from 'components/forms/schemas/userSchema';
 import AlertMessage from 'components/utils/AlertMessage';
 import CheckboxGroup from 'components/forms/CheckboxGroup';
+import { EmptyTitleSection } from 'components/common/TitleSection';
 
 const Register = () => (
   <>
     <Header />
-    <Content />
+    <EmptyTitleSection>
+      <Content />
+    </EmptyTitleSection>
     <Footer />
   </>
 );
+
 const Content = ({ redirectTo, sid, token }) => {
   return (
     <section>
-      <div className="container-fluid bg-light">
+      <div className="container-fluid">
         <div className="row">
-          <div className="col-lg-7 mx-auto">
+          <div className="col-lg-5 auth__text">
+            <h1>
+              Create a <br /> free account
+            </h1>
+            <p className="lead">
+              Register to access your profile, rewards and contributions.
+            </p>
+          </div>
+          <div className="col-lg-6 offset-lg-1">
             <div className="card p-5 my-6">
-              <section>
-                <h4>Register</h4>
-                <p className="mb-5">
-                  Register to access your profile, rewards and contributions.
-                </p>
-                <RegisterForm redirectTo={redirectTo} sid={sid} token={token} />
-              </section>
+              <RegisterForm redirectTo={redirectTo} sid={sid} token={token} />
               <section className="auth__social-media">
                 {/* <a
                   className="auth__social-media--icons"
