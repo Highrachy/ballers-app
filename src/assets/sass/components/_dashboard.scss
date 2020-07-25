@@ -4,6 +4,7 @@
     box-shadow: none;
     padding-bottom: 3rem;
     background: #f8faff !important;
+    border-bottom: 2px solid #f0f0f0;
   }
 
   .navbar-nav {
@@ -26,7 +27,7 @@
   }
 
   .top-nav-dropdown {
-    margin-left: 1rem;
+    margin-left: 2rem;
   }
 }
 
@@ -55,5 +56,73 @@
   }
   &-orange:before {
     background: #f79b18;
+  }
+}
+
+.dashboard.bg-primary {
+  padding: 2rem;
+
+  h4,
+  p {
+    color: white;
+    margin-bottom: 0;
+  }
+
+  p {
+    color: #f9fdff;
+    font-size: 1rem;
+    font-weight: 300;
+    margin-top: 0.5rem;
+  }
+}
+
+.icon-container svg {
+  fill: $primary;
+}
+
+.link-header {
+  text-transform: uppercase;
+  margin-top: 2rem;
+
+  span {
+    color: $primary;
+    font-weight: $font-weight-bolder;
+    font-size: 1rem;
+    display: inline-block;
+    margin-right: 1rem;
+  }
+
+  a {
+    color: $secondary;
+    font-weight: $font-weight-bold;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+    font-size: 0.7rem;
+    margin-right: 1rem;
+  }
+}
+
+.property-holder {
+  &__title {
+    font-size: 1rem;
+    color: $primary;
+    font-weight: 300;
+    margin: 0;
+    margin-bottom: 1rem;
+    border-left: 6px solid $green;
+    padding-left: 0.5rem;
+
+    &.border-success {
+      border-left-color: $green;
+    }
+    &.border-error {
+      border-left-color: $red;
+    }
+    &.border-warning {
+      border-left-color: $warning;
+    }
+    &.border-info {
+      border-left-color: $blue;
+    }
   }
 }

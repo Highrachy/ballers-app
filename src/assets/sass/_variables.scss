@@ -102,7 +102,7 @@ $text-muted: $gray-500;
 $faded-border: rgba(2, 3, 6, 0.125);
 
 //Sidebar
-$sidebar-width: 18rem;
+$sidebar-width: 17rem;
 $sidebar-bg: $white;
 
 // Links
@@ -209,3 +209,5 @@ $nav-tabs-link-active-border-color: transparent transparent $secondary
 
 // $nav-divider-color: $gray-200 !default;
 // $nav-divider-margin-y: $spacer / 2 !default;
+
+$progress-height: 0.5rem;

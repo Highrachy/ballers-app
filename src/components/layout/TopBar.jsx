@@ -4,11 +4,11 @@ import { Link } from '@reach/router';
 import { NotificationIcon, ThreeDotsIcon } from 'components/utils/Icons';
 import UserAvatar from 'assets/img/avatar/user.jpg';
 
-const Empty = ({ children, onClick }) => (
+const Empty = React.forwardRef(({ children, onClick }, ref) => (
   <div className="top-nav-dropdown" onClick={onClick}>
     {children}
   </div>
-);
+));
 
 const Header = () => (
   <>

@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const HomeIcon = () => (
   <svg
-    width={28}
-    height={28}
+    width={24}
+    height={24}
     viewBox="0 0 28 28"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -18,8 +19,8 @@ export const HomeIcon = () => (
 
 export const MyPropertyIcon = () => (
   <svg
-    width={28}
-    height={30}
+    width={24}
+    height={24}
     viewBox="0 0 28 30"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -34,8 +35,8 @@ export const MyPropertyIcon = () => (
 
 export const MessageIcon = () => (
   <svg
-    width={31}
-    height={31}
+    width={24}
+    height={24}
     viewBox="0 0 31 31"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -50,8 +51,8 @@ export const MessageIcon = () => (
 
 export const ProfileIcon = () => (
   <svg
-    width={31}
-    height={30}
+    width={24}
+    height={24}
     viewBox="0 0 31 30"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -64,10 +65,10 @@ export const ProfileIcon = () => (
   </svg>
 );
 
-export const ReferIcon = () => (
+export const ReferIcon = ({ width, height }) => (
   <svg
-    width={28}
-    height={28}
+    width={width}
+    height={height}
     viewBox="0 0 28 28"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -80,10 +81,20 @@ export const ReferIcon = () => (
   </svg>
 );
 
+ReferIcon.propTypes = {
+  height: PropTypes.number,
+  weight: PropTypes.number,
+};
+
+ReferIcon.defaultProps = {
+  height: 24,
+  width: 24,
+};
+
 export const TransactionIcon = () => (
   <svg
-    width={32}
-    height={28}
+    width={24}
+    height={24}
     viewBox="0 0 32 28"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -175,6 +186,23 @@ export const ThreeDotsIcon = () => (
       clipRule="evenodd"
       d="M2 4C3.104 4 4 3.104 4 2C4 0.896 3.104 0 2 0C0.896 0 0 0.896 0 2C0 3.104 0.896 4 2 4ZM2 7C0.896 7 0 7.896 0 9C0 10.104 0.896 11 2 11C3.104 11 4 10.104 4 9C4 7.896 3.104 7 2 7ZM0 16C0 14.896 0.896 14 2 14C3.104 14 4 14.896 4 16C4 17.104 3.104 18 2 18C0.896 18 0 17.104 0 16Z"
       fill="#161D3F"
+    />
+  </svg>
+);
+
+export const RightArrowIcon = () => (
+  <svg
+    width={5}
+    height={8}
+    viewBox="0 0 5 8"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M0.874943 7.75C0.682943 7.75 0.490943 7.6765 0.344693 7.53025C0.0514434 7.237 0.0514434 6.763 0.344693 6.46975L2.82344 3.991L0.438443 1.52125C0.151193 1.22275 0.159443 0.748004 0.457193 0.460754C0.755693 0.173504 1.23044 0.181754 1.51769 0.478754L4.41419 3.47875C4.69844 3.7735 4.69469 4.24075 4.40519 4.53025L1.40519 7.53025C1.25894 7.6765 1.06694 7.75 0.874943 7.75Z"
+      fill="#5775FA"
     />
   </svg>
 );
