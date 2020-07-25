@@ -3,7 +3,6 @@ import Header from 'components/layout/Header';
 import CommunityGallery from 'components/common/CommunityGallery';
 import Footer from 'components/layout/Footer';
 import TitleSection from 'components/common/TitleSection';
-import { useToasts } from 'react-toast-notifications';
 import { Formik, Form } from 'formik';
 import Input from 'components/forms/Input';
 import Button from 'components/forms/Button';
@@ -23,6 +22,8 @@ import InputFormat from './InputFormat';
 import Select from './Select';
 import RadioSelect from './RadioSelect';
 import CheckboxGroup from './CheckboxGroup';
+import Toast from 'components/utils/Toast';
+import { useToast } from 'components/utils/Toast';
 
 const FormComponents = () => (
   <>
@@ -65,7 +66,8 @@ const registerSchema = {
 };
 
 const Forms = () => {
-  const { addToast } = useToasts();
+  const [toast, setToast] = useToast();
+  console.log('toast', toast);
   return (
     <Formik
       initialValues={setInitialValues(registerSchema, { state: ['vanilla'] })}
@@ -77,6 +79,7 @@ const Forms = () => {
       }}
       render={({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
+          <Toast {...toast} />
           <div className="form-row">
             <Input
               formGroupClassName="col-md-6"
@@ -178,14 +181,20 @@ const Forms = () => {
 
           <Button
             onClick={() =>
-              addToast('Testing 123', {
-                appearance: 'warning',
-                // autoDismiss: true,
-                // autoDismissTimeout: 10000,
+              setToast({ message: 'This is a sample error message' })
+            }
+          >
+            Show Error Toast
+          </Button>
+          <Button
+            onClick={() =>
+              setToast({
+                message: 'This is a sample error message',
+                type: 'success',
               })
             }
           >
-            Show Toast
+            Show Success
           </Button>
           <DisplayFormikState {...props} />
         </Form>

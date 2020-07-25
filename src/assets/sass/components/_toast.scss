@@ -1,0 +1,59 @@
+.toast {
+  &-container {
+    font-size: 14px;
+    box-sizing: border-box;
+    position: fixed;
+    z-index: 100000;
+  }
+
+  &__top-right {
+    top: 6rem;
+    right: 1rem;
+    transition: transform 0.6s ease-in-out;
+    animation: toast-in-right 0.7s;
+  }
+
+  &-header {
+    padding: 0.25rem 1.5rem;
+    color: $red;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  &-body {
+    padding: 1rem 1.5rem;
+    color: darken($red, 15%);
+  }
+
+  &-icon-holder {
+    color: $red;
+    display: inline-block;
+    margin-right: 0.5rem;
+
+    svg {
+      line-height: 1rem;
+    }
+  }
+
+  &.success {
+    .toast-icon-holder {
+      color: $green;
+    }
+
+    .toast-header {
+      color: darken($green, 5%);
+    }
+
+    .toast-body {
+      color: darken($green, 30%);
+    }
+  }
+}
+
+@keyframes toast-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

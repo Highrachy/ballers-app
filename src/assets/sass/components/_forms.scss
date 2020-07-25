@@ -4,6 +4,11 @@ label {
 
 .form-label {
   font-size: 0.75rem;
+  display: block;
+}
+
+.label-radio {
+  font-size: 1rem !important;
 }
 
 .invalid-feedback {
@@ -19,7 +24,7 @@ label {
 
 .optional-form-field {
   float: right;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   padding-top: 0.25rem;
   color: $text-muted;
 }
@@ -30,5 +35,15 @@ label {
   }
   &:last-child {
     padding-left: 1rem;
+  }
+}
+
+.form-help-icon {
+  svg {
+    stroke: $text-muted;
+
+    &:hover {
+      stroke: $secondary;
+    }
   }
 }

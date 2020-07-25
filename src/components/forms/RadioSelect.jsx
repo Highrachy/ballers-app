@@ -210,7 +210,7 @@ RadioSelect.withLabel = ({
       <div className="row">
         <legend className={`col-form-label ${labelSizeClassName} pt-0`}>
           <Label
-            className={labelClassName}
+            className={`label-radio ${labelClassName}`}
             name={name}
             text={label}
             optional={optional}
