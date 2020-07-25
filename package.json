@@ -28,6 +28,7 @@
     "react-scripts": "3.4.1",
     "react-select": "^3.1.0",
     "react-slick": "^0.26.1",
+    "react-toast-notifications": "^2.4.0",
     "yup": "^0.29.1"
   },
   "scripts": {

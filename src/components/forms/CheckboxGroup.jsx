@@ -241,15 +241,18 @@ CheckboxGroup.WithLabel.propTypes = {
   labelClassName: PropTypes.string,
   labelSizeClassName: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  optional: PropTypes.bool.isRequired,
-  tooltipHeader: PropTypes.string.isRequired,
-  tooltipPosition: PropTypes.string.isRequired,
+  optional: PropTypes.bool,
+  tooltipHeader: PropTypes.string,
+  tooltipPosition: PropTypes.string,
   tooltipText: PropTypes.string,
 };
 
 CheckboxGroup.WithLabel.defaultProps = {
   labelClassName: null,
   tooltipText: null,
+  tooltipHeader: null,
+  tooltipPosition: 'right',
+  optional: false,
 };
 
 export default connect(CheckboxGroup);

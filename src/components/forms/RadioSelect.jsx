@@ -103,7 +103,6 @@ const RadioSelect = ({
   tooltipText,
   ...props
 }) => {
-  console.log('showFeedback', props);
   const fieldValue = getIn(formik.values, name);
   const radioGroup = options.map(({ label, value }) => {
     if (!(label || value)) return null;
@@ -232,16 +231,19 @@ RadioSelect.withLabel.propTypes = {
   labelClassName: PropTypes.string,
   labelSizeClassName: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  optional: PropTypes.bool.isRequired,
+  optional: PropTypes.bool,
   radioSizeClassName: PropTypes.string.isRequired,
-  tooltipHeader: PropTypes.string.isRequired,
-  tooltipPosition: PropTypes.string.isRequired,
+  tooltipHeader: PropTypes.string,
+  tooltipPosition: PropTypes.string,
   tooltipText: PropTypes.string,
 };
 
 RadioSelect.withLabel.defaultProps = {
   labelClassName: null,
   tooltipText: null,
+  tooltipHeader: null,
+  tooltipPosition: 'right',
+  optional: false,
 };
 
 export default connect(RadioSelect);

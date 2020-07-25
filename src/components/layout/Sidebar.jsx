@@ -67,7 +67,7 @@ Sidebar.Navigation = ({ menus, closeSidebar }) => {
       {menus.map(({ title, to, icon }) => (
         <li key={title}>
           <Link getProps={isActive} onClick={closeSidebar} to={to}>
-            <span class="sidebar__icon">{icon}</span> &nbsp;
+            <span className="sidebar__icon">{icon}</span> &nbsp;
             {title}
           </Link>
         </li>

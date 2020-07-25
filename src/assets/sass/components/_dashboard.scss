@@ -1,0 +1,59 @@
+.dashboard-top-nav {
+  &.navbar {
+    z-index: 9;
+    box-shadow: none;
+    padding-bottom: 3rem;
+    background: #f8faff !important;
+  }
+
+  .navbar-nav {
+    height: 4rem;
+    padding: 2rem 0 !important;
+  }
+  &__avatar {
+    height: 3.5rem;
+    width: 3.5rem;
+    object-fit: cover;
+    border-radius: 0.4rem;
+    display: inline-block;
+    overflow: hidden;
+    margin-right: 1rem;
+  }
+
+  .dropdown-menu-children {
+    margin-left: -3rem !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .top-nav-dropdown {
+    margin-left: 1rem;
+  }
+}
+
+.card-container {
+  padding: 1.5rem 2rem;
+
+  h6 {
+    font-size: 0.9rem;
+  }
+}
+
+.circle {
+  padding-left: 1rem;
+  position: relative;
+  &:before {
+    width: 10px;
+    height: 10px;
+    content: ' ';
+    position: absolute;
+    border-radius: 50%;
+    left: 0;
+    top: 8px;
+  }
+  &-purple:before {
+    background: #29266c;
+  }
+  &-orange:before {
+    background: #f79b18;
+  }
+}

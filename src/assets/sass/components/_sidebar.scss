@@ -8,7 +8,7 @@
   bottom: 0;
   margin-top: 0;
   padding-bottom: 2rem;
-  background: $black;
+  background: $white;
   transition: transform 0.3s ease-out;
   transform: translateX(-100%);
   border: 2px solid #f0f0f0;
@@ -16,8 +16,8 @@
   @include media-breakpoint-up(sm) {
     transform: translateX(0);
     width: $sidebar-width;
-    background: $sidebar-bg;
-    background: rgba($sidebar-bg, 0.3);
+    // background: $sidebar-bg;
+    // background: rgba($sidebar-bg, 0.3);
     box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.06), 0 1px 0 0 rgba(0, 0, 0, 0.02);
     transition-timing-function: all 0.3s ease-in-out;
   }
@@ -126,6 +126,7 @@
   margin-left: 0;
   @include media-breakpoint-up(sm) {
     margin-left: $sidebar-width;
+    margin-top: 7rem;
   }
   overflow: hidden;
 }
