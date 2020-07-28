@@ -18,11 +18,26 @@ export const useToast = () => {
   return [{ ...toast, toastIsClosed }, setToast];
 };
 
+const AlertToast = ({ message, type }) => (
+  <div
+    className={`card d-flex flex-row toast-alert ${
+      TOAST_STYLE[type] ? type : 'error'
+    }`}
+  >
+    <div className="span toast-icon-holder">
+      {TOAST_STYLE[type] ? TOAST_STYLE[type].icon : <ErrorIcon />}
+    </div>
+    <span className="d-inline-block ml-2 toast-message-content">{message}</span>
+  </div>
+);
+
 const Toast = ({ message, type, toastIsClosed }) => {
   const [show, setShow] = React.useState(true);
+  const [msg, setMessage] = React.useState(null);
 
   React.useEffect(() => {
     message && setShow(true);
+    message && setMessage(message);
   }, [message]);
 
   React.useEffect(() => {
@@ -37,33 +52,38 @@ const Toast = ({ message, type, toastIsClosed }) => {
   }, [show, toastIsClosed]);
 
   if (!message) {
+    if (msg) {
+      return <AlertToast message={msg} type={type} />;
+    }
     return null;
   }
 
-  console.log('TOAST_STYLE[type].icon ', TOAST_STYLE[type]);
   return (
-    <BoostrapToast
-      show={show}
-      onClose={() => {
-        setShow(false);
-        toastIsClosed();
-      }}
-      className={`toast-container toast__top-right ${
-        TOAST_STYLE[type] ? type : 'error'
-      }`}
-    >
-      <BoostrapToast.Header>
-        <div className="toast-icon-holder">
-          {TOAST_STYLE[type] ? TOAST_STYLE[type].icon : <ErrorIcon />}
-        </div>
-        <strong className="mr-auto">
-          {TOAST_STYLE[type]
-            ? TOAST_STYLE[type].name
-            : TOAST_STYLE['error'].name}
-        </strong>
-      </BoostrapToast.Header>
-      <BoostrapToast.Body>{message}</BoostrapToast.Body>
-    </BoostrapToast>
+    <>
+      <BoostrapToast
+        show={show}
+        onClose={() => {
+          setShow(false);
+          toastIsClosed();
+        }}
+        className={`toast-container toast__top-right ${
+          TOAST_STYLE[type] ? type : 'error'
+        }`}
+      >
+        <BoostrapToast.Header>
+          <div className="toast-icon-holder">
+            {TOAST_STYLE[type] ? TOAST_STYLE[type].icon : <ErrorIcon />}
+          </div>
+          <strong className="mr-auto">
+            {TOAST_STYLE[type]
+              ? TOAST_STYLE[type].name
+              : TOAST_STYLE['error'].name}
+          </strong>
+        </BoostrapToast.Header>
+        <BoostrapToast.Body>{message}</BoostrapToast.Body>
+      </BoostrapToast>
+      <AlertToast message={message} type={type} />
+    </>
   );
 };
 

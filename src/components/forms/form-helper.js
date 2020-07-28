@@ -56,12 +56,9 @@ export const FeedbackMessage = ({
   showFeedback,
   validMessage,
 }) => {
-  const className = getValidityClass(
-    formik,
-    name,
-    showFeedback,
-    feebackOptions
-  );
+  const className =
+    getValidityClass(formik, name, showFeedback, feebackOptions) ||
+    'invalid-feedback';
   const message = getIn(formik.errors, name) || validMessage;
   return className && message ? (
     <div className={className}>

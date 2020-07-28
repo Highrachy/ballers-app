@@ -30,11 +30,13 @@ label {
 }
 
 .form-row .form-group {
-  &:first-child {
-    padding-right: 1rem;
-  }
-  &:last-child {
-    padding-left: 1rem;
+  @include media-breakpoint-up(sm) {
+    &:first-child {
+      padding-right: 1rem;
+    }
+    &:last-child {
+      padding-left: 1rem;
+    }
   }
 }
 

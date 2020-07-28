@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 // import { getProxy } from 'utils/helpers';
 import { Link } from '@reach/router';
 import { Formik, Form } from 'formik';
-import Axios from 'axios';
+// import Axios from 'axios';
 import Input from 'components/forms/Input';
 import {
   setInitialValues,
@@ -14,9 +14,11 @@ import {
 import Button from 'components/forms/Button';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { registerSchema } from 'components/forms/schemas/userSchema';
-import AlertMessage from 'components/utils/AlertMessage';
+// import AlertMessage from 'components/utils/AlertMessage';
 import CheckboxGroup from 'components/forms/CheckboxGroup';
 import { EmptyTitleSection } from 'components/common/TitleSection';
+import Toast, { useToast } from 'components/utils/Toast';
+import Axios from 'axios';
 
 const Register = () => (
   <>
@@ -44,20 +46,6 @@ const Content = ({ redirectTo, sid, token }) => {
           <div className="col-lg-6 offset-lg-1">
             <div className="card p-5 my-6">
               <RegisterForm redirectTo={redirectTo} sid={sid} token={token} />
-              <section className="auth__social-media">
-                {/* <a
-                  className="auth__social-media--icons"
-                  href={`${getProxy()}/api/v1/auth/google`}
-                >
-                  <span className="icon-google" />
-                </a> */}
-                {/* <a
-                  className="auth__social-media--icons"
-                  href={`${getProxy()}/api/v1/auth/facebook`}
-                >
-                  <span className="icon-facebook-official" />
-                </a> */}
-              </section>
               <section className="auth__footer">
                 <div className="register mt-6 text-center">
                   Not Registered?{' '}
@@ -77,13 +65,12 @@ const Content = ({ redirectTo, sid, token }) => {
 };
 
 Content.propTypes = {
-  redirectTo: PropTypes.string.isRequired,
-  sid: PropTypes.string.isRequired,
-  token: PropTypes.string.isRequired,
+  // redirectTo: PropTypes.string.isRequired,
+  // sid: PropTypes.string.isRequired,
+  // token: PropTypes.string.isRequired,
 };
 
 const RegisterForm = ({ type }) => {
-  const [message, setMessage] = React.useState(null);
   const agreementText = (
     <small>
       I agree to the terms listed in the{' '}
@@ -97,53 +84,55 @@ const RegisterForm = ({ type }) => {
       .
     </small>
   );
+
+  const [toast, setToast] = useToast();
+
+  // https://staging-ballers-api.herokuapp.com/api/v1/
+  // const [{ data, loading, error }, registerUser] = useAxios(
+  //   {
+  //     url: 'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
+  //     method: 'POST',
+  //   },
+  //   { manual: true }
+  // );
+
+  // if (data) {
+  //   console.log('data', data);
+  // }
+
   return (
     <Formik
       initialValues={setInitialValues(registerSchema, { agreement: [] })}
       onSubmit={(values, actions) => {
         delete values.agreement;
-        Axios.post('/api/v1/users', values)
+
+        Axios.post(
+          'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
+          values
+        )
           .then(function (response) {
             const { status } = response;
             if (status === 200) {
-              setMessage({
+              setToast({
                 type: 'success',
                 message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
               });
+              actions.setSubmitting(false);
               actions.resetForm();
             }
           })
           .catch(function (error) {
-            setMessage({
+            setToast({
               message: error.response.data.message,
-              lists:
-                error.response.data.errors &&
-                Object.values(error.response.data.errors),
             });
+            actions.setSubmitting(false);
           });
-        actions.setSubmitting(false);
       }}
-      render={({ isSubmitting, handleSubmit, ...props }) => (
+      validationSchema={createSchema(registerSchema)}
+    >
+      {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
-          <section className="auth__social-media text-center">
-            {/* <p className="auth__social-media--text">Register with:</p>
-            <a
-              className="auth__social-media--icons"
-              href={`${getProxy()}/api/v1/auth/google`}
-            >
-              <span className="icon-google" />
-            </a> */}
-            {/* <a
-              className="auth__social-media--icons"
-              href={`${getProxy()}/api/v1/auth/facebook`}
-            >
-              <span className="icon-facebook-official" />
-            </a> */}
-            {/* <p className="auth__social-media--text mt-0 mb-5">OR</p> */}
-          </section>
-          <div className="mt-3 d-none d-md-block">
-            <AlertMessage {...message} />
-          </div>
+          <Toast {...toast} />
           <div className="form-row">
             <Input
               formGroupClassName="col-md-6"
@@ -172,7 +161,7 @@ const RegisterForm = ({ type }) => {
               formGroupClassName="col-md-6"
               isValidMessage="Phone number looks good"
               label="Phone"
-              name="phoneNumber"
+              name="phone"
               placeholder="Phone"
             />
           </div>
@@ -203,9 +192,6 @@ const RegisterForm = ({ type }) => {
             />
             <label className="form-check-label" htmlFor="agreement"></label>
           </div>
-          <div className="mt-3 d-block d-md-none">
-            <AlertMessage {...message} />
-          </div>
           <Button
             className="btn-secondary mt-4"
             loading={isSubmitting}
@@ -213,11 +199,10 @@ const RegisterForm = ({ type }) => {
           >
             Register
           </Button>
-          <DisplayFormikState {...props} hide showAll />
+          <DisplayFormikState {...props} showAll />
         </Form>
       )}
-      validationSchema={createSchema(registerSchema)}
-    />
+    </Formik>
   );
 };
 export default Register;

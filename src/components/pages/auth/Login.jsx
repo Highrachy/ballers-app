@@ -11,8 +11,9 @@ import { feedback } from 'components/forms/form-helper';
 import Button from 'components/forms/Button';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { loginSchema } from 'components/forms/schemas/userSchema';
-import AlertMessage from 'components/utils/AlertMessage';
+// import AlertMessage from 'components/utils/AlertMessage';
 import { EmptyTitleSection } from 'components/common/TitleSection';
+import Toast, { useToast } from 'components/utils/Toast';
 
 const Login = () => (
   <>
@@ -24,13 +25,20 @@ const Login = () => (
   </>
 );
 const Content = ({ redirectTo, sid, token }) => {
+  // const [{ data, loading, error }] = useAxios(
+  //   'https://staging-ballers-api.herokuapp.com/api/v1/'
+  // );
+
+  // console.log('data, loading, error', data, loading, error);
+
   return (
     <section>
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-5 auth__text">
             <h1>
-              Welcome <br /> Back
+              Welcome Back, <br />
+              Haruna
             </h1>
             <p className="lead">
               Sign in to access your profile, rewards and contributions.
@@ -78,7 +86,7 @@ Content.propTypes = {
 };
 
 const LoginForm = ({ redirectTo, sid, token }) => {
-  const [message, setMessage] = React.useState(null);
+  const [toast, setToast] = useToast();
   // const { userState, userDispatch } = React.useContext(UserContext);
 
   // CHECK TOKEN ACTIVATION
@@ -153,25 +161,27 @@ const LoginForm = ({ redirectTo, sid, token }) => {
         password: '',
       }}
       onSubmit={(values, actions) => {
-        // post to api
-        setMessage({ message: 'Testing ' });
-        // Axios.post('/api/v1/users/login', values)
-        //   .then(function (response) {
-        //     const { status, data } = response;
-        //     if (status === 200) {
-        //       console.log('data', data);
-        //       setMessage('Testing');
-        //       // userDispatch({ type: 'user-login', user: data.user });
-        //       // storeToken(data.token);
-        //       // storeUserType(data.user.type);
-        //     }
-        //   })
-        //   .catch(function (error) {
-        //     // setMessage({
-        //     //   message: error.response.data.message,
-        //     // });
-        //   });
-        actions.setSubmitting(false);
+        Axios.post(
+          'https://staging-ballers-api.herokuapp.com/api/v1/user/login',
+          values
+        )
+          .then(function (response) {
+            const { status } = response;
+            if (status === 200) {
+              setToast({
+                type: 'success',
+                message: `Your login is successful.`,
+              });
+              actions.setSubmitting(false);
+              actions.resetForm();
+            }
+          })
+          .catch(function (error) {
+            setToast({
+              message: error.response.data.message,
+            });
+            actions.setSubmitting(false);
+          });
       }}
       render={({ isSubmitting, handleSubmit }) => {
         const submitFormWithEnterKey = (event) => {
@@ -181,7 +191,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
         };
         return (
           <Form>
-            <AlertMessage {...message} />
+            <Toast {...toast} />
             <Input
               label="Email"
               name="email"

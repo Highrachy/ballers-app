@@ -6,7 +6,7 @@ import {
   strongPassword,
   confirmPassword,
   phoneNumber,
-  OptionalPhoneNumber,
+  // OptionalPhoneNumber,
 } from './schema-helpers';
 
 const agreement = yup
@@ -27,7 +27,7 @@ export const resetPasswordSchema = {
 export const registerSchema = {
   firstName: stringValidation('First Name'),
   lastName: stringValidation('Last Name'),
-  phoneNumber,
+  phone: phoneNumber,
   email,
   password: strongPassword,
   confirmPassword: confirmPassword,
@@ -43,8 +43,7 @@ export const changePasswordSchema = {
 export const personalInfoSchema = {
   firstName: stringValidation('First Name'),
   lastName: stringValidation('Last Name'),
-  phoneNumber,
-  phoneNumber2: OptionalPhoneNumber,
+  phone: phoneNumber,
 };
 
 export const forgotPasswordSchema = { email };

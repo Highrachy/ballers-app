@@ -1,4 +1,5 @@
-.toast {
+.toast,
+.toast-alert {
   &-container {
     font-size: 14px;
     box-sizing: border-box;
@@ -34,12 +35,19 @@
     }
   }
 
+  &.error {
+    .toast-message-content {
+      color: $red;
+    }
+  }
+
   &.success {
     .toast-icon-holder {
       color: $green;
     }
 
-    .toast-header {
+    .toast-header,
+    .toast-message-content {
       color: darken($green, 5%);
     }
 
@@ -56,4 +64,9 @@
   to {
     transform: translateX(0);
   }
+}
+
+.toast-alert {
+  padding: 1rem;
+  margin-bottom: 1rem;
 }

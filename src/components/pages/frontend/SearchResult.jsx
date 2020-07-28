@@ -27,15 +27,17 @@ import {
 } from 'utils/search-result-helpers';
 import { ContextAwareToggle } from 'components/common/FAQsAccordion';
 
-const SearchResult = () => (
-  <>
-    <Header />
-    <SearchForm />
-    <SearchResultContent />
-    <Footer />
-  </>
-);
-
+const SearchResult = ({ state, area, houseType }) => {
+  console.log('state, area, houseType', state, area, houseType);
+  return (
+    <>
+      <Header />
+      <SearchForm />
+      <SearchResultContent />
+      <Footer />
+    </>
+  );
+};
 const SearchForm = () => (
   <section className="container-fluid property-search-holder">
     <div className="row">
@@ -50,7 +52,7 @@ const SearchResultContent = () => {
   const testObject = {
     averagePropertyCost: 20000000,
     frequency: 1,
-    initial: 363587,
+    initial: 10000000,
     output: [
       {
         title: `Rent-to-own`,
@@ -62,9 +64,9 @@ const SearchResultContent = () => {
       },
       { title: 'Ineligible', advice: "You're almost there, keep contributing" },
     ],
-    periodic: 8507,
+    periodic: 10000,
   };
-  const [showResultCard, setshowResultCard] = React.useState(true);
+  const [showResultCard, setshowResultCard] = React.useState(false);
   const [result, setResult] = React.useState(testObject);
 
   const findEligibilityResult = ({ initial, frequency, periodic }) => {
@@ -339,7 +341,7 @@ const ResultCard = ({ result }) => {
         </div>
       </div>
 
-      <div className="button-container mb-3">
+      <div className="button-container mt-5 mb-3">
         <button className="btn btn-link">
           <ArrowLeftIcon /> Redefine your Eligibility status
         </button>
