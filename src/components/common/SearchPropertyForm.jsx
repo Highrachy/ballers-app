@@ -114,7 +114,9 @@ const SearchForProperty = () => {
   };
 
   const handleSearch = () => {
-    navigate(`search/${state}/${area}/${houseType}`);
+    navigate(
+      `search?state=${formValue.state}&area=${formValue.area}&houseType=${formValue.houseType}`
+    );
   };
 
   // Button

@@ -26,6 +26,9 @@ export const dashedLowerCase = (text) =>
 
 export const getPercentage = (value) => parseFloat(value) / 100;
 export const getNairaSymbol = () => <>&#8358;</>;
+export const ONE_MILLION = 1000000;
+export const nearestMillion = (value) =>
+  moneyFormatInNaira(Math.round(value / ONE_MILLION) * ONE_MILLION);
 
 export const isDevEnvironment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development';

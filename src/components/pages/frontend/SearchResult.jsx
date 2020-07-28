@@ -4,12 +4,11 @@ import Footer from 'components/layout/Footer';
 import SearchPropertyForm from 'components/common/SearchPropertyForm';
 import classNames from 'classnames';
 import Map from 'components/common/Map';
-import { OFFICE_LOCATION } from 'utils/constants';
 import { ReactComponent as ApartmentIcon } from 'assets/img/icons/house-gray.svg';
 import { ReactComponent as LocationIcon } from 'assets/img/icons/location-gray.svg';
 import { ReactComponent as RangeLine } from 'assets/img/dashed-line.svg';
 import Slider from 'react-rangeslider';
-import { getNairaSymbol, commaNumber } from 'utils/helpers';
+import { commaNumber, nearestMillion } from 'utils/helpers';
 import {
   Tabs,
   Tab,
@@ -26,14 +25,37 @@ import {
   FREQUENCY_IN_WORDS,
 } from 'utils/search-result-helpers';
 import { ContextAwareToggle } from 'components/common/FAQsAccordion';
+import Axios from 'axios';
+import useWindowSize from 'hooks/useWindowSize';
+import * as queryString from 'query-string';
 
-const SearchResult = ({ state, area, houseType }) => {
-  console.log('state, area, houseType', state, area, houseType);
+const SearchResult = ({ location }) => {
+  const queryParams = queryString.parse(location.search);
+  const { state, area, houseType } = queryParams;
+  const [result, setResult] = React.useState(null);
+  React.useEffect(() => {
+    Axios.post('http://staging.ballers.ng/includes/find-house.php', {
+      search: 'true',
+      state,
+      area,
+      type: houseType,
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        if (status === 200) {
+          console.log('data', data);
+          setResult(data);
+        }
+      })
+      .catch(function (error) {
+        console.log('error', error.response);
+      });
+  }, [area, houseType, state]);
   return (
     <>
       <Header />
       <SearchForm />
-      <SearchResultContent />
+      {result ? <SearchResultContent result={result} /> : <h2>Loading...</h2>}
       <Footer />
     </>
   );
@@ -48,26 +70,28 @@ const SearchForm = () => (
   </section>
 );
 
-const SearchResultContent = () => {
-  const testObject = {
-    averagePropertyCost: 20000000,
-    frequency: 1,
-    initial: 10000000,
-    output: [
-      {
-        title: `Rent-to-own`,
-        advice: `Build equity to start rent to own`,
-      },
-      {
-        title: `Hybrid`,
-        advice: `A whole new solution that combines solutions to make owning your home a whole lot easier`,
-      },
-      { title: 'Ineligible', advice: "You're almost there, keep contributing" },
-    ],
-    periodic: 10000,
-  };
+// {type: "3 bedroom", price: "27000000", area_name: "Lekki Phase 1", latitude: "6.4698", longitude: "3.5852", …}
+
+const SearchResultContent = ({ result }) => {
+  // const testObject = {
+  //   averagePropertyCost: 20000000,
+  //   frequency: 1,
+  //   initial: 10000000,
+  //   output: [
+  //     {
+  //       title: `Rent-to-own`,
+  //       advice: `Build equity to start rent to own`,
+  //     },
+  //     {
+  //       title: `Hybrid`,
+  //       advice: `A whole new solution that combines solutions to make owning your home a whole lot easier`,
+  //     },
+  //     { title: 'Ineligible', advice: "You're almost there, keep contributing" },
+  //   ],
+  //   periodic: 10000,
+  // };
   const [showResultCard, setshowResultCard] = React.useState(false);
-  const [result, setResult] = React.useState(testObject);
+  const [output, setOutput] = React.useState({});
 
   const findEligibilityResult = ({ initial, frequency, periodic }) => {
     const averagePropertyCost = 20000000;
@@ -77,7 +101,7 @@ const SearchResultContent = () => {
       periodic,
       averagePropertyCost,
     });
-    setResult(recommendations);
+    setOutput(recommendations);
 
     setshowResultCard(true);
     console.log('result', recommendations);
@@ -89,43 +113,49 @@ const SearchResultContent = () => {
         <div className="col-lg-8 text-center">
           <section className="search-result__card">
             <h6 className="font-weight-normal">ⓘ Average property price</h6>
-            <h2>{getNairaSymbol()}35,000,000</h2>
+            <h2>{nearestMillion(result.price)}</h2>
             <ul className="list-inline">
               <li className="list-inline-item px-2">
-                <LocationIcon /> Orchid Road Hotel, Lagos
+                <LocationIcon /> {result.area_name}, {result.state}
               </li>
               <li className="list-inline-item px-2">
-                <ApartmentIcon /> 3 bedroom
+                <ApartmentIcon /> {result.type}
               </li>
             </ul>
             <div className="search-result-price-range">
               <RangeLine />
               <div className="row">
                 <div className="col-lg-3 text-left pl-4 font-weight-bold">
-                  {getNairaSymbol()} 35,000,000
+                  {nearestMillion(result.minimum_price)}
                 </div>
                 <div className="col-lg-6 text-center text-secondary">
                   ⓘ Property price range of the selected location
                 </div>
                 <div className="col-lg-3 text-right font-weight-bold">
-                  {getNairaSymbol()} 35,000,000
+                  {nearestMillion(result.maximum_price)}
                 </div>
               </div>
             </div>
           </section>
           {showResultCard ? (
-            <ResultCard result={result} />
+            <ResultCard result={output} />
           ) : (
             <DefineYourEligibility
               findEligibilityResult={findEligibilityResult}
+              result={result}
             />
           )}
         </div>
-        <div
-          className="col-lg-4 fixed-map"
-          style={{ height: '33rem', position: 'fixed' }}
-        >
-          <Map coordinates={OFFICE_LOCATION} />
+        <div className="col-lg-4 search-result-map">
+          {result && (
+            <Map
+              coordinates={{
+                lng: result.longitude,
+                lat: result.latitude,
+              }}
+              pinColor="red"
+            />
+          )}
         </div>
       </div>
     </div>
@@ -136,25 +166,23 @@ const RangeInput = ({ name, min, max, step, title, handleChange, inputs }) => (
   <>
     <h5>{title}</h5>
     <p>Use the scroll bar or type in the desired amount</p>
-    <div className="row">
-      <div className="col-sm-6 col-12">
+    <div className="row search-result-range">
+      <div className="col-sm-6 col-12 search-result-range-label">
         <label htmlFor="initial-investment">
           NGN {!!inputs[name] && commaNumber(inputs[name])}
         </label>
         <Slider
-          min={min}
-          max={max}
+          min={parseInt(min, 10)}
+          max={parseInt(max, 10)}
           step={step}
           tooltip={false}
           value={inputs[name] || max / 2}
           onChange={(value) => handleChange(name, value)}
         />
       </div>
-      <div className="input-group col-sm-6 col-12">
+      <div className="input-group col-sm-6 col-12 ">
         <div className="input-group-prepend">
-          <span className="input-group-text" id="initial-investment">
-            NGN
-          </span>
+          <span className="input-group-text">NGN</span>
         </div>
         <NumberFormat
           type="text"
@@ -171,7 +199,7 @@ const RangeInput = ({ name, min, max, step, title, handleChange, inputs }) => (
   </>
 );
 
-const DefineYourEligibility = ({ findEligibilityResult }) => {
+const DefineYourEligibility = ({ findEligibilityResult, result }) => {
   const [inputs, setInputs] = React.useState({
     initial: 0,
     periodic: 0,
@@ -184,27 +212,6 @@ const DefineYourEligibility = ({ findEligibilityResult }) => {
       [name]: parseInt(value, 10),
     });
   };
-
-  // const OptionButton = ({ name, value }) => (
-  //   <label
-  //     className={classNames('btn btn-sm option-btn', {
-  //       active: value === inputs.frequency,
-  //     })}
-  //   >
-  //     <input
-  //       type="radio"
-  //       name="frequency"
-  //       value={value}
-  //       onClick={() =>
-  //         setInputs({
-  //           ...inputs,
-  //           frequency: value,
-  //         })
-  //       }
-  //     />{' '}
-  //     {name}
-  //   </label>
-  // );
 
   const OptionButton = ({ name, value }) => (
     <button
@@ -237,11 +244,11 @@ const DefineYourEligibility = ({ findEligibilityResult }) => {
       <div className="row text-left eligibility-form mt-5">
         <section className="col-12 bg-orange">
           <RangeInput
-            min={100}
-            max={500000}
+            min={10000}
+            max={result.price}
             name="initial"
             title="Initial investment amount"
-            step={1}
+            step={100000}
             handleChange={handleChange}
             inputs={inputs}
           />
@@ -259,11 +266,11 @@ const DefineYourEligibility = ({ findEligibilityResult }) => {
 
         <section className="col-12 bg-green">
           <RangeInput
-            min={100}
-            max={10000}
+            min={10000}
+            max={result.price}
             name="periodic"
             title="Periodic investment amount"
-            step={1}
+            step={10000}
             handleChange={handleChange}
             inputs={inputs}
           />
@@ -286,6 +293,8 @@ const DefineYourEligibility = ({ findEligibilityResult }) => {
 };
 
 const ResultCard = ({ result }) => {
+  const MOBILE_VIEW = 576;
+  const WINDOW_SIZE = useWindowSize();
   return (
     <div className="search-result__card result-card">
       <h3>Awesome!</h3>
@@ -301,43 +310,45 @@ const ResultCard = ({ result }) => {
 
       <div className="row">
         <div className="offset-lg-1 col-lg-10">
-          <Tabs defaultActiveKey={0}>
-            {result.output.map(({ title, advice }, index) => (
-              <Tab
-                key={index}
-                eventKey={index}
-                title={<TabTitle title={`${title} Package`} content={advice} />}
-              >
-                <div className="search-result-tab-content">{advice}</div>
-              </Tab>
-            ))}
-          </Tabs>
-
-          <Accordion
-            className="search-result-tab-accordion"
-            defaultActiveKey={0}
-          >
-            {result.output.map(({ title, advice }, index) => (
-              <Card key={index}>
-                <Accordion.Toggle
-                  as={Card.Header}
-                  variant="link"
-                  eventKey={index}
-                >
-                  <ContextAwareToggle
-                    iconOpen={<ArrowDownIcon />}
-                    iconClose={<ArrowDownIcon />}
+          {WINDOW_SIZE.width <= MOBILE_VIEW ? (
+            <Accordion
+              className="search-result-tab-accordion"
+              defaultActiveKey={0}
+            >
+              {result.output.map(({ title, advice }, index) => (
+                <Card key={index}>
+                  <Accordion.Toggle
+                    as={Card.Header}
+                    variant="link"
                     eventKey={index}
                   >
-                    <TabTitle title={title} content={advice} />
-                  </ContextAwareToggle>
-                </Accordion.Toggle>
-                <Accordion.Collapse eventKey={index}>
-                  <Card.Body>{advice}</Card.Body>
-                </Accordion.Collapse>
-              </Card>
-            ))}
-          </Accordion>
+                    <ContextAwareToggle
+                      iconOpen={<ArrowDownIcon />}
+                      iconClose={<ArrowDownIcon />}
+                      eventKey={index}
+                    >
+                      <TabTitle title={title} content={advice} />
+                    </ContextAwareToggle>
+                  </Accordion.Toggle>
+                  <Accordion.Collapse eventKey={index}>
+                    <Card.Body>{advice}</Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+              ))}
+            </Accordion>
+          ) : (
+            <Tabs defaultActiveKey={0}>
+              {result.output.map(({ title, advice }, index) => (
+                <Tab
+                  key={index}
+                  eventKey={index}
+                  title={<TabTitle title={title} content={advice} />}
+                >
+                  <div className="search-result-tab-content">{advice}</div>
+                </Tab>
+              ))}
+            </Tabs>
+          )}
         </div>
       </div>
 
@@ -365,7 +376,7 @@ const TabTitle = ({ title, content }) => (
       placement="right"
       overlay={
         <Popover>
-          <Popover.Title as="h6">{title}</Popover.Title>
+          <Popover.Title as="h6">{title} Package</Popover.Title>
           <Popover.Content>{content}</Popover.Content>
         </Popover>
       }

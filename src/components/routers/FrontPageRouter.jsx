@@ -32,7 +32,7 @@ const FrontPageRouter = () => (
     <ForgotPassword path="forgot-password" />
     <ResetPassword path="reset-password/:token" />
     <Register path="register" />
-    <SearchResult path="search/:state/:area/:houseType" />
+    <SearchResult path="search" />
     <FormComponents path="forms" />
     <Dashboard path="test" />
   </Router>

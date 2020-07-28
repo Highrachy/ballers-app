@@ -8,6 +8,10 @@
   left: 50%;
   top: 50%;
   margin: -20px 0 0 -20px;
+
+  &.red {
+    background: #ff3a29;
+  }
   // animation-name: bounce;
   // animation-fill-mode: both;
   // animation-duration: 1s;

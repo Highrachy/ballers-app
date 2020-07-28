@@ -15,7 +15,7 @@ const Header = () => (
   <>
     <Navbar fixed="top" bg="white" expand="lg">
       <div className="container-fluid">
-        <Navbar.Brand href="#home">
+        <Navbar.Brand as={Link} to="/">
           <img
             className="ballers-logo mr-5"
             src={BallersLogo}
