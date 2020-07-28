@@ -17,8 +17,14 @@ import {
   Accordion,
   Card,
 } from 'react-bootstrap';
-import { QuestionMarkIcon } from 'components/utils/Icons';
-import { ArrowLeftIcon, ArrowDownIcon } from 'components/utils/Icons';
+import {
+  QuestionMarkIcon,
+  MapPinIcon,
+  ArrowLeftIcon,
+  ArrowDownIcon,
+  InfoIcon,
+  HouseIcon,
+} from 'components/utils/Icons';
 import NumberFormat from 'react-number-format';
 import {
   recommendBallersPlan,
@@ -28,11 +34,13 @@ import { ContextAwareToggle } from 'components/common/FAQsAccordion';
 import Axios from 'axios';
 import useWindowSize from 'hooks/useWindowSize';
 import * as queryString from 'query-string';
+import { Slide } from 'react-awesome-reveal';
 
 const SearchResult = ({ location }) => {
   const queryParams = queryString.parse(location.search);
   const { state, area, houseType } = queryParams;
   const [result, setResult] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
   React.useEffect(() => {
     Axios.post('http://staging.ballers.ng/includes/find-house.php', {
       search: 'true',
@@ -43,23 +51,32 @@ const SearchResult = ({ location }) => {
       .then(function (response) {
         const { status, data } = response;
         if (status === 200) {
-          console.log('data', data);
+          setLoading(false);
           setResult(data);
         }
       })
       .catch(function (error) {
         console.log('error', error.response);
+        setLoading(false);
+        setResult(null);
       });
   }, [area, houseType, state]);
   return (
     <>
       <Header />
       <SearchForm />
-      {result ? <SearchResultContent result={result} /> : <h2>Loading...</h2>}
+      {loading ? (
+        <LoadingSearchResult />
+      ) : result ? (
+        <SearchResultContent result={result} />
+      ) : (
+        <NoSearchResultFound />
+      )}
       <Footer />
     </>
   );
 };
+
 const SearchForm = () => (
   <section className="container-fluid property-search-holder">
     <div className="row">
@@ -70,26 +87,26 @@ const SearchForm = () => (
   </section>
 );
 
-// {type: "3 bedroom", price: "27000000", area_name: "Lekki Phase 1", latitude: "6.4698", longitude: "3.5852", …}
+const NoSearchResultFound = () => (
+  <div className="container-fluid search-result-section text-center full-height">
+    <div className="mt-6">
+      <HouseIcon />
+      <h3 className="mt-4">Loading Search Results</h3>
+    </div>
+  </div>
+);
+
+const LoadingSearchResult = () => (
+  <div className="container-fluid search-result-section text-center full-height">
+    <div className="mt-6">
+      <HouseIcon />
+      <h3 className="mt-4">Loading Search Results</h3>
+      <div className="dot-flashing"></div>
+    </div>
+  </div>
+);
 
 const SearchResultContent = ({ result }) => {
-  // const testObject = {
-  //   averagePropertyCost: 20000000,
-  //   frequency: 1,
-  //   initial: 10000000,
-  //   output: [
-  //     {
-  //       title: `Rent-to-own`,
-  //       advice: `Build equity to start rent to own`,
-  //     },
-  //     {
-  //       title: `Hybrid`,
-  //       advice: `A whole new solution that combines solutions to make owning your home a whole lot easier`,
-  //     },
-  //     { title: 'Ineligible', advice: "You're almost there, keep contributing" },
-  //   ],
-  //   periodic: 10000,
-  // };
   const [showResultCard, setshowResultCard] = React.useState(false);
   const [output, setOutput] = React.useState({});
 
@@ -102,41 +119,55 @@ const SearchResultContent = ({ result }) => {
       averagePropertyCost,
     });
     setOutput(recommendations);
-
     setshowResultCard(true);
-    console.log('result', recommendations);
   };
+
+  const [showMap, setShowMap] = React.useState(true);
 
   return (
     <div className="container-fluid search-result-section">
       <div className="row">
-        <div className="col-lg-8 text-center">
-          <section className="search-result__card">
-            <h6 className="font-weight-normal">ⓘ Average property price</h6>
-            <h2>{nearestMillion(result.price)}</h2>
-            <ul className="list-inline">
-              <li className="list-inline-item px-2">
-                <LocationIcon /> {result.area_name}, {result.state}
-              </li>
-              <li className="list-inline-item px-2">
-                <ApartmentIcon /> {result.type}
-              </li>
-            </ul>
-            <div className="search-result-price-range">
-              <RangeLine />
-              <div className="row">
-                <div className="col-lg-3 text-left pl-4 font-weight-bold">
-                  {nearestMillion(result.minimum_price)}
-                </div>
-                <div className="col-lg-6 text-center text-secondary">
-                  ⓘ Property price range of the selected location
-                </div>
-                <div className="col-lg-3 text-right font-weight-bold">
-                  {nearestMillion(result.maximum_price)}
+        <div
+          className={classNames('col-lg-8 text-center', {
+            'offset-lg-2': !showMap,
+          })}
+        >
+          <button className="btn-map" onClick={() => setShowMap(!showMap)}>
+            <span>
+              <MapPinIcon /> View Map
+            </span>
+          </button>
+
+          <Slide>
+            <section className="search-result__card">
+              <h6 className="font-weight-normal search-result-average-price">
+                <InfoIcon /> Average property price
+              </h6>
+              <h2>{nearestMillion(result.price)}</h2>
+              <ul className="list-inline">
+                <li className="list-inline-item px-2">
+                  <LocationIcon /> {result.area_name}, {result.state}
+                </li>
+                <li className="list-inline-item px-2">
+                  <ApartmentIcon /> {result.type}
+                </li>
+              </ul>
+              <div className="search-result-price-range">
+                <RangeLine />
+                <div className="row">
+                  <div className="col-lg-3 text-left pl-4 font-weight-bold">
+                    {nearestMillion(result.minimum_price)}
+                  </div>
+                  <div className="col-lg-6 text-center text-secondary">
+                    <InfoIcon /> Property price range of the selected location
+                  </div>
+                  <div className="col-lg-3 text-right font-weight-bold">
+                    {nearestMillion(result.maximum_price)}
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </Slide>
           {showResultCard ? (
             <ResultCard result={output} />
           ) : (
@@ -146,17 +177,19 @@ const SearchResultContent = ({ result }) => {
             />
           )}
         </div>
-        <div className="col-lg-4 search-result-map">
-          {result && (
-            <Map
-              coordinates={{
-                lng: result.longitude,
-                lat: result.latitude,
-              }}
-              pinColor="red"
-            />
-          )}
-        </div>
+        {showMap && (
+          <div className="col-lg-4 search-result-map">
+            {result && (
+              <Map
+                coordinates={{
+                  lng: result.longitude,
+                  lat: result.latitude,
+                }}
+                pinColor="red"
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -231,8 +264,14 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
 
   const enableCalculateButton = !!inputs['initial'] && !!inputs['periodic'];
 
+  const myRef = React.createRef();
+  const handleEligibility = () => {
+    findEligibilityResult(inputs);
+    window.scrollTo({ behavior: 'smooth', top: myRef.current.offsetTop - 200 });
+  };
+
   return (
-    <section className="eligibility-section search-result__card">
+    <section className="eligibility-section search-result__card" ref={myRef}>
       <div className="text-center">
         <h3>Define your eligibility</h3>
         <p className="lead-header">
@@ -282,7 +321,7 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
             className="btn btn-secondary"
             name="calculate-investment"
             disabled={!enableCalculateButton}
-            onClick={() => findEligibilityResult(inputs)}
+            onClick={handleEligibility}
           >
             Calculate
           </button>
@@ -296,7 +335,7 @@ const ResultCard = ({ result }) => {
   const MOBILE_VIEW = 576;
   const WINDOW_SIZE = useWindowSize();
   return (
-    <div className="search-result__card result-card">
+    <div className="search-result__card result-card mb-5">
       <h3>Awesome!</h3>
       <section className="text-center awesome-text mb-5">
         With an initial investment off{' '}
