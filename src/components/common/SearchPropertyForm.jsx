@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Axios from 'axios';
 import Select from 'react-select';
 import { customStyles } from 'components/forms/Select';
 import { navigate } from '@reach/router';
 
-const SearchForProperty = () => {
+const SearchPropertyForm = ({ defaultInputValue }) => {
   const LOADING = 'Loading...';
 
   const [formValue, setFormValue] = React.useState({
@@ -12,6 +13,20 @@ const SearchForProperty = () => {
     area: '',
     houseType: '',
   });
+
+  const statePlaceholder = 'Select State...';
+  const areaPlaceholder = 'Select Area...';
+  const houseTypePlaceholder = 'House Type...';
+
+  const [placeholder, setPlaceholder] = React.useState({
+    state: statePlaceholder,
+    area: areaPlaceholder,
+    houseType: houseTypePlaceholder,
+  });
+
+  React.useEffect(() => {
+    setPlaceholder(defaultInputValue);
+  }, [defaultInputValue]);
 
   // State
   const [state, setState] = React.useState([{ label: 'Lagos', value: '1' }]);
@@ -35,16 +50,12 @@ const SearchForProperty = () => {
   }, []);
 
   // Area
-  const initialAreaPlaceholder = 'Select Area...';
   const [disableArea, setDisableArea] = React.useState(true);
-  const [areaPlaceholder, setAreaPlaceholder] = React.useState(
-    initialAreaPlaceholder
-  );
   const [area, setArea] = React.useState({});
   const getArea = ({ value }) => {
     if (value) {
       setFormValue({ ...formValue, state: value, houseType: '' });
-      setAreaPlaceholder(LOADING);
+      setPlaceholder({ ...placeholder, area: LOADING });
       Axios.post('http://staging.ballers.ng/includes/find-house.php', {
         state_id: value,
         area_id: '',
@@ -57,7 +68,7 @@ const SearchForProperty = () => {
               value: area_id,
             }));
 
-            setAreaPlaceholder(initialAreaPlaceholder);
+            setPlaceholder({ ...placeholder, houseType: houseTypePlaceholder });
             setArea(output);
             setDisableArea(false);
           }
@@ -67,16 +78,12 @@ const SearchForProperty = () => {
         });
     } else {
       setDisableArea(true);
-      setAreaPlaceholder(initialAreaPlaceholder);
+      setPlaceholder({ ...placeholder, area: areaPlaceholder });
     }
   };
 
   // House Type
-  const initialHouseTypePlaceholder = 'House Type...';
   const [disableHouseType, setDisableHouseType] = React.useState(true);
-  const [houseTypePlaceholder, setHouseTypePlaceholder] = React.useState(
-    initialHouseTypePlaceholder
-  );
   const [houseType, setHouseType] = React.useState({});
 
   const getHouseType = ({ value }) => {
@@ -84,27 +91,27 @@ const SearchForProperty = () => {
     setDisableHouseType(true);
     if (value) {
       setFormValue({ ...formValue, area: value });
-      setHouseTypePlaceholder(LOADING);
+      setPlaceholder({ ...placeholder, houseType: LOADING });
       Axios.post('http://staging.ballers.ng/includes/find-house.php', {
-        state_id: '1',
+        state_id: formValue.state,
         area_id: value,
       })
         .then(function (response) {
           const { status, data } = response;
-          console.log('response', response);
           if (status === 200) {
             const output = data.map(({ type }) => ({
               label: type,
               value: type,
             }));
 
-            setHouseTypePlaceholder(initialAreaPlaceholder);
+            setPlaceholder({ ...placeholder, houseType: houseTypePlaceholder });
             setHouseType(output);
             setDisableHouseType(false);
           }
         })
         .catch(function (error) {
-          console.log('error', error.response);
+          setDisableHouseType(true);
+          setPlaceholder({ ...placeholder, houseType: houseTypePlaceholder });
         });
     }
   };
@@ -115,7 +122,8 @@ const SearchForProperty = () => {
 
   const handleSearch = () => {
     navigate(
-      `search?state=${formValue.state}&area=${formValue.area}&houseType=${formValue.houseType}`
+      `/search?state=${formValue.state}&area=${formValue.area}&houseType=${formValue.houseType}`,
+      true
     );
   };
 
@@ -127,24 +135,28 @@ const SearchForProperty = () => {
       <div className="select-holder">
         <Select
           options={state}
+          key={JSON.stringify(defaultInputValue.state)}
           styles={customStyles}
-          placeholder="Select State..."
+          placeholder={placeholder.state}
           onChange={getArea}
         />
       </div>
       <div className="select-holder">
         <Select
-          placeholder={areaPlaceholder}
+          placeholder={placeholder.area}
           options={area}
           styles={customStyles}
           isDisabled={disableArea}
           onChange={getHouseType}
+          key={JSON.stringify(`${defaultInputValue.area} ${formValue.state}`)}
         />
       </div>
       <div className="select-holder">
         <Select
-          key={`select_key__${formValue.area}`}
-          placeholder={houseTypePlaceholder}
+          key={JSON.stringify(
+            `${defaultInputValue.houseType} ${formValue.area}`
+          )}
+          placeholder={placeholder.houseType}
           options={houseType}
           styles={customStyles}
           isDisabled={disableHouseType}
@@ -163,4 +175,16 @@ const SearchForProperty = () => {
   );
 };
 
-export default SearchForProperty;
+SearchPropertyForm.propTypes = {
+  defaultInputValue: PropTypes.object,
+};
+
+SearchPropertyForm.defaultProps = {
+  defaultInputValue: {
+    state: '',
+    area: '',
+    houseType: '',
+  },
+};
+
+export default SearchPropertyForm;

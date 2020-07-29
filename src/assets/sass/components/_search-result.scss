@@ -254,25 +254,26 @@
   min-height: 90vh;
 }
 
-.btn-map {
+.btn-view-map {
   margin-top: 3rem;
   background: url(../../img/backgrounds/view-map-btn-bg.png) no-repeat;
   background-color: $gray-200;
   color: $blue;
   padding: 0.8rem 2.8rem;
-  border: 1px solid rgba($purple, 0.17);
+  border: 1px solid rgba($purple, 0.3);
   opacity: 0.75;
-  box-shadow: 0px 15px 30px rgba(22, 29, 63, 0.16);
   transition: all 0.3s ease-out;
 
   &:hover {
     border-color: $purple;
     opacity: 1;
+    box-shadow: 0px 15px 30px rgba(22, 29, 63, 0.16);
     span {
       color: $secondary;
     }
     svg {
       animation-name: bounce-pin;
+      animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
     }
     // box-shadow: 0px 15px 30px rgba(22, 29, 63, 0.16);
   }
@@ -291,6 +292,14 @@
   }
 }
 
+.btn-close-map {
+  position: absolute;
+  left: 2rem;
+  top: 1rem;
+  box-shadow: 0px 4px 16px rgba(40, 45, 65, 0.1);
+  z-index: 100;
+}
+
 @keyframes bounce-pin {
   0% {
     transform: scale(1, 1) translateY(0);
@@ -302,16 +311,13 @@
     transform: scale(0.9, 1.1) translateY(-4px);
   }
   50% {
-    transform: scale(0.95, 1) translateY(0);
+    transform: scale(1.05, 0.95) translateY(0);
   }
-  60% {
-    transform: scale(1, 1) translateY(1px);
+  57% {
+    transform: scale(1, 1) translateY(-1px);
   }
-  70% {
+  64% {
     transform: scale(1, 1) translateY(0);
-  }
-  80% {
-    transform: scale(1, 1) translateY(1px);
   }
   100% {
     transform: scale(1, 1) translateY(0);

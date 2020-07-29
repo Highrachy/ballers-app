@@ -2,19 +2,26 @@ import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import { Popover, OverlayTrigger } from 'react-bootstrap';
 
-const Map = ({ coordinates, zoom, pinColor }) => {
-  console.log('coordinates', coordinates);
+const Map = ({ children, coordinates, zoom, pinColor }) => {
   return (
-    <GoogleMapReact
-      bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API }}
-      defaultCenter={{
-        lat: parseFloat(coordinates.lat),
-        lng: parseFloat(coordinates.lng),
-      }}
-      defaultZoom={zoom || 18}
-    >
-      <Marker lat={coordinates.lat} lng={coordinates.lng} pinColor={pinColor} />
-    </GoogleMapReact>
+    <>
+      {children}
+      <GoogleMapReact
+        key={JSON.stringify(`${coordinates.lat} ${coordinates.lng}`)}
+        bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API }}
+        defaultCenter={{
+          lat: parseFloat(coordinates.lat),
+          lng: parseFloat(coordinates.lng),
+        }}
+        defaultZoom={zoom || 18}
+      >
+        <Marker
+          lat={coordinates.lat}
+          lng={coordinates.lng}
+          pinColor={pinColor}
+        />
+      </GoogleMapReact>
+    </>
   );
 };
 

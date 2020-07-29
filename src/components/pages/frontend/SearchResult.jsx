@@ -39,8 +39,15 @@ import { Slide } from 'react-awesome-reveal';
 const SearchResult = ({ location }) => {
   const queryParams = queryString.parse(location.search);
   const { state, area, houseType } = queryParams;
+  // const [query, setQuery] = React.useState({ state, area, houseType });
+  console.log('state, area, houseType', state, area, houseType);
   const [result, setResult] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+  const [defaultInputValue, setDefaultInputValue] = React.useState({
+    state: 'Loading...',
+    area: 'Loading...',
+    houseType: 'Loading...',
+  });
   React.useEffect(() => {
     Axios.post('http://staging.ballers.ng/includes/find-house.php', {
       search: 'true',
@@ -53,6 +60,11 @@ const SearchResult = ({ location }) => {
         if (status === 200) {
           setLoading(false);
           setResult(data);
+          setDefaultInputValue({
+            state: data.state_name,
+            area: data.area_name,
+            houseType: data.type,
+          });
         }
       })
       .catch(function (error) {
@@ -64,7 +76,7 @@ const SearchResult = ({ location }) => {
   return (
     <>
       <Header />
-      <SearchForm />
+      <SearchForm defaultInputValue={defaultInputValue} />
       {loading ? (
         <LoadingSearchResult />
       ) : result ? (
@@ -77,11 +89,11 @@ const SearchResult = ({ location }) => {
   );
 };
 
-const SearchForm = () => (
+const SearchForm = ({ defaultInputValue }) => (
   <section className="container-fluid property-search-holder">
     <div className="row">
       <section className="property-search__page  offset-lg-2 col-lg-8 my-3">
-        <SearchPropertyForm />
+        <SearchPropertyForm defaultInputValue={defaultInputValue} />
       </section>
     </div>
   </section>
@@ -132,13 +144,15 @@ const SearchResultContent = ({ result }) => {
             'offset-lg-2': !showMap,
           })}
         >
-          <button className="btn-map" onClick={() => setShowMap(!showMap)}>
-            <span>
-              <MapPinIcon /> View Map
-            </span>
-          </button>
+          {!showMap && (
+            <button className="btn-view-map" onClick={() => setShowMap(true)}>
+              <span>
+                <MapPinIcon /> View Map
+              </span>
+            </button>
+          )}
 
-          <Slide>
+          <Slide triggerOnce>
             <section className="search-result__card">
               <h6 className="font-weight-normal search-result-average-price">
                 <InfoIcon /> Average property price
@@ -180,13 +194,22 @@ const SearchResultContent = ({ result }) => {
         {showMap && (
           <div className="col-lg-4 search-result-map">
             {result && (
-              <Map
-                coordinates={{
-                  lng: result.longitude,
-                  lat: result.latitude,
-                }}
-                pinColor="red"
-              />
+              <>
+                <button
+                  className="btn btn-sm btn-light btn-close-map"
+                  onClick={() => setShowMap(false)}
+                >
+                  X Close Map
+                </button>
+                <Map
+                  coordinates={{
+                    lng: result.longitude,
+                    lat: result.latitude,
+                  }}
+                  zoom={16}
+                  pinColor="red"
+                />
+              </>
             )}
           </div>
         )}
