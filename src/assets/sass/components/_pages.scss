@@ -59,7 +59,8 @@
 
 .property-search {
   &__home,
-  &__page {
+  &__page,
+  &__dashboard {
     @include media-breakpoint-up(lg) {
       width: 50rem;
       padding: 1.2rem;
@@ -97,6 +98,21 @@
 
     @include media-breakpoint-up(lg) {
       position: absolute;
+    }
+  }
+
+  &__dashboard {
+    width: 100%;
+    background: transparent;
+
+    .select-holder {
+      margin-right: 0;
+    }
+
+    .btn {
+      width: 50px;
+      height: 40px;
+      padding: 0px 10px;
     }
   }
 }

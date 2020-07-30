@@ -153,6 +153,19 @@ export const customStyles = {
   },
 };
 
+export const customStylesDashboard = {
+  ...customStyles,
+  control: (provided, state) => {
+    return {
+      ...customStyles.control(provided, state),
+      minHeight: 36,
+      width: '100%',
+      borderRadius: 0,
+      backgroundColor: state.isDisabled ? '#f5f5f5' : 'white',
+    };
+  },
+};
+
 Select.defaultProps = {
   autoComplete: '',
   formGroupClassName: null,

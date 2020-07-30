@@ -66,7 +66,12 @@ Sidebar.Navigation = ({ menus, closeSidebar }) => {
     <ul className="sidebar-menu">
       {menus.map(({ title, to, icon }) => (
         <li key={title}>
-          <Link getProps={isActive} onClick={closeSidebar} to={to}>
+          <Link
+            getProps={isActive}
+            onClick={closeSidebar}
+            to={to}
+            className="sidebar-menu__item"
+          >
             <span className="sidebar__icon">{icon}</span> &nbsp;
             {title}
           </Link>
@@ -83,7 +88,9 @@ Sidebar.Navigation.propTypes = {
 };
 
 const isActive = ({ isCurrent }) => {
-  return isCurrent ? { className: 'active' } : null;
+  return isCurrent
+    ? { className: 'sidebar-menu__item active' }
+    : 'sidebar-menu__item';
 };
 
 export default Sidebar;

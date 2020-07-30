@@ -2,6 +2,7 @@ import React from 'react';
 import { Router } from '@reach/router';
 import { Helmet } from 'react-helmet';
 import FrontPageRouter from 'components/routers/FrontPageRouter';
+import UserRouter from 'components/routers/UserRouter';
 import 'assets/sass/App.scss';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       </Helmet>
       <Router primary={false}>
         <FrontPageRouter path="/*" />
+        <UserRouter path="/user/*" />
       </Router>
     </>
   );

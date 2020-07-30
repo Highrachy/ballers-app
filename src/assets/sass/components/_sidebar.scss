@@ -64,7 +64,7 @@
 .sidebar-menu {
   list-style: none;
   margin-top: 4rem;
-  padding-left: 4rem;
+  padding-left: 0;
 
   &__header {
     font-size: 0.75rem;
@@ -74,51 +74,57 @@
     margin-bottom: 1rem;
   }
 
-  li {
-    margin-bottom: 3rem;
+  &__item {
+    display: block;
+    padding: 1rem 1rem 1rem 4rem;
     overflow-x: hidden;
-    // i {
-    //   margin-right: 0.5rem;
-    //   margin-left: -3px;
-    //   font-size: 1.2rem;
-    //   @include media-breakpoint-up(sm) {
-    //     font-size: 1rem;
-    //   }
-    // }
-    a {
-      display: block;
-      color: $gray-700;
-      font-size: 1rem;
-      transition: all 0.3s ease-out;
-      text-decoration: none;
+    margin-bottom: 1rem;
+    color: $gray-700;
+    font-size: 1rem;
+    transition: all 0.3s ease-out;
+    text-decoration: none;
 
-      .sidebar__icon {
-        display: inline-block;
-        margin-right: 1rem;
-        svg {
-          fill: $gray-700;
-        }
+    .sidebar__icon {
+      display: inline-block;
+      margin-right: 1rem;
+      svg {
+        fill: $gray-700;
       }
-      &:hover svg {
+    }
+    &:hover svg {
+      fill: $secondary;
+    }
+
+    &.active {
+      background: #f1f4ff;
+      // border-left: 4px solid $secondary;
+      font-weight: bold;
+      color: $secondary;
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: 4px;
+        border-radius: 2px 2px 0px 0px;
+        left: 0;
+        height: 2rem;
+        background: $secondary;
+      }
+
+      svg {
         fill: $secondary;
       }
-
-      &.active {
-        font-weight: bold;
-        color: $secondary;
-      }
-      // @include media-breakpoint-up(sm) {
-      //   font-size: 1.25rem;
-      // }
-
-      &:hover {
-        color: $secondary;
-        transform: translateX(0.3rem);
-      }
-      // &.active {
-      //   color: lighten($red-300, 40%);
-      // }
     }
+    // @include media-breakpoint-up(sm) {
+    //   font-size: 1.25rem;
+    // }
+
+    &:hover {
+      color: $secondary;
+    }
+    // &.active {
+    //   color: lighten($red-300, 40%);
+    // }
   }
 }
 
