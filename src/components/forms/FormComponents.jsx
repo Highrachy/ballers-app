@@ -67,13 +67,11 @@ const registerSchema = {
 
 const Forms = () => {
   const [toast, setToast] = useToast();
-  console.log('toast', toast);
   return (
     <Formik
       initialValues={setInitialValues(registerSchema, { state: ['vanilla'] })}
       onSubmit={(values, actions) => {
         setTimeout(() => {
-          console.log('values', values);
           actions.setSubmitting(false);
         }, 4000);
       }}

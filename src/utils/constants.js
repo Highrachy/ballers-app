@@ -16,3 +16,5 @@ export const USER_TYPES = {
   admin: 0,
   user: 1,
 };
+
+export const MOBILE_WIDTH = 576;

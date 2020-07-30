@@ -24,6 +24,7 @@ import {
   ArrowDownIcon,
   InfoIcon,
   HouseIcon,
+  CloseIcon,
 } from 'components/utils/Icons';
 import NumberFormat from 'react-number-format';
 import {
@@ -35,43 +36,47 @@ import Axios from 'axios';
 import useWindowSize from 'hooks/useWindowSize';
 import * as queryString from 'query-string';
 import { Slide } from 'react-awesome-reveal';
+import { MOBILE_WIDTH } from 'utils/constants';
 
 const SearchResult = ({ location }) => {
   const queryParams = queryString.parse(location.search);
   const { state, area, houseType } = queryParams;
-  // const [query, setQuery] = React.useState({ state, area, houseType });
-  console.log('state, area, houseType', state, area, houseType);
   const [result, setResult] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+
   const [defaultInputValue, setDefaultInputValue] = React.useState({
     state: 'Loading...',
     area: 'Loading...',
     houseType: 'Loading...',
   });
+
   React.useEffect(() => {
+    const emptyFormValue = {
+      state: 'Select State...',
+      area: 'Select Area...',
+      houseType: 'House Type...',
+    };
     Axios.post('http://staging.ballers.ng/includes/find-house.php', {
       search: 'true',
       state,
       area,
       type: houseType,
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        if (status === 200) {
-          setLoading(false);
-          setResult(data);
-          setDefaultInputValue({
-            state: data.state_name,
-            area: data.area_name,
-            houseType: data.type,
-          });
-        }
-      })
-      .catch(function (error) {
-        console.log('error', error.response);
+    }).then(function (response) {
+      const { status, data } = response;
+      if (status === 200) {
+        setLoading(false);
+        setResult(data);
+        setDefaultInputValue({
+          state: data.state_name,
+          area: data.area_name,
+          houseType: data.type,
+        });
+      } else {
         setLoading(false);
         setResult(null);
-      });
+        setDefaultInputValue(emptyFormValue);
+      }
+    });
   }, [area, houseType, state]);
   return (
     <>
@@ -103,7 +108,7 @@ const NoSearchResultFound = () => (
   <div className="container-fluid search-result-section text-center full-height">
     <div className="mt-6">
       <HouseIcon />
-      <h3 className="mt-4">Loading Search Results</h3>
+      <h3 className="mt-4">No Search Results Found</h3>
     </div>
   </div>
 );
@@ -134,7 +139,10 @@ const SearchResultContent = ({ result }) => {
     setshowResultCard(true);
   };
 
-  const [showMap, setShowMap] = React.useState(true);
+  const WINDOW_SIZE = useWindowSize();
+  const [showMap, setShowMap] = React.useState(
+    WINDOW_SIZE.width > MOBILE_WIDTH
+  );
 
   return (
     <div className="container-fluid search-result-section">
@@ -209,6 +217,12 @@ const SearchResultContent = ({ result }) => {
                   zoom={16}
                   pinColor="red"
                 />
+                <button
+                  className="btn btn-sm btn-light btn-close-map-mobile d-inline-block d-sm-none"
+                  onClick={() => setShowMap(false)}
+                >
+                  <CloseIcon />
+                </button>
               </>
             )}
           </div>
@@ -355,7 +369,6 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
 };
 
 const ResultCard = ({ result }) => {
-  const MOBILE_VIEW = 576;
   const WINDOW_SIZE = useWindowSize();
   return (
     <div className="search-result__card result-card mb-5">
@@ -372,7 +385,7 @@ const ResultCard = ({ result }) => {
 
       <div className="row">
         <div className="offset-lg-1 col-lg-10">
-          {WINDOW_SIZE.width <= MOBILE_VIEW ? (
+          {WINDOW_SIZE.width <= MOBILE_WIDTH ? (
             <Accordion
               className="search-result-tab-accordion"
               defaultActiveKey={0}

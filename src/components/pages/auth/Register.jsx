@@ -86,20 +86,6 @@ const RegisterForm = ({ type }) => {
   );
 
   const [toast, setToast] = useToast();
-
-  // https://staging-ballers-api.herokuapp.com/api/v1/
-  // const [{ data, loading, error }, registerUser] = useAxios(
-  //   {
-  //     url: 'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
-  //     method: 'POST',
-  //   },
-  //   { manual: true }
-  // );
-
-  // if (data) {
-  //   console.log('data', data);
-  // }
-
   return (
     <Formik
       initialValues={setInitialValues(registerSchema, { agreement: [] })}

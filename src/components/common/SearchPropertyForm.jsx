@@ -25,7 +25,10 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   });
 
   React.useEffect(() => {
-    setPlaceholder(defaultInputValue);
+    (defaultInputValue.state ||
+      defaultInputValue.area ||
+      defaultInputValue.houseType) &&
+      setPlaceholder(defaultInputValue);
   }, [defaultInputValue]);
 
   // State
@@ -45,7 +48,7 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
         }
       })
       .catch(function (error) {
-        console.log('error', error.response);
+        // console.log('error', error.response);
       });
   }, []);
 
@@ -74,7 +77,7 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
           }
         })
         .catch(function (error) {
-          console.log('error', error.response);
+          // console.log('error', error.response);
         });
     } else {
       setDisableArea(true);
