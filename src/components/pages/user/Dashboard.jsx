@@ -1,7 +1,6 @@
 import React from 'react';
-import Sidebar from 'components/layout/Sidebar';
+import BackendPage from 'components/layout/BackendPage';
 import { Doughnut } from 'react-chartjs-2';
-import TopBar from 'components/layout/TopBar';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import { ReferIcon } from 'components/utils/Icons';
@@ -9,27 +8,13 @@ import { RightArrowIcon } from 'components/utils/Icons';
 import HomeImage from 'assets/img/home.png';
 import SearchForProperty from 'components/common/SearchDashboardPropertyForm';
 
-const Dashboard = () => {
-  const [showSidebar, setShowSidebar] = React.useState(false);
-  const closeSidebar = () => {
-    document.body.classList.remove('modal-open');
-    setShowSidebar(false);
-  };
-
-  return (
-    <div>
-      <Sidebar closeSidebar={closeSidebar} showSidebar={showSidebar} />
-
-      {/* Content Page */}
-      <div className="content-page">
-        <TopBar />
-        <Welcome />
-        <Overview />
-        <Others />
-      </div>
-    </div>
-  );
-};
+const Dashboard = () => (
+  <BackendPage>
+    <Welcome />
+    <Overview />
+    <Others />
+  </BackendPage>
+);
 
 const Welcome = () => (
   <section className="container-fluid">

@@ -101,28 +101,3 @@
     margin-right: 1rem;
   }
 }
-
-.property-holder {
-  &__title {
-    font-size: 1rem;
-    color: $primary;
-    font-weight: 300;
-    margin: 0;
-    margin-bottom: 1rem;
-    border-left: 6px solid $green;
-    padding-left: 0.5rem;
-
-    &.border-success {
-      border-left-color: $green;
-    }
-    &.border-error {
-      border-left-color: $red;
-    }
-    &.border-warning {
-      border-left-color: $warning;
-    }
-    &.border-info {
-      border-left-color: $blue;
-    }
-  }
-}

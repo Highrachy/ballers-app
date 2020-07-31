@@ -6,7 +6,7 @@ export const HomeIcon = () => (
     width={24}
     height={24}
     viewBox="0 0 28 28"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -22,7 +22,7 @@ export const MyPropertyIcon = () => (
     width={24}
     height={24}
     viewBox="0 0 28 30"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -38,7 +38,7 @@ export const MessageIcon = () => (
     width={24}
     height={24}
     viewBox="0 0 31 31"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -54,7 +54,7 @@ export const ProfileIcon = () => (
     width={24}
     height={24}
     viewBox="0 0 31 30"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -70,7 +70,7 @@ export const ReferIcon = ({ width, height }) => (
     width={width}
     height={height}
     viewBox="0 0 28 28"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -96,7 +96,7 @@ export const TransactionIcon = () => (
     width={24}
     height={24}
     viewBox="0 0 32 28"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -112,7 +112,7 @@ export const QuestionMarkIcon = () => (
     width={19}
     height={18}
     viewBox="0 0 19 18"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -129,7 +129,7 @@ export const ArrowLeftIcon = () => (
     width={13}
     height={9}
     viewBox="0 0 13 9"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -144,7 +144,7 @@ export const ArrowDownIcon = () => (
     width={24}
     height={24}
     viewBox="0 0 24 24"
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -192,18 +192,18 @@ export const ThreeDotsIcon = () => (
 
 export const RightArrowIcon = () => (
   <svg
-    width={5}
-    height={8}
-    viewBox="0 0 5 8"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-chevron-right"
   >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M0.874943 7.75C0.682943 7.75 0.490943 7.6765 0.344693 7.53025C0.0514434 7.237 0.0514434 6.763 0.344693 6.46975L2.82344 3.991L0.438443 1.52125C0.151193 1.22275 0.159443 0.748004 0.457193 0.460754C0.755693 0.173504 1.23044 0.181754 1.51769 0.478754L4.41419 3.47875C4.69844 3.7735 4.69469 4.24075 4.40519 4.53025L1.40519 7.53025C1.25894 7.6765 1.06694 7.75 0.874943 7.75Z"
-      fill="#5775FA"
-    />
+    <polyline points="9 18 15 12 9 6" />
   </svg>
 );
 
@@ -315,6 +315,42 @@ export const MapPinIcon = () => (
   >
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
     <circle cx={12} cy={10} r={3} />
+  </svg>
+);
+
+export const CheckIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-check"
+  >
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+export const DownloadIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-download"
+  >
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1={12} y1={15} x2={12} y2={3} />
   </svg>
 );
 
