@@ -5,6 +5,7 @@ import Portfolio from 'components/pages/user/Portfolio';
 import SinglePortfolio from 'components/pages/user/SinglePortfolio';
 import Transactions from 'components/pages/user/Transactions';
 import Profile from 'components/pages/user/Profile';
+import ReferAndEarn from 'components/pages/user/ReferAndEarn';
 
 const UserRouter = () => (
   <Router>
@@ -13,6 +14,7 @@ const UserRouter = () => (
     <SinglePortfolio path="portfolio/:id" />
     <Transactions path="transactions" />
     <Profile path="profile" />
+    <ReferAndEarn path="refer-and-earn" />
   </Router>
 );
 

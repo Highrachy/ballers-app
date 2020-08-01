@@ -36,7 +36,7 @@ export default [
   },
   {
     title: 'Refer to Earn',
-    to: '/user/refer-to-earn',
+    to: '/user/refer-and-earn',
     icon: <ReferIcon />,
   },
 ];

@@ -14,6 +14,8 @@ const Label = ({
   labelLink,
 }) => {
   const sanitizedLabelLink = { to: null, text: null, ...labelLink };
+
+  if (!text || !name) return null;
   return (
     <label className={`form-label ${className}`} htmlFor={name}>
       {text}

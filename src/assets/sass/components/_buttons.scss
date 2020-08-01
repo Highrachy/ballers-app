@@ -11,3 +11,9 @@ a {
     color: $secondary;
   }
 }
+
+.btn-wide {
+  &.btn-sm {
+    padding: 0.75rem 3rem;
+  }
+}

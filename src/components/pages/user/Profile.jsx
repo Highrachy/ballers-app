@@ -20,7 +20,7 @@ const Transactions = () => (
 );
 
 const Profile = () => (
-  <div className="container-fluid ">
+  <div className="container-fluid">
     <Card className="card-container">
       <Tabs defaultActiveKey="0">
         <Tab eventKey="0" title="Profile">
