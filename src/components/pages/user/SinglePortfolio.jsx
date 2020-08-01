@@ -122,8 +122,8 @@ const PropertyHolder = () => (
         </div>
 
         {/* Side Card */}
-        <div className="col-sm-4 offset-sm-1">
-          <Card className="card-container property-holder">
+        <div className="col-sm-5">
+          <Card className="card-container property-holder ml-5">
             <table class="table table-sm table-borderless">
               <tbody>
                 <tr>

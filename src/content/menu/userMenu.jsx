@@ -21,7 +21,7 @@ export default [
   },
   {
     title: 'Transaction',
-    to: '/user/transations',
+    to: '/user/transactions',
     icon: <TransactionIcon />,
   },
   {
