@@ -31,7 +31,7 @@ export default [
   },
   {
     title: 'Profile',
-    to: '/user/payments-history',
+    to: '/user/profile',
     icon: <ProfileIcon />,
   },
   {
