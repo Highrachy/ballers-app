@@ -190,27 +190,60 @@ $line-height-sm: 1.6;
 
 // Navs
 
-// $nav-link-padding-y: 0.5rem !default;
-// $nav-link-padding-x: 1rem !default;
-// $nav-link-disabled-color: $gray-600 !default;
-
 $nav-tabs-border-color: $input-border-color;
-// $nav-tabs-border-width: $border-width !default;
-// $nav-tabs-border-radius: $border-radius !default;
-$nav-tabs-link-hover-border-color: transparent transparent red transparent;
+$nav-tabs-link-hover-border-color: transparent transparent $gray-400 transparent;
 $nav-tabs-link-active-color: $secondary;
 $nav-tabs-link-active-bg: $white;
 $nav-tabs-link-active-border-color: transparent transparent $secondary
   transparent;
 
-// $nav-pills-border-radius: $border-radius !default;
-// $nav-pills-link-active-color: $component-active-color !default;
-// $nav-pills-link-active-bg: $component-active-bg !default;
-
-// $nav-divider-color: $gray-200 !default;
-// $nav-divider-margin-y: $spacer / 2 !default;
-
 $progress-height: 0.5rem;
 
+// Table
 $table-cell-padding: 1.5rem;
 $table-color: $primary;
+
+// Modals
+
+// Padding applied to the modal body
+$modal-inner-padding: 2rem;
+
+// Margin between elements in footer, must be lower than or equal to 2 * $modal-inner-padding
+// $modal-footer-margin-between: 0.5rem !default;
+
+// $modal-dialog-margin: 0.5rem !default;
+// $modal-dialog-margin-y-sm-up: 1.75rem !default;
+
+// $modal-title-line-height: $line-height-base !default;
+
+// $modal-content-color: null !default;
+// $modal-content-bg: $white !default;
+// $modal-content-border-color: rgba($black, 0.2) !default;
+// $modal-content-border-width: $border-width !default;
+$modal-content-border-radius: 5px;
+// $modal-content-inner-border-radius: subtract(
+//   $modal-content-border-radius,
+//   $modal-content-border-width
+// ) !default;
+// $modal-content-box-shadow-xs: 0 0.25rem 0.5rem rgba($black, 0.5) !default;
+// $modal-content-box-shadow-sm-up: 0 0.5rem 1rem rgba($black, 0.5) !default;
+
+// $modal-backdrop-bg: $black !default;
+$modal-backdrop-opacity: 0.65;
+// $modal-header-border-color: $border-color !default;
+// $modal-footer-border-color: $modal-header-border-color !default;
+// $modal-header-border-width: $modal-content-border-width !default;
+// $modal-footer-border-width: $modal-header-border-width !default;
+// $modal-header-padding-y: 1rem !default;
+$modal-header-padding-x: 2rem;
+// $modal-header-padding: $modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
+
+// $modal-xl: 1140px !default;
+// $modal-lg: 800px !default;
+// $modal-md: 500px !default;
+// $modal-sm: 300px !default;
+
+// $modal-fade-transform: translate(0, -50px) !default;
+// $modal-show-transform: none !default;
+// $modal-transition: transform 0.3s ease-out !default;
+// $modal-scale-transform: scale(1.02) !default;

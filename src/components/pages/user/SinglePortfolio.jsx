@@ -8,6 +8,18 @@ import { MapPinIcon } from 'components/utils/Icons';
 import Map from 'components/common/Map';
 import { OFFICE_LOCATION } from 'utils/constants';
 import { CheckIcon, DownloadIcon } from 'components/utils/Icons';
+import Modal from 'components/common/Modal';
+import Toast, { useToast } from 'components/utils/Toast';
+import Axios from 'axios';
+import Input from 'components/forms/Input';
+import {
+  setInitialValues,
+  DisplayFormikState,
+} from 'components/forms/form-helper';
+import Button from 'components/forms/Button';
+import { Formik, Form } from 'formik';
+import { createSchema } from 'components/forms/schemas/schema-helpers';
+import { registerSchema } from 'components/forms/schemas/userSchema';
 
 const SinglePortfolio = () => (
   <BackendPage>
@@ -185,35 +197,50 @@ const AssignedPropertySidebar = () => (
   </Card>
 );
 
-const PropertySidebar = () => (
-  <>
-    <Card className="card-container property-holder bg-gray">
-      <h5>Interested in this property?</h5>
+const PropertySidebar = () => {
+  const [showRequestVist, setShowRequestVisit] = React.useState(false);
 
-      <p className="">Kindly proceed with property acquisition</p>
-      <button className="btn btn-block btn-secondary my-3">Proceed</button>
-    </Card>
+  return (
+    <>
+      <Modal
+        title="Schedule visit"
+        show={showRequestVist}
+        onHide={() => setShowRequestVisit(false)}
+        showFooter={false}
+      >
+        <ScheduleVisitForm />
+      </Modal>
+      <Card className="card-container property-holder bg-gray">
+        <h5>Interested in this property?</h5>
 
-    <h5 className="text-smaller">Schedule a tour</h5>
-    <Card className="card-container property-holder bg-gray">
-      <p className="mr-4">
-        Want to come check the property?
-        <br /> Request a visit.
-      </p>
-      <div className="circle-icon">
-        <RightArrowIcon />
-      </div>
-    </Card>
+        <p className="">Kindly proceed with property acquisition</p>
+        <button className="btn btn-block btn-secondary my-3">Proceed</button>
+      </Card>
 
-    <h5 className="text-smaller">Request title document</h5>
-    <Card className="card-container property-holder bg-gray">
-      <p className="mr-4">Request a copy of the property document.</p>
-      <div className="circle-icon bg-green">
-        <RightArrowIcon />
-      </div>
-    </Card>
-  </>
-);
+      <h5 className="text-smaller">Schedule a tour</h5>
+      <Card
+        className="card-container property-holder bg-gray"
+        onClick={() => setShowRequestVisit(true)}
+      >
+        <p className="mr-4">
+          Want to come check the property?
+          <br /> Request a visit.
+        </p>
+        <div className="circle-icon">
+          <RightArrowIcon />
+        </div>
+      </Card>
+
+      <h5 className="text-smaller">Request title document</h5>
+      <Card className="card-container property-holder bg-gray">
+        <p className="mr-4">Request a copy of the property document.</p>
+        <div className="circle-icon bg-green">
+          <RightArrowIcon />
+        </div>
+      </Card>
+    </>
+  );
+};
 
 const Neighborhood = () => (
   <>
@@ -255,5 +282,76 @@ const PropertyMap = () => (
     <Map coordinates={OFFICE_LOCATION} />
   </div>
 );
+
+const ScheduleVisitForm = () => {
+  const [toast, setToast] = useToast();
+  return (
+    <section className="row">
+      <div className="col-md-10">
+        <Formik
+          initialValues={setInitialValues(registerSchema, { agreement: [] })}
+          onSubmit={(values, actions) => {
+            delete values.agreement;
+
+            Axios.post(
+              'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
+              values
+            )
+              .then(function (response) {
+                const { status } = response;
+                if (status === 200) {
+                  setToast({
+                    type: 'success',
+                    message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
+                  });
+                  actions.setSubmitting(false);
+                  actions.resetForm();
+                }
+              })
+              .catch(function (error) {
+                setToast({
+                  message: error.response.data.message,
+                });
+                actions.setSubmitting(false);
+              });
+          }}
+          validationSchema={createSchema(registerSchema)}
+        >
+          {({ isSubmitting, handleSubmit, ...props }) => (
+            <Form>
+              <Toast {...toast} />
+              <Input
+                isValidMessage="Name looks good"
+                label="Name"
+                name="firstName"
+                placeholder="Name"
+              />
+              <Input
+                isValidMessage="Email address seems valid"
+                label="Email"
+                name="email"
+                placeholder="Email Address"
+              />
+              <Input
+                isValidMessage="Phone number looks good"
+                label="Phone"
+                name="phone"
+                placeholder="Phone"
+              />
+              <Button
+                className="btn-secondary mt-4"
+                loading={isSubmitting}
+                onClick={handleSubmit}
+              >
+                Schedule
+              </Button>
+              <DisplayFormikState {...props} hide showAll />
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </section>
+  );
+};
 
 export default SinglePortfolio;
