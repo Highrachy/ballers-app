@@ -34,9 +34,9 @@ const Sidebar = ({ showSidebar, closeSidebar, ...props }) => {
       >
         <div className="sidebar__logo">
           {/* For some reasons, using Link to homepage causes the page to freeze */}
-          <a href="/">
+          <Link to="/">
             <img alt="Ballers Logo" src={BallersLogo} />
-          </a>
+          </Link>
           <div className="sidebar__close" onClick={closeSidebar}>
             <button
               aria-label="Close"
@@ -90,7 +90,7 @@ Sidebar.Navigation.propTypes = {
 const isActive = ({ isCurrent }) => {
   return isCurrent
     ? { className: 'sidebar-menu__item active' }
-    : 'sidebar-menu__item';
+    : { className: 'sidebar-menu__item' };
 };
 
 export default Sidebar;

@@ -149,8 +149,8 @@
   }
 
   .bg-green {
-    background-color: $green-bg;
-    border: 1.5px solid #2dca73;
+    background-color: $green-bg !important;
+    border: 1.5px solid #2dca73 !important;
     label {
       color: $green;
     }

@@ -41,7 +41,7 @@ const Others = () => (
 
 const now = 60;
 const color = 'success';
-const PropertyHolder = () => (
+export const PropertyHolder = () => (
   <Link to="/user/portfolio/1">
     <Card className="card-container h-100 property-holder">
       <h5 className={`property-holder__title border-${color}`}>
@@ -90,7 +90,7 @@ const PropertyHolder = () => (
   </Link>
 );
 
-const RecommendedProperty = () => (
+export const RecommendedProperty = () => (
   <Card className="card-container property-holder">
     <div className="row">
       <div className="col-md-5">

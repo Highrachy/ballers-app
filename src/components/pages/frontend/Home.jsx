@@ -32,7 +32,7 @@ const HoldingSection = () => (
           <h1>
             Become <br className="d-none d-lg-block" /> a LandLord
           </h1>
-          <p className="mt-4 text-muted">
+          <p className="mt-4 text-primary">
             We make owning a home simpler and achievable.
           </p>
         </div>

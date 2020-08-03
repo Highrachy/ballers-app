@@ -1,6 +1,13 @@
 import React from 'react';
 import Sidebar from 'components/layout/Sidebar';
 import TopBar from 'components/layout/TopBar';
+import { Link } from '@reach/router';
+import {
+  MyPropertyIcon,
+  HomeIcon,
+  TransactionIcon,
+  ReferIcon,
+} from 'components/utils/Icons';
 
 const BackendPage = ({ children }) => {
   const [showSidebar, setShowSidebar] = React.useState(false);
@@ -17,9 +24,59 @@ const BackendPage = ({ children }) => {
       <div className="content-page">
         <TopBar />
         {children}
+        <FixedFooter />
       </div>
     </div>
   );
 };
+
+const FixedFooter = () => (
+  <footer className="footer-fixed">
+    <ul className="list-group list-group-horizontal">
+      <li className="list-group-item flex-fill">
+        <Link to="/user/dashboard">
+          <span className="footer-fixed__icon">
+            <HomeIcon />
+          </span>
+          <p className="footer-fixed__menu-title">Home</p>
+        </Link>
+      </li>
+      <li className="list-group-item flex-fill">
+        <Link to="/user/portfolio">
+          <span className="footer-fixed__icon">
+            <MyPropertyIcon />
+          </span>
+          <p className="footer-fixed__menu-title">My Portfolio</p>
+        </Link>
+      </li>
+      <li className="list-group-item flex-fill">
+        <Link to="/user/transactions">
+          <span className="footer-fixed__icon">
+            <TransactionIcon />
+          </span>
+          <p className="footer-fixed__menu-title">Transactions</p>
+        </Link>
+      </li>
+      <li className="list-group-item flex-fill">
+        <Link to="/user/dashboard">
+          <span className="footer-fixed__icon">
+            <ReferIcon />
+          </span>
+
+          <p className="footer-fixed__menu-title">Refer and Earn</p>
+        </Link>
+      </li>
+      {/* <li className="list-group-item flex-fill">
+        <Link to="/user/dashboard">
+          <span className="footer-fixed__icon">
+            <HomeIcon />
+          </span>
+
+          <p className="footer-fixed__menu-title">Menu</p>
+        </Link>
+      </li> */}
+    </ul>
+  </footer>
+);
 
 export default BackendPage;

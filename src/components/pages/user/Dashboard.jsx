@@ -1,12 +1,12 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import { Card, ProgressBar } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import { ReferIcon } from 'components/utils/Icons';
 import { RightArrowIcon } from 'components/utils/Icons';
-import HomeImage from 'assets/img/home.png';
 import SearchForProperty from 'components/common/SearchDashboardPropertyForm';
 import ContributionGraph from 'components/common/ContributionGraph';
+import { PropertyHolder, RecommendedProperty } from './Portfolio';
 
 const Dashboard = () => (
   <BackendPage>
@@ -97,75 +97,6 @@ const LinkHeader = ({ name, to }) => (
       </Link>
     </div>
   </>
-);
-
-const now = 60;
-const color = 'success';
-const PropertyHolder = () => (
-  <Card className="card-container h-100">
-    <div className="property-holder">
-      <div
-        className={`badge badge-${color} property-holder__details float-right`}
-      >
-        Details <RightArrowIcon />
-      </div>
-      <h5 className={`property-holder__title border-${color}`}>Property A</h5>
-      <div className="row">
-        <div className="col-md-5">
-          <img src={HomeImage} alt="" className="img-fluid" />
-        </div>
-        <div className="col-md-7">
-          <div className="">Property Value</div>
-          <h3>N 23,000,000</h3>
-          <div className="property-holder__location">Ikate, Lagos state</div>
-          <div className="property-holder__house-type">3 bedroom flat</div>
-          <div className="property-holder__payment-status">
-            Overdue: -3 days{' '}
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-sm-12">
-          <div style={{ paddingLeft: `${now - 5}%` }}>{now}%</div>
-          <ProgressBar variant="success" now={now} label={`${now}%`} srOnly />
-          <div>
-            Amount Contributed:N 18,000{' '}
-            <span className="float-right">Goal</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </Card>
-);
-
-const RecommendedProperty = () => (
-  <Card className="card-container">
-    <div className="property-holder">
-      <div className="row">
-        <div className="col-md-5">
-          <img src={HomeImage} alt="" className="img-fluid" />
-        </div>
-        <div className="col-md-7">
-          <div>Blissville Condos</div>
-          <div className="property-holder__location">
-            Location: Ikate, Lagos state
-          </div>
-          <div className="property-holder__house-type">
-            House Type: 3 bedroom flat
-          </div>
-
-          <h3 className="mt-4">N 23,000,000</h3>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-sm-12">
-          <div className="float-right">
-            Details <RightArrowIcon />
-          </div>
-        </div>
-      </div>
-    </div>
-  </Card>
 );
 
 const EnjoyYourBallingExperience = () => (

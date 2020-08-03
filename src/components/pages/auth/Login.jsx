@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 import { getProxy } from 'utils/helpers';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 import { Formik, Form } from 'formik';
 import Axios from 'axios';
 import Input from 'components/forms/Input';
@@ -172,6 +172,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
                 type: 'success',
                 message: `Your login is successful.`,
               });
+              navigate('user/dashboard');
               actions.setSubmitting(false);
               actions.resetForm();
             }

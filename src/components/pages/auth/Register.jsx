@@ -48,10 +48,10 @@ const Content = ({ redirectTo, sid, token }) => {
               <RegisterForm redirectTo={redirectTo} sid={sid} token={token} />
               <section className="auth__footer">
                 <div className="register mt-6 text-center">
-                  Not Registered?{' '}
-                  <Link className="auth__link" to="/register">
+                  Registered?{' '}
+                  <Link className="auth__link" to="/login">
                     {' '}
-                    Create Account
+                    Sign In
                   </Link>
                 </div>
               </section>
@@ -185,7 +185,7 @@ const RegisterForm = ({ type }) => {
           >
             Register
           </Button>
-          <DisplayFormikState {...props} showAll />
+          <DisplayFormikState {...props} hide showAll />
         </Form>
       )}
     </Formik>

@@ -19,7 +19,7 @@ const Header = () => (
       expand="lg"
     >
       <div className="container-fluid">
-        <Nav className="ml-auto d-flex align-items-center">
+        <Nav className="ml-auto d-flex flex-row align-items-center">
           <Nav.Link to="/login" as={Link}>
             <NotificationIcon />
           </Nav.Link>

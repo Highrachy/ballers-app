@@ -7,6 +7,7 @@ const ContributionGraph = () => (
     <div className="row">
       <div className="col-sm-4">
         <h6>No Active Contributions</h6>
+        <OverviewPrice title="Property A" color="blue" price={0} />
       </div>
       <div className="col-sm-4">
         <div className="ml-n5 mr-n5">
@@ -32,7 +33,10 @@ const ContributionGraph = () => (
             }}
           />
         </div>
-        <h5 className="text-center mt-3">Testing 123</h5>
+        <h5 className="text-center mt-3">N23,000,000</h5>
+        <p className="text-center  mb-0">
+          My BALL <span className="text-orange">Net Worth</span>
+        </p>
       </div>
       <div className="col-sm-4">
         <h6>Earnings</h6>
