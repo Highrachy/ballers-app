@@ -5,8 +5,9 @@ import { Link } from '@reach/router';
 import {
   MyPropertyIcon,
   HomeIcon,
-  TransactionIcon,
+  LoveIcon,
   ReferIcon,
+  MenuIcon,
 } from 'components/utils/Icons';
 
 const BackendPage = ({ children }) => {
@@ -46,15 +47,15 @@ const FixedFooter = () => (
           <span className="footer-fixed__icon">
             <MyPropertyIcon />
           </span>
-          <p className="footer-fixed__menu-title">My Portfolio</p>
+          <p className="footer-fixed__menu-title">Portfolio</p>
         </Link>
       </li>
       <li className="list-group-item flex-fill">
         <Link to="/user/transactions">
           <span className="footer-fixed__icon">
-            <TransactionIcon />
+            <LoveIcon />
           </span>
-          <p className="footer-fixed__menu-title">Transactions</p>
+          <p className="footer-fixed__menu-title">Just For You</p>
         </Link>
       </li>
       <li className="list-group-item flex-fill">
@@ -63,18 +64,18 @@ const FixedFooter = () => (
             <ReferIcon />
           </span>
 
-          <p className="footer-fixed__menu-title">Refer and Earn</p>
+          <p className="footer-fixed__menu-title">Refer to Earn</p>
         </Link>
       </li>
-      {/* <li className="list-group-item flex-fill">
-        <Link to="/user/dashboard">
+      <li className="list-group-item flex-fill">
+        <Link to="/user/menu">
           <span className="footer-fixed__icon">
-            <HomeIcon />
+            <MenuIcon />
           </span>
 
           <p className="footer-fixed__menu-title">Menu</p>
         </Link>
-      </li> */}
+      </li>
     </ul>
   </footer>
 );

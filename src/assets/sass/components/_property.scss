@@ -36,9 +36,37 @@
   }
 
   &__img {
-    height: 9rem;
+    height: 10rem;
     object-fit: cover;
     border-radius: 3px;
+  }
+
+  &__location,
+  &__house-type {
+    font-size: 0.85rem;
+
+    strong {
+      font-weight: 500;
+      color: $primary;
+    }
+  }
+
+  .badge-secondary {
+    background: #f1f4ff;
+    color: $secondary;
+    margin: 0 5px 2px 0;
+  }
+
+  &__separator {
+    border-top: 1px solid rgba(2, 3, 6, 0.1);
+    margin: 0.5rem 0;
+  }
+
+  .small-icon {
+    display: inline-block;
+    svg {
+      height: 14px;
+    }
   }
 
   &.bg-gray {

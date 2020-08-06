@@ -3,7 +3,7 @@ import {
   MyPropertyIcon,
   HomeIcon,
   TransactionIcon,
-  MessageIcon,
+  LoveIcon,
   ProfileIcon,
   ReferIcon,
 } from 'components/utils/Icons';
@@ -25,9 +25,9 @@ export default [
     icon: <TransactionIcon />,
   },
   {
-    title: 'Message',
-    to: '/user/message',
-    icon: <MessageIcon />,
+    title: 'Just For You',
+    to: '/user/just-for-you',
+    icon: <LoveIcon />,
   },
   {
     title: 'Profile',

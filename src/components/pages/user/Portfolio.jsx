@@ -101,17 +101,35 @@ export const RecommendedProperty = () => (
         />
       </div>
       <div className="col-md-7">
-        <div>Blissville Condos</div>
+        <h5 className="font-weight-500">Blissville Condos</h5>
         <div className="property-holder__location">
-          Location: Ikate, Lagos state
+          Location: <strong>Ikate, Lagos state</strong>
         </div>
         <div className="property-holder__house-type">
-          House Type: 3 bedroom flat
+          House Type: <strong>3 bedroom flat</strong>
         </div>
 
         <h5 className="mt-2">N 23,000,000</h5>
-        <span className="badge badge-light small float-right">
-          Details <RightArrowIcon />
+        <div className="property-holder__separator"></div>
+
+        <span className={`badge badge-secondary property-holder__details`}>
+          Mortgage
+        </span>
+        <span className={`badge badge-secondary property-holder__details`}>
+          Mortgage 2
+        </span>
+        <span className={`badge badge-secondary property-holder__details`}>
+          Mortgage 3
+        </span>
+        <span className={`badge badge-secondary property-holder__details`}>
+          Mortgage 4
+        </span>
+
+        <span className="text-uppercase small float-right">
+          Details{' '}
+          <div className="small-icon">
+            <RightArrowIcon />
+          </div>
         </span>
       </div>
     </div>
