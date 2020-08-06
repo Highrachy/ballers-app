@@ -23,13 +23,13 @@ import { registerSchema } from 'components/forms/schemas/userSchema';
 
 const SinglePortfolio = () => (
   <BackendPage>
-    <PropertyHolder />
+    <OwnedPropertyCard />
   </BackendPage>
 );
 
 const NOW = 50;
 
-const PropertyHolder = () => (
+const OwnedPropertyCard = () => (
   <div className="container-fluid">
     <Card className="card-container h-100 property-holder__big">
       <div className="row">

@@ -6,7 +6,10 @@ import { ReferIcon } from 'components/utils/Icons';
 import { RightArrowIcon } from 'components/utils/Icons';
 import SearchForProperty from 'components/common/SearchDashboardPropertyForm';
 import ContributionGraph from 'components/common/ContributionGraph';
-import { PropertyHolder, RecommendedProperty } from './Portfolio';
+import {
+  OwnedPropertyCard,
+  RecommendedPropertyCard,
+} from 'components/common/PropertyCard';
 
 const Dashboard = () => (
   <BackendPage>
@@ -69,7 +72,7 @@ const Others = () => (
       <LinkHeader to="/" name="Overview" />
       <div className="row row-eq-height">
         <div className="col-sm-6">
-          <PropertyHolder />
+          <OwnedPropertyCard />
         </div>
         <div className="col-sm-6">
           <EnjoyYourBallingExperience />
@@ -79,8 +82,8 @@ const Others = () => (
       <LinkHeader to="/" name="Just for you" />
       <div className="row">
         <div className="col-sm-6">
-          <RecommendedProperty />
-          <RecommendedProperty />
+          <RecommendedPropertyCard />
+          <RecommendedPropertyCard />
         </div>
       </div>
     </div>
