@@ -2,29 +2,36 @@ import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Card } from 'react-bootstrap';
 
+const PROPERTY_COLOR = '#2dca73';
+const CONTRIBUTION_REWARD_COLOR = '#161d3f';
+const REFERRAL_COLOR = '#F79B18';
+
 const ContributionGraph = () => (
   <Card className="card-container h-100">
     <div className="row">
       <div className="col-sm-4">
         <h6>No Active Contributions</h6>
-        <OverviewPrice title="Property A" color="blue" price={0} />
+        <OverviewPrice title="Property A" color="green" price={0} />
       </div>
       <div className="col-sm-4">
         <div className="ml-n5 mr-n5">
           <Doughnut
             data={{
-              labels: ['Red', 'Green', 'Yellow'],
+              labels: ['Property', 'Contribution Rewards', 'Referral Bonus'],
               datasets: [
                 {
-                  data: [2, 6, 1],
-                  backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                  hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                  data: [6, 2, 1],
+                  backgroundColor: [
+                    PROPERTY_COLOR,
+                    CONTRIBUTION_REWARD_COLOR,
+                    REFERRAL_COLOR,
+                  ],
                 },
               ],
             }}
             options={{
               responsive: true,
-              rotation: -0.5,
+              rotation: 1,
               maintainAspectRatio: true,
               cutoutPercentage: 75,
               legend: {
@@ -48,10 +55,9 @@ const ContributionGraph = () => (
 );
 
 const OverviewPrice = ({ color, title, price }) => (
-  <div className={`circle circle-${color}`}>
-    {title}
-    <br />
-    <strong>N {price}</strong>
+  <div className={`overview-price__circle overview-price__circle-${color}`}>
+    <span className="overview-price__title">{title}</span>
+    <strong className="overview-price__amount">N {price}</strong>
   </div>
 );
 

@@ -4,7 +4,7 @@ import Axios from 'axios';
 import Select from 'react-select';
 import { customStylesDashboard } from 'components/forms/Select';
 import { navigate } from '@reach/router';
-import SearchIcon from 'assets/img/icons/search-icon.png';
+import { SearchIcon } from 'components/utils/Icons';
 
 const SearchPropertyForm = ({ defaultInputValue }) => {
   const LOADING = 'Loading...';
@@ -173,7 +173,10 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
         disabled={!enableButton}
         onClick={handleSearch}
       >
-        <img src={SearchIcon} alt="search icon" className="img-fluid" />
+        <span className="d-md-block d-none">
+          <SearchIcon />
+        </span>
+        <span className="d-md-none">Search</span>
       </button>
     </div>
   );

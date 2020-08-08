@@ -70,7 +70,7 @@
       padding: 1.2rem;
     }
 
-    padding: 2rem;
+    padding-top: 2rem;
     background: white;
 
     .input-group {
@@ -114,9 +114,17 @@
     }
 
     .btn {
-      width: 50px;
-      height: 40px;
-      padding: 0px 10px;
+      color: $white;
+
+      svg {
+        stroke: $white;
+      }
+      @include media-breakpoint-up(md) {
+        width: 50px;
+        height: 41px;
+        padding: 5px 10px;
+        border-radius: 0;
+      }
     }
   }
 }

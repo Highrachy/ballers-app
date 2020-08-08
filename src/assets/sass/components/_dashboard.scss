@@ -41,17 +41,24 @@
   }
 }
 
-.circle {
-  padding-left: 1rem;
+.overview-price__circle {
+  padding-left: 1.25rem;
   position: relative;
   &:before {
     width: 10px;
     height: 10px;
     content: ' ';
+    background: $white;
     position: absolute;
     border-radius: 50%;
     left: 0;
-    top: 8px;
+    top: 6px;
+    @include media-breakpoint-up(md) {
+      top: 9px;
+    }
+  }
+  &-green:before {
+    background: $green;
   }
   &-purple:before {
     background: #29266c;
@@ -63,7 +70,19 @@
     background: $purple;
   }
 }
-
+.overview-price {
+  &__title {
+    @include media-breakpoint-up(md) {
+      display: block;
+    }
+  }
+  &__amount {
+    float: right;
+    @include media-breakpoint-up(md) {
+      float: none;
+    }
+  }
+}
 .dashboard.bg-primary {
   padding: 2rem;
 

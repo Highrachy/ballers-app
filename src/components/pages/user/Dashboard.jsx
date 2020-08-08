@@ -3,13 +3,15 @@ import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import { ReferIcon } from 'components/utils/Icons';
-import { RightArrowIcon } from 'components/utils/Icons';
+import { RightArrowIcon, SearchIcon, CloseIcon } from 'components/utils/Icons';
 import SearchForProperty from 'components/common/SearchDashboardPropertyForm';
 import ContributionGraph from 'components/common/ContributionGraph';
 import {
   OwnedPropertyCard,
   RecommendedPropertyCard,
 } from 'components/common/PropertyCard';
+import useWindowSize from 'hooks/useWindowSize';
+import { MOBILE_WIDTH } from 'utils/constants';
 
 const Dashboard = () => (
   <BackendPage>
@@ -19,31 +21,53 @@ const Dashboard = () => (
   </BackendPage>
 );
 
-const Welcome = () => (
-  <section className="container-fluid">
-    <div className="card bg-primary dashboard mb-3">
-      <div className="row">
-        <div className="col-sm-5">
-          <h4>Hello, Danjuma </h4>
-          <p className="lead">Welcome to BALL!</p>
-        </div>
-        <div className="col-sm-7">
-          <section className="property-search__dashboard">
-            <SearchForProperty />
-          </section>
+const Welcome = () => {
+  const WINDOW_SIZE = useWindowSize();
+  const [showSearch, setShowSearch] = React.useState(
+    WINDOW_SIZE.width > MOBILE_WIDTH
+  );
+  return (
+    <section className="container-fluid">
+      <div className="card bg-primary dashboard mb-3">
+        <div className="row">
+          <div className="col-sm-5">
+            <h4>Hello, Danjuma </h4>
+            <p className="lead">Welcome to BALL!</p>
+          </div>
+          <div className="col-sm-7">
+            <section className="property-search__dashboard">
+              {showSearch && <SearchForProperty />}
+
+              {showSearch ? (
+                <p
+                  className="btn btn-link btn-block mt-3 text-muted d-md-none"
+                  onClick={() => setShowSearch(false)}
+                >
+                  <CloseIcon /> Close Search
+                </p>
+              ) : (
+                <h5
+                  className="text-muted text-center"
+                  onClick={() => setShowSearch(true)}
+                >
+                  <SearchIcon /> Search Property
+                </h5>
+              )}
+            </section>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const Overview = () => (
   <div className="container-fluid ">
     <div className="row row-eq-height">
-      <div className="col-sm-8">
+      <div className="col-sm-8 mb-3">
         <ContributionGraph />
       </div>
-      <div className="col-sm-4">
+      <div className="col-sm-4 mb-3">
         <ReferAndEarn />
       </div>
     </div>
