@@ -19,6 +19,7 @@ import {
   multiSelectValidation,
 } from './schemas/schema-helpers';
 import InputFormat from './InputFormat';
+import DatePicker from './DatePicker';
 import Select from './Select';
 import RadioSelect from './RadioSelect';
 import CheckboxGroup from './CheckboxGroup';
@@ -160,6 +161,25 @@ const Forms = () => {
                 // options can contain either value or label
               />
             </div>
+          </div>
+
+          <div className="form-row">
+            <DatePicker
+              formGroupClassName="col-md-6"
+              label="Event Date"
+              name="eventDate"
+              placeholder="Event Date"
+            />
+            <DatePicker
+              label="Event Time"
+              formGroupClassName="col-md-6"
+              dateFormat="h:mm aa"
+              name="event-time"
+              showTimeSelect
+              showTimeSelectOnly
+              timeCaption="Start Time"
+              timeIntervals={30}
+            />
           </div>
 
           <Textarea

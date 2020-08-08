@@ -214,7 +214,12 @@ const PropertySidebar = () => {
         <h5>Interested in this property?</h5>
 
         <p className="">Kindly proceed with property acquisition</p>
-        <button className="btn btn-block btn-secondary my-3">Proceed</button>
+        <Link
+          to="/user/property/enquiry/1"
+          className="btn btn-block btn-secondary my-3"
+        >
+          Proceed
+        </Link>
       </Card>
 
       <h5 className="text-smaller">Schedule a tour</h5>

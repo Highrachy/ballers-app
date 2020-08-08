@@ -13,34 +13,30 @@ import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { registerSchema } from 'components/forms/schemas/userSchema';
 
-const Transactions = () => (
-  <BackendPage>
-    <Profile />
-  </BackendPage>
-);
-
 const Profile = () => (
-  <div className="container-fluid">
-    <Card className="card-container">
-      <Tabs defaultActiveKey="0">
-        <Tab eventKey="0" title="Profile">
-          <div className="card-tab-content py-5">
-            <ProfileForm />
-          </div>
-        </Tab>
-        <Tab eventKey="1" title="Property Preference">
-          <div className="card-tab-content py-5">
-            <PropertyPreferenceForm />
-          </div>
-        </Tab>
-        <Tab eventKey="2" title="Change Password">
-          <div className="card-tab-content py-5">
-            <ChangePasswordForm />
-          </div>
-        </Tab>
-      </Tabs>
-    </Card>
-  </div>
+  <BackendPage>
+    <div className="container-fluid">
+      <Card className="card-container">
+        <Tabs defaultActiveKey="0">
+          <Tab eventKey="0" title="Profile">
+            <div className="card-tab-content py-5">
+              <ProfileForm />
+            </div>
+          </Tab>
+          <Tab eventKey="1" title="Property Preference">
+            <div className="card-tab-content py-5">
+              <PropertyPreferenceForm />
+            </div>
+          </Tab>
+          <Tab eventKey="2" title="Change Password">
+            <div className="card-tab-content py-5">
+              <ChangePasswordForm />
+            </div>
+          </Tab>
+        </Tabs>
+      </Card>
+    </div>
+  </BackendPage>
 );
 
 const ProfileForm = () => {
@@ -283,4 +279,4 @@ const ChangePasswordForm = () => {
     </section>
   );
 };
-export default Transactions;
+export default Profile;

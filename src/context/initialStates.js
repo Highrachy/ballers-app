@@ -1,0 +1,16 @@
+export const INITIAL_STATE = {
+  id: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  phone2: '',
+  role: 1,
+  referralCode: '',
+  profileImg: '',
+  isLoggedIn: false,
+  notifications: [],
+  assignedProperties: [],
+  referrals: [],
+  preferences: null,
+};
