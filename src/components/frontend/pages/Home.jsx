@@ -298,7 +298,7 @@ const FAQsSection = () => {
 
   return (
     <section className="container-fluid">
-      <h6 class="header-secondary">FAQs</h6>
+      <h6 className="header-secondary">FAQs</h6>
       <h2>
         Your questions <br /> Answered
       </h2>

@@ -30,7 +30,7 @@ const Modal = (props) => {
 };
 
 Modal.propTypes = {
-  children: PropTypes.array.isRequired,
+  children: PropTypes.any.isRequired,
   title: PropTypes.string.isRequired,
   size: PropTypes.string,
   showFooter: PropTypes.bool,

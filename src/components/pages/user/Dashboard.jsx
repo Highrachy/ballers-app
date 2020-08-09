@@ -3,7 +3,7 @@ import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import { ReferIcon } from 'components/utils/Icons';
-import { RightArrowIcon, SearchIcon, CloseIcon } from 'components/utils/Icons';
+import { RightArrowIcon, SearchIcon } from 'components/utils/Icons';
 import SearchForProperty from 'components/common/SearchDashboardPropertyForm';
 import ContributionGraph from 'components/common/ContributionGraph';
 import {
@@ -36,22 +36,15 @@ const Welcome = () => {
           </div>
           <div className="col-sm-7">
             <section className="property-search__dashboard">
-              {showSearch && <SearchForProperty />}
-
               {showSearch ? (
-                <p
-                  className="btn btn-link btn-block mt-3 text-muted d-md-none"
-                  onClick={() => setShowSearch(false)}
-                >
-                  <CloseIcon /> Close Search
-                </p>
+                <SearchForProperty />
               ) : (
-                <h5
-                  className="text-muted text-center"
+                <button
+                  className="btn btn-secondary btn-block"
                   onClick={() => setShowSearch(true)}
                 >
                   <SearchIcon /> Search Property
-                </h5>
+                </button>
               )}
             </section>
           </div>
@@ -127,11 +120,13 @@ const LinkHeader = ({ name, to }) => (
 );
 
 const EnjoyYourBallingExperience = () => (
-  <Card className="card-container text-center d-block h-100">
+  <Card className="card-container d-block text-center h-100">
     <h5 className="mt-5">Enjoying your balling experience?</h5>
-    <div>Expand your portfolio today</div>
+    <div className="mb-5">Expand your portfolio today</div>
 
-    <div className="btn btn-secondary mt-5">Add a new property + </div>
+    <Link to="/user/just-for-you" className="btn btn-sm btn-secondary">
+      Add a new property +{' '}
+    </Link>
   </Card>
 );
 

@@ -134,30 +134,32 @@ const YourReferralCode = () => (
 const InviteFriendsTable = () => (
   <div className="container-fluid mt-5">
     <h6>Invited friends</h6>
-    <table class="table">
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Asounju.dadate@gmail.com</td>
-          <td className="text-right text-danger">Invite Sent</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Asounju.dadate@gmail.com</td>
-          <td className="text-right text-warning">Registered</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Asounju.dadate@gmail.com</td>
-          <td className="text-right text-success">Rewarded</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+    <div className="table-responsive">
+      <table className="table">
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Asounju.dadate@gmail.com</td>
+            <td className="text-right text-danger">Invite Sent</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Asounju.dadate@gmail.com</td>
+            <td className="text-right text-warning">Registered</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Asounju.dadate@gmail.com</td>
+            <td className="text-right text-success">Rewarded</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 );
 

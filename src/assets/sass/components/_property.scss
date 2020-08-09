@@ -36,7 +36,9 @@
   }
 
   &__img {
-    height: 10rem;
+    @include media-breakpoint-up(md) {
+      height: 10rem;
+    }
     object-fit: cover;
     border-radius: 3px;
   }
@@ -132,18 +134,35 @@
     margin: 1rem 0.5rem 1rem 0;
   }
 }
-
-.gallery-main-image {
-  height: 30rem;
+.property-img {
   width: 100%;
   object-fit: cover;
   border-radius: 3px;
 }
 
+.gallery-main-image {
+  height: 15rem;
+  @include media-breakpoint-up(md) {
+    height: 30rem;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .gallery-row {
+    margin: 0 -5px !important;
+  }
+
+  .gallery-col {
+    padding: 10px 5px !important;
+  }
+}
+
 .gallery-thumbnails {
-  margin-bottom: 2rem;
-  border-radius: 3px;
-  height: 6rem;
+  height: 4rem;
+  @include media-breakpoint-up(md) {
+    margin-bottom: 2rem;
+    height: 6rem;
+  }
 }
 
 .circle-icon {
@@ -157,6 +176,21 @@
   top: 2rem;
   right: 1rem;
 
+  svg {
+    height: 1rem;
+  }
+}
+
+.badge-success,
+.btn-success {
+  &.invert-success {
+    border-color: darken(#e8ffed, 10);
+    background: #e8ffed;
+    color: $green;
+  }
+}
+
+.svg-1 {
   svg {
     height: 1rem;
   }

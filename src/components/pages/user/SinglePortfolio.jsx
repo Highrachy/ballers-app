@@ -2,12 +2,9 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
-import { RightArrowIcon } from 'components/utils/Icons';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
-import { MapPinIcon } from 'components/utils/Icons';
 import Map from 'components/common/Map';
 import { OFFICE_LOCATION } from 'utils/constants';
-import { CheckIcon, DownloadIcon } from 'components/utils/Icons';
 import Modal from 'components/common/Modal';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
@@ -20,6 +17,13 @@ import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { registerSchema } from 'components/forms/schemas/userSchema';
+import {
+  RightArrowIcon,
+  CameraIcon,
+  CheckIcon,
+  DownloadIcon,
+  MapPinIcon,
+} from 'components/utils/Icons';
 
 const SinglePortfolio = () => (
   <BackendPage>
@@ -35,22 +39,19 @@ const OwnedPropertyCard = () => (
       <div className="row">
         <div className="col-sm-10">
           <h3 className={`property-holder__big-title border-success`}>
-            <span
-              className={`badge badge-success property-holder__details float-right`}
-            >
-              Details <RightArrowIcon />
-            </span>
             Property A
           </h3>
         </div>
       </div>
       <PropertyImage />
       <div className="row mt-5">
-        <PropertyDescription />
+        <div className="col-sm-7">
+          <PropertyDescription />
+        </div>
 
         {/* Side Card */}
         <div className="col-sm-5">
-          <aside className="ml-5">
+          <aside className="ml-md-5">
             {<PropertySidebar /> || <AssignedPropertySidebar />}
           </aside>
         </div>
@@ -67,44 +68,52 @@ const PropertyImage = () => (
       <img
         src={PropertyPlaceholderImage}
         alt="Property"
-        className="img-fluid gallery-main-image"
+        className="img-fluid gallery-main-image  property-img"
       />
     </div>
     <div className="col-sm-2">
-      <div className="gallery-holder-vertical">
-        <img
-          src={PropertyPlaceholderImage}
-          alt="Property"
-          className="img-fluid gallery-thumbnails"
-        />
-      </div>
-      <div className="gallery-holder-vertical">
-        <img
-          src={PropertyPlaceholderImage}
-          alt="Property"
-          className="img-fluid gallery-thumbnails"
-        />
-      </div>
-      <div className="gallery-holder-vertical">
-        <img
-          src={PropertyPlaceholderImage}
-          alt="Property"
-          className="img-fluid gallery-thumbnails"
-        />
-      </div>
-      <div className="gallery-holder-vertical">
-        <img
-          src={PropertyPlaceholderImage}
-          alt="Property"
-          className="img-fluid gallery-thumbnails"
-        />
-      </div>
+      <aside className="row gallery-row">
+        <div className="gallery-col col-3 col-md-12">
+          <img
+            src={PropertyPlaceholderImage}
+            alt="Property"
+            className="img-fluid gallery-thumbnails property-img"
+          />
+        </div>
+        <div className="gallery-col col-3 col-md-12">
+          <img
+            src={PropertyPlaceholderImage}
+            alt="Property"
+            className="img-fluid gallery-thumbnails property-img"
+          />
+        </div>
+        <div className="gallery-col col-3 col-md-12">
+          <img
+            src={PropertyPlaceholderImage}
+            alt="Property"
+            className="img-fluid gallery-thumbnails property-img"
+          />
+        </div>
+        <div className="gallery-col col-3 col-md-12">
+          <Link to="/user/gallery" className="overlay overlay__secondary">
+            <img
+              src={PropertyPlaceholderImage}
+              alt="Property"
+              className="img-fluid gallery-thumbnails property-img mb-0"
+            />
+            <span>
+              <CameraIcon /> <br />
+              View Gallery
+            </span>
+          </Link>
+        </div>
+      </aside>
     </div>
   </div>
 );
 
 const PropertyDescription = () => (
-  <div className="col-sm-7">
+  <>
     <h5 className="mb-4">
       <span className="text-secondary">
         <MapPinIcon />
@@ -112,19 +121,19 @@ const PropertyDescription = () => (
       Off dreamworlds africana , at Km 20
     </h5>
     <div className="row">
-      <div className="col-sm-4">
+      <div className="col-sm-4 col-6">
         <small>Property Value</small>
         <h5>N35,000,000</h5>
       </div>
-      <div className="col-sm-4">
+      <div className="col-sm-4 col-6">
         <small>House Type</small>
         <h5>Apartment</h5>
       </div>
-      <div className="col-sm-2">
+      <div className="col-sm-2 col-6">
         <small>Bedroom</small>
         <h5>3</h5>
       </div>
-      <div className="col-sm-2">
+      <div className="col-sm-2 col-6">
         <small>Bathroom</small>
         <h5>4</h5>
       </div>
@@ -142,20 +151,20 @@ const PropertyDescription = () => (
       Blissville.
     </p>
 
-    <div className="mt-5">
+    <div className="my-5">
       <a href="/" className="btn-link icon-box">
         Download floor plans (PDF){' '}
-        <span>
+        <span className="d-inline-block ml-2">
           <DownloadIcon />
         </span>
       </a>
     </div>
-  </div>
+  </>
 );
 
 const AssignedPropertySidebar = () => (
   <Card className="card-container property-holder">
-    <table class="table table-sm table-borderless">
+    <table className="table table-sm table-borderless">
       <tbody>
         <tr>
           <td>

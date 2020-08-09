@@ -5,6 +5,7 @@ import Portfolio from 'components/pages/user/Portfolio';
 import SinglePortfolio from 'components/pages/user/SinglePortfolio';
 import Transactions from 'components/pages/user/Transactions';
 import Profile from 'components/pages/user/Profile';
+import Gallery from 'components/pages/user/Gallery';
 import ReferAndEarn from 'components/pages/user/ReferAndEarn';
 import JustForYou from 'components/pages/user/JustForYou';
 import Menu from 'components/pages/user/Menu';
@@ -20,6 +21,7 @@ const UserRouter = () => (
     <Profile path="profile" />
     <ReferAndEarn path="refer-and-earn" />
     <JustForYou path="just-for-you" />
+    <Gallery path="gallery" />
     <Menu path="menu" />
   </Router>
 );
