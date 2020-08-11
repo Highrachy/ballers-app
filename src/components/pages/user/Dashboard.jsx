@@ -77,7 +77,7 @@ const ReferAndEarn = () => (
       Refer your colleagues and friends to receive bonuses to grow your BALL net
       worth.
     </p>
-    <Link to="/" className="btn btn-sm btn-secondary">
+    <Link to="/user/refer-and-earn" className="btn btn-sm btn-secondary">
       Refer and Earn
     </Link>
   </section>
@@ -86,7 +86,7 @@ const ReferAndEarn = () => (
 const Others = () => (
   <>
     <div className="container-fluid">
-      <LinkHeader to="/" name="Overview" />
+      <LinkHeader to="/user/portfolio" name="Overview" />
       <div className="row row-eq-height">
         <div className="col-sm-6">
           <OwnedPropertyCard />
@@ -96,7 +96,7 @@ const Others = () => (
         </div>
       </div>
 
-      <LinkHeader to="/" name="Just for you" />
+      <LinkHeader to="/user/just-for-you" name="Just for you" />
       <div className="row">
         <div className="col-sm-6">
           <RecommendedPropertyCard />

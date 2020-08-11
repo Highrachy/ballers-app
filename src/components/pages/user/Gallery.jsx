@@ -11,6 +11,7 @@ const Profile = () => (
           <Tab eventKey="0" title="First Gallery">
             <div className="card-tab-content py-5">
               <SampleImages />
+              <SampleImages />
             </div>
           </Tab>
           <Tab eventKey="1" title="Second Gallery">
@@ -20,6 +21,8 @@ const Profile = () => (
           </Tab>
           <Tab eventKey="2" title="Third Gallery">
             <div className="card-tab-content py-5">
+              <SampleImages />
+              <SampleImages />
               <SampleImages />
             </div>
           </Tab>

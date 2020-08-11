@@ -51,7 +51,7 @@ const FixedFooter = () => (
         </Link>
       </li>
       <li className="list-group-item flex-fill">
-        <Link to="/user/transactions">
+        <Link to="/user/just-for-you">
           <span className="footer-fixed__icon">
             <LoveIcon />
           </span>
@@ -59,7 +59,7 @@ const FixedFooter = () => (
         </Link>
       </li>
       <li className="list-group-item flex-fill">
-        <Link to="/user/dashboard">
+        <Link to="/user/refer-to-earn">
           <span className="footer-fixed__icon">
             <ReferIcon />
           </span>

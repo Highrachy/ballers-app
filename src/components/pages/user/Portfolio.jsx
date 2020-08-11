@@ -49,7 +49,7 @@ const EnjoyingBallers = () => (
         </div>
         <div className="col-sm-4">
           <section className="property-btn">
-            <Link to="/" className="btn btn-secondary">
+            <Link to="/user/just-for-you" className="btn btn-secondary">
               + Add a New Property
             </Link>
           </section>
