@@ -6,8 +6,8 @@ import { Link } from '@reach/router';
 
 const Menu = () => (
   <BackendPage>
-    <div className="col-sm-10 mx-auto">
-      <h4>Menu</h4>
+    <div className="col-sm-10 mx-2">
+      <h4 className="my-4">Menu</h4>
       {userSideMenu.map(({ title, to, icon }) => (
         <Card key={title} className="menu__card">
           <Link to={to}>

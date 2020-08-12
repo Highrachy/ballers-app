@@ -2,6 +2,7 @@ import React from 'react';
 import Header from 'components/layout/Header';
 import { ReactComponent as PolkaDot } from 'assets/img/backgrounds/polka-dot.svg';
 import HomeImage from 'assets/img/home.png';
+import HomeTabImage from 'assets/img/home-tab.png';
 import PhoneImage from 'assets/img/phone.png';
 import Footer from 'components/layout/Footer';
 import BenefitsSection from 'components/common/BenefitsSection';
@@ -10,6 +11,8 @@ import CommunityGallery from 'components/common/CommunityGallery';
 import FAQsContent from 'content/faqs';
 import SearchPropertyForm from 'components/common/SearchPropertyForm';
 import { Flash, Slide } from 'react-awesome-reveal';
+import useWindowSize from 'hooks/useWindowSize';
+import { MOBILE_WIDTH } from 'utils/constants';
 
 const Home = () => (
   <>
@@ -52,28 +55,36 @@ const HoldingSection = () => (
   </section>
 );
 
-const AboutSection = () => (
-  <section className="container-fluid bg-light-blue mb-n4">
-    <div className="row my-4">
-      <div className="col-sm-6 col-12 text-center mb-n4">
-        <h6 className="header-secondary d-lg-none d-block">ABOUT BALL</h6>
-        <img src={HomeImage} className="img-fluid home-image" alt="home" />
+const AboutSection = () => {
+  const WINDOW_SIZE = useWindowSize();
+  return (
+    <section className="container-fluid bg-light-blue mb-n4">
+      <div className="row my-4">
+        <div className="col-sm-6 col-12 text-center mb-n4">
+          <h6 className="header-secondary d-lg-none d-block">ABOUT BALL</h6>
+          <img
+            src={WINDOW_SIZE.width > MOBILE_WIDTH ? HomeImage : HomeTabImage}
+            className="img-fluid home-image"
+            alt="home"
+          />
+        </div>
+        <div className="col-sm-6 col-12 pb-5">
+          <h6 className="header-secondary d-none d-lg-block">ABOUT BALL</h6>
+          <h2>
+            Game-changing service <br /> that makes owning <br /> your home
+            easier
+          </h2>
+          <p className="my-5 text-normal">
+            We make owning a home simpler and achievable. <br /> With BALL
+            unique saving plan tailored to you and your <br /> financial
+            position,owning a home has never been easier.
+          </p>
+          <button className="btn btn-secondary">LEARN MORE</button>
+        </div>
       </div>
-      <div className="col-sm-6 col-12 pb-5">
-        <h6 className="header-secondary d-none d-lg-block">ABOUT BALL</h6>
-        <h2>
-          Game-changing service <br /> that makes owning <br /> your home easier
-        </h2>
-        <p className="my-5 text-normal">
-          We make owning a home simpler and achievable. <br /> With BALL unique
-          saving plan tailored to you and your <br /> financial position,owning
-          a home has never been easier.
-        </p>
-        <button className="btn btn-secondary">LEARN MORE</button>
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const HowItWorksSection = () => (
   <section className="container-fluid my-4">

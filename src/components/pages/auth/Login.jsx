@@ -14,6 +14,7 @@ import { loginSchema } from 'components/forms/schemas/userSchema';
 // import AlertMessage from 'components/utils/AlertMessage';
 import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
+import { BASE_API_URL } from 'utils/constants';
 
 const Login = () => (
   <>
@@ -161,10 +162,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
         password: '',
       }}
       onSubmit={(values, actions) => {
-        Axios.post(
-          'https://staging-ballers-api.herokuapp.com/api/v1/user/login',
-          values
-        )
+        Axios.post(`${BASE_API_URL}/api/v1/user/login`, values)
           .then(function (response) {
             const { status } = response;
             if (status === 200) {

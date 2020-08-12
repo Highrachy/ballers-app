@@ -59,7 +59,7 @@ const FixedFooter = () => (
         </Link>
       </li>
       <li className="list-group-item flex-fill">
-        <Link to="/user/refer-to-earn">
+        <Link to="/user/refer-and-earn">
           <span className="footer-fixed__icon">
             <ReferIcon />
           </span>
