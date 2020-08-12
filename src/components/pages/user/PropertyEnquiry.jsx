@@ -15,6 +15,7 @@ import { Card } from 'react-bootstrap';
 import Textarea from 'components/forms/Textarea';
 import DatePicker from 'components/forms/DatePicker';
 import RadioSelect from 'components/forms/RadioSelect';
+import { BASE_API_URL } from 'utils/constants';
 // import Select from 'components/forms/Select';
 
 const PropertyEnquiry = () => (
@@ -36,10 +37,7 @@ const EnquiryForm = () => {
       onSubmit={(values, actions) => {
         delete values.agreement;
 
-        Axios.post(
-          'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
-          values
-        )
+        Axios.post(`${BASE_API_URL}/user/register`, values)
           .then(function (response) {
             const { status } = response;
             if (status === 200) {

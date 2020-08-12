@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { stringValidation } from './schema-helpers';
+import { stringValidation, OptionalPhoneNumber } from './schema-helpers';
 import {
   email,
   password,
@@ -44,6 +44,7 @@ export const personalInfoSchema = {
   firstName: stringValidation('First Name'),
   lastName: stringValidation('Last Name'),
   phone: phoneNumber,
+  phone2: OptionalPhoneNumber,
 };
 
 export const forgotPasswordSchema = { email };

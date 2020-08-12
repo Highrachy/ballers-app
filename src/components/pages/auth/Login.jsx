@@ -116,11 +116,6 @@ const LoginForm = ({ redirectTo, sid, token }) => {
           .then(function (response) {
             const { status, data } = response;
             if (status === 200) {
-              setToast({
-                type: 'success',
-                message: `Your login is successful.`,
-              });
-              console.log('loggedIn');
               storeToken(data.user.token);
               storeUserType(data.user.role);
               userDispatch({ type: 'user-login', user: data.user });

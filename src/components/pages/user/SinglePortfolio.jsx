@@ -4,7 +4,7 @@ import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
 import Map from 'components/common/Map';
-import { OFFICE_LOCATION } from 'utils/constants';
+import { OFFICE_LOCATION, BASE_API_URL } from 'utils/constants';
 import Modal from 'components/common/Modal';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
@@ -307,10 +307,7 @@ const ScheduleVisitForm = () => {
           onSubmit={(values, actions) => {
             delete values.agreement;
 
-            Axios.post(
-              'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
-              values
-            )
+            Axios.post(`${BASE_API_URL}/user/register`, values)
               .then(function (response) {
                 const { status } = response;
                 if (status === 200) {

@@ -13,6 +13,7 @@ import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { registerSchema } from 'components/forms/schemas/userSchema';
 import ReferralImage from 'assets/img/refer-n-earn.png';
+import { BASE_API_URL } from 'utils/constants';
 
 const ReferAndEarn = () => (
   <BackendPage>
@@ -54,10 +55,7 @@ const InviteFriendByEmailForm = () => {
           onSubmit={(values, actions) => {
             delete values.agreement;
 
-            Axios.post(
-              'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
-              values
-            )
+            Axios.post(`${BASE_API_URL}/user/register`, values)
               .then(function (response) {
                 const { status } = response;
                 if (status === 200) {

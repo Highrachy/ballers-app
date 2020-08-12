@@ -34,11 +34,13 @@ const AlertToast = ({ message, type }) => (
 const Toast = ({ message, type, toastIsClosed }) => {
   const [show, setShow] = React.useState(true);
   const [msg, setMessage] = React.useState(null);
+  const [alertType, setAlertType] = React.useState('error');
 
   React.useEffect(() => {
     message && setShow(true);
     message && setMessage(message);
-  }, [message]);
+    type && setAlertType(type);
+  }, [message, type]);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -53,7 +55,7 @@ const Toast = ({ message, type, toastIsClosed }) => {
 
   if (!message) {
     if (msg) {
-      return <AlertToast message={msg} type={type} />;
+      return <AlertToast message={msg} type={alertType} />;
     }
     return null;
   }

@@ -11,7 +11,13 @@ import {
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { registerSchema } from 'components/forms/schemas/userSchema';
+import {
+  registerSchema,
+  personalInfoSchema,
+} from 'components/forms/schemas/userSchema';
+import { BASE_API_URL } from 'utils/constants';
+import { getTokenFromStore } from 'utils/localStorage';
+import { UserContext } from 'context/UserContext';
 
 const Profile = () => (
   <BackendPage>
@@ -41,37 +47,42 @@ const Profile = () => (
 
 const ProfileForm = () => {
   const [toast, setToast] = useToast();
+  const { userState, userDispatch } = React.useContext(UserContext);
   return (
     <section className="row">
       <div className="col-md-10">
         <Formik
-          initialValues={setInitialValues(registerSchema, { agreement: [] })}
+          enableReinitialize={true}
+          initialValues={setInitialValues(personalInfoSchema, userState)}
           onSubmit={(values, actions) => {
             delete values.agreement;
 
-            Axios.post(
-              'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
-              values
-            )
+            Axios.put(`${BASE_API_URL}/user/update`, values, {
+              headers: { Authorization: getTokenFromStore() },
+            })
               .then(function (response) {
-                const { status } = response;
+                const { status, data } = response;
                 if (status === 200) {
+                  userDispatch({
+                    type: 'user-profile-update',
+                    user: data.updatedUser,
+                  });
                   setToast({
                     type: 'success',
-                    message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
+                    message: `Your profile has been successfully updated`,
                   });
                   actions.setSubmitting(false);
-                  actions.resetForm();
                 }
               })
               .catch(function (error) {
                 setToast({
-                  message: error.response.data.message,
+                  message:
+                    error.response.data.error || error.response.data.message,
                 });
                 actions.setSubmitting(false);
               });
           }}
-          validationSchema={createSchema(registerSchema)}
+          validationSchema={createSchema(personalInfoSchema)}
         >
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>
@@ -95,17 +106,18 @@ const ProfileForm = () => {
               <div className="form-row">
                 <Input
                   formGroupClassName="col-md-6"
-                  isValidMessage="Email address seems valid"
-                  label="Email"
-                  name="email"
-                  placeholder="Email Address"
-                />
-                <Input
-                  formGroupClassName="col-md-6"
                   isValidMessage="Phone number looks good"
                   label="Phone"
                   name="phone"
                   placeholder="Phone"
+                />
+                <Input
+                  formGroupClassName="col-md-6"
+                  isValidMessage="Phone number looks good"
+                  label="Alternative Phone"
+                  name="phone2"
+                  optional
+                  placeholder="Alternative Phone"
                 />
               </div>
               <Button
@@ -115,7 +127,7 @@ const ProfileForm = () => {
               >
                 Save Changes
               </Button>
-              <DisplayFormikState {...props} hide showAll />
+              <DisplayFormikState {...props} showAll />
             </Form>
           )}
         </Formik>
@@ -134,10 +146,7 @@ const PropertyPreferenceForm = () => {
           onSubmit={(values, actions) => {
             delete values.agreement;
 
-            Axios.post(
-              'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
-              values
-            )
+            Axios.post(`${BASE_API_URL}/user/register`, values)
               .then(function (response) {
                 const { status } = response;
                 if (status === 200) {
@@ -219,10 +228,7 @@ const ChangePasswordForm = () => {
           onSubmit={(values, actions) => {
             delete values.agreement;
 
-            Axios.post(
-              'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
-              values
-            )
+            Axios.post(`${BASE_API_URL}/user/register`, values)
               .then(function (response) {
                 const { status } = response;
                 if (status === 200) {

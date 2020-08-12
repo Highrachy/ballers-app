@@ -19,6 +19,7 @@ import CheckboxGroup from 'components/forms/CheckboxGroup';
 import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
+import { BASE_API_URL } from 'utils/constants';
 
 const Register = () => (
   <>
@@ -92,10 +93,7 @@ const RegisterForm = ({ type }) => {
       onSubmit={(values, actions) => {
         delete values.agreement;
 
-        Axios.post(
-          'https://staging-ballers-api.herokuapp.com/api/v1/user/register',
-          values
-        )
+        Axios.post(`${BASE_API_URL}/user/register`, values)
           .then(function (response) {
             const { status } = response;
             if (status === 200) {
