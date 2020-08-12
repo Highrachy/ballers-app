@@ -8,16 +8,17 @@ export const HomeKeeping = ({ children, location }) => {
   const { userState, userDispatch } = React.useContext(UserContext);
   React.useEffect(() => {
     if (!userState.isLoggedIn && getTokenFromStore()) {
+      console.log('getTokenFromStore()', getTokenFromStore());
       axios
-        .get(`${BASE_API_URL}/api/v1/who-am-i`, {
+        .get(`${BASE_API_URL}/user/who-am-i`, {
           headers: {
-            'x-access-token': getTokenFromStore(),
+            Authorization: getTokenFromStore(),
           },
         })
         .then(function (response) {
           const { status, data } = response;
           if (status === 200) {
-            userDispatch({ type: 'user-info', user: data });
+            userDispatch({ type: 'user-info', user: data.user });
             storeUserType(data.type);
           }
         })

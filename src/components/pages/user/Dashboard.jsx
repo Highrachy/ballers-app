@@ -12,6 +12,7 @@ import {
 } from 'components/common/PropertyCard';
 import useWindowSize from 'hooks/useWindowSize';
 import { MOBILE_WIDTH } from 'utils/constants';
+import { UserContext } from 'context/UserContext';
 
 const Dashboard = () => (
   <BackendPage>
@@ -22,6 +23,7 @@ const Dashboard = () => (
 );
 
 const Welcome = () => {
+  const { userState /* userDispatch */ } = React.useContext(UserContext);
   const WINDOW_SIZE = useWindowSize();
   const [showSearch, setShowSearch] = React.useState(
     WINDOW_SIZE.width > MOBILE_WIDTH
@@ -31,7 +33,7 @@ const Welcome = () => {
       <div className="card bg-primary dashboard mb-3">
         <div className="row">
           <div className="col-sm-5">
-            <h4>Hello, Danjuma </h4>
+            <h4>Hello, {userState.firstName} </h4>
             <p className="lead">Welcome to BALL!</p>
           </div>
           <div className="col-sm-7">

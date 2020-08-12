@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
-import { getProxy } from 'utils/helpers';
 import { Link, navigate } from '@reach/router';
 import { Formik, Form } from 'formik';
 import Axios from 'axios';
@@ -11,10 +10,11 @@ import { feedback } from 'components/forms/form-helper';
 import Button from 'components/forms/Button';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { loginSchema } from 'components/forms/schemas/userSchema';
-// import AlertMessage from 'components/utils/AlertMessage';
 import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, DASHBOARD_PAGE } from 'utils/constants';
+import { UserContext } from 'context/UserContext';
+import { storeToken, storeUserType } from 'utils/localStorage';
 
 const Login = () => (
   <>
@@ -26,12 +26,6 @@ const Login = () => (
   </>
 );
 const Content = ({ redirectTo, sid, token }) => {
-  // const [{ data, loading, error }] = useAxios(
-  //   'https://staging-ballers-api.herokuapp.com/api/v1/'
-  // );
-
-  // console.log('data, loading, error', data, loading, error);
-
   return (
     <section>
       <div className="container-fluid">
@@ -39,7 +33,6 @@ const Content = ({ redirectTo, sid, token }) => {
           <div className="col-lg-5 auth__text">
             <h1>
               Welcome Back, <br />
-              Haruna
             </h1>
             <p className="lead">
               Sign in to access your profile, rewards and contributions.
@@ -48,20 +41,6 @@ const Content = ({ redirectTo, sid, token }) => {
           <div className="offset-lg-2 col-lg-5">
             <div className="card p-5 my-6">
               <LoginForm redirectTo={redirectTo} sid={sid} token={token} />
-              <section className="auth__social-media">
-                <a
-                  className="auth__social-media--icons"
-                  href={`${getProxy()}/api/v1/auth/google`}
-                >
-                  <span className="icon-google" />
-                </a>
-                {/* <a
-                  className="auth__social-media--icons"
-                  href={`${getProxy()}/api/v1/auth/facebook`}
-                >
-                  <span className="icon-facebook-official" />
-                </a> */}
-              </section>
               <section className="auth__footer">
                 <div className="register mt-6 text-center">
                   Not Registered?{' '}
@@ -81,14 +60,20 @@ const Content = ({ redirectTo, sid, token }) => {
 };
 
 Content.propTypes = {
-  redirectTo: PropTypes.string.isRequired,
-  sid: PropTypes.string.isRequired,
-  token: PropTypes.string.isRequired,
+  redirectTo: PropTypes.string,
+  sid: PropTypes.string,
+  token: PropTypes.string,
+};
+
+Content.defaultProps = {
+  redirectTo: null,
+  sid: null,
+  token: null,
 };
 
 const LoginForm = ({ redirectTo, sid, token }) => {
   const [toast, setToast] = useToast();
-  // const { userState, userDispatch } = React.useContext(UserContext);
+  const { userState, userDispatch } = React.useContext(UserContext);
 
   // CHECK TOKEN ACTIVATION
   React.useEffect(() => {
@@ -99,61 +84,26 @@ const LoginForm = ({ redirectTo, sid, token }) => {
           // handle success
           if (status === 200) {
             console.log('data', data);
-            // setMessage({
-            //   type: 'success',
-            //   message: data.message,
-            // });
+            setToast({
+              type: 'success',
+              message: data.message,
+            });
           }
         })
         .catch(function (error) {
-          // setMessage({
-          //   message: error.response.data.message,
-          // });
+          setToast({
+            message: error.response.data.message,
+          });
         });
-  }, [token]);
-
-  // CHECK IF SOCIAL MEDIA LOGIN
-  // React.useEffect(() => {
-  //   sid &&
-  //     axios
-  //       .get('/api/v1/who-am-i', {
-  //         headers: {
-  //           'x-access-token': sid,
-  //         },
-  //       })
-  //       .then(function (response) {
-  //         const { status, data } = response;
-
-  //         // handle success
-  //         if (status === 200) {
-  //           if (data.type === USER_TYPES.unknown) {
-  //             navigate(`/complete-registration/${sid}`);
-  //           } else {
-  //             userDispatch({ type: 'user-social-media-login', user: data });
-  //             storeToken(sid);
-  //             storeUserType(data.type);
-  //           }
-  //         }
-  //       })
-  //       .catch(function (error) {
-  //         console.log('error', error);
-  //         setMessage({
-  //           message: error.response.data.message,
-  //         });
-  //       });
-  // }, [sid, userDispatch]);
+  }, [token, setToast]);
 
   // CHECK IF USER HAS SIGNED IN
-  // React. useEffect(() => {
-  //   if (
-  //     userState &&
-  //     userState.isLoggedIn &&
-  //     userState.type !== USER_TYPES.unknown
-  //   ) {
-  //     const dashboardUrl = `/${DASHBOARD_PAGE[userState.type]}/dashboard`;
-  //     navigate(redirectTo || dashboardUrl);
-  //   }
-  // }, [userState, redirectTo]);
+  React.useEffect(() => {
+    if (userState && userState.isLoggedIn) {
+      const dashboardUrl = `/${DASHBOARD_PAGE[userState.role]}/dashboard`;
+      navigate(redirectTo || dashboardUrl);
+    }
+  }, [userState, redirectTo]);
 
   return (
     <Formik
@@ -162,17 +112,18 @@ const LoginForm = ({ redirectTo, sid, token }) => {
         password: '',
       }}
       onSubmit={(values, actions) => {
-        Axios.post(`${BASE_API_URL}/api/v1/user/login`, values)
+        Axios.post(`${BASE_API_URL}/user/login`, values)
           .then(function (response) {
-            const { status } = response;
+            const { status, data } = response;
             if (status === 200) {
               setToast({
                 type: 'success',
                 message: `Your login is successful.`,
               });
-              navigate('user/dashboard');
-              actions.setSubmitting(false);
-              actions.resetForm();
+              console.log('loggedIn');
+              storeToken(data.user.token);
+              storeUserType(data.user.role);
+              userDispatch({ type: 'user-login', user: data.user });
             }
           })
           .catch(function (error) {
@@ -182,7 +133,9 @@ const LoginForm = ({ redirectTo, sid, token }) => {
             actions.setSubmitting(false);
           });
       }}
-      render={({ isSubmitting, handleSubmit }) => {
+      validationSchema={createSchema(loginSchema)}
+    >
+      {({ isSubmitting, handleSubmit }) => {
         const submitFormWithEnterKey = (event) => {
           if (event.keyCode === 13) {
             handleSubmit();
@@ -219,18 +172,20 @@ const LoginForm = ({ redirectTo, sid, token }) => {
           </Form>
         );
       }}
-      validationSchema={createSchema(loginSchema)}
-    />
+    </Formik>
   );
 };
 
 LoginForm.propTypes = {
   redirectTo: PropTypes.string,
-  sid: PropTypes.string.isRequired,
-  token: PropTypes.string.isRequired,
+  sid: PropTypes.string,
+  token: PropTypes.string,
 };
 
 LoginForm.defaultProps = {
-  redirectTo: '',
+  redirectTo: null,
+  sid: null,
+  token: null,
 };
+
 export default Login;

@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from 'components/layout/Sidebar';
 import TopBar from 'components/layout/TopBar';
-import { Link } from '@reach/router';
+import { Link, navigate, useLocation } from '@reach/router';
 import {
   MyPropertyIcon,
   HomeIcon,
@@ -9,13 +9,28 @@ import {
   ReferIcon,
   MenuIcon,
 } from 'components/utils/Icons';
+import { UserContext } from 'context/UserContext';
+import { getTokenFromStore } from 'utils/localStorage';
 
 const BackendPage = ({ children }) => {
+  let { userDispatch } = React.useContext(UserContext);
+  const location = useLocation();
+
   const [showSidebar, setShowSidebar] = React.useState(false);
   const closeSidebar = () => {
     document.body.classList.remove('modal-open');
     setShowSidebar(false);
   };
+
+  // CHECK IF USER HAS PREVIOUSLY SIGNED IN
+  React.useEffect(() => {
+    if (!getTokenFromStore()) {
+      userDispatch({
+        type: 'no-token',
+      });
+      navigate(`/login?url=${location.pathname}`);
+    }
+  }, [userDispatch, location]);
 
   return (
     <div>
