@@ -1,11 +1,11 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 // import { getProxy } from 'utils/helpers';
 import { Link } from '@reach/router';
 import { Formik, Form } from 'formik';
-// import Axios from 'axios';
+import Axios from 'axios';
 import Input from 'components/forms/Input';
 import {
   setInitialValues,
@@ -14,11 +14,9 @@ import {
 import Button from 'components/forms/Button';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { registerSchema } from 'components/forms/schemas/userSchema';
-// import AlertMessage from 'components/utils/AlertMessage';
 import CheckboxGroup from 'components/forms/CheckboxGroup';
 import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
-import Axios from 'axios';
 import { BASE_API_URL } from 'utils/constants';
 
 const Register = () => (
@@ -66,21 +64,27 @@ const Content = ({ redirectTo, sid, token }) => {
 };
 
 Content.propTypes = {
-  // redirectTo: PropTypes.string.isRequired,
-  // sid: PropTypes.string.isRequired,
-  // token: PropTypes.string.isRequired,
+  redirectTo: PropTypes.string,
+  sid: PropTypes.string,
+  token: PropTypes.string,
+};
+
+Content.defaultProps = {
+  redirectTo: null,
+  sid: null,
+  token: null,
 };
 
 const RegisterForm = ({ type }) => {
   const agreementText = (
     <small>
-      I agree to the terms listed in the{' '}
-      <a href="/terms-of-use" target="_blank">
+      I agree to{' '}
+      <a href="/terms-of-use" className="text-secondary" target="_blank">
         Ballers Terms of Use
       </a>{' '}
       and acknowledge the{' '}
-      <a href="/privacy-policy" target="_blank">
-        Ballers Privacy Policy
+      <a href="/privacy-policy" className="text-secondary" target="_blank">
+        Privacy Policy
       </a>
       .
     </small>
@@ -96,10 +100,10 @@ const RegisterForm = ({ type }) => {
         Axios.post(`${BASE_API_URL}/user/register`, values)
           .then(function (response) {
             const { status } = response;
-            if (status === 200) {
+            if (status === 201) {
               setToast({
                 type: 'success',
-                message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
+                message: `Your registration is successful. Kindly activate your account via the confirmation link sent to your inbox (${values.email}).`,
               });
               actions.setSubmitting(false);
               actions.resetForm();

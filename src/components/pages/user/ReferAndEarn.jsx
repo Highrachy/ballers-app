@@ -14,6 +14,9 @@ import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { registerSchema } from 'components/forms/schemas/userSchema';
 import ReferralImage from 'assets/img/refer-n-earn.png';
 import { BASE_API_URL } from 'utils/constants';
+import { CopyToClipBoardIcon } from 'components/utils/Icons';
+import { UserContext } from 'context/UserContext';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const ReferAndEarn = () => (
   <BackendPage>
@@ -25,31 +28,34 @@ const ReferAndEarn = () => (
   </BackendPage>
 );
 
-const EmailReferral = () => (
-  <div className="container-fluid">
-    <h5>Refer your friends and earn more</h5>
-    <Card className="mt-4 card-container">
-      <section className="row py-4">
-        <div className="col-sm-5 my-5">
-          <img src={ReferralImage} alt="Referral" className="img-fluid" />
-        </div>
-        <div className="col-sm-7">
-          <p className="text-primary mb-5">
-            Refer your friends and earn. We will also give your friends rewards
-            because we value your friendship.
-          </p>
-          <InviteFriendByEmailForm />
-        </div>
-      </section>
-    </Card>
-  </div>
-);
+const EmailReferral = () => {
+  return (
+    <div className="container-fluid">
+      <h5>Refer your friends and earn more</h5>
+      <Card className="mt-4 card-container">
+        <section className="row py-4">
+          <div className="col-sm-5 my-5">
+            <img src={ReferralImage} alt="Referral" className="img-fluid" />
+          </div>
+          <div className="col-sm-7">
+            <p className="text-primary mb-5">
+              Refer your friends and earn. We will also give your friends
+              rewards because we value your friendship.
+            </p>
+
+            <InviteFriendByEmailForm />
+          </div>
+        </section>
+      </Card>
+    </div>
+  );
+};
 
 const InviteFriendByEmailForm = () => {
   const [toast, setToast] = useToast();
   return (
     <section className="row">
-      <div className="col-md-10">
+      <div className="col-md-12">
         <Formik
           initialValues={setInitialValues(registerSchema, { agreement: [] })}
           onSubmit={(values, actions) => {
@@ -84,6 +90,7 @@ const InviteFriendByEmailForm = () => {
                 name="email"
                 placeholder="Email Address"
               />
+              <Input name="name" optional placeholder="Name (Optional)" />
               <div className="text-center">
                 <Button
                   className="btn-secondary mt-1 btn-sm btn-wide"
@@ -106,27 +113,64 @@ const YourReferralCode = () => (
   <div className="container-fluid">
     <Card className="mt-4 card-container">
       <section className="row py-4">
-        <div className="col-sm-6 my-5">
-          <InviteFriendByEmailForm />
+        <div className="col-sm-6">
+          <ReferralCodeClipBoard />
         </div>
         <div className="col-sm-6">
-          <p className="text-primary">Share:</p>
-          <span className="icon-holder">
-            <FacebookIcon />
-          </span>
-          <span className="icon-holder">
-            <TwitterIcon />
-          </span>
-          <span className="icon-holder">
-            <WhatsappIcon />
-          </span>
-          <span className="icon-holder">
-            <LinkedInIcon />
-          </span>
+          <ReferralSocialShare />
         </div>
       </section>
     </Card>
   </div>
+);
+
+const ReferralCodeClipBoard = () => {
+  const { userState } = React.useContext(UserContext);
+  const [copied, setCopied] = React.useState(false);
+  const referralCode = `https://ballers.ng?ref=${userState.referralCode}`;
+
+  return (
+    <>
+      <label htmlFor="referralLink">Your Referral Link</label>
+      <div className="input-group">
+        <input
+          type="text"
+          name="referralLink"
+          className="form-control"
+          aria-label="referral code"
+          value={referralCode}
+        />
+        <div className="input-group-append">
+          <CopyToClipboard text={referralCode} onCopy={() => setCopied(true)}>
+            <span className="input-group-text btn btn-light">
+              <CopyToClipBoardIcon />
+            </span>
+          </CopyToClipboard>
+        </div>
+      </div>
+      <div className="mt-2">
+        {copied && <small>Your text has been successfully copied</small>}
+      </div>
+    </>
+  );
+};
+
+const ReferralSocialShare = () => (
+  <>
+    <p className="text-primary">Share:</p>
+    <span className="icon-holder">
+      <FacebookIcon />
+    </span>
+    <span className="icon-holder">
+      <TwitterIcon />
+    </span>
+    <span className="icon-holder">
+      <WhatsappIcon />
+    </span>
+    <span className="icon-holder">
+      <LinkedInIcon />
+    </span>
+  </>
 );
 
 const InviteFriendsTable = () => (
