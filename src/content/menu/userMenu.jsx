@@ -30,8 +30,8 @@ export default [
     icon: <LoveIcon />,
   },
   {
-    title: 'Profile',
-    to: '/user/profile',
+    title: 'Settings',
+    to: '/user/settings',
     icon: <ProfileIcon />,
   },
   {

@@ -10,7 +10,10 @@ import {
 } from 'components/forms/form-helper';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
-import { createSchema } from 'components/forms/schemas/schema-helpers';
+import {
+  createSchema,
+  addressSchema,
+} from 'components/forms/schemas/schema-helpers';
 import {
   registerSchema,
   personalInfoSchema,
@@ -18,8 +21,9 @@ import {
 import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
+import Address from 'components/utils/Address';
 
-const Profile = () => (
+const Settings = () => (
   <BackendPage>
     <div className="container-fluid">
       <Card className="card-container">
@@ -48,15 +52,17 @@ const Profile = () => (
 const ProfileForm = () => {
   const [toast, setToast] = useToast();
   const { userState, userDispatch } = React.useContext(UserContext);
+
   return (
     <section className="row">
       <div className="col-md-10">
         <Formik
           enableReinitialize={true}
-          initialValues={setInitialValues(personalInfoSchema, userState)}
+          initialValues={{
+            ...setInitialValues(personalInfoSchema, userState),
+            address: setInitialValues(addressSchema, userState),
+          }}
           onSubmit={(values, actions) => {
-            delete values.agreement;
-
             Axios.put(`${BASE_API_URL}/user/update`, values, {
               headers: { Authorization: getTokenFromStore() },
             })
@@ -82,7 +88,12 @@ const ProfileForm = () => {
                 actions.setSubmitting(false);
               });
           }}
-          validationSchema={createSchema(personalInfoSchema)}
+          validationSchema={createSchema({
+            ...personalInfoSchema,
+            address: createSchema(addressSchema),
+          })}
+          // address: createSchema(addressSchema),
+          // }
         >
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>
@@ -120,6 +131,8 @@ const ProfileForm = () => {
                   placeholder="Alternative Phone"
                 />
               </div>
+
+              <Address />
               <Button
                 className="btn-secondary mt-4"
                 loading={isSubmitting}
@@ -285,4 +298,4 @@ const ChangePasswordForm = () => {
     </section>
   );
 };
-export default Profile;
+export default Settings;

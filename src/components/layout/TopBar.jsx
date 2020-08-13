@@ -34,7 +34,7 @@ const Header = () => (
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="dropdown-menu-children">
-              <Dropdown.Item as={Link} to="/user/profile">
+              <Dropdown.Item as={Link} to="/user/settings">
                 Settings
               </Dropdown.Item>
               <Dropdown.Item as={Link} to="/logout">

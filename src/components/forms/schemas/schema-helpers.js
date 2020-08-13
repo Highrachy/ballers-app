@@ -151,3 +151,11 @@ export const multiSelectValidation = (label) =>
     .label(label)
     .min(1, `Tip: you can select more than one ${label}.`)
     .of(yup.string().required());
+
+export const addressSchema = {
+  streetLine1: stringValidation('Street Line 1'),
+  streetLine2: optionalValidation(stringValidation('Street Line 2', 2)),
+  city: required('City'),
+  state: required('State'),
+  country: required('Country'),
+};
