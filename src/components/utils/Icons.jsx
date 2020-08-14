@@ -19,17 +19,19 @@ export const HomeIcon = () => (
 
 export const MyPropertyIcon = () => (
   <svg
+    xmlns="http://www.w3.org/2000/svg"
     width={24}
     height={24}
-    viewBox="0 0 28 30"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-home"
   >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M20.0002 26.9817H24.4852L24.5002 14.4177L13.9972 3.6297L3.50924 14.3562L3.50024 26.9817H8.00024V16.4817C8.00024 15.6522 8.67074 14.9817 9.50024 14.9817H18.5002C19.3282 14.9817 20.0002 15.6522 20.0002 16.4817V26.9817ZM17.0002 26.9817H11.0002V17.9817H17.0002V26.9817ZM26.6362 12.2592L15.0727 0.433186C14.5072 -0.144314 13.4932 -0.144314 12.9277 0.433186L1.36274 12.2607C0.815244 12.8232 0.500244 13.6092 0.500244 14.4177V26.9817C0.500244 28.6362 1.77074 29.9817 3.33224 29.9817H9.50024H18.5002H24.6667C26.2282 29.9817 27.5002 28.6362 27.5002 26.9817V14.4177C27.5002 13.6092 27.1852 12.8232 26.6362 12.2592Z"
-    />
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    <polyline points="9 22 9 12 15 12 15 22" />
   </svg>
 );
 
@@ -441,6 +443,24 @@ export const SearchIcon = () => (
   >
     <circle cx={11} cy={11} r={8} />
     <line x1={21} y1={21} x2="16.65" y2="16.65" />
+  </svg>
+);
+
+export const UsersIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-user"
+  >
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx={12} cy={7} r={4} />
   </svg>
 );
 

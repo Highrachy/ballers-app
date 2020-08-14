@@ -87,12 +87,6 @@
     .sidebar__icon {
       display: inline-block;
       margin-right: 1rem;
-      svg {
-        fill: $gray-700;
-      }
-    }
-    &:hover svg {
-      fill: $secondary;
     }
 
     &.active {
@@ -109,10 +103,6 @@
         left: 0;
         height: 2rem;
         background: $secondary;
-      }
-
-      svg {
-        fill: $secondary;
       }
     }
     // @include media-breakpoint-up(sm) {

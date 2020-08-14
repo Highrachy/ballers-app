@@ -3,31 +3,31 @@ import {
   MyPropertyIcon,
   HomeIcon,
   TransactionIcon,
-  LoveIcon,
   ProfileIcon,
   ReferIcon,
+  UsersIcon,
 } from 'components/utils/Icons';
 
 export default [
   {
     title: 'Home',
-    to: '/user/dashboard',
+    to: '/admin/dashboard',
     icon: <HomeIcon />,
   },
   {
-    title: 'My Portfolio',
-    to: '/user/portfolio',
+    title: 'Users',
+    to: '/admin/users',
+    icon: <UsersIcon />,
+  },
+  {
+    title: 'Portfolios',
+    to: '/admin/portfolios',
     icon: <MyPropertyIcon />,
   },
   {
     title: 'Transaction',
-    to: '/user/transactions',
+    to: '/admin/transactions',
     icon: <TransactionIcon />,
-  },
-  {
-    title: 'Just For You',
-    to: '/user/just-for-you',
-    icon: <LoveIcon />,
   },
   {
     title: 'Settings',
