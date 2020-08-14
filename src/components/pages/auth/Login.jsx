@@ -14,7 +14,7 @@ import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
 import { BASE_API_URL, DASHBOARD_PAGE } from 'utils/constants';
 import { UserContext } from 'context/UserContext';
-import { storeToken, storeUserType } from 'utils/localStorage';
+import { storeToken, storeUserRole } from 'utils/localStorage';
 
 const Login = () => (
   <>
@@ -117,7 +117,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
             const { status, data } = response;
             if (status === 200) {
               storeToken(data.user.token);
-              storeUserType(data.user.role);
+              storeUserRole(data.user.role);
               userDispatch({ type: 'user-login', user: data.user });
             }
           })

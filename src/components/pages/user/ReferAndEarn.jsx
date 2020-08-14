@@ -156,8 +156,8 @@ const ReferralCodeClipBoard = () => {
       </div>
       <div className="mt-2">
         {copied && (
-          <div className="small text-danger text-center">
-            Your referral link has been successfully copied
+          <div className="small text-success text-center">
+            Your referral link has been successfully copied!
           </div>
         )}
       </div>

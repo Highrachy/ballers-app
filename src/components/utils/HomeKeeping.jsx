@@ -1,5 +1,5 @@
 import React from 'react';
-import { getTokenFromStore, storeUserType } from 'utils/localStorage';
+import { getTokenFromStore, storeUserRole } from 'utils/localStorage';
 import axios from 'axios';
 import { UserContext } from 'context/UserContext';
 import { BASE_API_URL } from 'utils/constants';
@@ -19,7 +19,7 @@ export const HomeKeeping = ({ children, location }) => {
           const { status, data } = response;
           if (status === 200) {
             userDispatch({ type: 'user-info', user: data.user });
-            storeUserType(data.type);
+            storeUserRole(data.type);
           }
         })
         .catch(function (error) {});

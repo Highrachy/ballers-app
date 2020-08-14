@@ -153,7 +153,7 @@ const PropertyDescription = () => (
 
     <div className="my-5">
       <a href="/" className="btn-link icon-box">
-        Download floor plans (PDF){' '}
+        View floor plans{' '}
         <span className="d-inline-block ml-2">
           <DownloadIcon />
         </span>
