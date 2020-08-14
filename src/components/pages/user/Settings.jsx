@@ -17,11 +17,13 @@ import {
 import {
   registerSchema,
   personalInfoSchema,
+  changePasswordSchema,
 } from 'components/forms/schemas/userSchema';
 import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import Address from 'components/utils/Address';
+import { feedback } from 'components/forms/form-helper';
 
 const Settings = () => (
   <BackendPage>
@@ -237,17 +239,17 @@ const ChangePasswordForm = () => {
     <section className="row">
       <div className="col-md-10">
         <Formik
-          initialValues={setInitialValues(registerSchema, { agreement: [] })}
+          initialValues={setInitialValues(changePasswordSchema)}
           onSubmit={(values, actions) => {
-            delete values.agreement;
-
-            Axios.post(`${BASE_API_URL}/user/register`, values)
+            Axios.put(`${BASE_API_URL}/user/change-password`, values, {
+              headers: { 'x-access-token': getTokenFromStore() },
+            })
               .then(function (response) {
                 const { status } = response;
                 if (status === 200) {
                   setToast({
                     type: 'success',
-                    message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
+                    message: `Your password has been successfully updated`,
                   });
                   actions.setSubmitting(false);
                   actions.resetForm();
@@ -265,30 +267,36 @@ const ChangePasswordForm = () => {
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>
               <Toast {...toast} />
-              <div className="form-row">
-                <Input
-                  formGroupClassName="col-md-6"
-                  isValidMessage="Old Password looks good"
-                  label="Old Password"
-                  name="oldPassword"
-                  placeholder="Old Password"
-                />
-              </div>
-              <div className="form-row">
-                <Input
-                  formGroupClassName="col-md-6"
-                  isValidMessage="New Password number looks good"
-                  label="New Password"
-                  name="New Password"
-                  placeholder="New Password"
-                />
-              </div>
+              <Input
+                isValidMessage="Password seems good"
+                label="Old Password"
+                name="oldPassword"
+                placeholder="Old Password"
+                showFeedback={feedback.ERROR}
+                type="password"
+              />
+              <Input
+                isValidMessage="Password seems good"
+                label="New Password"
+                name="password"
+                placeholder="New Password"
+                showFeedback={feedback.ERROR}
+                type="password"
+              />
+              <Input
+                isValidMessage="Password matches"
+                label="Confirm Password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                showFeedback={feedback.ERROR}
+                type="password"
+              />
               <Button
-                className="btn-secondary mt-4"
+                className="btn-danger btn-wide btn-transparent mt-3"
                 loading={isSubmitting}
                 onClick={handleSubmit}
               >
-                Save Changes
+                Update Password
               </Button>
               <DisplayFormikState {...props} hide showAll />
             </Form>
