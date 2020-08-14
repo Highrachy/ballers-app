@@ -3,16 +3,20 @@ import store from 'store2';
 import { UserContext } from 'context/UserContext';
 import BackendPage from 'components/layout/BackendPage';
 import { navigate } from '@reach/router';
+import { storeUserFirstName } from 'utils/localStorage';
 
 const Logout = () => {
-  const { userDispatch } = React.useContext(UserContext);
+  const { userState, userDispatch } = React.useContext(UserContext);
 
+  const firstName = userState.firstName;
   useEffect(() => {
-    store(false);
-    userDispatch({ type: 'user-logout' });
-    navigate('/');
-    // window.location.href = '/';
-  }, [userDispatch]);
+    if (firstName) {
+      store(false);
+      userDispatch({ type: 'user-logout' });
+      navigate('/');
+      storeUserFirstName(firstName);
+    }
+  }, [userDispatch, firstName]);
 
   return (
     <BackendPage title="Log Out">

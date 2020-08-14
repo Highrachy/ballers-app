@@ -14,7 +14,11 @@ import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
 import { BASE_API_URL, DASHBOARD_PAGE } from 'utils/constants';
 import { UserContext } from 'context/UserContext';
-import { storeToken, storeUserRole } from 'utils/localStorage';
+import {
+  storeToken,
+  storeUserRole,
+  getUserFirstName,
+} from 'utils/localStorage';
 
 const Login = () => (
   <>
@@ -33,6 +37,7 @@ const Content = ({ redirectTo, sid, token }) => {
           <div className="col-lg-5 auth__text">
             <h1>
               Welcome Back, <br />
+              {getUserFirstName()}
             </h1>
             <p className="lead">
               Sign in to access your profile, rewards and contributions.

@@ -27,6 +27,7 @@ const Button = ({
           role="status"
           aria-hidden="true"
         />{' '}
+        &nbsp;
         {showLoadingText && (loadingText || children)}
       </>
     ) : (
