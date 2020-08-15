@@ -18,6 +18,7 @@ import { newPropertySchema } from 'components/forms/schemas/propertySchema';
 import Textarea from 'components/forms/Textarea';
 import InputFormat from 'components/forms/InputFormat';
 import MapPicker from 'components/utils/MapPicker';
+import useMapGeocoder from 'hooks/useMapGeocoder';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
@@ -31,6 +32,7 @@ const NewProperty = () => (
 
 const NewPropertyForm = () => {
   const [toast, setToast] = useToast();
+  const [location, setLocation] = React.useState(null);
   const { userDispatch } = React.useContext(UserContext);
 
   return (
@@ -38,10 +40,14 @@ const NewPropertyForm = () => {
       enableReinitialize={true}
       initialValues={setInitialValues(newPropertySchema)}
       onSubmit={(values, actions) => {
-        !values.titleDocument && delete values.titleDocument;
-        !values.floorPlans && delete values.floorPlans;
+        let payload;
+        payload = location
+          ? { ...values, mapLocation: location.latLng }
+          : values;
+        console.log('location', location);
+        console.log('payload', payload);
 
-        Axios.post(`${BASE_API_URL}/property/add`, values, {
+        Axios.post(`${BASE_API_URL}/property/add`, payload, {
           headers: { Authorization: getTokenFromStore() },
         })
           .then(function (response) {
@@ -73,9 +79,10 @@ const NewPropertyForm = () => {
           <Toast {...toast} />
           <PropertyInfoForm {...props} />
           <PropertyImage />
-          <PropertyTitleDocument />
-          <PropertyFloorPlan />
-          <MapLocation />
+          <MapLocation
+            setLocation={setLocation}
+            mapAddress={props.values.location}
+          />
           <Button
             className="btn-secondary mt-4"
             loading={isSubmitting}
@@ -164,45 +171,21 @@ const PropertyImage = () => (
   </Card>
 );
 
-const PropertyTitleDocument = () => (
-  <Card className="card-container mt-5">
-    <section className="row">
-      <div className="col-md-10 px-4">
-        <h5 className="mb-4">Property Title Document</h5>
-        <Input
-          label="Property Title Document"
-          name="titleDocument"
-          placeholder="Property Title Document"
-        />
-      </div>
-    </section>
-  </Card>
-);
-
-const PropertyFloorPlan = () => (
-  <Card className="card-container mt-5">
-    <section className="row">
-      <div className="col-md-10 px-4">
-        <h5 className="mb-4">Property Floor Plans</h5>
-        <Input
-          label="Property Floor Plan"
-          name="floorPlans"
-          placeholder="Property Floor Plan"
-        />
-      </div>
-    </section>
-  </Card>
-);
-
-const MapLocation = () => {
-  const [location, setLocation] = React.useState(null);
-  console.log('location', location);
+const MapLocation = ({ mapAddress, setLocation }) => {
+  console.log('mapAddress', mapAddress);
+  const { latLngFromAddress } = useMapGeocoder({
+    mapAddress,
+  });
+  console.log('latLngFromAddress', latLngFromAddress);
   return (
     <Card className="card-container mt-5">
       <section className="row">
         <div className="col-md-10 px-4">
-          <h5 className="mb-4">Property Floor Plans</h5>
-          <MapPicker processLocation={(value) => setLocation(value)} />
+          <h5 className="mb-4">Set Map Picker</h5>
+          <MapPicker
+            mapLocation={latLngFromAddress}
+            processLocation={(value) => setLocation(value)}
+          />
         </div>
       </section>
     </Card>

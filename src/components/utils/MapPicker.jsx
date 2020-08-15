@@ -6,14 +6,21 @@ import { OFFICE_LOCATION } from 'utils/constants';
 const DEFAULT_ZOOM = 15;
 const DEFAULT_LOCATION = OFFICE_LOCATION;
 
-const MapPicker = ({ processLocation }) => {
+const MapPicker = ({ processLocation, mapLocation }) => {
   const [location, setLocation] = useState(DEFAULT_LOCATION);
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
 
   React.useEffect(() => {
-    processLocation({ location, zoom });
+    processLocation({ latLng: location, zoom });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, zoom]);
+
+  React.useEffect(() => {
+    mapLocation &&
+      mapLocation.lat &&
+      mapLocation.lng &&
+      setLocation(mapLocation);
+  }, [mapLocation]);
 
   const handleChange = (name, { target }) => {
     setLocation({
@@ -43,7 +50,7 @@ const MapPicker = ({ processLocation }) => {
           <input
             type="text"
             className="form-control"
-            value={location.lat === 0 ? '' : location.lat}
+            value={location && location.lat === 0 ? '' : location.lat}
             onChange={(value) => handleChange('lat', value)}
           />
         </div>
@@ -52,24 +59,26 @@ const MapPicker = ({ processLocation }) => {
           <input
             type="text"
             className="form-control"
-            value={location.lng}
+            value={location && location.lng === 0 ? '' : location.lat}
             onChange={(value) => handleChange('lng', value)}
           />
         </div>
       </div>
 
-      <ReactMapPicker
-        defaultLocation={location}
-        zoom={zoom}
-        style={{ height: '33rem' }}
-        onChangeLocation={handleChangeLocation}
-        onChangeZoom={handleChangeZoom}
-        apiKey={process.env.REACT_APP_GOOGLE_MAP_API}
-      />
+      {location && location.lat && location.lng && (
+        <ReactMapPicker
+          defaultLocation={location}
+          zoom={zoom}
+          style={{ height: '33rem' }}
+          onChangeLocation={handleChangeLocation}
+          onChangeZoom={handleChangeZoom}
+          apiKey={process.env.REACT_APP_GOOGLE_MAP_API}
+        />
+      )}
 
       <div>
         <button
-          className="btn btn-danger btn-sm mt-4"
+          className="btn btn-light btn-sm mt-4"
           onClick={handleResetLocation}
         >
           Reset Location

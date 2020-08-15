@@ -26,6 +26,7 @@ import CheckboxGroup from './CheckboxGroup';
 import Toast from 'components/utils/Toast';
 import { useToast } from 'components/utils/Toast';
 import MapPicker from 'components/utils/MapPicker';
+import useMapGeocoder from 'hooks/useMapGeocoder';
 
 const FormComponents = () => (
   <>
@@ -69,6 +70,11 @@ const registerSchema = {
 
 const Forms = () => {
   const [toast, setToast] = useToast();
+  const { latLngFromAddress } = useMapGeocoder({
+    mapAddress: '4 Adebisi steet, moshalashi bus stop, shasha Lagos',
+  });
+
+  console.log('latLngFromAddress', latLngFromAddress);
   return (
     <Formik
       initialValues={setInitialValues(registerSchema, { state: ['vanilla'] })}
