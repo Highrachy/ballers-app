@@ -8,7 +8,6 @@ export const HomeKeeping = ({ children, location }) => {
   const { userState, userDispatch } = React.useContext(UserContext);
   React.useEffect(() => {
     if (!userState.isLoggedIn && getTokenFromStore()) {
-      console.log('getTokenFromStore()', getTokenFromStore());
       axios
         .get(`${BASE_API_URL}/user/who-am-i`, {
           headers: {

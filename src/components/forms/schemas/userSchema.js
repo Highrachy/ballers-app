@@ -1,6 +1,7 @@
 import * as yup from 'yup';
-import { stringValidation, OptionalPhoneNumber } from './schema-helpers';
 import {
+  stringValidation,
+  OptionalPhoneNumber,
   email,
   password,
   strongPassword,
