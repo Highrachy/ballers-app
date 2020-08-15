@@ -17,6 +17,7 @@ import { UserContext } from 'context/UserContext';
 import { newPropertySchema } from 'components/forms/schemas/propertySchema';
 import Textarea from 'components/forms/Textarea';
 import InputFormat from 'components/forms/InputFormat';
+import MapPicker from 'components/utils/MapPicker';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
@@ -74,6 +75,7 @@ const NewPropertyForm = () => {
           <PropertyImage />
           <PropertyTitleDocument />
           <PropertyFloorPlan />
+          <MapLocation />
           <Button
             className="btn-secondary mt-4"
             loading={isSubmitting}
@@ -191,5 +193,20 @@ const PropertyFloorPlan = () => (
     </section>
   </Card>
 );
+
+const MapLocation = () => {
+  const [location, setLocation] = React.useState(null);
+  console.log('location', location);
+  return (
+    <Card className="card-container mt-5">
+      <section className="row">
+        <div className="col-md-10 px-4">
+          <h5 className="mb-4">Property Floor Plans</h5>
+          <MapPicker processLocation={(value) => setLocation(value)} />
+        </div>
+      </section>
+    </Card>
+  );
+};
 
 export default NewProperty;

@@ -25,6 +25,7 @@ import RadioSelect from './RadioSelect';
 import CheckboxGroup from './CheckboxGroup';
 import Toast from 'components/utils/Toast';
 import { useToast } from 'components/utils/Toast';
+import MapPicker from 'components/utils/MapPicker';
 
 const FormComponents = () => (
   <>
@@ -188,6 +189,9 @@ const Forms = () => {
             placeholder="Your Message..."
             tooltipText={<p className="text-danger">Enter your content</p>}
           />
+
+          <MapPicker />
+
           <Button
             className="btn-danger"
             loading={isSubmitting}
