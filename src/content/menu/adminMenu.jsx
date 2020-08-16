@@ -7,6 +7,7 @@ import {
   ReferIcon,
   UsersIcon,
 } from 'components/utils/Icons';
+import { VisitationIcon } from 'components/utils/Icons';
 
 export default [
   {
@@ -23,6 +24,11 @@ export default [
     title: 'Portfolios',
     to: '/admin/portfolios',
     icon: <MyPropertyIcon />,
+  },
+  {
+    title: 'Scheduled Visits',
+    to: '/admin/scheduled-visits',
+    icon: <VisitationIcon />,
   },
   {
     title: 'Transaction',
