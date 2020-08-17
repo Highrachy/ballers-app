@@ -8,6 +8,7 @@ import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
+import { UsersIcon } from 'components/utils/Icons';
 
 const Users = () => {
   const [toast, setToast] = useToast();
@@ -40,6 +41,7 @@ const Users = () => {
 
 const AllUsers = ({ users, toast }) => (
   <LoadItems
+    Icon={<UsersIcon />}
     items={users}
     loadingText="Loading your Users"
     noContent={<NoContent isButton text="No Users found" />}
@@ -59,7 +61,7 @@ const UsersRowList = ({ users, toast }) => (
               <td>S/N</td>
               <td>DATE</td>
               <td>DESCRIPTION</td>
-              <td>AMOUNT</td>
+              <td>PHONE</td>
             </tr>
           </thead>
           <tbody>

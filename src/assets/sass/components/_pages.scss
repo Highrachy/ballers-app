@@ -359,3 +359,11 @@ ul.timeline li.timeline__border:after {
     }
   }
 }
+
+.loading-icon,
+.no-content {
+  svg {
+    width: 6rem;
+    height: 6rem;
+  }
+}

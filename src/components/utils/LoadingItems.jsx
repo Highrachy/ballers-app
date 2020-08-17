@@ -1,13 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { HouseIcon } from './Icons';
+import { Spinner } from 'react-bootstrap';
 
-const LoadItems = ({ items, children, loadingText, noContent }) => {
+const LoadItems = ({ items, children, loadingText, noContent, Icon }) => {
   if (items == null) {
     return (
-      <>
-        <HouseIcon /> <br /> {loadingText}{' '}
-      </>
+      <div className="text-center mt-5 loading-icon">
+        {Icon || <HouseIcon />}
+        <h5 className="my-4">{loadingText} &nbsp;</h5>{' '}
+        <Spinner
+          as="span"
+          animation="border"
+          role="status"
+          aria-hidden="true"
+        />{' '}
+      </div>
     );
   }
   if (items.length > 0) {
@@ -19,6 +27,7 @@ const LoadItems = ({ items, children, loadingText, noContent }) => {
 
 LoadItems.propTypes = {
   children: PropTypes.any,
+  Icon: PropTypes.number,
   items: PropTypes.array,
   loadingText: PropTypes.string,
   noContent: PropTypes.any.isRequired,
@@ -26,6 +35,7 @@ LoadItems.propTypes = {
 
 LoadItems.defaultProps = {
   children: null,
+  Icon: null,
   loadingText: null,
   items: null,
 };

@@ -9,6 +9,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { Link } from '@reach/router';
+import { moneyFormatInNaira } from 'utils/helpers';
 
 const Portfolios = () => {
   const [toast, setToast] = useToast();
@@ -98,7 +99,7 @@ const PortfoliosRow = ({ _id, name, location, price, number, mainImage }) => (
       <strong>{location}</strong>
     </td>
     <td>
-      <strong>{price}</strong>
+      <strong>{moneyFormatInNaira(price)}</strong>
     </td>
   </tr>
 );

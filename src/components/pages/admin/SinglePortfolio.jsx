@@ -26,6 +26,8 @@ import {
 import { getTokenFromStore } from 'utils/localStorage';
 import NoContent from 'components/utils/NoContent';
 import { scheduleTourSchema } from 'components/forms/schemas/propertySchema';
+import { moneyFormatInNaira } from 'utils/helpers';
+import { MyPropertyIcon } from 'components/utils/Icons';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -56,7 +58,7 @@ const SinglePortfolio = ({ id }) => {
       {property ? (
         <OwnedPropertyCard property={property} toast={toast} />
       ) : (
-        <NoContent text="Loading Property" />
+        <NoContent text="Loading Property" Icon={<MyPropertyIcon />} />
       )}
     </BackendPage>
   );
@@ -157,7 +159,7 @@ const PropertyDescription = ({ property }) => (
     <div className="row">
       <div className="col-sm-4 col-6">
         <small>Property Value</small>
-        <h5>N {property.price}</h5>
+        <h5>{moneyFormatInNaira(property.price)}</h5>
       </div>
       <div className="col-sm-4 col-6">
         <small>House Type</small>

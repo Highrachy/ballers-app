@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from '@reach/router';
 
-const NoContent = ({ text, linkText, linkTo, isButton, className }) => (
+const NoContent = ({ text, linkText, linkTo, isButton, className, Icon }) => (
   <section className={classNames(className, 'no-content text-center')}>
+    {Icon && Icon}
     <h4 className="text-muted-light subtitle--3 pt-3">{text}</h4>
     {linkText && linkTo && (
       <Link
@@ -25,6 +26,7 @@ const NoContent = ({ text, linkText, linkTo, isButton, className }) => (
 NoContent.propTypes = {
   className: PropTypes.string,
   isButton: PropTypes.bool,
+  Icon: PropTypes.node,
   linkText: PropTypes.string,
   linkTo: PropTypes.string,
   text: PropTypes.any.isRequired,
@@ -32,6 +34,7 @@ NoContent.propTypes = {
 
 NoContent.defaultProps = {
   className: 'mt-5 mb-5',
+  Icon: null,
   isButton: false,
   linkText: '',
   linkTo: '/',

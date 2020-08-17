@@ -59,7 +59,7 @@ const MapPicker = ({ processLocation, mapLocation }) => {
           <input
             type="text"
             className="form-control"
-            value={location && location.lng === 0 ? '' : location.lat}
+            value={location && location.lng === 0 ? '' : location.lng}
             onChange={(value) => handleChange('lng', value)}
           />
         </div>

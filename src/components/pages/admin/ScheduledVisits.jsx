@@ -8,6 +8,7 @@ import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
+import { VisitationIcon } from 'components/utils/Icons';
 
 const ScheduledVisits = () => {
   const [toast, setToast] = useToast();
@@ -40,6 +41,7 @@ const ScheduledVisits = () => {
 
 const AllScheduledVisits = ({ scheduledVisits, toast }) => (
   <LoadItems
+    Icon={<VisitationIcon />}
     items={scheduledVisits}
     loadingText="Loading your ScheduledVisits"
     noContent={<NoContent isButton text="No ScheduledVisits found" />}
@@ -62,8 +64,8 @@ const ScheduledVisitsRowList = ({ scheduledVisits, toast }) => (
               <td>S/N</td>
               <td>DATE</td>
               <td>DESCRIPTION</td>
-              <td>AMOUNT</td>
-              <td>Property</td>
+              <td>PHONE</td>
+              <td>PROPERTY</td>
             </tr>
           </thead>
           <tbody>

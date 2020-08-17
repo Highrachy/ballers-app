@@ -96,7 +96,7 @@ const NewPropertyForm = () => {
           >
             Add New Property
           </Button>
-          <DisplayFormikState {...props} showAll />
+          <DisplayFormikState {...props} hide showAll />
         </Form>
       )}
     </Formik>
@@ -182,7 +182,6 @@ const MapLocation = ({ mapAddress, setLocation }) => {
   const { latLngFromAddress } = useMapGeocoder({
     mapAddress,
   });
-  console.log('latLngFromAddress', latLngFromAddress);
   return (
     <Card className="card-container mt-5">
       <section className="row">
