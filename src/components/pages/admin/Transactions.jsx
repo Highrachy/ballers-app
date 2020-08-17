@@ -1,19 +1,11 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import ContributionGraph from 'components/common/ContributionGraph';
 import { Card } from 'react-bootstrap';
 
 const Transactions = () => (
   <BackendPage>
-    <Overview />
     <AllTransactions />
   </BackendPage>
-);
-
-const Overview = () => (
-  <div className="container-fluid ">
-    <ContributionGraph />
-  </div>
 );
 
 const AllTransactions = () => (

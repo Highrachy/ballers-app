@@ -84,11 +84,13 @@ PortfoliosRowList.propTypes = {
   portfolios: PropTypes.array.isRequired,
 };
 
-const PortfoliosRow = ({ name, location, price, number, mainImage }) => (
+const PortfoliosRow = ({ _id, name, location, price, number, mainImage }) => (
   <tr>
     <td>{number}</td>
     <td>
-      <img src={mainImage} width="80" alt="property" />
+      <Link to={`/admin/portfolio/${_id}`}>
+        <img src={mainImage} width="80" alt="property" />
+      </Link>
     </td>
     <td>{name}</td>
 

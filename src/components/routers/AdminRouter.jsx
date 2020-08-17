@@ -3,6 +3,7 @@ import { Router } from '@reach/router';
 import Dashboard from 'components/pages/admin/Dashboard';
 import Users from 'components/pages/admin/Users';
 import Portfolios from 'components/pages/admin/Portfolios';
+import SinglePortfolio from 'components/pages/admin/SinglePortfolio';
 import ScheduledVisits from 'components/pages/admin/ScheduledVisits';
 import Transactions from 'components/pages/admin/Transactions';
 import NewProperty from 'components/pages/admin/NewProperty';
@@ -13,6 +14,7 @@ const UserRouter = () => (
     <Dashboard path="dashboard" />
     <Users path="users" />
     <Portfolios path="portfolios" />
+    <SinglePortfolio path="portfolio/:id" />
     <NewProperty path="portfolios/new" />
     <ScheduledVisits path="scheduled-visits" />
     <Transactions path="transactions" />

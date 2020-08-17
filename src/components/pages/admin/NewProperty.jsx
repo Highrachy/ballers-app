@@ -42,7 +42,13 @@ const NewPropertyForm = () => {
       onSubmit={(values, actions) => {
         let payload;
         payload = location
-          ? { ...values, mapLocation: location.latLng }
+          ? {
+              ...values,
+              mapLocation: {
+                longitude: location.latLng.lng.toString(),
+                latitude: location.latLng.lat.toString(),
+              },
+            }
           : values;
         console.log('location', location);
         console.log('payload', payload);
