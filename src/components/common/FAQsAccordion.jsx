@@ -50,7 +50,7 @@ ContextAwareToggle.defaultProps = {
 const FAQsAccordion = ({ faqs }) => {
   return (
     <Accordion defaultActiveKey={0}>
-      <Fade cascade damping={0.4} delay={2000}>
+      <Fade cascade damping={0.6} delay={1000}>
         {faqs.map((faq, index) => (
           <Card key={index}>
             <Accordion.Toggle as={Card.Header} eventKey={index}>
