@@ -18,15 +18,15 @@ const Address = () => {
       <div className="form-row">
         <Input
           formGroupClassName="col-md-6"
-          label="State"
-          name="address.state"
-          placeholder="State"
-        />
-        <Input
-          formGroupClassName="col-md-6"
           label="City"
           name="address.city"
           placeholder="City"
+        />
+        <Input
+          formGroupClassName="col-md-6"
+          label="State"
+          name="address.state"
+          placeholder="State"
         />
       </div>
       <div className="form-row">

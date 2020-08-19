@@ -5,6 +5,13 @@ export const INITIAL_STATE = {
   email: '',
   phone: '',
   phone2: '',
+  address: {
+    street1: '',
+    street2: '',
+    city: '',
+    state: '',
+    country: '',
+  },
   role: 1,
   referralCode: '',
   profileImg: '',

@@ -62,10 +62,13 @@ const ProfileForm = () => {
           enableReinitialize={true}
           initialValues={{
             ...setInitialValues(personalInfoSchema, userState),
-            address: setInitialValues(addressSchema, userState),
+            address: setInitialValues(addressSchema, userState.address),
           }}
           onSubmit={(values, actions) => {
-            Axios.put(`${BASE_API_URL}/user/update`, values, {
+            const payload = { ...values };
+            !payload.address.street2 && delete payload.address.street2;
+
+            delete Axios.put(`${BASE_API_URL}/user/update`, values, {
               headers: { Authorization: getTokenFromStore() },
             })
               .then(function (response) {
@@ -142,7 +145,7 @@ const ProfileForm = () => {
               >
                 Save Changes
               </Button>
-              <DisplayFormikState {...props} showAll />
+              <DisplayFormikState {...props} hide showAll />
             </Form>
           )}
         </Formik>
