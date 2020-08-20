@@ -9,14 +9,17 @@ import {
 } from 'components/forms/form-helper';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
-// import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { registerSchema } from 'components/forms/schemas/userSchema';
+import { addEnquirySchema } from 'components/forms/schemas/enquirySchema';
 import { Card } from 'react-bootstrap';
-import Textarea from 'components/forms/Textarea';
 import DatePicker from 'components/forms/DatePicker';
 import RadioSelect from 'components/forms/RadioSelect';
 import { BASE_API_URL } from 'utils/constants';
-// import Select from 'components/forms/Select';
+import Address from 'components/utils/Address';
+import {
+  createSchema,
+  addressSchema,
+} from 'components/forms/schemas/schema-helpers';
+import { UserContext } from 'context/UserContext';
 
 const PropertyEnquiry = () => (
   <BackendPage>
@@ -29,21 +32,24 @@ const PropertyEnquiry = () => (
 
 const EnquiryForm = () => {
   const [toast, setToast] = useToast();
+  const { userState } = React.useContext(UserContext);
+
   return (
     <Formik
-      initialValues={setInitialValues(registerSchema, {
-        agreement: [],
-      })}
+      initialValues={{
+        ...setInitialValues(addEnquirySchema, userState),
+        address: setInitialValues(addressSchema, userState.address),
+      }}
       onSubmit={(values, actions) => {
-        delete values.agreement;
-
-        Axios.post(`${BASE_API_URL}/user/register`, values)
+        const address = `${values.address.street1} ${values.address.street2} ${values.address.city}, ${values.address.state}, ${values.address.country}`;
+        const payload = { ...values, address };
+        Axios.post(`${BASE_API_URL}/enquiry/add`, payload)
           .then(function (response) {
             const { status } = response;
-            if (status === 200) {
+            if (status === 201) {
               setToast({
                 type: 'success',
-                message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
+                message: 'Your enquiry has been successfully submitted',
               });
               actions.setSubmitting(false);
               actions.resetForm();
@@ -56,12 +62,16 @@ const EnquiryForm = () => {
             actions.setSubmitting(false);
           });
       }}
-      // validationSchema={createSchema(registerSchema)}
+      validationSchema={createSchema({
+        ...addEnquirySchema,
+        address: createSchema(addressSchema),
+      })}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
           <ClientDetailsForm />
+          <PropertyAddress />
           <PropertyDetailsForm />
           <InvestmentDetailsForm />
           <Button
@@ -71,7 +81,7 @@ const EnquiryForm = () => {
           >
             Submit Form
           </Button>
-          <DisplayFormikState {...props} hide showAll />
+          <DisplayFormikState {...props} showAll />
         </Form>
       )}
     </Formik>
@@ -86,14 +96,12 @@ const ClientDetailsForm = () => (
         <div className="form-row">
           <Input
             formGroupClassName="col-md-6"
-            isValidMessage="Titlelooks good"
             label="Title"
             name="title"
             placeholder="Title"
           />
           <Input
             formGroupClassName="col-md-6"
-            isValidMessage="First Name looks good"
             label="First Name"
             name="firstName"
             placeholder="First Name"
@@ -102,14 +110,12 @@ const ClientDetailsForm = () => (
         <div className="form-row">
           <Input
             formGroupClassName="col-md-6"
-            isValidMessage="Last Name looks good"
             label="Last Name"
             name="lastName"
             placeholder="Last Name"
           />
           <Input
             formGroupClassName="col-md-6"
-            isValidMessage="Other Names looks good"
             label="Other Names"
             name="otherName"
             placeholder="Other Names"
@@ -119,33 +125,35 @@ const ClientDetailsForm = () => (
         <div className="form-row">
           <Input
             formGroupClassName="col-md-6"
-            isValidMessage="Email address seems valid"
             label="Email"
             name="email"
             placeholder="Email Address"
           />
           <Input
             formGroupClassName="col-md-6"
-            isValidMessage="Phone number looks good"
             label="Phone"
             name="phone"
             placeholder="Phone"
           />
         </div>
 
-        <Textarea
-          isValidMessage="Contact Address seems valid"
-          label="Contact Address"
-          name="address"
-          placeholder="Contact Address"
-        />
-
         <Input
-          isValidMessage="Occupation looks good"
           label="Occupation/Nature of Business"
           name="occupation"
           placeholder="Occupation/Nature of Business"
         />
+      </div>
+    </section>
+  </Card>
+);
+
+const PropertyAddress = () => (
+  <Card className="card-container mt-5">
+    <section className="row">
+      <div className="col-md-10">
+        <h5>Address</h5>
+
+        <Address />
       </div>
     </section>
   </Card>
@@ -158,7 +166,6 @@ const PropertyDetailsForm = () => (
         <h5>Property Details</h5>
 
         <Input
-          isValidMessage="Other Names looks good"
           label="Name on Title Document"
           name="nameOnTitleDocument"
           placeholder="Name on Title Document"
@@ -174,26 +181,18 @@ const InvestmentDetailsForm = () => (
       <div className="col-md-10">
         <h5>Investment Details</h5>
 
-        <Input
-          isValidMessage="Other Names looks good"
-          label="Name on Title Document"
-          name="nameOnTitleDocument"
-          placeholder="Name on Title Document"
-        />
-
         <DatePicker
-          isValidMessage="Surname looks good"
           label="Start Date"
           name="investmentStartDate"
           placeholder="State Date"
         />
 
         <Input
-          isValidMessage="Other Names looks good"
-          label="Initial Investment"
+          label="Initial Investment Amount"
           name="initialInvestmentAmount"
           placeholder="Initial Investment"
         />
+
         <RadioSelect
           label="Investment Frequency"
           name="investmentFrequency"
@@ -207,8 +206,8 @@ const InvestmentDetailsForm = () => (
           inline
           custom
         />
+
         <Input
-          isValidMessage="Other Names looks good"
           label="Periodic Investment"
           name="periodicInvestmentAmount"
           placeholder="Periodic Investment"
