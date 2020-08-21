@@ -18,6 +18,7 @@ import { CopyToClipBoardIcon } from 'components/utils/Icons';
 import { UserContext } from 'context/UserContext';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Sharer from 'components/utils/Sharer';
+import { CheckIcon } from 'components/utils/Icons';
 
 const ReferAndEarn = () => (
   <BackendPage>
@@ -135,6 +136,13 @@ const ReferralCodeClipBoard = () => {
   const referralCode = `https://ballers.ng?ref=${userState.referralCode}`;
   const [copied, setCopied] = React.useState(false);
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setCopied(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [copied]);
+
   return (
     <>
       <label htmlFor="referralLink">Share Your Referral Link</label>
@@ -148,9 +156,15 @@ const ReferralCodeClipBoard = () => {
         />
         <div className="input-group-append">
           <CopyToClipboard text={referralCode} onCopy={() => setCopied(true)}>
-            <span className="input-group-text btn btn-light">
-              <CopyToClipBoardIcon />
-            </span>
+            {copied ? (
+              <span className="input-group-text btn-success text-white disabled">
+                <CheckIcon />
+              </span>
+            ) : (
+              <span className="input-group-text btn btn-light">
+                <CopyToClipBoardIcon />
+              </span>
+            )}
           </CopyToClipboard>
         </div>
       </div>

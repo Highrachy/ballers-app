@@ -8,6 +8,7 @@ import ScheduledVisits from 'components/pages/admin/ScheduledVisits';
 import Transactions from 'components/pages/admin/Transactions';
 import NewProperty from 'components/pages/admin/NewProperty';
 import Menu from 'components/pages/user/Menu';
+import CreateOfferLetter from 'components/pages/admin/CreateOfferLetter';
 
 const UserRouter = () => (
   <Router>
@@ -15,6 +16,7 @@ const UserRouter = () => (
     <Users path="users" />
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />
+    <CreateOfferLetter path="offer-letter/:enquiry-id" />
     <NewProperty path="portfolios/new" />
     <ScheduledVisits path="scheduled-visits" />
     <Transactions path="transactions" />

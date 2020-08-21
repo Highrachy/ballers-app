@@ -197,3 +197,12 @@
 .menu__title {
   margin-top: 0.5rem;
 }
+
+.dashboard__card {
+  display: block;
+  svg {
+    height: 2rem;
+    width: 2rem;
+    margin-top: 1.5rem;
+  }
+}
