@@ -9,7 +9,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { Link } from '@reach/router';
-import { moneyFormatInNaira } from 'utils/helpers';
+import { moneyFormatInNaira, getError } from 'utils/helpers';
 
 const Portfolios = () => {
   const [toast, setToast] = useToast();
@@ -29,12 +29,13 @@ const Portfolios = () => {
       })
       .catch(function (error) {
         setToast({
-          message: error.response.data.message,
+          message: getError(error),
         });
       });
   }, [setToast]);
   return (
     <BackendPage>
+      <Toast {...toast} showToastOnly />
       <AllPortfolios portfolios={portfolios} toast={toast} />
     </BackendPage>
   );
@@ -50,14 +51,13 @@ const AllPortfolios = ({ portfolios, toast }) => (
   </LoadItems>
 );
 
-const PortfoliosRowList = ({ portfolios, toast }) => (
+const PortfoliosRowList = ({ portfolios }) => (
   <div className="container-fluid">
     <div className="text-right">
       <Link to="/admin/portfolios/new" className="btn btn-secondary btn-wide">
         Add Property
       </Link>
     </div>
-    <Toast {...toast} />
     <Card className="mt-4">
       <div className="table-responsive">
         <table className="table table-borderless table-hover">

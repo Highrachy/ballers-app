@@ -24,6 +24,7 @@ import {
   DownloadIcon,
   MapPinIcon,
 } from 'components/utils/Icons';
+import { getError } from 'utils/helpers';
 
 const SinglePortfolio = () => (
   <BackendPage>
@@ -321,7 +322,7 @@ const ScheduleVisitForm = () => {
               })
               .catch(function (error) {
                 setToast({
-                  message: error.response.data.message,
+                  message: getError(error),
                 });
                 actions.setSubmitting(false);
               });

@@ -20,6 +20,7 @@ import {
   addressSchema,
 } from 'components/forms/schemas/schema-helpers';
 import { UserContext } from 'context/UserContext';
+import { getError } from 'utils/helpers';
 
 const PropertyEnquiry = () => (
   <BackendPage>
@@ -57,7 +58,7 @@ const EnquiryForm = () => {
           })
           .catch(function (error) {
             setToast({
-              message: error.response.data.message,
+              message: getError(error),
             });
             actions.setSubmitting(false);
           });

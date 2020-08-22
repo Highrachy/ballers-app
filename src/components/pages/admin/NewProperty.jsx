@@ -19,6 +19,7 @@ import Textarea from 'components/forms/Textarea';
 import InputFormat from 'components/forms/InputFormat';
 import MapPicker from 'components/utils/MapPicker';
 import useMapGeocoder from 'hooks/useMapGeocoder';
+import { getError } from 'utils/helpers';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
@@ -73,7 +74,7 @@ const NewPropertyForm = () => {
           })
           .catch(function (error) {
             setToast({
-              message: error.response.data.error || error.response.data.message,
+              message: getError(error),
             });
             actions.setSubmitting(false);
           });

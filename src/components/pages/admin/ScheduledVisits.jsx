@@ -9,6 +9,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { VisitationIcon } from 'components/utils/Icons';
+import { getError } from 'utils/helpers';
 
 const ScheduledVisits = () => {
   const [toast, setToast] = useToast();
@@ -28,34 +29,31 @@ const ScheduledVisits = () => {
       })
       .catch(function (error) {
         setToast({
-          message: error.response.data.message,
+          message: getError(error),
         });
       });
   }, [setToast]);
   return (
     <BackendPage>
+      <Toast {...toast} showToastOnly />
       <AllScheduledVisits scheduledVisits={scheduledVisits} toast={toast} />
     </BackendPage>
   );
 };
 
-const AllScheduledVisits = ({ scheduledVisits, toast }) => (
+const AllScheduledVisits = ({ scheduledVisits }) => (
   <LoadItems
     Icon={<VisitationIcon />}
     items={scheduledVisits}
     loadingText="Loading your ScheduledVisits"
     noContent={<NoContent isButton text="No ScheduledVisits found" />}
   >
-    <ScheduledVisitsRowList
-      toast={toast}
-      scheduledVisits={scheduledVisits || []}
-    />
+    <ScheduledVisitsRowList scheduledVisits={scheduledVisits || []} />
   </LoadItems>
 );
 
-const ScheduledVisitsRowList = ({ scheduledVisits, toast }) => (
+const ScheduledVisitsRowList = ({ scheduledVisits }) => (
   <div className="container-fluid">
-    <Toast {...toast} />
     <Card className="mt-4">
       <div className="table-responsive">
         <table className="table table-borderless table-hover">

@@ -18,6 +18,7 @@ import CheckboxGroup from 'components/forms/CheckboxGroup';
 import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
 import { BASE_API_URL } from 'utils/constants';
+import { getError } from 'utils/helpers';
 
 const Register = () => (
   <>
@@ -111,7 +112,7 @@ const RegisterForm = ({ type }) => {
           })
           .catch(function (error) {
             setToast({
-              message: error.response.data.message,
+              message: getError(error),
             });
             actions.setSubmitting(false);
           });

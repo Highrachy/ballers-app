@@ -27,7 +27,7 @@ const LoadItems = ({ items, children, loadingText, noContent, Icon }) => {
 
 LoadItems.propTypes = {
   children: PropTypes.any,
-  Icon: PropTypes.number,
+  Icon: PropTypes.any,
   items: PropTypes.array,
   loadingText: PropTypes.string,
   noContent: PropTypes.any.isRequired,

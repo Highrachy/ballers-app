@@ -35,3 +35,28 @@ export const isDevEnvironment = () =>
 
 export const getProxy = () =>
   isDevEnvironment() ? 'http://localhost:8080' : '';
+
+export const getError = (error) =>
+  (error &&
+    error.response &&
+    error.response.data &&
+    (error.response.data.error || error.response.data.message)) ||
+  'An error has occured. Please try again later.';
+
+export const generateNumOptions = (number = 12, type = '', options = {}) => {
+  const startFrom =
+    options.startFrom || options.startFrom === 0 ? options.startFrom : 1;
+  const firstMonthText = options.firstMonthText;
+  const pluralizeText = options.pluralizeText || true;
+
+  return [...Array(number).keys()].map((value) => {
+    const num = value + startFrom;
+    return {
+      value: num.toString(),
+      label:
+        num.toString() === startFrom.toString() && firstMonthText
+          ? firstMonthText
+          : `${num} ${pluralizeText ? Humanize.pluralize(num, type) : type}`,
+    };
+  });
+};

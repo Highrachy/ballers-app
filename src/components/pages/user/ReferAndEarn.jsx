@@ -19,6 +19,7 @@ import { UserContext } from 'context/UserContext';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Sharer from 'components/utils/Sharer';
 import { CheckIcon } from 'components/utils/Icons';
+import { getError } from 'utils/helpers';
 
 const ReferAndEarn = () => (
   <BackendPage>
@@ -80,7 +81,7 @@ const InviteFriendByEmailForm = () => {
           })
           .catch(function (error) {
             setToast({
-              message: error.response.data.message,
+              message: getError(error),
             });
             actions.setSubmitting(false);
           });

@@ -18,34 +18,15 @@ import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import Select from 'components/forms/Select';
-import { useToast } from 'components/utils/Toast';
-import Toast from 'components/utils/Toast';
-import Humanize from 'humanize-plus';
+import Toast, { useToast } from 'components/utils/Toast';
 import Textarea from 'components/forms/Textarea';
+import { getError, generateNumOptions } from 'utils/helpers';
 
 const CreateOfferLetter = () => (
   <BackendPage>
     <CreateOfferLetterForm />
   </BackendPage>
 );
-
-const generateNumOptions = (number = 12, type = '', options = {}) => {
-  const startFrom =
-    options.startFrom || options.startFrom === 0 ? options.startFrom : 1;
-  const firstMonthText = options.firstMonthText;
-  const pluralizeText = options.pluralizeText || true;
-
-  return [...Array(number).keys()].map((value) => {
-    const num = value + startFrom;
-    return {
-      value: num.toString(),
-      label:
-        num.toString() === startFrom.toString() && firstMonthText
-          ? firstMonthText
-          : `${num} ${pluralizeText ? Humanize.pluralize(num, type) : type}`,
-    };
-  });
-};
 
 const CreateOfferLetterForm = () => {
   const [toast, setToast] = useToast();
@@ -87,9 +68,7 @@ const CreateOfferLetterForm = () => {
                   })
                   .catch(function (error) {
                     setToast({
-                      message:
-                        error.response.data.error ||
-                        error.response.data.message,
+                      message: getError(error),
                     });
                     actions.setSubmitting(false);
                   });
@@ -98,8 +77,6 @@ const CreateOfferLetterForm = () => {
                 ...personalInfoSchema,
                 address: createSchema(addressSchema),
               })}
-              // address: createSchema(addressSchema),
-              // }
             >
               {({ isSubmitting, handleSubmit, ...props }) => (
                 <Form>

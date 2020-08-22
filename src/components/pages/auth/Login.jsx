@@ -19,6 +19,7 @@ import {
   storeUserRole,
   getUserFirstName,
 } from 'utils/localStorage';
+import { getError } from 'utils/helpers';
 
 const Login = () => (
   <>
@@ -97,7 +98,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
         })
         .catch(function (error) {
           setToast({
-            message: error.response.data.message,
+            message: getError(error),
           });
         });
   }, [token, setToast]);
@@ -128,7 +129,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
           })
           .catch(function (error) {
             setToast({
-              message: error.response.data.message,
+              message: getError(error),
             });
             actions.setSubmitting(false);
           });

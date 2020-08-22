@@ -31,7 +31,13 @@ const AlertToast = ({ message, type }) => (
   </div>
 );
 
-const Toast = ({ message, type, toastIsClosed }) => {
+const Toast = ({
+  message,
+  type,
+  toastIsClosed,
+  showAlertMessageOnly,
+  showToastOnly,
+}) => {
   const [show, setShow] = React.useState(true);
   const [msg, setMessage] = React.useState(null);
   const [alertType, setAlertType] = React.useState('error');
@@ -42,19 +48,23 @@ const Toast = ({ message, type, toastIsClosed }) => {
     type && setAlertType(type);
   }, [message, type]);
 
+  // increase interval for showToastOnly
+
+  const toastInterval = showToastOnly ? 10000 : 5000;
+
   React.useEffect(() => {
     const interval = setInterval(() => {
       setShow(false);
       toastIsClosed();
-    }, 5000);
+    }, toastInterval);
 
     return () => {
       clearInterval(interval);
     };
-  }, [show, toastIsClosed]);
+  }, [show, toastInterval, toastIsClosed]);
 
   if (!message) {
-    if (msg) {
+    if (msg && !showToastOnly) {
       return <AlertToast message={msg} type={alertType} />;
     }
     return null;
@@ -62,29 +72,31 @@ const Toast = ({ message, type, toastIsClosed }) => {
 
   return (
     <>
-      <BoostrapToast
-        show={show}
-        onClose={() => {
-          setShow(false);
-          toastIsClosed();
-        }}
-        className={`toast-container toast__top-right ${
-          TOAST_STYLE[type] ? type : 'error'
-        }`}
-      >
-        <BoostrapToast.Header>
-          <div className="toast-icon-holder">
-            {TOAST_STYLE[type] ? TOAST_STYLE[type].icon : <ErrorIcon />}
-          </div>
-          <strong className="mr-auto">
-            {TOAST_STYLE[type]
-              ? TOAST_STYLE[type].name
-              : TOAST_STYLE['error'].name}
-          </strong>
-        </BoostrapToast.Header>
-        <BoostrapToast.Body>{message}</BoostrapToast.Body>
-      </BoostrapToast>
-      <AlertToast message={message} type={type} />
+      {!showAlertMessageOnly && (
+        <BoostrapToast
+          show={show}
+          onClose={() => {
+            setShow(false);
+            toastIsClosed();
+          }}
+          className={`toast-container toast__top-right ${
+            TOAST_STYLE[type] ? type : 'error'
+          }`}
+        >
+          <BoostrapToast.Header>
+            <div className="toast-icon-holder">
+              {TOAST_STYLE[type] ? TOAST_STYLE[type].icon : <ErrorIcon />}
+            </div>
+            <strong className="mr-auto">
+              {TOAST_STYLE[type]
+                ? TOAST_STYLE[type].name
+                : TOAST_STYLE['error'].name}
+            </strong>
+          </BoostrapToast.Header>
+          <BoostrapToast.Body>{message}</BoostrapToast.Body>
+        </BoostrapToast>
+      )}
+      {!showToastOnly && <AlertToast message={message} type={type} />}
     </>
   );
 };

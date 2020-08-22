@@ -9,6 +9,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { UsersIcon } from 'components/utils/Icons';
+import { getError } from 'utils/helpers';
 
 const Users = () => {
   const [toast, setToast] = useToast();
@@ -28,13 +29,14 @@ const Users = () => {
       })
       .catch(function (error) {
         setToast({
-          message: error.response.data.message,
+          message: getError(error),
         });
       });
   }, [setToast]);
   return (
     <BackendPage>
-      <AllUsers users={users} toast={toast} />
+      <Toast {...toast} showToastOnly />
+      <AllUsers users={users} />
     </BackendPage>
   );
 };
@@ -50,9 +52,8 @@ const AllUsers = ({ users, toast }) => (
   </LoadItems>
 );
 
-const UsersRowList = ({ users, toast }) => (
+const UsersRowList = ({ users }) => (
   <div className="container-fluid">
-    <Toast {...toast} />
     <Card className="mt-4">
       <div className="table-responsive">
         <table className="table table-borderless table-hover">

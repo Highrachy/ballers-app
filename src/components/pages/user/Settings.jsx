@@ -24,6 +24,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import Address from 'components/utils/Address';
 import { feedback } from 'components/forms/form-helper';
+import { getError } from 'utils/helpers';
 
 const Settings = () => (
   <BackendPage>
@@ -87,8 +88,7 @@ const ProfileForm = () => {
               })
               .catch(function (error) {
                 setToast({
-                  message:
-                    error.response.data.error || error.response.data.message,
+                  message: getError(error),
                 });
                 actions.setSubmitting(false);
               });
@@ -178,7 +178,7 @@ const PropertyPreferenceForm = () => {
               })
               .catch(function (error) {
                 setToast({
-                  message: error.response.data.message,
+                  message: getError(error),
                 });
                 actions.setSubmitting(false);
               });
@@ -260,7 +260,7 @@ const ChangePasswordForm = () => {
               })
               .catch(function (error) {
                 setToast({
-                  message: error.response.data.message,
+                  message: getError(error),
                 });
                 actions.setSubmitting(false);
               });

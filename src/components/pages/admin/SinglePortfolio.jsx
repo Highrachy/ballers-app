@@ -26,7 +26,7 @@ import {
 import { getTokenFromStore } from 'utils/localStorage';
 import NoContent from 'components/utils/NoContent';
 import { scheduleTourSchema } from 'components/forms/schemas/propertySchema';
-import { moneyFormatInNaira } from 'utils/helpers';
+import { moneyFormatInNaira, getError } from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
 
 const SinglePortfolio = ({ id }) => {
@@ -48,9 +48,9 @@ const SinglePortfolio = ({ id }) => {
       })
       .catch(function (error) {
         console.log('error.response', error.response);
-        // setToast({
-        //   message: error.response.data.message,
-        // });
+        setToast({
+          message: getError(error),
+        });
       });
   }, [setToast, id]);
   return (
@@ -364,7 +364,7 @@ const ScheduleVisitForm = ({ propertyId, hideForm }) => {
               })
               .catch(function (error) {
                 setToast({
-                  message: error.response.data.error,
+                  message: getError(error),
                 });
                 actions.setSubmitting(false);
               });
