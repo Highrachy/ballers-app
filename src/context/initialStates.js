@@ -19,5 +19,5 @@ export const INITIAL_STATE = {
   notifications: [],
   assignedProperties: [],
   referrals: [],
-  preferences: null,
+  preferences: {},
 };

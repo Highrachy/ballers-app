@@ -15,7 +15,7 @@ import {
   addressSchema,
 } from 'components/forms/schemas/schema-helpers';
 import {
-  registerSchema,
+  preferenceSchema,
   personalInfoSchema,
   changePasswordSchema,
 } from 'components/forms/schemas/userSchema';
@@ -24,7 +24,8 @@ import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import Address from 'components/utils/Address';
 import { feedback } from 'components/forms/form-helper';
-import { getError } from 'utils/helpers';
+import { getError, generateBudgetOptions, ONE_MILLION } from 'utils/helpers';
+import Select from 'components/forms/Select';
 
 const Settings = () => (
   <BackendPage>
@@ -69,7 +70,7 @@ const ProfileForm = () => {
             const payload = { ...values };
             !payload.address.street2 && delete payload.address.street2;
 
-            delete Axios.put(`${BASE_API_URL}/user/update`, values, {
+            Axios.put(`${BASE_API_URL}/user/update`, values, {
               headers: { Authorization: getTokenFromStore() },
             })
               .then(function (response) {
@@ -156,24 +157,46 @@ const ProfileForm = () => {
 
 const PropertyPreferenceForm = () => {
   const [toast, setToast] = useToast();
+  const { userState, userDispatch } = React.useContext(UserContext);
+
   return (
     <section className="row">
       <div className="col-md-10">
         <Formik
-          initialValues={setInitialValues(registerSchema, { agreement: [] })}
+          enableReinitialize={true}
+          initialValues={setInitialValues(
+            preferenceSchema,
+            userState.preferences
+          )}
           onSubmit={(values, actions) => {
-            delete values.agreement;
+            // remove values less than 1 million
+            Number(values.minPrice) < ONE_MILLION && delete values.minPrice;
+            Number(values.maxPrice) < ONE_MILLION && delete values.maxPrice;
+            !values.houseType && delete values.houseType;
+            !values.location && delete values.location;
 
-            Axios.post(`${BASE_API_URL}/user/register`, values)
+            const payload = {
+              firstName: userState.firstName,
+              lastName: userState.lastName,
+              phone: userState.phone,
+              preferences: values,
+            };
+
+            Axios.put(`${BASE_API_URL}/user/update`, payload, {
+              headers: { Authorization: getTokenFromStore() },
+            })
               .then(function (response) {
-                const { status } = response;
+                const { status, data } = response;
                 if (status === 200) {
+                  userDispatch({
+                    type: 'user-profile-update',
+                    user: data.updatedUser,
+                  });
                   setToast({
                     type: 'success',
-                    message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
+                    message: `Your preferences has been successfully updated`,
                   });
                   actions.setSubmitting(false);
-                  actions.resetForm();
                 }
               })
               .catch(function (error) {
@@ -183,7 +206,7 @@ const PropertyPreferenceForm = () => {
                 actions.setSubmitting(false);
               });
           }}
-          validationSchema={createSchema(registerSchema)}
+          validationSchema={createSchema(preferenceSchema)}
         >
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>
@@ -191,33 +214,35 @@ const PropertyPreferenceForm = () => {
               <div className="form-row">
                 <Input
                   formGroupClassName="col-md-6"
-                  isValidMessage="State looks good"
-                  label="State"
-                  name="state"
+                  label="Preferred State"
+                  name="location"
                   placeholder="Select State"
+                  showFeedback={feedback.ERROR}
                 />
                 <Input
                   formGroupClassName="col-md-6"
-                  isValidMessage="Area looks good"
-                  label="Area"
-                  name="area"
-                  placeholder="Area"
+                  label="Preferred HouseType"
+                  name="houseType"
+                  placeholder="Select House Type"
+                  showFeedback={feedback.ERROR}
                 />
               </div>
               <div className="form-row">
-                <Input
+                <Select
                   formGroupClassName="col-md-6"
-                  isValidMessage="House Type seems valid"
-                  label="HouseType"
-                  name="houseType"
-                  placeholder="Select House Type"
+                  label="Minimum Budget"
+                  name="minPrice"
+                  placeholder="Min Budget"
+                  options={generateBudgetOptions({ defaultValue: 1 })}
+                  showFeedback={feedback.ERROR}
                 />
-                <Input
+                <Select
                   formGroupClassName="col-md-6"
-                  isValidMessage="Budget looks good"
                   label="Budget"
-                  name="budget"
-                  placeholder="budget"
+                  name="maxPrice"
+                  placeholder="Maximum Budget"
+                  options={generateBudgetOptions({ defaultValue: 2 })}
+                  showFeedback={feedback.ERROR}
                 />
               </div>
               <Button
@@ -227,7 +252,7 @@ const PropertyPreferenceForm = () => {
               >
                 Save Changes
               </Button>
-              <DisplayFormikState {...props} hide showAll />
+              <DisplayFormikState {...props} showAll />
             </Form>
           )}
         </Formik>
@@ -265,7 +290,7 @@ const ChangePasswordForm = () => {
                 actions.setSubmitting(false);
               });
           }}
-          validationSchema={createSchema(registerSchema)}
+          validationSchema={createSchema(preferenceSchema)}
         >
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>

@@ -7,6 +7,8 @@ import {
   strongPassword,
   confirmPassword,
   phoneNumber,
+  optionalValidation,
+  positiveNumberValidation,
   // OptionalPhoneNumber,
 } from './schema-helpers';
 
@@ -46,6 +48,20 @@ export const personalInfoSchema = {
   lastName: stringValidation('Last Name'),
   phone: phoneNumber,
   phone2: OptionalPhoneNumber,
+};
+
+export const preferenceSchema = {
+  location: optionalValidation(stringValidation('State')),
+  houseType: optionalValidation(stringValidation('Last Name')),
+  minPrice: optionalValidation(
+    positiveNumberValidation('Minimum Budget', 'budget')
+  ),
+  maxPrice: optionalValidation(
+    positiveNumberValidation('Maximum Budget', 'budget').moreThan(
+      yup.ref('minPrice'),
+      'Maximum Budget should be greater than the minimum Budget'
+    )
+  ),
 };
 
 export const forgotPasswordSchema = { email };

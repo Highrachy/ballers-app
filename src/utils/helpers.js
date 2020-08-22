@@ -60,3 +60,23 @@ export const generateNumOptions = (number = 12, type = '', options = {}) => {
     };
   });
 };
+
+export const generateBudgetOptions = (options) => {
+  const start = options.start || 5;
+  const end = options.end || 30;
+  const defaultValue = options.defaultValue || 1;
+  const showBlankOption = options.showBlankOption || true;
+
+  const blankOption = [
+    { value: defaultValue.toString(), label: 'Not Applicable' },
+  ];
+  const budget = [...Array(end - start).keys()].map((value) => {
+    const num = value + start;
+    return {
+      value: (num * ONE_MILLION).toString(),
+      label: `${num.toString()} Million Naira`,
+    };
+  });
+
+  return showBlankOption ? [...blankOption, ...budget] : budget;
+};

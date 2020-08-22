@@ -51,6 +51,7 @@ const Content = () => (
 );
 
 const options = [
+  { value: '', label: 'Not Applicable' },
   { value: 'chocolate', label: 'Chocolate' },
   { value: 'strawberry', label: 'Strawberry' },
   { value: 'vanilla', label: 'Vanilla' },
