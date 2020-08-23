@@ -9,6 +9,7 @@ import { getError } from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
+import SearchDashboardPropertyForm from 'components/common/SearchDashboardPropertyForm';
 
 const Portfolio = () => {
   const [toast, setToast] = useToast();
@@ -41,6 +42,7 @@ const Portfolio = () => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
+      <SearchForm />
       <LoadItems
         Icon={<MyPropertyIcon />}
         items={properties}
@@ -53,9 +55,22 @@ const Portfolio = () => {
   );
 };
 
+const SearchForm = () => (
+  <div className="text-center py-4 mb-3 border-bottom">
+    <h4>Search for your preferred Property</h4>
+    <div className="row">
+      <div className="col-sm-8 mx-auto">
+        <div className="property-search__dashboard just-for-you__search">
+          <SearchDashboardPropertyForm useDashboardStyles={false} />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const Properties = ({ recommendedProperties }) => (
   <div className="container-fluid">
-    <h5 className="mt-4">Just for you (Recommended Properties)</h5>
+    <h5 className="mt-4">Properties for You</h5>
     <div className="row">
       {recommendedProperties &&
         recommendedProperties.map((property) => (

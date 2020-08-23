@@ -102,7 +102,7 @@ const ScheduledVisitsRow = ({
     <td>
       <strong>{visitorPhone}</strong>
     </td>
-    <td>{propertyInfo[0].name}</td>
+    <td>{propertyInfo[0] && propertyInfo[0].name}</td>
   </tr>
 );
 

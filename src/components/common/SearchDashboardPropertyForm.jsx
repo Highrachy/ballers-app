@@ -2,12 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Axios from 'axios';
 import Select from 'react-select';
-import { customStylesDashboard } from 'components/forms/Select';
+import {
+  customStylesJustForYou,
+  customStylesDashboard,
+} from 'components/forms/Select';
 import { navigate } from '@reach/router';
 import { SearchIcon } from 'components/utils/Icons';
 import { BASE_API_URL } from 'utils/constants';
 
-const SearchPropertyForm = ({ defaultInputValue }) => {
+const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
   const LOADING = 'Loading...';
 
   const [formValue, setFormValue] = React.useState({
@@ -135,13 +138,18 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   // Button
   const enableButton = formValue.state && formValue.area && formValue.houseType;
 
+  // Styles to use
+  const styles = useDashboardStyles
+    ? customStylesDashboard
+    : customStylesJustForYou;
+
   return (
     <div className="input-group">
       <div className="select-holder">
         <Select
           options={state}
           key={JSON.stringify(defaultInputValue.state)}
-          styles={customStylesDashboard}
+          styles={styles}
           placeholder={placeholder.state}
           onChange={getArea}
         />
@@ -150,7 +158,7 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
         <Select
           placeholder={placeholder.area}
           options={area}
-          styles={customStylesDashboard}
+          styles={styles}
           isDisabled={disableArea}
           onChange={getHouseType}
           key={JSON.stringify(`${defaultInputValue.area} ${formValue.state}`)}
@@ -163,7 +171,7 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
           )}
           placeholder={placeholder.houseType}
           options={houseType}
-          styles={customStylesDashboard}
+          styles={styles}
           isDisabled={disableHouseType}
           onChange={getHouseValue}
         />
@@ -175,7 +183,7 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
         onClick={handleSearch}
       >
         <span className="d-md-block d-none">
-          <SearchIcon />
+          {useDashboardStyles ? <SearchIcon /> : 'Search'}
         </span>
         <span className="d-md-none">Search</span>
       </button>
@@ -185,9 +193,11 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
 
 SearchPropertyForm.propTypes = {
   defaultInputValue: PropTypes.object,
+  useDashboardStyles: PropTypes.bool,
 };
 
 SearchPropertyForm.defaultProps = {
+  useDashboardStyles: true,
   defaultInputValue: {
     state: '',
     area: '',

@@ -168,6 +168,16 @@ export const customStylesDashboard = {
     };
   },
 };
+export const customStylesJustForYou = {
+  ...customStyles,
+  control: (provided, state) => {
+    return {
+      ...customStyles.control(provided, state),
+      width: '100%',
+      borderRadius: 0,
+    };
+  },
+};
 
 Select.defaultProps = {
   autoComplete: '',
