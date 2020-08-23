@@ -20,4 +20,5 @@ export const INITIAL_STATE = {
   assignedProperties: [],
   referrals: [],
   preferences: {},
+  favorites: [],
 };

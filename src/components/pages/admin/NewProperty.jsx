@@ -51,8 +51,6 @@ const NewPropertyForm = () => {
               },
             }
           : values;
-        console.log('location', location);
-        console.log('payload', payload);
 
         Axios.post(`${BASE_API_URL}/property/add`, payload, {
           headers: { Authorization: getTokenFromStore() },

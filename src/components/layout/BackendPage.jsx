@@ -33,7 +33,7 @@ const BackendPage = ({ children }) => {
   }, [userDispatch, location]);
 
   return (
-    <div>
+    <div className="dashboard-page">
       <Sidebar closeSidebar={closeSidebar} showSidebar={showSidebar} />
 
       {/* Content Page */}

@@ -24,6 +24,12 @@ export const listJsonItems = (items, defaultValue = null) => {
 export const dashedLowerCase = (text) =>
   text && text.toString().replace(/\s+/g, '-').toLowerCase();
 
+export const getItems = (items, end) => {
+  if (items == null) return items;
+  // The slice() method returns a shallow copy of a portion of an array into a new array object selected from begin to end (end not included). The original array will not be modified.
+  return items.slice(0, end);
+};
+
 export const getPercentage = (value) => parseFloat(value) / 100;
 export const getNairaSymbol = () => <>&#8358;</>;
 export const ONE_MILLION = 1000000;
@@ -65,7 +71,7 @@ export const generateBudgetOptions = (options) => {
   const start = options.start || 5;
   const end = options.end || 30;
   const defaultValue = options.defaultValue || 1;
-  const showBlankOption = options.showBlankOption || true;
+  const showBlankOption = options.showBlankOption || false;
 
   const blankOption = [
     { value: defaultValue.toString(), label: 'Not Applicable' },

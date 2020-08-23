@@ -11,16 +11,52 @@ import {
   RecommendedPropertyCard,
 } from 'components/common/PropertyCard';
 import useWindowSize from 'hooks/useWindowSize';
-import { MOBILE_WIDTH } from 'utils/constants';
+import { MOBILE_WIDTH, BASE_API_URL } from 'utils/constants';
 import { UserContext } from 'context/UserContext';
+import LoadItems from 'components/utils/LoadingItems';
+import { MyPropertyIcon } from 'components/utils/Icons';
+import NoContent from 'components/utils/NoContent';
+import Axios from 'axios';
+import { getTokenFromStore } from 'utils/localStorage';
+import { getError, getItems } from 'utils/helpers';
+import Toast, { useToast } from 'components/utils/Toast';
 
-const Dashboard = () => (
-  <BackendPage>
-    <Welcome />
-    <Overview />
-    <Others />
-  </BackendPage>
-);
+const Dashboard = () => {
+  const [toast, setToast] = useToast();
+  const [properties, setProperties] = React.useState(null);
+  React.useEffect(() => {
+    Axios.post(
+      `${BASE_API_URL}/property/search`,
+      {},
+      {
+        headers: {
+          Authorization: getTokenFromStore(),
+        },
+      }
+    )
+      .then(function (response) {
+        const { status, data } = response;
+        console.log('data', data);
+        // handle success
+        if (status === 200) {
+          setProperties(data.properties);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+      });
+  }, [setToast]);
+  return (
+    <BackendPage>
+      <Toast {...toast} showToastOnly />
+      <Welcome />
+      <Overview />
+      <Others recommendedProperties={getItems(properties, 2) || []} />
+    </BackendPage>
+  );
+};
 
 const Welcome = () => {
   const { userState /* userDispatch */ } = React.useContext(UserContext);
@@ -85,7 +121,7 @@ const ReferAndEarn = () => (
   </section>
 );
 
-const Others = () => (
+const Others = ({ recommendedProperties }) => (
   <>
     <div className="container-fluid">
       <LinkHeader to="/user/portfolio" name="Overview" />
@@ -101,8 +137,17 @@ const Others = () => (
       <LinkHeader to="/user/just-for-you" name="Just for you" />
       <div className="row">
         <div className="col-sm-6">
-          <RecommendedPropertyCard />
-          <RecommendedPropertyCard />
+          <LoadItems
+            Icon={<MyPropertyIcon />}
+            items={recommendedProperties}
+            loadingText="Loading Property Recommendations"
+            noContent={<NoContent isButton text="No Properties found" />}
+          >
+            {recommendedProperties &&
+              recommendedProperties.map((property) => (
+                <RecommendedPropertyCard {...property} key={property._id} />
+              ))}
+          </LoadItems>
         </div>
       </div>
     </div>

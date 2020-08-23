@@ -49,7 +49,6 @@ const Select = ({
       <div className={inputSizeClassName}>
         <Field name={name}>
           {({ field, form }) => {
-            console.log('option', field);
             return (
               <ReactSelect
                 className={classNames(
@@ -61,7 +60,6 @@ const Select = ({
                 name={name}
                 onBlur={field.onBlur}
                 onChange={(option) => {
-                  console.log('option', option);
                   option && (option.value || option.length > 0)
                     ? isMulti
                       ? form.setFieldValue(

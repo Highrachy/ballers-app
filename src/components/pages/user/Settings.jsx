@@ -212,6 +212,24 @@ const PropertyPreferenceForm = () => {
             <Form>
               <Toast {...toast} />
               <div className="form-row">
+                <Select
+                  formGroupClassName="col-md-6"
+                  label="Minimum Budget"
+                  name="minPrice"
+                  placeholder="Min Budget"
+                  options={generateBudgetOptions({ defaultValue: 1 })}
+                  showFeedback={feedback.ERROR}
+                />
+                <Select
+                  formGroupClassName="col-md-6"
+                  label="Maximum Budget"
+                  name="maxPrice"
+                  placeholder="Maximum Budget"
+                  options={generateBudgetOptions({ defaultValue: 2 })}
+                  showFeedback={feedback.ERROR}
+                />
+              </div>
+              <div className="form-row">
                 <Input
                   formGroupClassName="col-md-6"
                   label="Preferred State"
@@ -227,24 +245,7 @@ const PropertyPreferenceForm = () => {
                   showFeedback={feedback.ERROR}
                 />
               </div>
-              <div className="form-row">
-                <Select
-                  formGroupClassName="col-md-6"
-                  label="Minimum Budget"
-                  name="minPrice"
-                  placeholder="Min Budget"
-                  options={generateBudgetOptions({ defaultValue: 1 })}
-                  showFeedback={feedback.ERROR}
-                />
-                <Select
-                  formGroupClassName="col-md-6"
-                  label="Budget"
-                  name="maxPrice"
-                  placeholder="Maximum Budget"
-                  options={generateBudgetOptions({ defaultValue: 2 })}
-                  showFeedback={feedback.ERROR}
-                />
-              </div>
+
               <Button
                 className="btn-secondary mt-4"
                 loading={isSubmitting}
@@ -252,7 +253,7 @@ const PropertyPreferenceForm = () => {
               >
                 Save Changes
               </Button>
-              <DisplayFormikState {...props} showAll />
+              <DisplayFormikState {...props} hide showAll />
             </Form>
           )}
         </Formik>

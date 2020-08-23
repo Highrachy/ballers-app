@@ -5,6 +5,7 @@ import Select from 'react-select';
 import { customStylesDashboard } from 'components/forms/Select';
 import { navigate } from '@reach/router';
 import { SearchIcon } from 'components/utils/Icons';
+import { BASE_API_URL } from 'utils/constants';
 
 const SearchPropertyForm = ({ defaultInputValue }) => {
   const LOADING = 'Loading...';
@@ -35,7 +36,7 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   // State
   const [state, setState] = React.useState([{ label: 'Lagos', value: '1' }]);
   React.useEffect(() => {
-    Axios.post('http://staging.ballers.ng/includes/find-house.php', {
+    Axios.post(`${BASE_API_URL}/property/search`, {
       load_state: 'test',
     })
       .then(function (response) {

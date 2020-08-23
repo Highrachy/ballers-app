@@ -4,6 +4,7 @@ import { Link } from '@reach/router';
 import { RightArrowIcon } from 'components/utils/Icons';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
 import { MapPinIcon, MyPropertyIcon } from 'components/utils/Icons';
+import { moneyFormatInNaira } from 'utils/helpers';
 
 const now = 60;
 const color = 'success';
@@ -62,27 +63,36 @@ export const OwnedPropertyCard = () => (
   </Card>
 );
 
-export const RecommendedPropertyCard = () => (
+export const RecommendedPropertyCard = ({
+  address,
+  houseType,
+  mainImage,
+  price,
+  _id,
+}) => (
   <section className="mb-3">
     <Card className="card-container property-holder">
       <div className="row">
         <div className="col-md-5">
           <img
-            src={PropertyPlaceholderImage}
-            alt=""
+            src={mainImage || PropertyPlaceholderImage}
+            alt="Property"
             className="img-fluid property-holder__img"
           />
         </div>
         <div className="col-md-7">
           <h5 className="font-weight-500 mt-3 mt-md-0">Blissville Condos</h5>
           <div className="property-holder__location">
-            Location: <strong>Ikate, Lagos state</strong>
+            Location:{' '}
+            <strong>
+              {address.city}, {address.state}
+            </strong>
           </div>
           <div className="property-holder__house-type">
-            House Type: <strong>3 bedroom flat</strong>
+            House Type: <strong>{houseType}</strong>
           </div>
 
-          <h5 className="mt-2">N 23,000,000</h5>
+          <h5 className="mt-2">{moneyFormatInNaira(price)}</h5>
           <div className="property-holder__separator"></div>
 
           <span className={`badge badge-secondary property-holder__details`}>
@@ -92,12 +102,15 @@ export const RecommendedPropertyCard = () => (
             Mortgage 2
           </span>
 
-          <span className="text-uppercase small float-right">
+          <Link
+            className="text-uppercase small float-right"
+            to={`/user/portfolio/${_id}`}
+          >
             Details{' '}
             <div className="small-icon">
               <RightArrowIcon />
             </div>
-          </span>
+          </Link>
         </div>
       </div>
     </Card>

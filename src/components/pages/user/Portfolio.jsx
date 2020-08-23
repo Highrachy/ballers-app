@@ -5,14 +5,54 @@ import {
   OwnedPropertyCard,
   RecommendedPropertyCard,
 } from 'components/common/PropertyCard';
+import Axios from 'axios';
+import { BASE_API_URL } from 'utils/constants';
+import Toast, { useToast } from 'components/utils/Toast';
+import { getTokenFromStore } from 'utils/localStorage';
+// import LoadItems from 'components/utils/LoadingItems';
+// import NoContent from 'components/utils/NoContent';
+// import { PropertiesIcon } from 'components/utils/Icons';
+import { getError } from 'utils/helpers';
+import LoadItems from 'components/utils/LoadingItems';
+import { MyPropertyIcon } from 'components/utils/Icons';
+import NoContent from 'components/utils/NoContent';
 
-const Portfolio = () => (
-  <BackendPage>
-    <Others />
-  </BackendPage>
-);
+const Portfolio = () => {
+  const [toast, setToast] = useToast();
+  const [properties, setProperties] = React.useState(null);
+  React.useEffect(() => {
+    Axios.post(
+      `${BASE_API_URL}/property/search`,
+      {},
+      {
+        headers: {
+          Authorization: getTokenFromStore(),
+        },
+      }
+    )
+      .then(function (response) {
+        const { status, data } = response;
+        console.log('data', data);
+        // handle success
+        if (status === 200) {
+          setProperties(data.properties);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+      });
+  }, [setToast]);
+  return (
+    <BackendPage>
+      <Toast {...toast} showToastOnly />
+      <Others recommendedProperties={properties} />
+    </BackendPage>
+  );
+};
 
-const Others = () => (
+const Others = ({ recommendedProperties }) => (
   <>
     <div className="container-fluid">
       <h5>Your active property</h5>
@@ -25,17 +65,24 @@ const Others = () => (
 
     <EnjoyingBallers />
 
-    <div className="container-fluid">
-      <h5 className="mt-4">Just for you (Recommended Properties)</h5>
-      <div className="row">
-        <div className="col-sm-6">
-          <RecommendedPropertyCard />
-        </div>
-        <div className="col-sm-6">
-          <RecommendedPropertyCard />
+    <LoadItems
+      Icon={<MyPropertyIcon />}
+      items={recommendedProperties}
+      loadingText="Loading Property Recommendations"
+      noContent={<NoContent isButton text="No Properties found" />}
+    >
+      <div className="container-fluid">
+        <h5 className="mt-4">Just for you (Recommended Properties)</h5>
+        <div className="row">
+          {recommendedProperties &&
+            recommendedProperties.map((property) => (
+              <div className="col-sm-6" key={property._id}>
+                <RecommendedPropertyCard {...property} />
+              </div>
+            ))}
         </div>
       </div>
-    </div>
+    </LoadItems>
   </>
 );
 

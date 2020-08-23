@@ -119,10 +119,10 @@
 }
 
 .content-page {
-  margin-left: 0;
+  padding-left: 0;
   @include media-breakpoint-up(sm) {
-    margin-left: $sidebar-width;
-    margin-top: 7rem;
+    padding-left: $sidebar-width;
+    padding-top: 2rem;
   }
   overflow: hidden;
 }
