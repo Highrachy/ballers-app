@@ -21,17 +21,18 @@ import {
 } from 'components/forms/schemas/schema-helpers';
 import { UserContext } from 'context/UserContext';
 import { getError } from 'utils/helpers';
+import { getTokenFromStore } from 'utils/localStorage';
 
-const PropertyEnquiry = () => (
+const PropertyEnquiry = ({ id }) => (
   <BackendPage>
     <section className="container-fluid">
       <h4>Property Enquiry</h4>
-      <EnquiryForm />
+      <EnquiryForm id={id} />
     </section>
   </BackendPage>
 );
 
-const EnquiryForm = () => {
+const EnquiryForm = ({ id }) => {
   const [toast, setToast] = useToast();
   const { userState } = React.useContext(UserContext);
 
@@ -43,8 +44,13 @@ const EnquiryForm = () => {
       }}
       onSubmit={(values, actions) => {
         const address = `${values.address.street1} ${values.address.street2} ${values.address.city}, ${values.address.state}, ${values.address.country}`;
-        const payload = { ...values, address };
-        Axios.post(`${BASE_API_URL}/enquiry/add`, payload)
+        const payload = { ...values, address, properyId: id };
+        console.log('payload', payload);
+        Axios.post(`${BASE_API_URL}/enquiry/add`, payload, {
+          headers: {
+            Authorization: getTokenFromStore(),
+          },
+        })
           .then(function (response) {
             const { status } = response;
             if (status === 201) {
@@ -82,7 +88,7 @@ const EnquiryForm = () => {
           >
             Submit Form
           </Button>
-          <DisplayFormikState {...props} showAll />
+          <DisplayFormikState {...props} hide showAll />
         </Form>
       )}
     </Formik>

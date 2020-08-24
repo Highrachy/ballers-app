@@ -2,7 +2,8 @@ import {
   stringValidation,
   email,
   phoneNumber,
-  minDateValidation,
+  // minDateValidation,
+  required,
 } from './schema-helpers';
 
 export const addEnquirySchema = {
@@ -14,8 +15,9 @@ export const addEnquirySchema = {
   phone: phoneNumber,
   occupation: stringValidation('Occupation'),
   nameOnTitleDocument: stringValidation('Name on Title Document'),
-  investmentStartDate: minDateValidation('Investment Start Date', new Date()),
+  // investmentStartDate: minDateValidation('Investment Start Date', new Date()),
+  investmentStartDate: required('Investment Start Date', new Date()),
   initialInvestmentAmount: stringValidation('Initial Investment Amount'),
-  investmentFrequency: stringValidation('Investment Frequency'),
+  investmentFrequency: required('Investment Frequency'),
   periodicInvestmentAmount: stringValidation('Periodic Investment Amount'),
 };

@@ -26,15 +26,15 @@ import {
 } from 'components/utils/Icons';
 import { getError } from 'utils/helpers';
 
-const SinglePortfolio = () => (
+const SinglePortfolio = ({ id }) => (
   <BackendPage>
-    <OwnedPropertyCard />
+    <OwnedPropertyCard id={id} />
   </BackendPage>
 );
 
 const NOW = 50;
 
-const OwnedPropertyCard = () => (
+const OwnedPropertyCard = ({ id }) => (
   <div className="container-fluid">
     <Card className="card-container h-100 property-holder__big">
       <div className="row">
@@ -53,7 +53,7 @@ const OwnedPropertyCard = () => (
         {/* Side Card */}
         <div className="col-sm-5">
           <aside className="ml-md-5">
-            {<PropertySidebar /> || <AssignedPropertySidebar />}
+            {<PropertySidebar id={id} /> || <AssignedPropertySidebar />}
           </aside>
         </div>
       </div>
@@ -207,7 +207,7 @@ const AssignedPropertySidebar = () => (
   </Card>
 );
 
-const PropertySidebar = () => {
+const PropertySidebar = ({ id }) => {
   const [showRequestVist, setShowRequestVisit] = React.useState(false);
 
   return (
@@ -225,7 +225,7 @@ const PropertySidebar = () => {
 
         <p className="">Kindly proceed with property acquisition</p>
         <Link
-          to="/user/property/enquiry/1"
+          to={`/user/property/enquiry/${id}`}
           className="btn btn-block btn-secondary my-3"
         >
           Proceed

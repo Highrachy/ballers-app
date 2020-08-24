@@ -1,5 +1,6 @@
 import React from 'react';
 import Humanize from 'humanize-plus';
+import Converter from 'number-to-words';
 
 export const commaNumber = (value, prependCurrency = false) => {
   const number = parseInt(value, 10);
@@ -29,6 +30,10 @@ export const getItems = (items, end) => {
   // The slice() method returns a shallow copy of a portion of an array into a new array object selected from begin to end (end not included). The original array will not be modified.
   return items.slice(0, end);
 };
+
+export const numToWords = (num) => Humanize.titleCase(Converter.toWords(num));
+export const numToOrdinal = (num) =>
+  Humanize.titleCase(Converter.toWordsOrdinal(num));
 
 export const getPercentage = (value) => parseFloat(value) / 100;
 export const getNairaSymbol = () => <>&#8358;</>;

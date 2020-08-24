@@ -1,3 +1,4 @@
+import * as yup from 'yup';
 import {
   stringValidation,
   // optionalValidation,
@@ -28,4 +29,20 @@ export const scheduleTourSchema = {
   visitorName: stringValidation('Visitor Name'),
   visitorEmail: email,
   visitorPhone: phoneNumber,
+};
+
+export const offerLetterSchema = {
+  propertyPrice: positiveNumberValidation('Property Price'),
+  totalAmountPayable: positiveNumberValidation('Total Amount Payable').moreThan(
+    yup.ref('propertyPrice'),
+    'Total Amount Payable should be greater or equal to than property price'
+  ),
+  handOverDate: positiveNumberValidation('HandOver Date'),
+  allocationMonth: positiveNumberValidation('Allocation Month'),
+  initialPayment: positiveNumberValidation('Initial Payment'),
+  monthlyPayment: positiveNumberValidation('Monthly Payment'),
+  paymentFrequency: positiveNumberValidation('Payment Frequency'),
+  offerExpires: positiveNumberValidation('Offer Expires'),
+  titleDocument: stringValidation('Title Document'),
+  deliveryState: stringValidation('Delivery State'),
 };
