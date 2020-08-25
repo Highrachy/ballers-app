@@ -40,6 +40,7 @@ const Welcome = () => {
           icon={<MessageIcon />}
           name="Property Enquiries"
           number={15}
+          to="/admin/enquiries"
         />
         <DashboardCardList
           icon={<AssignedPropertyIcon />}

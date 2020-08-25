@@ -8,14 +8,14 @@ import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
-import { Link } from '@reach/router';
-import { moneyFormatInNaira, getError } from 'utils/helpers';
+import { getError } from 'utils/helpers';
+import { MessageIcon } from 'components/utils/Icons';
 
-const Portfolios = () => {
+const Enquiries = () => {
   const [toast, setToast] = useToast();
-  const [portfolios, setPortfolios] = React.useState(null);
+  const [enquiries, setEnquiries] = React.useState(null);
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/property/all`, {
+    Axios.get(`${BASE_API_URL}/enquiry/all`, {
       headers: {
         Authorization: getTokenFromStore(),
       },
@@ -24,7 +24,8 @@ const Portfolios = () => {
         const { status, data } = response;
         // handle success
         if (status === 200) {
-          setPortfolios(data.properties);
+          console.log('data.enquiries', data.enquiries);
+          setEnquiries(data.enquiries);
         }
       })
       .catch(function (error) {
@@ -36,43 +37,39 @@ const Portfolios = () => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
-      <AllPortfolios portfolios={portfolios} toast={toast} />
+      <AllEnquiries enquiries={enquiries} toast={toast} />
     </BackendPage>
   );
 };
 
-const AllPortfolios = ({ portfolios, toast }) => (
+const AllEnquiries = ({ enquiries }) => (
   <LoadItems
-    items={portfolios}
-    loadingText="Loading your Portfolios"
-    noContent={<NoContent isButton text="No Portfolios found" />}
+    Icon={<MessageIcon />}
+    items={enquiries}
+    loadingText="Loading your Enquiries"
+    noContent={<NoContent isButton text="No Enquiries found" />}
   >
-    <PortfoliosRowList toast={toast} portfolios={portfolios || []} />
+    <EnquiriesRowList enquiries={enquiries || []} />
   </LoadItems>
 );
 
-const PortfoliosRowList = ({ portfolios }) => (
+const EnquiriesRowList = ({ enquiries }) => (
   <div className="container-fluid">
-    <div className="text-right">
-      <Link to="/admin/portfolios/new" className="btn btn-secondary btn-wide">
-        Add Property
-      </Link>
-    </div>
     <Card className="mt-4">
       <div className="table-responsive">
         <table className="table table-borderless table-hover">
           <thead>
             <tr>
               <td>S/N</td>
-              <td>Image</td>
-              <td>Name</td>
-              <td>Location</td>
-              <td>Price</td>
+              <td>DATE</td>
+              <td>DESCRIPTION</td>
+              <td>PHONE</td>
+              <td>PROPERTY</td>
             </tr>
           </thead>
           <tbody>
-            {portfolios.map((portfolio, index) => (
-              <PortfoliosRow key={index} number={index + 1} {...portfolio} />
+            {enquiries.map((enquiry, index) => (
+              <EnquiriesRow key={index} number={index + 1} {...enquiry} />
             ))}
           </tbody>
         </table>
@@ -81,29 +78,33 @@ const PortfoliosRowList = ({ portfolios }) => (
   </div>
 );
 
-PortfoliosRowList.propTypes = {
-  portfolios: PropTypes.array.isRequired,
+EnquiriesRowList.propTypes = {
+  enquiries: PropTypes.array.isRequired,
 };
 
-const PortfoliosRow = ({ _id, name, address, price, number, mainImage }) => (
+const EnquiriesRow = ({
+  number,
+  title,
+  firstName,
+  lastName,
+  email,
+  phone,
+  propertyInfo,
+}) => (
   <tr>
     <td>{number}</td>
     <td>
-      <Link to={`/admin/portfolio/${_id}`}>
-        <img src={mainImage} width="80" alt="property" />
-      </Link>
+      {title} {firstName} {lastName}
     </td>
-    <td>{name}</td>
 
     <td>
-      <strong>
-        {address.city}, {address.state}
-      </strong>
+      <strong>{email}</strong>
     </td>
     <td>
-      <strong>{moneyFormatInNaira(price)}</strong>
+      <strong>{phone}</strong>
     </td>
+    <td>{propertyInfo[0] && propertyInfo[0].name}</td>
   </tr>
 );
 
-export default Portfolios;
+export default Enquiries;

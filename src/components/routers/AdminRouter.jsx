@@ -9,6 +9,7 @@ import Transactions from 'components/pages/admin/Transactions';
 import NewProperty from 'components/pages/admin/NewProperty';
 import Menu from 'components/pages/user/Menu';
 import CreateOfferLetter from 'components/pages/admin/CreateOfferLetter';
+import Enquiries from 'components/pages/admin/Enquiries';
 
 const UserRouter = () => (
   <Router>
@@ -19,6 +20,7 @@ const UserRouter = () => (
     <CreateOfferLetter path="offer-letter/:enquiry-id" />
     <NewProperty path="portfolios/new" />
     <ScheduledVisits path="scheduled-visits" />
+    <Enquiries path="enquiries" />
     <Transactions path="transactions" />
     <Menu path="menu" />
   </Router>
