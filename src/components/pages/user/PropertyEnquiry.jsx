@@ -22,6 +22,7 @@ import {
 import { UserContext } from 'context/UserContext';
 import { getError } from 'utils/helpers';
 import { getTokenFromStore } from 'utils/localStorage';
+import InputFormat from 'components/forms/InputFormat';
 
 const PropertyEnquiry = ({ id }) => (
   <BackendPage>
@@ -38,13 +39,45 @@ const EnquiryForm = ({ id }) => {
 
   return (
     <Formik
-      initialValues={{
-        ...setInitialValues(addEnquirySchema, userState),
-        address: setInitialValues(addressSchema, userState.address),
-      }}
+      initialValues={
+        ({
+          ...setInitialValues(addEnquirySchema, userState),
+          address: setInitialValues(addressSchema, userState.address),
+        },
+        {
+          address: {
+            city: 'Obanikoro',
+            country: 'Nigeria',
+            state: 'Lagos',
+            street1: 'No 264,Ikorodu Road, Obanikoro',
+            street2: 'Test',
+          },
+          email: 'harunpopson@gmail.com',
+          firstName: 'Popoola',
+          initialInvestmentAmount: '5000000',
+          investmentFrequency: '4',
+          investmentStartDate: '26/08/2020',
+          lastName: 'Oladayo',
+          nameOnTitleDocument: 'Haruna Popoola',
+          occupation: 'Andela',
+          otherName: 'Oladayo',
+          periodicInvestmentAmount: '5000000',
+          phone: '+2348028388185',
+          title: 'Mr',
+        })
+      }
       onSubmit={(values, actions) => {
-        const address = `${values.address.street1} ${values.address.street2} ${values.address.city}, ${values.address.state}, ${values.address.country}`;
-        const payload = { ...values, address, properyId: id };
+        // delete optional fields
+        !values.address.street2 && delete values.address.street2;
+        !values.address.otherName && delete values.address.otherName;
+
+        // build payload
+        const payload = {
+          ...values,
+          investmentStartDate:
+            values.investmentStartDate.date || values.investmentStartDate,
+          propertyId: id,
+        };
         console.log('payload', payload);
         Axios.post(`${BASE_API_URL}/enquiry/add`, payload, {
           headers: {
@@ -194,7 +227,7 @@ const InvestmentDetailsForm = () => (
           placeholder="State Date"
         />
 
-        <Input
+        <InputFormat
           label="Initial Investment Amount"
           name="initialInvestmentAmount"
           placeholder="Initial Investment"
@@ -214,7 +247,7 @@ const InvestmentDetailsForm = () => (
           custom
         />
 
-        <Input
+        <InputFormat
           label="Periodic Investment"
           name="periodicInvestmentAmount"
           placeholder="Periodic Investment"

@@ -1,23 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BallersLogo from 'assets/img/logo/ballers-logo.png';
-import userSideMenu from 'content/menu/userMenu';
-import adminSideMenu from 'content/menu/adminMenu';
 import classNames from 'classnames';
-import { USER_TYPES } from 'utils/constants';
-import { UserContext } from 'context/UserContext';
-import { getUserRoleFromStore } from 'utils/localStorage';
 import { Link } from '@reach/router';
-
-const SIDE_MENU = {
-  [USER_TYPES.user]: userSideMenu,
-  [USER_TYPES.admin]: adminSideMenu,
-};
+import { useMenu } from 'hooks/useMenu';
 
 const Sidebar = ({ showSidebar, closeSidebar, ...props }) => {
-  const { userState } = React.useContext(UserContext);
-  const currentUserRole = userState.type || getUserRoleFromStore();
-  const sideMenu = SIDE_MENU[currentUserRole];
+  const sideMenu = useMenu();
 
   return (
     <>

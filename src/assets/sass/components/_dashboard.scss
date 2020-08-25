@@ -1,5 +1,6 @@
 .dashboard-page {
   background: #f9fdff;
+  padding-bottom: 8rem;
 }
 
 .dashboard-top-nav {
@@ -192,10 +193,6 @@
   display: inline-block;
   height: 8rem;
   color: $secondary;
-
-  svg {
-    fill: $secondary;
-  }
 }
 
 .menu__title {
