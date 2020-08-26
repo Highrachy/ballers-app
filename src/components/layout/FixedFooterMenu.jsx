@@ -33,6 +33,7 @@ const FixedFooterMenu = () => {
   );
 };
 
-const isActive = ({ isCurrent }) => isCurrent && 'active';
+const isActive = ({ isPartiallyCurrent }) =>
+  isPartiallyCurrent && { className: 'text-secondary' };
 
 export default FixedFooterMenu;

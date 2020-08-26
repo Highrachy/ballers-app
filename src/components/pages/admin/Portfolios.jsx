@@ -94,7 +94,6 @@ const PortfoliosRow = ({ _id, name, address, price, number, mainImage }) => (
       </Link>
     </td>
     <td>{name}</td>
-
     <td>
       <strong>
         {address.city}, {address.state}
@@ -103,6 +102,7 @@ const PortfoliosRow = ({ _id, name, address, price, number, mainImage }) => (
     <td>
       <strong>{moneyFormatInNaira(price)}</strong>
     </td>
+    ]
   </tr>
 );
 

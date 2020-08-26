@@ -104,6 +104,10 @@ export const customStyles = {
       ...provided,
       color: state.isSelected ? '#5775FA' : '#161D3F',
       backgroundColor: 'white',
+      textAlign: 'left',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
       ':hover': {
         ...provided[':hover'],
         backgroundColor: 'rgba(232, 237, 255, 0.38)',
@@ -168,6 +172,7 @@ export const customStylesDashboard = {
     };
   },
 };
+
 export const customStylesJustForYou = {
   ...customStyles,
   control: (provided, state) => {

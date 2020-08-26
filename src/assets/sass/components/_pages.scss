@@ -120,9 +120,8 @@
         stroke: $white;
       }
       @include media-breakpoint-up(md) {
-        width: 50px;
         height: 41px;
-        padding: 5px 10px;
+        padding: 5px 20px;
         border-radius: 0;
       }
     }
