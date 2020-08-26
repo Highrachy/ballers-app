@@ -10,20 +10,32 @@ import { MyPropertyIcon } from 'components/utils/Icons';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import SearchDashboardPropertyForm from 'components/common/SearchDashboardPropertyForm';
+import * as queryString from 'query-string';
 
-const Portfolio = () => {
+const JustForYou = ({ location }) => {
   const [toast, setToast] = useToast();
   const [properties, setProperties] = React.useState(null);
+
+  // From search query
+  const queryParams = queryString.parse(location.search);
+  const { state, houseType } = queryParams;
+
+  // if no state or housetype, use preferences
+
   React.useEffect(() => {
-    Axios.post(
-      `${BASE_API_URL}/property/search`,
-      {},
-      {
-        headers: {
-          Authorization: getTokenFromStore(),
-        },
-      }
-    )
+    const payload = {};
+    if (state) {
+      payload['state'] = state;
+    }
+    if (houseType) {
+      payload['houseType'] = houseType;
+    }
+
+    Axios.post(`${BASE_API_URL}/property/search`, payload, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
       .then(function (response) {
         const { status, data } = response;
         console.log('data', data);
@@ -37,12 +49,13 @@ const Portfolio = () => {
           message: getError(error),
         });
       });
-  }, [setToast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, houseType]);
 
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
-      <SearchForm />
+      <SearchForm defaultInputValue={{ state, houseType }} />
       <LoadItems
         Icon={<MyPropertyIcon />}
         items={properties}
@@ -55,13 +68,16 @@ const Portfolio = () => {
   );
 };
 
-const SearchForm = () => (
+const SearchForm = ({ defaultInputValue }) => (
   <div className="text-center py-4 mb-3 border-bottom">
     <h4>Search for your preferred Property</h4>
     <div className="row">
       <div className="col-sm-8 mx-auto">
         <div className="property-search__dashboard just-for-you__search">
-          <SearchDashboardPropertyForm useDashboardStyles={false} />
+          <SearchDashboardPropertyForm
+            defaultInputValue={defaultInputValue}
+            useDashboardStyles={false}
+          />
         </div>
       </div>
     </div>
@@ -82,4 +98,4 @@ const Properties = ({ recommendedProperties }) => (
   </div>
 );
 
-export default Portfolio;
+export default JustForYou;

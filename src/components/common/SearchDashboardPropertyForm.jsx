@@ -13,26 +13,37 @@ import { valuesToOptions } from 'utils/helpers';
 
 const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
   const statePlaceholder = 'State';
+  const houseTypePlaceholder = 'House Type';
+
+  console.log('defaultInputValue', defaultInputValue);
 
   const [formValue, setFormValue] = React.useState({
-    state: '',
-    houseType: '',
+    state: defaultInputValue.state || '',
+    houseType: defaultInputValue.houseType || '',
   });
-  const houseTypePlaceholder = 'House Type';
 
   const [placeholder, setPlaceholder] = React.useState({
     state: statePlaceholder,
     houseType: houseTypePlaceholder,
   });
+
   const [data, setData] = React.useState({
     state: [],
     houseType: [],
   });
 
   React.useEffect(() => {
-    (defaultInputValue.state || defaultInputValue.houseType) &&
-      setPlaceholder(defaultInputValue);
-  }, [defaultInputValue]);
+    const defaults = placeholder;
+
+    if (defaultInputValue.state) {
+      defaults['state'] = defaultInputValue.state;
+    }
+    if (defaultInputValue.houseType) {
+      defaults['houseType'] = defaultInputValue.houseType;
+    }
+
+    setPlaceholder(defaults);
+  }, [defaultInputValue, placeholder]);
 
   React.useEffect(() => {
     Axios.get(`${BASE_API_URL}/property/available-options`, {
@@ -46,8 +57,11 @@ const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
         // handle success
         if (status === 200) {
           setData({
-            states: valuesToOptions(data.availableFields.states),
-            houseTypes: valuesToOptions(data.availableFields.houseTypes),
+            states: valuesToOptions(data.availableFields.states, 'Any State'),
+            houseTypes: valuesToOptions(
+              data.availableFields.houseTypes,
+              'Any House Type'
+            ),
           });
         }
       })
@@ -60,10 +74,17 @@ const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
   }, []);
 
   const handleSearch = () => {
-    navigate(
-      `/user/just-for-you?state=${formValue.state}&houseType=${formValue.houseType}`,
-      true
-    );
+    const params = [];
+    if (formValue.state) {
+      params.push([`state=${formValue.state}`]);
+    }
+    if (formValue.houseType) {
+      params.push([`houseType=${formValue.houseType}`]);
+    }
+
+    console.log('params', params);
+    const query = params.length > 0 ? `?${params.join('&')}` : '';
+    navigate(`/user/just-for-you${query}`, true);
   };
 
   // Styles to use
@@ -111,7 +132,6 @@ SearchPropertyForm.defaultProps = {
   useDashboardStyles: true,
   defaultInputValue: {
     state: '',
-    area: '',
     houseType: '',
   },
 };

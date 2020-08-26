@@ -92,8 +92,13 @@ export const generateBudgetOptions = (options) => {
   return showBlankOption ? [...blankOption, ...budget] : budget;
 };
 
-export const valuesToOptions = (values) =>
-  values.map((value) => ({
+export const valuesToOptions = (values, defaultLabel = null) => {
+  const output = values.map((value) => ({
     value: value.toString(),
     label: value,
   }));
+
+  return defaultLabel
+    ? [{ value: '', label: defaultLabel }, ...output]
+    : output;
+};
