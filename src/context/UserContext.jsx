@@ -22,6 +22,8 @@ let reducer = (state, action) => {
       return { ...state, ...action.user, isLoggedIn: true };
     case 'user-profile-image':
       return { ...state, profileImg: action.imageURL };
+    case 'available-options':
+      return { ...state, availableOptions: action.availableOptions };
     default:
       return state;
   }

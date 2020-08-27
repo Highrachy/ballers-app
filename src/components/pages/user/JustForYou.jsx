@@ -40,6 +40,7 @@ const JustForYou = ({ location }) => {
         const { status, data } = response;
         console.log('data', data);
         // handle success
+
         if (status === 200) {
           setProperties(data.properties);
         }

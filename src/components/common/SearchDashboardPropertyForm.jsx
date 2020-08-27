@@ -1,21 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Axios from 'axios';
 import Select from 'react-select';
 import {
   customStylesJustForYou,
   customStylesDashboard,
 } from 'components/forms/Select';
 import { navigate } from '@reach/router';
-import { BASE_API_URL } from 'utils/constants';
-import { getTokenFromStore } from 'utils/localStorage';
-import { valuesToOptions } from 'utils/helpers';
+import { useAvailableOptions } from 'hooks/useAvailableOptions';
 
 const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
-  const statePlaceholder = 'State';
-  const houseTypePlaceholder = 'House Type';
-
-  console.log('defaultInputValue', defaultInputValue);
+  const statePlaceholder = 'Any State';
+  const houseTypePlaceholder = 'Any House Type';
 
   const [formValue, setFormValue] = React.useState({
     state: defaultInputValue.state || '',
@@ -27,10 +22,7 @@ const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
     houseType: houseTypePlaceholder,
   });
 
-  const [data, setData] = React.useState({
-    state: [],
-    houseType: [],
-  });
+  const availableOptions = useAvailableOptions();
 
   React.useEffect(() => {
     const defaults = placeholder;
@@ -44,34 +36,6 @@ const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
 
     setPlaceholder(defaults);
   }, [defaultInputValue, placeholder]);
-
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/property/available-options`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        console.log('data', data);
-        // handle success
-        if (status === 200) {
-          setData({
-            states: valuesToOptions(data.availableFields.states, 'Any State'),
-            houseTypes: valuesToOptions(
-              data.availableFields.houseTypes,
-              'Any House Type'
-            ),
-          });
-        }
-      })
-      .catch(function (error) {
-        // setToast({
-        //   message: getError(error),
-        // });
-        console.log('error', error);
-      });
-  }, []);
 
   const handleSearch = () => {
     const params = [];
@@ -96,7 +60,7 @@ const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
     <div className="input-group">
       <div className="select-holder">
         <Select
-          options={data.states}
+          options={availableOptions.states}
           styles={styles}
           placeholder={placeholder.state}
           onChange={({ value }) => setFormValue({ ...formValue, state: value })}
@@ -105,7 +69,7 @@ const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
       <div className="select-holder">
         <Select
           placeholder={placeholder.houseType}
-          options={data.houseTypes}
+          options={availableOptions.houseTypes}
           styles={styles}
           onChange={({ value }) =>
             setFormValue({ ...formValue, houseType: value })

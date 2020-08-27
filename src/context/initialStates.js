@@ -21,4 +21,8 @@ export const INITIAL_STATE = {
   referrals: [],
   preferences: {},
   favorites: [],
+  availableOptions: {
+    states: [],
+    houseTypes: [],
+  },
 };

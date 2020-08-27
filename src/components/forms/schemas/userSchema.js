@@ -8,7 +8,7 @@ import {
   confirmPassword,
   phoneNumber,
   optionalValidation,
-  positiveNumberValidation,
+  numberValidation,
   // OptionalPhoneNumber,
 } from './schema-helpers';
 
@@ -53,14 +53,23 @@ export const personalInfoSchema = {
 export const preferenceSchema = {
   location: optionalValidation(stringValidation('State')),
   houseType: optionalValidation(stringValidation('Last Name')),
-  minPrice: optionalValidation(
-    positiveNumberValidation('Minimum Budget', 'budget')
-  ),
+  minPrice: optionalValidation(numberValidation('Minimum Budget', 'budget')),
   maxPrice: optionalValidation(
-    positiveNumberValidation('Maximum Budget', 'budget').moreThan(
-      yup.ref('minPrice'),
-      'Maximum Budget should be greater than the minimum Budget'
+    numberValidation('Maximum Budget', 'budget').test(
+      'maximum',
+      'Maximum Budget should be greater than the minimum Budget',
+      function () {
+        console.log('this.parent', this.parent);
+        return this.parent.minPrice
+          ? this.parent.maxPrice > this.parent.minPrice
+          : true;
+      }
     )
+
+    //   min(
+    //   yup.ref('minPrice') ? yup.ref('minPrice') : 0,
+    //   'Maximum Budget should be greater than the minimum Budget'
+    // )
   ),
 };
 

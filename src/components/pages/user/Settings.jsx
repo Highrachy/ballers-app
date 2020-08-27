@@ -26,6 +26,7 @@ import Address from 'components/utils/Address';
 import { feedback } from 'components/forms/form-helper';
 import { getError, generateBudgetOptions, ONE_MILLION } from 'utils/helpers';
 import Select from 'components/forms/Select';
+import { useAvailableOptions } from 'hooks/useAvailableOptions';
 
 const Settings = () => (
   <BackendPage>
@@ -158,6 +159,7 @@ const ProfileForm = () => {
 const PropertyPreferenceForm = () => {
   const [toast, setToast] = useToast();
   const { userState, userDispatch } = React.useContext(UserContext);
+  const availableOptions = useAvailableOptions();
 
   return (
     <section className="row">
@@ -216,32 +218,38 @@ const PropertyPreferenceForm = () => {
                   formGroupClassName="col-md-6"
                   label="Minimum Budget"
                   name="minPrice"
-                  placeholder="Min Budget"
-                  options={generateBudgetOptions({ defaultValue: 1 })}
+                  placeholder="Not Applicable"
+                  options={generateBudgetOptions({
+                    showBlankOption: true,
+                  })}
                   showFeedback={feedback.ERROR}
                 />
                 <Select
                   formGroupClassName="col-md-6"
                   label="Maximum Budget"
                   name="maxPrice"
-                  placeholder="Maximum Budget"
-                  options={generateBudgetOptions({ defaultValue: 2 })}
+                  placeholder="Not Applicable"
+                  options={generateBudgetOptions({
+                    showBlankOption: true,
+                  })}
                   showFeedback={feedback.ERROR}
                 />
               </div>
               <div className="form-row">
-                <Input
+                <Select
                   formGroupClassName="col-md-6"
                   label="Preferred State"
                   name="location"
-                  placeholder="Select State"
+                  placeholder="Any State"
+                  options={availableOptions.states}
                   showFeedback={feedback.ERROR}
                 />
-                <Input
+                <Select
                   formGroupClassName="col-md-6"
                   label="Preferred HouseType"
                   name="houseType"
-                  placeholder="Select House Type"
+                  placeholder="Any House Type"
+                  options={availableOptions.houseTypes}
                   showFeedback={feedback.ERROR}
                 />
               </div>
@@ -253,7 +261,7 @@ const PropertyPreferenceForm = () => {
               >
                 Save Changes
               </Button>
-              <DisplayFormikState {...props} hide showAll />
+              <DisplayFormikState {...props} showAll />
             </Form>
           )}
         </Formik>

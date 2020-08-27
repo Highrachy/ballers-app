@@ -75,7 +75,7 @@ export const generateNumOptions = (number = 12, type = '', options = {}) => {
 export const generateBudgetOptions = (options) => {
   const start = options.start || 5;
   const end = options.end || 30;
-  const defaultValue = options.defaultValue || 1;
+  const defaultValue = options.defaultValue || 0;
   const showBlankOption = options.showBlankOption || false;
 
   const blankOption = [
