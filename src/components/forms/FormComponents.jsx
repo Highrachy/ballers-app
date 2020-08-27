@@ -27,6 +27,9 @@ import Toast from 'components/utils/Toast';
 import { useToast } from 'components/utils/Toast';
 import MapPicker from 'components/utils/MapPicker';
 import useMapGeocoder from 'hooks/useMapGeocoder';
+import { generateNumOptions } from 'utils/helpers';
+import ReactSelect from 'react-select';
+import { customStyles } from 'components/forms/Select';
 
 const FormComponents = () => (
   <>
@@ -135,12 +138,27 @@ const Forms = () => {
             />
             <Select
               formGroupClassName="col-md-6"
-              label="Country"
-              name="country"
-              options={options}
-              optional
+              label="Hand Over Date"
+              name="handOverDate"
+              placeholder="Select Hand Over Date"
+              options={generateNumOptions(61, 'Month', {
+                startFrom: 0,
+                firstMonthText: 'Immediately',
+              })}
+              tooltipText="Hand over date in months. For example, selecting 7 Months will display
+                      Seven (7) Months from date of initial deposit payment. (i.e. 6
+                        months payment period plus 1 month to finish and inspect)"
             />
           </div>
+
+          <ReactSelect
+            placeholder="Select Hand Over Date"
+            styles={customStyles}
+            options={generateNumOptions(61, 'Month', {
+              startFrom: 0,
+              firstMonthText: 'Immediately',
+            })}
+          />
 
           <div className="row">
             <div className="col-12">

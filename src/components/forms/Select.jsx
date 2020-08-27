@@ -49,6 +49,27 @@ const Select = ({
       <div className={inputSizeClassName}>
         <Field name={name}>
           {({ field, form }) => {
+            let value = isMulti ? [] : '';
+            if (options && field.value) {
+              value = options.filter((option) =>
+                isMulti
+                  ? field.value.toString().indexOf(option.value) >= 0
+                  : field.value.toString() === option.value.toString()
+              );
+            }
+
+            const handleChange = (option) => {
+              console.log('option', option);
+              option && (option.value || option.length > 0)
+                ? isMulti
+                  ? form.setFieldValue(
+                      name,
+                      option.map((item) => item.value)
+                    )
+                  : form.setFieldValue(name, option.value)
+                : form.setFieldValue(name, isMulti ? [] : '');
+            };
+
             return (
               <ReactSelect
                 className={classNames(
@@ -59,29 +80,11 @@ const Select = ({
                 isMulti={isMulti}
                 name={name}
                 onBlur={field.onBlur}
-                onChange={(option) => {
-                  option && (option.value || option.length > 0)
-                    ? isMulti
-                      ? form.setFieldValue(
-                          name,
-                          option.map((item) => item.value)
-                        )
-                      : form.setFieldValue(name, option.value)
-                    : form.setFieldValue(name, isMulti ? [] : '');
-                }}
+                onChange={(option) => handleChange(option)}
                 options={options}
                 placeholder={placeholder || `Select ${label}...`}
                 styles={customStyles}
-                value={
-                  options && field.value
-                    ? options.filter(
-                        (option) =>
-                          field.value.toString().indexOf(option.value) >= 0
-                      )
-                    : isMulti
-                    ? []
-                    : ''
-                }
+                value={value}
               />
             );
           }}

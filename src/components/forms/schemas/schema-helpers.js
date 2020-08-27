@@ -60,6 +60,13 @@ export const positiveNumberValidation = (label, type = 'number') =>
     .positive(`${label} must be a positive ${type}`)
     .integer(`${label} must be a ${type}`);
 
+export const numberValidation = (label, type = 'number') =>
+  yup
+    .number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required(`${label} must be a valid ${type}`)
+    .integer(`${label} must be a ${type}`);
+
 export const percentageValidation = (label, type = 'number') =>
   yup
     .number()

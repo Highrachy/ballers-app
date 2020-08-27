@@ -6,6 +6,7 @@ import {
   positiveNumberValidation,
   email,
   phoneNumber,
+  numberValidation,
 } from './schema-helpers';
 
 export const newPropertySchema = {
@@ -37,7 +38,7 @@ export const offerLetterSchema = {
     yup.ref('propertyPrice'),
     'Total Amount Payable should be greater or equal to than property price'
   ),
-  handOverDate: positiveNumberValidation('HandOver Date'),
+  handOverDate: numberValidation('HandOver Date'),
   allocationMonth: positiveNumberValidation('Allocation Month'),
   initialPayment: positiveNumberValidation('Initial Payment'),
   monthlyPayment: positiveNumberValidation('Monthly Payment'),
