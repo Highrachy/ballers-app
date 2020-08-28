@@ -1,6 +1,5 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import { RecommendedPropertyCard } from 'components/common/PropertyCard';
 import Axios from 'axios';
 import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
@@ -11,10 +10,13 @@ import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import SearchDashboardPropertyForm from 'components/common/SearchDashboardPropertyForm';
 import * as queryString from 'query-string';
+import { UserContext } from 'context/UserContext';
+import { RecommendedPropertyLists } from 'components/common/PropertyCard';
 
 const JustForYou = ({ location }) => {
   const [toast, setToast] = useToast();
   const [properties, setProperties] = React.useState(null);
+  const { userState } = React.useContext(UserContext);
 
   // From search query
   const queryParams = queryString.parse(location.search);
@@ -57,13 +59,18 @@ const JustForYou = ({ location }) => {
     <BackendPage>
       <Toast {...toast} showToastOnly />
       <SearchForm defaultInputValue={{ state, houseType }} />
+
+      <section className="mt-5">
+        <Properties title="Favorites" properties={userState.favorites} />
+      </section>
+
       <LoadItems
         Icon={<MyPropertyIcon />}
         items={properties}
         loadingText="Loading Property Recommendations"
         noContent={<NoContent isButton text="No Properties found" />}
       >
-        <Properties recommendedProperties={properties || []} />
+        <Properties title="Properties for You" properties={properties || []} />
       </LoadItems>
     </BackendPage>
   );
@@ -85,18 +92,18 @@ const SearchForm = ({ defaultInputValue }) => (
   </div>
 );
 
-const Properties = ({ recommendedProperties }) => (
-  <div className="container-fluid">
-    <h5 className="mt-4">Properties for You</h5>
-    <div className="row">
-      {recommendedProperties &&
-        recommendedProperties.map((property) => (
-          <div className="col-sm-6" key={property._id}>
-            <RecommendedPropertyCard {...property} />
-          </div>
-        ))}
+const Properties = ({ properties, title }) => {
+  return properties && properties.length > 0 ? (
+    <div className="container-fluid">
+      <h5 className="mt-4">{title}</h5>
+      <div className="row">
+        <RecommendedPropertyLists
+          propertyClassName="col-sm-6"
+          properties={properties}
+        />
+      </div>
     </div>
-  </div>
-);
+  ) : null;
+};
 
 export default JustForYou;

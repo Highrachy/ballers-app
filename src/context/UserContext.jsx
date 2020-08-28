@@ -24,6 +24,16 @@ let reducer = (state, action) => {
       return { ...state, profileImg: action.imageURL };
     case 'available-options':
       return { ...state, availableOptions: action.availableOptions };
+    case 'remove-favorite':
+      const favorites = state.favorites.filter(
+        (favorite) => action.property._id !== favorite._id
+      );
+      return { ...state, favorites };
+    case 'add-to-favorites':
+      return {
+        ...state,
+        favorites: [action.property, ...state.favorites],
+      };
     default:
       return state;
   }

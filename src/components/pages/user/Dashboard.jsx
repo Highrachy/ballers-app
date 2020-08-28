@@ -8,7 +8,7 @@ import SearchForProperty from 'components/common/SearchDashboardPropertyForm';
 import ContributionGraph from 'components/common/ContributionGraph';
 import {
   OwnedPropertyCard,
-  RecommendedPropertyCard,
+  RecommendedPropertyLists,
 } from 'components/common/PropertyCard';
 import useWindowSize from 'hooks/useWindowSize';
 import { MOBILE_WIDTH, BASE_API_URL } from 'utils/constants';
@@ -53,7 +53,7 @@ const Dashboard = () => {
       <Toast {...toast} showToastOnly />
       <Welcome />
       <Overview />
-      <Others recommendedProperties={getItems(properties, 2) || []} />
+      <Others recommendedProperties={properties} />
     </BackendPage>
   );
 };
@@ -143,10 +143,11 @@ const Others = ({ recommendedProperties }) => (
             loadingText="Loading Property Recommendations"
             noContent={<NoContent isButton text="No Properties found" />}
           >
-            {recommendedProperties &&
-              recommendedProperties.map((property) => (
-                <RecommendedPropertyCard {...property} key={property._id} />
-              ))}
+            {recommendedProperties && (
+              <RecommendedPropertyLists
+                properties={getItems(recommendedProperties, 2) || []}
+              />
+            )}
           </LoadItems>
         </div>
       </div>

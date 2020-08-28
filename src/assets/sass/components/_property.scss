@@ -2,6 +2,8 @@
   padding: 1.2rem;
   margin-bottom: 2rem;
   position: relative;
+  z-index: 0;
+  transition: all 5s ease-in;
 
   &__big {
     padding: 2rem;
@@ -193,5 +195,31 @@
 .svg-1 {
   svg {
     height: 1rem;
+  }
+}
+
+.favorites-icon {
+  cursor: pointer !important;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0.5rem 1rem;
+  z-index: 1;
+
+  // svg {
+  //   z-index: 0;
+  // }
+
+  &:hover {
+    svg {
+      stroke: red;
+    }
+  }
+
+  &__is-favorite {
+    svg {
+      fill: red;
+      stroke: red;
+    }
   }
 }

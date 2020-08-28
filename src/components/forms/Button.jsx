@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { COLOR_STYLE } from 'utils/constants';
-import { Spinner } from 'react-bootstrap';
+import BallersSpinner from 'components/utils/BallersSpinner';
 
 const Button = ({
   className,
@@ -20,14 +20,7 @@ const Button = ({
   >
     {loading ? (
       <>
-        <Spinner
-          as="span"
-          animation="border"
-          size="sm"
-          role="status"
-          aria-hidden="true"
-        />{' '}
-        &nbsp;
+        <BallersSpinner small /> &nbsp;
         {showLoadingText && (loadingText || children)}
       </>
     ) : (
