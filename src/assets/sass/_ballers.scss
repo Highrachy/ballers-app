@@ -10,10 +10,12 @@
 @import 'components/a-z';
 @import 'components/slick';
 @import 'components/search-result';
+@import 'components/knowledgebase';
 @import 'components/sidebar';
 @import 'components/property';
 @import 'plugins/range';
 @import 'plugins/react-date-picker';
+@import 'plugins/editor';
 // @import 'plugins/slick';
 
 html {
@@ -40,4 +42,14 @@ html {
 
 .react-toast-notifications__container {
   z-index: 2000 !important;
+}
+
+.author-block {
+  border-top: 3px solid $primary;
+  margin-top: 2rem;
+  padding-top: 2rem;
+}
+
+.dotted-border {
+  border-top: 1px dotted $primary;
 }

@@ -7,6 +7,7 @@ import FAQs from 'components/pages/frontend/FAQs';
 import ContactUs from 'components/pages/frontend/ContactUs';
 import TermsOfUse from 'components/pages/frontend/TermsOfUse';
 import PrivacyPolicy from 'components/pages/frontend/PrivacyPolicy';
+import Articles from 'components/pages/frontend/Articles';
 import Login from 'components/pages/auth/Login';
 import Logout from 'components/pages/auth/Logout';
 import Register from 'components/pages/auth/Register';
@@ -33,6 +34,7 @@ const FrontPageRouter = () => (
     <ResetPassword path="reset-password/:token" />
     <Register path="register" />
     <SearchResult path="search" />
+    <Articles path="articles" />
     <FormComponents path="forms" />
     <Dashboard path="test" />
   </Router>
