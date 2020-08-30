@@ -1,6 +1,7 @@
 import React from 'react';
 import Humanize from 'humanize-plus';
 import Converter from 'number-to-words';
+import { MALE_TITLES, FEMALE_TITLES } from './constants';
 
 export const commaNumber = (value, prependCurrency = false) => {
   const number = parseInt(value, 10);
@@ -101,4 +102,10 @@ export const valuesToOptions = (values, defaultLabel = null) => {
   return defaultLabel
     ? [{ value: '', label: defaultLabel }, ...output]
     : output;
+};
+
+export const getGenderFromTitle = (title) => {
+  if (MALE_TITLES.includes(title)) return 'Sir';
+  if (FEMALE_TITLES.includes(title)) return 'Ma';
+  return 'Sir/Ma';
 };

@@ -1,12 +1,10 @@
 import * as yup from 'yup';
 import {
   stringValidation,
-  // optionalValidation,
-  // required,
   positiveNumberValidation,
   email,
   phoneNumber,
-  numberValidation,
+  validPercentage,
 } from './schema-helpers';
 
 export const newPropertySchema = {
@@ -38,8 +36,7 @@ export const offerLetterSchema = {
     yup.ref('propertyPrice'),
     'Total Amount Payable should be greater or equal to than property price'
   ),
-  handOverDate: numberValidation('HandOver Date'),
-  allocationMonth: positiveNumberValidation('Allocation Month'),
+  allocation: validPercentage('Allocation'),
   initialPayment: positiveNumberValidation('Initial Payment'),
   monthlyPayment: positiveNumberValidation('Monthly Payment'),
   paymentFrequency: positiveNumberValidation('Payment Frequency'),

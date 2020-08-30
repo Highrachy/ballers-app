@@ -34,6 +34,10 @@ let reducer = (state, action) => {
         ...state,
         favorites: [action.property, ...state.favorites],
       };
+    case 'remove-alert':
+      return { ...state, alert: null };
+    case 'add-alert':
+      return { ...state, alert: action.alert };
     default:
       return state;
   }

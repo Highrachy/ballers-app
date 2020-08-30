@@ -25,15 +25,15 @@ import {
 import { offerLetterSchema } from 'components/forms/schemas/propertySchema';
 import InputFormat from 'components/forms/InputFormat';
 import HighrachyLogo from 'assets/img/logo/highrachy-logo.png';
+import Input from 'components/forms/Input';
 
 const CreateOfferLetter = () => {
   const defaultValue = {
     propertyPrice: '30000000',
     totalAmountPayable: '32000000',
-    handOverDate: '8',
-    allocationMonth: '6',
-    initialPayment: '10000000',
-    monthlyPayment: '2500000',
+    allocation: 70,
+    initialPayment: '20000000',
+    monthlyPayment: '5000000',
     paymentFrequency: '1',
     offerExpires: '7',
     titleDocument:
@@ -113,11 +113,10 @@ const CreateOfferLetterForm = ({
                   <Toast {...toast} />
                   <div className="form-row">
                     <InputFormat
-                      formGroupClassName="col-md-6"
-                      label="Property Price"
+                      formGroupClassName="col-md-6 d-none"
+                      label="Total Amount Payable"
                       name="propertyPrice"
-                      placeholder="Property Price"
-                      disabled
+                      placeholder="Total Amount Payable"
                     />
                     <InputFormat
                       formGroupClassName="col-md-6"
@@ -125,26 +124,13 @@ const CreateOfferLetterForm = ({
                       name="totalAmountPayable"
                       placeholder="Total Amount Payable"
                     />
-                  </div>
-                  <div className="form-row">
-                    <Select
+                    <Input
                       formGroupClassName="col-md-6"
-                      label="Hand Over Date"
-                      name="handOverDate"
-                      placeholder="Select Hand Over Date"
-                      options={generateNumOptions(61, 'Month', {
-                        startFrom: 0,
-                        firstMonthText: 'Immediately',
-                      })}
-                      tooltipText="Hand over date in months. For example, selecting 7 Months will display
-                      Seven (7) Months from date of initial deposit payment. (i.e. 6
-                        months payment period plus 1 month to finish and inspect)"
-                    />
-                    <Select
-                      formGroupClassName="col-md-6"
-                      label="Allocation"
-                      name="allocationMonth"
-                      options={generateNumOptions(20, 'Deposit')}
+                      label="Allocation In Percentage"
+                      name="allocation"
+                      type="number"
+                      max={100}
+                      min={0}
                       placeholder="Allocation"
                       tooltipText="The number of deposits to be made before prpoerty is allocated"
                     />
@@ -205,7 +191,7 @@ const CreateOfferLetterForm = ({
                   >
                     View Offer Letter
                   </Button>
-                  <DisplayFormikState {...props} hide showAll />
+                  <DisplayFormikState {...props} showAll />
                 </Form>
               )}
             </Formik>
@@ -265,23 +251,27 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
           you a 3 BEDROOM APARTMENT on the following terms and conditions:
         </p>
         <div className="table-responsive">
-          <table className="table table-borderless">
+          <table className="table table-md table-borderless">
             <tbody>
               <tr>
-                <td>
-                  <strong>VENDOR:</strong>
+                <td width="30%">
+                  <strong>1. VENDOR:</strong>
                 </td>
-                <td>Highrachy Investment and Technology Ltd</td>
+                <td>
+                  <strong>Highrachy Investment and Technology Ltd</strong>
+                </td>
               </tr>
               <tr>
                 <td>
-                  <strong>BUYER:</strong>
+                  <strong>2. BUYER:</strong>
                 </td>
-                <td> Mr. Oladele Ademola </td>
+                <td>
+                  <strong>Mr. Oladele Ademola </strong>
+                </td>
               </tr>
               <tr>
                 <td>
-                  <strong>PROPERTY DESCRIPTION:</strong>
+                  <strong>3. PROPERTY DESCRIPTION:</strong>
                 </td>
                 <td>
                   1 Unit of a 3 bedroom Apartment in a “condominium style” with
@@ -291,77 +281,38 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
               </tr>
               <tr>
                 <td>
-                  <strong>TITLE:</strong>{' '}
+                  <strong>4. TITLE:</strong>{' '}
                 </td>
                 <td>{value.titleDocument}</td>
               </tr>
               <tr>
                 <td>
-                  <strong>FACILITIES/SERVICES PROVIDED:</strong>
-                </td>
-                <td>
-                  <ul>
-                    <li>Grid Power supply</li>
-                    <li>Borehole and Water treatment plant</li>
-                    <li> Dedicated parking for 2 cars </li>
-                    <li>Intercom system </li>
-                    <li>Alternative power supply</li>
-                    <li> Perimeter fence</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>HAND OVER DATE:</strong>
-                </td>
-                <td>
-                  {`${numToWords(value.handOverDate)} (${
-                    value.handOverDate
-                  }) Months from date of initial deposit payment. (i.e. ${
-                    Number(value.handOverDate) - 1
-                  }
-                months payment period plus 1 month to finish and inspect)`}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>DELIVERY STATE:</strong>{' '}
-                </td>
-                <td>{value.deliveryState}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>SELLING PRICE:</strong>{' '}
-                </td>
-                <td>
-                  {`${moneyFormatInNaira(value.propertyPrice)} (${numToWords(
-                    value.propertyPrice
-                  )} Naira only), payable as
-                  provided in clause 9 below.`}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>TOTAL AMOUNT PAYABLE:</strong>{' '}
+                  <strong>5. SELLING PRICE:</strong>{' '}
                 </td>
                 <td>
                   {`${moneyFormatInNaira(
                     value.totalAmountPayable
                   )} (${numToWords(
                     value.totalAmountPayable
-                  )} Naira only). See breakdown
-                below;`}
+                  )} Naira only), payable as
+                  provided in clause 6 below.`}
                 </td>
               </tr>
               <tr>
+                <td>
+                  <strong>6. PAYMENT TERMS</strong>{' '}
+                </td>
+                <td>Spread payment, see breakdown below;</td>
+              </tr>
+              <tr>
                 <td colSpan="2">
-                  <div className="table-responsive">
+                  <div className="table-responsive table-sm">
                     <table className="table table-bordered">
                       <thead>
                         <tr>
-                          <td>DEPOSIT</td>
+                          <th>DEPOSIT</th>
                           {/* <td>Payment Date</td> */}
-                          <td>SUM DUE (N)</td>
+                          <th>SUM DUE (N)</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -370,15 +321,13 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
                           {/* <td>Immediate</td> */}
                           <td>{moneyFormat(initialPayment)}</td>
                         </tr>
-                        {[...Array(noOfMonths - 1).keys()].map(
-                          (value, index) => (
-                            <tr key={index}>
-                              <td>{numToOrdinal(index + 2)} Deposit</td>
-                              {/* <td>April 2019</td> */}
-                              <td>{moneyFormat(monthlyPayment)}</td>
-                            </tr>
-                          )
-                        )}
+                        {[...Array(noOfMonths).keys()].map((value, index) => (
+                          <tr key={index}>
+                            <td>{numToOrdinal(index + 2)} Deposit</td>
+                            {/* <td>April 2019</td> */}
+                            <td>{moneyFormat(monthlyPayment)}</td>
+                          </tr>
+                        ))}
                         {lastPayment > 0 && (
                           <tr>
                             <td>Last Deposit</td>
@@ -391,15 +340,32 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
                   </div>
                 </td>
               </tr>
-
               <tr>
-                <td>ALLOCATION:</td>
                 <td>
-                  Due after the {numToOrdinal(value.allocationMonth)} deposit.
+                  <strong>7. FACILITIES / SERVICES PROVIDED:</strong>
+                </td>
+                <td>
+                  <ul>
+                    <li>Grid Power supply</li>
+                    <li>Borehole and Water treatment plant</li>
+                    <li> Dedicated parking for 2 cars </li>
+                    <li>Intercom system </li>
+                    <li>Alternative power supply</li>
+                    <li> Perimeter fence</li>
+                  </ul>
                 </td>
               </tr>
+
               <tr>
-                <td>PAYMENT ACCOUNT:</td>
+                <td>
+                  <strong>8. DELIVERY STATE:</strong>{' '}
+                </td>
+                <td>{value.deliveryState}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>9. PAYMENT ACCOUNT:</strong>
+                </td>
                 <td>
                   Highrachy Investment and Technology Ltd <br />
                   Bank: FIRST BANK OF NIGERIA PLC
@@ -407,12 +373,18 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
                   Account Number: 2032997125
                 </td>
               </tr>
+              <tr>
+                <td>
+                  <strong>10. ALLOCATION:</strong>
+                </td>
+                <td>Due after the {value.allocation}% of payment received.</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <h5>OTHER TERMS AND CONDITIONS: </h5>
-        <ul>
+        <strong>11. OTHER TERMS AND CONDITIONS: </strong>
+        <ol type="a">
           <li>
             <p>
               If the Buyer fails, refuses or neglects to pay any installment
@@ -510,7 +482,7 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
               and conditions captured herein.
             </p>
           </li>
-        </ul>
+        </ol>
 
         <p className="">
           If the above terms and conditions are acceptable to you, kindly send

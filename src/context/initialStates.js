@@ -25,4 +25,5 @@ export const INITIAL_STATE = {
     states: [],
     houseTypes: [],
   },
+  alert: null,
 };

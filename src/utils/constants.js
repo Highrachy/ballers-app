@@ -23,4 +23,7 @@ export const COLOR_STYLE = [
   'dark',
 ];
 
+export const MALE_TITLES = ['Mr.', 'Master', 'Chief (Mr)', 'Alhaji'];
+export const FEMALE_TITLES = ['Mrs.', 'Ms.', 'Miss', 'Chief (Mrs)', 'Alhaja'];
+
 export const MOBILE_WIDTH = 576;

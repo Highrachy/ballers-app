@@ -86,6 +86,16 @@ export const moneyRange = (label, type = 'number', min, max = 0) =>
     .min(min, `${label} must be greater than ${moneyFormatInNaira(min)}`);
 // .max(max, `${label} must be lesser than ${moneyFormatInNaira(max)}`);
 
+export const validPercentage = (label) =>
+  yup
+    .number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required(`${label} must be a valid percentage`)
+    .positive(`${label} must be a positive percentage`)
+    .integer(`${label} must be a percentage`)
+    .min(0, `${label} must be greater than 0%`)
+    .max(100, `${label} must be lesser than 100%`);
+
 export const requiredDate = (label) =>
   yup
     .object()
