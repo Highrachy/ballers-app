@@ -2,7 +2,7 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
-import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
+// import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
 import Map from 'components/common/Map';
 import { BASE_API_URL } from 'utils/constants';
 import Modal from 'components/common/Modal';
@@ -18,7 +18,7 @@ import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import {
   RightArrowIcon,
-  CameraIcon,
+  // CameraIcon,
   CheckIcon,
   DownloadIcon,
   MapPinIcon,
@@ -73,20 +73,20 @@ const OwnedPropertyCard = ({ property, toast }) => (
       <div className="row">
         <div className="col-sm-10">
           <h3 className={`property-holder__big-title border-success`}>
-            {property.name}
+            {property[0].name}
           </h3>
         </div>
       </div>
       <PropertyImage property={property} />
       <div className="row mt-5">
         <div className="col-sm-7">
-          <PropertyDescription property={property} />
+          <PropertyDescription property={property[0]} />
         </div>
 
         {/* Side Card */}
         <div className="col-sm-5">
           <aside className="ml-md-5">
-            {<PropertySidebar propertyId={property._id} /> || (
+            {<PropertySidebar propertyId={property[0]._id} /> || (
               <AssignedPropertySidebar />
             )}
           </aside>
@@ -94,20 +94,20 @@ const OwnedPropertyCard = ({ property, toast }) => (
       </div>
       <Neighborhood />
     </Card>
-    <PropertyMap mapLocation={property.mapLocation} />
+    <PropertyMap mapLocation={property[0].mapLocation} />
   </div>
 );
 
 const PropertyImage = ({ property }) => (
   <div className="row">
-    <div className="col-sm-10">
+    <div className="col-sm-12">
       <img
-        src={property.mainImage}
+        src={property[0].mainImage}
         alt="Property"
         className="img-fluid gallery-main-image  property-img"
       />
     </div>
-    <div className="col-sm-2">
+    {/* <div className="col-sm-2">
       <aside className="row gallery-row">
         <div className="gallery-col col-3 col-md-12">
           <img
@@ -144,7 +144,7 @@ const PropertyImage = ({ property }) => (
           </Link>
         </div>
       </aside>
-    </div>
+    </div> */}
   </div>
 );
 
@@ -154,7 +154,7 @@ const PropertyDescription = ({ property }) => (
       <span className="text-secondary">
         <MapPinIcon />
       </span>{' '}
-      {property.location}
+      {property.address.street1}
     </h5>
     <div className="row">
       <div className="col-sm-4 col-6">

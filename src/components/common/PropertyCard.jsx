@@ -71,7 +71,15 @@ export const OwnedPropertyCard = () => (
 );
 
 export const RecommendedPropertyCard = (property) => {
-  const { address, favorites, houseType, mainImage, price, _id } = property;
+  const {
+    name,
+    address,
+    favorites,
+    houseType,
+    mainImage,
+    price,
+    _id,
+  } = property;
   const [loading, setLoading] = React.useState(false);
   const isFavorite = (favorites || []).includes(_id);
   let { userDispatch } = React.useContext(UserContext);
@@ -131,7 +139,7 @@ export const RecommendedPropertyCard = (property) => {
             />
           </div>
           <div className="col-md-7">
-            <h5 className="font-weight-500 mt-3 mt-md-0">Blissville Condos</h5>
+            <h5 className="font-weight-500 mt-3 mt-md-0">{name}</h5>
             <div className="property-holder__location">
               Location:{' '}
               <strong>

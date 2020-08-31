@@ -2,9 +2,9 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
-import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
+// import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
 import Map from 'components/common/Map';
-import { OFFICE_LOCATION, BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL } from 'utils/constants';
 import Modal from 'components/common/Modal';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
@@ -16,63 +16,98 @@ import {
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { registerSchema } from 'components/forms/schemas/userSchema';
 import {
   RightArrowIcon,
-  CameraIcon,
+  // CameraIcon,
   CheckIcon,
   DownloadIcon,
   MapPinIcon,
 } from 'components/utils/Icons';
-import { getError } from 'utils/helpers';
+import { getTokenFromStore } from 'utils/localStorage';
+import NoContent from 'components/utils/NoContent';
+import { scheduleTourSchema } from 'components/forms/schemas/propertySchema';
+import { moneyFormatInNaira, getError } from 'utils/helpers';
+import { MyPropertyIcon } from 'components/utils/Icons';
 
-const SinglePortfolio = ({ id }) => (
-  <BackendPage>
-    <OwnedPropertyCard id={id} />
-  </BackendPage>
-);
+const SinglePortfolio = ({ id }) => {
+  const [toast, setToast] = useToast();
+  const [property, setProperty] = React.useState(null);
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/property/${id}`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        // handle success
+        if (status === 200) {
+          setProperty(data.property);
+          console.log('data.property', data.property);
+        }
+      })
+      .catch(function (error) {
+        console.log('error.response', error.response);
+        setToast({
+          message: getError(error),
+        });
+      });
+  }, [setToast, id]);
+  return (
+    <BackendPage>
+      {property ? (
+        <OwnedPropertyCard property={property} toast={toast} />
+      ) : (
+        <NoContent text="Loading Property" Icon={<MyPropertyIcon />} />
+      )}
+    </BackendPage>
+  );
+};
 
 const NOW = 50;
 
-const OwnedPropertyCard = ({ id }) => (
+const OwnedPropertyCard = ({ property, toast }) => (
   <div className="container-fluid">
-    <Card className="card-container h-100 property-holder__big">
+    <Toast {...toast} />
+    <Card className="card-container mt-4 h-100 property-holder__big">
       <div className="row">
         <div className="col-sm-10">
           <h3 className={`property-holder__big-title border-success`}>
-            Property A
+            {property[0].name}
           </h3>
         </div>
       </div>
-      <PropertyImage />
+      <PropertyImage property={property} />
       <div className="row mt-5">
         <div className="col-sm-7">
-          <PropertyDescription />
+          <PropertyDescription property={property[0]} />
         </div>
 
         {/* Side Card */}
         <div className="col-sm-5">
           <aside className="ml-md-5">
-            {<PropertySidebar id={id} /> || <AssignedPropertySidebar />}
+            {<PropertySidebar propertyId={property[0]._id} /> || (
+              <AssignedPropertySidebar />
+            )}
           </aside>
         </div>
       </div>
       <Neighborhood />
     </Card>
-    <PropertyMap />
+    <PropertyMap mapLocation={property[0].mapLocation} />
   </div>
 );
 
-const PropertyImage = () => (
+const PropertyImage = ({ property }) => (
   <div className="row">
-    <div className="col-sm-10">
+    <div className="col-sm-12">
       <img
-        src={PropertyPlaceholderImage}
+        src={property[0].mainImage}
         alt="Property"
         className="img-fluid gallery-main-image  property-img"
       />
     </div>
-    <div className="col-sm-2">
+    {/* <div className="col-sm-2">
       <aside className="row gallery-row">
         <div className="gallery-col col-3 col-md-12">
           <img
@@ -109,48 +144,39 @@ const PropertyImage = () => (
           </Link>
         </div>
       </aside>
-    </div>
+    </div> */}
   </div>
 );
 
-const PropertyDescription = () => (
+const PropertyDescription = ({ property }) => (
   <>
     <h5 className="mb-4">
       <span className="text-secondary">
         <MapPinIcon />
       </span>{' '}
-      Off dreamworlds africana , at Km 20
+      {property.address.street1}
     </h5>
     <div className="row">
       <div className="col-sm-4 col-6">
         <small>Property Value</small>
-        <h5>N35,000,000</h5>
+        <h5>{moneyFormatInNaira(property.price)}</h5>
       </div>
       <div className="col-sm-4 col-6">
         <small>House Type</small>
-        <h5>Apartment</h5>
+        <h5>{property.houseType}</h5>
       </div>
       <div className="col-sm-2 col-6">
         <small>Bedroom</small>
-        <h5>3</h5>
+        <h5>{property.bedrooms}</h5>
       </div>
       <div className="col-sm-2 col-6">
         <small>Bathroom</small>
-        <h5>4</h5>
+        <h5>{property.toilets}</h5>
       </div>
     </div>
 
     <h5 className="mt-5">About Property</h5>
-    <p className="">
-      You can now experience true tranquility with our elevated apartment units
-      and penthouses. Each unit is a 3 bedroom 185MSq with maids room, four
-      bathrooms and five toilets, living room, dining space, kitchen, pantry,
-      guest toilet and dedicated parking lots. The standard apartments sit on
-      the 2nd floor while the penthouses are on the 3rd floor. They are similar
-      in design with three bedrooms each and an adjoining staff room. Owners of
-      the apartments enjoy all the benefits that come with leaving in
-      Blissville.
-    </p>
+    <p className="">{property.description}</p>
 
     <div className="my-5">
       <a href="/" className="btn-link icon-box">
@@ -207,25 +233,28 @@ const AssignedPropertySidebar = () => (
   </Card>
 );
 
-const PropertySidebar = ({ id }) => {
-  const [showRequestVist, setShowRequestVisit] = React.useState(false);
+const PropertySidebar = ({ propertyId }) => {
+  const [showRequestVisitForm, setShowRequestVisitForm] = React.useState(false);
 
   return (
     <>
       <Modal
         title="Schedule visit"
-        show={showRequestVist}
-        onHide={() => setShowRequestVisit(false)}
+        show={showRequestVisitForm}
+        onHide={() => setShowRequestVisitForm(false)}
         showFooter={false}
       >
-        <ScheduleVisitForm />
+        <ScheduleVisitForm
+          hideForm={() => setShowRequestVisitForm(false)}
+          propertyId={propertyId}
+        />
       </Modal>
       <Card className="card-container property-holder bg-gray">
         <h5>Interested in this property?</h5>
 
         <p className="">Kindly proceed with property acquisition</p>
         <Link
-          to={`/user/property/enquiry/${id}`}
+          to="/user/property/enquiry/1"
           className="btn btn-block btn-secondary my-3"
         >
           Proceed
@@ -235,7 +264,7 @@ const PropertySidebar = ({ id }) => {
       <h5 className="text-smaller">Schedule a tour</h5>
       <Card
         className="card-container property-holder bg-gray"
-        onClick={() => setShowRequestVisit(true)}
+        onClick={() => setShowRequestVisitForm(true)}
       >
         <p className="mr-4">
           Want to come check the property?
@@ -292,29 +321,42 @@ const NeighborhoodCheck = ({ name, color }) => (
   </div>
 );
 
-const PropertyMap = () => (
-  <div style={{ height: '15rem', marginTop: '-2px' }}>
-    <Map coordinates={OFFICE_LOCATION} />
-  </div>
-);
+const PropertyMap = ({ mapLocation }) =>
+  mapLocation ? (
+    mapLocation.latitude &&
+    mapLocation.longitude && (
+      <div style={{ height: '15rem', marginTop: '-2px' }}>
+        <Map
+          coordinates={{
+            lat: mapLocation.latitude,
+            lng: mapLocation.longitude,
+          }}
+        />
+      </div>
+    )
+  ) : (
+    <></>
+  );
 
-const ScheduleVisitForm = () => {
+const ScheduleVisitForm = ({ propertyId, hideForm }) => {
   const [toast, setToast] = useToast();
   return (
     <section className="row">
       <div className="col-md-10">
         <Formik
-          initialValues={setInitialValues(registerSchema, { agreement: [] })}
+          initialValues={setInitialValues(scheduleTourSchema)}
           onSubmit={(values, actions) => {
-            delete values.agreement;
+            const payload = { propertyId, ...values };
 
-            Axios.post(`${BASE_API_URL}/user/register`, values)
+            Axios.post(`${BASE_API_URL}/visitation/schedule`, payload, {
+              headers: { Authorization: getTokenFromStore() },
+            })
               .then(function (response) {
                 const { status } = response;
-                if (status === 200) {
+                if (status === 201) {
                   setToast({
                     type: 'success',
-                    message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
+                    message: `Your visitation has been scheduled. We will contact you within 24 hours).`,
                   });
                   actions.setSubmitting(false);
                   actions.resetForm();
@@ -327,7 +369,7 @@ const ScheduleVisitForm = () => {
                 actions.setSubmitting(false);
               });
           }}
-          validationSchema={createSchema(registerSchema)}
+          validationSchema={createSchema(scheduleTourSchema)}
         >
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>
@@ -335,19 +377,19 @@ const ScheduleVisitForm = () => {
               <Input
                 isValidMessage="Name looks good"
                 label="Name"
-                name="firstName"
+                name="visitorName"
                 placeholder="Name"
               />
               <Input
                 isValidMessage="Email address seems valid"
                 label="Email"
-                name="email"
+                name="visitorEmail"
                 placeholder="Email Address"
               />
               <Input
                 isValidMessage="Phone number looks good"
                 label="Phone"
-                name="phone"
+                name="visitorPhone"
                 placeholder="Phone"
               />
               <Button
