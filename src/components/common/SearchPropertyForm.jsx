@@ -4,6 +4,7 @@ import Axios from 'axios';
 import Select from 'react-select';
 import { customStyles } from 'components/forms/Select';
 import { navigate } from '@reach/router';
+import Toast, { useToast } from 'components/utils/Toast';
 
 const SearchPropertyForm = ({ defaultInputValue }) => {
   const LOADING = 'Loading...';
@@ -14,9 +15,9 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
     houseType: '',
   });
 
-  const statePlaceholder = 'Select State...';
-  const areaPlaceholder = 'Select Area...';
-  const houseTypePlaceholder = 'House Type...';
+  const statePlaceholder = '1. Select State...';
+  const areaPlaceholder = '2. Select Area...';
+  const houseTypePlaceholder = '3. House Type...';
 
   const [placeholder, setPlaceholder] = React.useState({
     state: statePlaceholder,
@@ -133,8 +134,11 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   // Button
   const enableButton = formValue.state && formValue.area && formValue.houseType;
 
+  const [toast, setToast] = useToast();
+
   return (
     <div className="input-group">
+      <Toast {...toast} showToastOnly />
       <div className="select-holder">
         <Select
           options={state}
@@ -144,7 +148,16 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
           onChange={getArea}
         />
       </div>
-      <div className="select-holder">
+      <div
+        className="select-holder"
+        onClick={() =>
+          disableArea &&
+          setToast({
+            message:
+              'You need to select your `Preferred State` to load the Area',
+          })
+        }
+      >
         <Select
           placeholder={placeholder.area}
           options={area}
@@ -154,7 +167,16 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
           key={JSON.stringify(`${defaultInputValue.area} ${formValue.state}`)}
         />
       </div>
-      <div className="select-holder">
+      <div
+        className="select-holder"
+        onClick={() =>
+          disableHouseType &&
+          setToast({
+            message:
+              'You need to select your `Preferred Area` to load the HouseType',
+          })
+        }
+      >
         <Select
           key={JSON.stringify(
             `${defaultInputValue.houseType} ${formValue.area}`
