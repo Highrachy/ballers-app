@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Input from 'components/forms/Input';
 
-const Address = () => {
+const Address = ({ showCountry }) => {
   return (
     <>
       <Input
@@ -29,16 +30,26 @@ const Address = () => {
           placeholder="State"
         />
       </div>
-      <div className="form-row">
-        <Input
-          formGroupClassName="col-md-6 ml-n2"
-          label="Country"
-          name="address.country"
-          placeholder="Country"
-        />
-      </div>
+      {showCountry && (
+        <div className="form-row">
+          <Input
+            formGroupClassName="col-md-6 ml-n2"
+            label="Country"
+            name="address.country"
+            placeholder="Country"
+          />
+        </div>
+      )}
     </>
   );
+};
+
+Address.propTypes = {
+  showCountry: PropTypes.bool,
+};
+
+Address.defaultProps = {
+  showCountry: true,
 };
 
 export default Address;

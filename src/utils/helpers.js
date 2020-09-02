@@ -109,3 +109,23 @@ export const getGenderFromTitle = (title) => {
   if (FEMALE_TITLES.includes(title)) return 'Ma';
   return 'Sir/Ma';
 };
+
+export const getLocationFromAddress = (address) => {
+  let output = '';
+  if (address.street1) {
+    output += address.street1;
+
+    if (address.street2) {
+      output += `, ${address.street2}`;
+    }
+
+    if (address.city) {
+      output += `, ${address.city}`;
+    }
+
+    if (address.state) {
+      output += `, ${address.state}.`;
+    }
+  }
+  return output;
+};

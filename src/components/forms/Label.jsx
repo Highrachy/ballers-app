@@ -17,7 +17,10 @@ const Label = ({
 
   if (!text || !name) return null;
   return (
-    <label className={`form-label ${className}`} htmlFor={name}>
+    <label
+      className={`form-label ${className ? className : ''}`}
+      htmlFor={name}
+    >
       {text}
 
       {/* Optional / Compulsory Fields */}

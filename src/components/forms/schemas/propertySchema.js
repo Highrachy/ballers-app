@@ -9,7 +9,6 @@ import {
 
 export const newPropertySchema = {
   name: stringValidation('Property Name'),
-  location: stringValidation('Location'),
   price: positiveNumberValidation('Price'),
   units: positiveNumberValidation('Units'),
   houseType: stringValidation('House Type'),

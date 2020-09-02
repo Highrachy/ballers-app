@@ -102,7 +102,6 @@ const PortfoliosRow = ({ _id, name, address, price, number, mainImage }) => (
     <td>
       <strong>{moneyFormatInNaira(price)}</strong>
     </td>
-    ]
   </tr>
 );
 

@@ -23,6 +23,8 @@ export const COLOR_STYLE = [
   'dark',
 ];
 
+export const HOUSE_TYPES = ['3 Bedroom Flat', '4 Bedroom Flat', 'Maisonettes'];
+
 export const MALE_TITLES = ['Mr.', 'Master', 'Chief (Mr)', 'Alhaji'];
 export const FEMALE_TITLES = ['Mrs.', 'Ms.', 'Miss', 'Chief (Mrs)', 'Alhaja'];
 

@@ -10,8 +10,11 @@ import {
 } from 'components/forms/form-helper';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
-import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { BASE_API_URL } from 'utils/constants';
+import {
+  createSchema,
+  addressSchema,
+} from 'components/forms/schemas/schema-helpers';
+import { BASE_API_URL, HOUSE_TYPES } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import { newPropertySchema } from 'components/forms/schemas/propertySchema';
@@ -19,7 +22,14 @@ import Textarea from 'components/forms/Textarea';
 import InputFormat from 'components/forms/InputFormat';
 import MapPicker from 'components/utils/MapPicker';
 import useMapGeocoder from 'hooks/useMapGeocoder';
-import { getError } from 'utils/helpers';
+import {
+  getError,
+  getLocationFromAddress,
+  valuesToOptions,
+  generateNumOptions,
+} from 'utils/helpers';
+import Address from 'components/utils/Address';
+import Select from 'components/forms/Select';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
@@ -39,7 +49,13 @@ const NewPropertyForm = () => {
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={setInitialValues(newPropertySchema)}
+      initialValues={
+        ({
+          ...setInitialValues(newPropertySchema),
+          address: setInitialValues(addressSchema),
+        },
+        { address: { country: 'Nigeria' } })
+      }
       onSubmit={(values, actions) => {
         let payload;
         payload = location
@@ -77,16 +93,20 @@ const NewPropertyForm = () => {
             actions.setSubmitting(false);
           });
       }}
-      validationSchema={createSchema(newPropertySchema)}
+      validationSchema={createSchema({
+        ...newPropertySchema,
+        address: createSchema(addressSchema),
+      })}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
           <PropertyInfoForm {...props} />
+          <PropertyAddress />
           <PropertyImage />
           <MapLocation
             setLocation={setLocation}
-            mapAddress={props.values.location}
+            mapAddress={getLocationFromAddress(props.values.address)}
           />
           <Button
             className="btn-secondary mt-4"
@@ -95,71 +115,102 @@ const NewPropertyForm = () => {
           >
             Add New Property
           </Button>
-          <DisplayFormikState {...props} hide showAll />
+          <DisplayFormikState {...props} showAll />
         </Form>
       )}
     </Formik>
   );
 };
 
-const PropertyInfoForm = ({ values }) => (
-  <Card className="card-container">
-    <section className="row">
-      <div className="col-md-10 px-4">
-        <h5 className="mb-4">Property Information</h5>
-        <Input label="Property Name" name="name" placeholder="Property Name" />
+const PropertyInfoForm = () => {
+  const [displayForm, setDisplayForm] = React.useState({ eventType: false });
+  const toggleForm = (value) => {
+    setDisplayForm({ [value]: !displayForm[value] });
+  };
+  return (
+    <Card className="card-container">
+      <section className="row">
+        <div className="col-md-10 px-4">
+          <h5 className="mb-4">Property Information</h5>
+          <div className="form-row">
+            <Input
+              formGroupClassName="col-md-6"
+              label="Property Name"
+              name="name"
+              placeholder="Property Name"
+            />
 
-        <Input label="House Type" name="houseType" placeholder="House Type" />
+            {displayForm.houseType ? (
+              <Input
+                formGroupClassName="col-md-6"
+                label="House Type"
+                name="houseType"
+                placeholder="House Type"
+                labelLink={{
+                  onClick: () => toggleForm('houseType'),
+                  text: 'Select House Type',
+                  to: '',
+                }}
+              />
+            ) : (
+              <Select
+                placeholder="Select House Type"
+                formGroupClassName="col-md-6"
+                label="House Type"
+                labelLink={{
+                  onClick: () => toggleForm('houseType'),
+                  text: 'Type Manually',
+                  to: '',
+                }}
+                name="houseType"
+                options={valuesToOptions(HOUSE_TYPES)}
+              />
+            )}
+          </div>
 
-        <Textarea label="Location" name="location" placeholder="Location" />
+          <div className="form-row">
+            <InputFormat
+              formGroupClassName="col-md-6"
+              label="Price"
+              name="price"
+              placeholder="Price"
+            />
+            <Input
+              type="number"
+              formGroupClassName="col-md-6"
+              label="Units"
+              name="units"
+              placeholder="Available Units"
+            />
+          </div>
 
-        <div className="form-row">
-          <InputFormat
-            formGroupClassName="col-md-6"
-            label="Price"
-            name="price"
-            placeholder="Price"
-            // isValidMessage={`${
-            //   values.price > 0
-            //     ? `${Humanize.titleCase(Converter.toWords(values.price))} Naira`
-            //     : ''
-            // }`}
-          />
-          <Input
-            type="number"
-            formGroupClassName="col-md-6"
-            label="Units"
-            name="units"
-            placeholder="Available Units"
+          <div className="form-row">
+            <Select
+              formGroupClassName="col-md-6"
+              label="Bedrooms"
+              name="bedrooms"
+              options={generateNumOptions(9, 'Bedroom')}
+              placeholder="Select Bedrooms"
+            />
+            <Select
+              formGroupClassName="col-md-6"
+              label="Toilets"
+              name="toilets"
+              options={generateNumOptions(9, 'Toilet')}
+              placeholder="Select Toilets"
+            />
+          </div>
+
+          <Textarea
+            label="Description"
+            name="description"
+            placeholder="A detailed description of the property"
           />
         </div>
-
-        <div className="form-row">
-          <Input
-            type="number"
-            formGroupClassName="col-md-6"
-            label="Bedrooms"
-            name="bedrooms"
-            placeholder="Bedrooms"
-          />
-          <Input
-            type="number"
-            formGroupClassName="col-md-6"
-            label="Toilets"
-            name="toilets"
-            placeholder="Toilets"
-          />
-        </div>
-
-        <Textarea
-          label="Description"
-          name="description"
-          placeholder="A detailed description of the property"
-        />
-      </div>
-    </section>
-  </Card>
-);
+      </section>
+    </Card>
+  );
+};
 
 const PropertyImage = () => (
   <Card className="card-container mt-5">
@@ -171,6 +222,18 @@ const PropertyImage = () => (
           name="mainImage"
           placeholder="Property Image"
         />
+      </div>
+    </section>
+  </Card>
+);
+
+const PropertyAddress = () => (
+  <Card className="card-container mt-5">
+    <section className="row">
+      <div className="col-md-10">
+        <h5>Address</h5>
+
+        <Address showCountry={false} />
       </div>
     </section>
   </Card>
