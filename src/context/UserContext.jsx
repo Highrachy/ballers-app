@@ -21,7 +21,7 @@ let reducer = (state, action) => {
     case 'user-profile-update':
       return { ...state, ...action.user, isLoggedIn: true };
     case 'user-profile-image':
-      return { ...state, profileImg: action.imageURL };
+      return { ...state, profileImage: action.profileImage };
     case 'available-options':
       return { ...state, availableOptions: action.availableOptions };
     case 'remove-favorite':

@@ -14,7 +14,10 @@ export const INITIAL_STATE = {
   },
   role: 1,
   referralCode: '',
-  profileImg: '',
+  profileImage: {
+    id: null,
+    url: null,
+  },
   isLoggedIn: false,
   notifications: [],
   assignedProperties: [],

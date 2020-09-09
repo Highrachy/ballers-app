@@ -27,6 +27,7 @@ import { feedback } from 'components/forms/form-helper';
 import { getError, generateBudgetOptions, ONE_MILLION } from 'utils/helpers';
 import Select from 'components/forms/Select';
 import { useAvailableOptions } from 'hooks/useAvailableOptions';
+import UploadProfileImage from 'components/utils/UploadProfileImage';
 
 const Settings = () => (
   <BackendPage>
@@ -105,6 +106,8 @@ const ProfileForm = () => {
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>
               <Toast {...toast} />
+
+              <UploadProfileImage />
               <div className="form-row">
                 <Input
                   formGroupClassName="col-md-6"
