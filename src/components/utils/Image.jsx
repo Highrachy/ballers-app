@@ -42,7 +42,7 @@ Image.defaultProps = {
   bordered: false,
   className: '',
   responsiveImage: true,
-  rounded: true,
+  rounded: false,
 };
 
 Image.Big = ({ src, name, className }) => (

@@ -23,9 +23,41 @@ export const COLOR_STYLE = [
   'dark',
 ];
 
-export const HOUSE_TYPES = ['3 Bedroom Flat', '4 Bedroom Flat', 'Maisonettes'];
-
 export const MALE_TITLES = ['Mr.', 'Master', 'Chief (Mr)', 'Alhaji'];
 export const FEMALE_TITLES = ['Mrs.', 'Ms.', 'Miss', 'Chief (Mrs)', 'Alhaja'];
 
 export const MOBILE_WIDTH = 576;
+
+export const HOUSE_TYPES = [
+  'Studio Apartment',
+  '1 bedroom flat ',
+  '2 bedroom flat',
+  '3 bedroom flat',
+  '4 bedroom flat',
+  'Penthouse (1,2 or 3)',
+  '2 bedroom Maisonette',
+  '3 bedroom Maisonette',
+  '4 bedroom Maisonette',
+  '2 bedroom semi-detached duplex',
+  '3 bedroom semi-detached duplex ',
+  '4 bedroom semi-detached duplex',
+  '5 bedroom semi-detached duplex',
+  '3 bedroom detached duplex',
+  '4 bedroom detached duplex',
+  '5 bedroom detached duplex',
+  '6 bedroom detached duplex',
+  '2 bedroom terraced duplex',
+  '3 bedroom terraced duplex',
+  '4 bedroom terraced duplex',
+  '2 bedroom bungalow',
+  '3 bedroom bungalow',
+  '4 bedroom bungalow',
+  '1 bedroom semi-detached bungalow',
+  '2 bedroom semi-detached bungalow',
+  '3 bedroom semi-detached bungalow',
+  '4 bedroom semi-detached bungalow',
+  '1 bedroom terraced bungalow',
+  '2 bedroom terraced bungalow ',
+  '3 bedroom terraced bungalow',
+  '4 bedroom terraced bungalow ',
+].sort();

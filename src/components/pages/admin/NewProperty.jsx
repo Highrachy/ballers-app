@@ -15,7 +15,11 @@ import {
   addressSchema,
 } from 'components/forms/schemas/schema-helpers';
 import { BASE_API_URL, HOUSE_TYPES } from 'utils/constants';
-import { getTokenFromStore } from 'utils/localStorage';
+import {
+  getTokenFromStore,
+  storePropertyImage,
+  getPropertyImage,
+} from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import { newPropertySchema } from 'components/forms/schemas/propertySchema';
 import Textarea from 'components/forms/Textarea';
@@ -30,6 +34,8 @@ import {
 } from 'utils/helpers';
 import Address from 'components/utils/Address';
 import Select from 'components/forms/Select';
+import UploadImage from 'components/utils/UploadImage';
+import Image from 'components/utils/Image';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
@@ -44,7 +50,12 @@ const NewProperty = () => (
 const NewPropertyForm = () => {
   const [toast, setToast] = useToast();
   const [location, setLocation] = React.useState(null);
+  const [image, setImage] = React.useState(getPropertyImage());
   const { userDispatch } = React.useContext(UserContext);
+  const saveImage = (image) => {
+    setImage(image);
+    storePropertyImage(image);
+  };
 
   return (
     <Formik
@@ -58,15 +69,17 @@ const NewPropertyForm = () => {
       }
       onSubmit={(values, actions) => {
         let payload;
+        const payloadData = { ...values, mainImage: image };
+
         payload = location
           ? {
-              ...values,
+              ...payloadData,
               mapLocation: {
                 longitude: location.latLng.lng.toString(),
                 latitude: location.latLng.lat.toString(),
               },
             }
-          : values;
+          : payloadData;
 
         Axios.post(`${BASE_API_URL}/property/add`, payload, {
           headers: { Authorization: getTokenFromStore() },
@@ -103,7 +116,7 @@ const NewPropertyForm = () => {
           <Toast {...toast} />
           <PropertyInfoForm {...props} />
           <PropertyAddress />
-          <PropertyImage />
+          <PropertyImage image={image} setImage={saveImage} />
           <MapLocation
             setLocation={setLocation}
             mapAddress={getLocationFromAddress(props.values.address)}
@@ -212,15 +225,21 @@ const PropertyInfoForm = () => {
   );
 };
 
-const PropertyImage = () => (
+const PropertyImage = ({ image, setImage }) => (
   <Card className="card-container mt-5">
     <section className="row">
       <div className="col-md-10 px-4">
         <h5 className="mb-4">Property Image</h5>
-        <Input
-          label="Property Image"
-          name="mainImage"
-          placeholder="Property Image"
+        {image && (
+          <Image
+            className="avatar--large uploaded-image mb-3"
+            name="property image"
+            src={image}
+          />
+        )}
+        <UploadImage
+          afterUpload={(image) => setImage(image)}
+          defaultImage={image}
         />
       </div>
     </section>

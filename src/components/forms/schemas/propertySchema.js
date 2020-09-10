@@ -15,7 +15,6 @@ export const newPropertySchema = {
   bedrooms: positiveNumberValidation('Bedrooms'),
   toilets: positiveNumberValidation('Toilets'),
   description: stringValidation('Description'),
-  mainImage: stringValidation('Main Image'),
   // floorPlans: optionalValidation(required('Floor Plans')),
   // titleDocument: optionalValidation(required('Title Document')),
   // mapLocation: optionalValidation(required('Map Location')),

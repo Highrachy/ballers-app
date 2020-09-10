@@ -4,6 +4,7 @@ const PREFIX = 'ballers';
 const TOKEN = `${PREFIX}-token`;
 const USER_TYPE = `${PREFIX}-user-type`;
 const FIRST_NAME = `${PREFIX}-first-name`;
+const PROPERTY_IMAGE = `${PREFIX}-property-image`;
 
 export const storeToken = (token) => store(TOKEN, token);
 export const getTokenFromStore = () => store(TOKEN);
@@ -13,4 +14,7 @@ export const getUserRoleFromStore = () =>
 
 export const storeUserFirstName = (firstName) => store(FIRST_NAME, firstName);
 export const getUserFirstName = () => store(FIRST_NAME);
+export const storePropertyImage = (image) => store(PROPERTY_IMAGE, image);
+export const getPropertyImage = () => store(PROPERTY_IMAGE);
+export const removePropertyImage = () => store.remove(PROPERTY_IMAGE);
 export const clearStorage = () => store(false);

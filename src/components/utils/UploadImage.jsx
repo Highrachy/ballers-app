@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Axios from 'axios';
-import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { getTokenFromStore } from 'utils/localStorage';
-import { UserContext } from 'context/UserContext';
 import BallersSpinner from 'components/utils/BallersSpinner';
-import Image from './Image';
 import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getError } from 'utils/helpers';
 
-const UploadProfileImage = () => {
-  const MAX_IMG_SIZE = 500000; //500kb
-
-  // Context
-  let { userState, userDispatch } = React.useContext(UserContext);
+const UploadImage = ({ defaultImage, uploadText, afterUpload }) => {
+  const MAX_IMG_SIZE = 1000000; //1MB
 
   // HOOKS
   const [toast, setToast] = useToast();
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
   const onChangeHandler = (event) => {
     setLoading(true);
@@ -41,18 +37,18 @@ const UploadProfileImage = () => {
     } else {
       const data = new FormData();
       data.append('image', file);
+      console.log('data', data);
 
-      Axios.post(`${BASE_API_URL}/user/profile-image`, data, {
+      Axios.post(`${BASE_API_URL}/user/upload-image`, data, {
         headers: { Authorization: getTokenFromStore() },
       })
         .then(function (response) {
           const { status, data } = response;
           console.log('response', response);
           if (status === 200) {
-            userDispatch({
-              type: 'user-profile-image',
-              profileImage: data.profileImage,
-            });
+            console.log('data', data);
+            setImage(data.file.path);
+            afterUpload(data.file.path);
             setLoading(false);
           }
         })
@@ -67,31 +63,42 @@ const UploadProfileImage = () => {
 
   return (
     <>
-      <div className="upload-button text-center mb-5">
+      <div className="mb-5">
         <Toast {...toast} showToastOnly />
-        <Image
-          bordered
-          rounded
-          className="avatar--large uploaded-image mb-3"
-          name={userState.firstName + ' ' + userState.lastName}
-          src={userState.profileImage.url || ProfileAvatar}
-        />
-        <input id="image" onChange={onChangeHandler} type="file" />
-        <label
-          className="btn btn-info btn-sm btn-wide btn-transparent"
-          htmlFor="image"
-        >
-          {loading ? (
-            <>
-              <BallersSpinner small /> &nbsp; &nbsp;Uploading
-            </>
-          ) : (
-            'Change Image'
-          )}
-        </label>
+        <div className="custom-file">
+          <input
+            id="image"
+            type="file"
+            className="custom-file-input"
+            onChange={onChangeHandler}
+          />
+          <label className="custom-file-label" for="image">
+            {loading ? (
+              <>
+                <BallersSpinner small /> &nbsp; &nbsp; Uploading Image
+              </>
+            ) : image || defaultImage ? (
+              'Change Image'
+            ) : (
+              uploadText || 'Upload New Image'
+            )}
+          </label>
+        </div>
       </div>
     </>
   );
 };
 
-export default UploadProfileImage;
+UploadImage.propTypes = {
+  afterUpload: PropTypes.func,
+  uploadText: PropTypes.string,
+  defaultImage: PropTypes.string,
+};
+
+UploadImage.defaultProps = {
+  afterUpload: () => {},
+  uploadText: null,
+  defaultImage: null,
+};
+
+export default UploadImage;
