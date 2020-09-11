@@ -5,6 +5,7 @@ import {
   email,
   phoneNumber,
   validPercentage,
+  minDateValidation,
 } from './schema-helpers';
 
 export const newPropertySchema = {
@@ -26,6 +27,7 @@ export const scheduleTourSchema = {
   visitorName: stringValidation('Visitor Name'),
   visitorEmail: email,
   visitorPhone: phoneNumber,
+  visitDate: minDateValidation('Visitation Date', new Date()),
 };
 
 export const offerLetterSchema = {

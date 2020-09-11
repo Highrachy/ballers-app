@@ -2,7 +2,7 @@ $datepicker__background-color: $primary;
 $datepicker__background-hover-color: $secondary;
 $datepicker__border-color: $gray-900;
 $datepicker__highlighted-color: $secondary;
-$datepicker__muted-color: $white;
+$datepicker__muted-color: #ccc;
 $datepicker__selected-color: $red;
 $datepicker__text-color: $text-color;
 $datepicker__header-color: $white;
@@ -487,6 +487,7 @@ $datepicker__triangle-size: 8px !default;
 
     &:hover {
       background-color: transparent;
+      color: $datepicker__muted-color;
     }
   }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal as BModal, Button } from 'react-bootstrap';
 
-const Modal = (props) => {
+const Modal = ({ showFooter, ...props }) => {
   return (
     <BModal
       {...props}

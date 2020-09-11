@@ -28,6 +28,7 @@ import NoContent from 'components/utils/NoContent';
 import { scheduleTourSchema } from 'components/forms/schemas/propertySchema';
 import { moneyFormatInNaira, getError } from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
+import DatePicker from 'components/forms/DatePicker';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -346,7 +347,11 @@ const ScheduleVisitForm = ({ propertyId, hideForm }) => {
         <Formik
           initialValues={setInitialValues(scheduleTourSchema)}
           onSubmit={(values, actions) => {
-            const payload = { propertyId, ...values };
+            const payload = {
+              propertyId,
+              ...values,
+              visitDate: values.visitDate.date || values.visitDate,
+            };
 
             Axios.post(`${BASE_API_URL}/visitation/schedule`, payload, {
               headers: { Authorization: getTokenFromStore() },
@@ -392,6 +397,13 @@ const ScheduleVisitForm = ({ propertyId, hideForm }) => {
                 name="visitorPhone"
                 placeholder="Phone"
               />
+
+              <DatePicker
+                label="Visitation Date"
+                name="visitDate"
+                minDate={new Date()}
+                placeholder="Visit Date"
+              />
               <Button
                 className="btn-secondary mt-4"
                 loading={isSubmitting}
@@ -399,7 +411,7 @@ const ScheduleVisitForm = ({ propertyId, hideForm }) => {
               >
                 Schedule
               </Button>
-              <DisplayFormikState {...props} hide showAll />
+              <DisplayFormikState {...props} showAll />
             </Form>
           )}
         </Formik>
