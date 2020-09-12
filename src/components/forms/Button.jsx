@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { COLOR_STYLE } from 'utils/constants';
 import BallersSpinner from 'components/utils/BallersSpinner';
+import { Link } from '@reach/router';
 
 const Button = ({
   className,
@@ -47,6 +48,19 @@ Button.defaultProps = {
   loadingText: null,
   showLoadingText: true,
   onClick: () => {},
+};
+
+export const AddNewButton = ({ children, to }) => (
+  <div className="text-right">
+    <Link to={to} className="btn btn-secondary btn-wide">
+      {children}
+    </Link>
+  </div>
+);
+
+AddNewButton.propTypes = {
+  children: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
 };
 
 export default Button;

@@ -8,7 +8,7 @@ import {
   UsersIcon,
 } from 'components/utils/Icons';
 import { VisitationIcon } from 'components/utils/Icons';
-import { ArticlesIcon } from 'components/utils/Icons';
+// import { ArticlesIcon } from 'components/utils/Icons';
 
 export default [
   {
@@ -41,12 +41,12 @@ export default [
     icon: <TransactionIcon />,
     footer: true,
   },
-  {
-    title: 'Knowledgebase',
-    to: '/admin/knowledgebase',
-    icon: <ArticlesIcon />,
-    footer: true,
-  },
+  // {
+  //   title: 'Knowledgebase',
+  //   to: '/admin/knowledgebase',
+  //   icon: <ArticlesIcon />,
+  //   footer: true,
+  // },
   {
     title: 'Settings',
     to: '/user/settings',

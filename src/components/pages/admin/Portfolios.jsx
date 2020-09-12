@@ -10,6 +10,8 @@ import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { Link } from '@reach/router';
 import { moneyFormatInNaira, getError } from 'utils/helpers';
+import { MyPropertyIcon } from 'components/utils/Icons';
+import TopTitle from 'components/utils/TopTitle';
 
 const Portfolios = () => {
   const [toast, setToast] = useToast();
@@ -36,6 +38,9 @@ const Portfolios = () => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
+      <TopTitle buttonText="New Portfolio" to="/admin/portfolios/new">
+        All Portfolios
+      </TopTitle>
       <AllPortfolios portfolios={portfolios} toast={toast} />
     </BackendPage>
   );
@@ -43,9 +48,16 @@ const Portfolios = () => {
 
 const AllPortfolios = ({ portfolios, toast }) => (
   <LoadItems
+    Icon={<MyPropertyIcon />}
     items={portfolios}
     loadingText="Loading your Portfolios"
-    noContent={<NoContent isButton text="No Portfolios found" />}
+    noContent={
+      <NoContent
+        isButton
+        Icon={<MyPropertyIcon />}
+        text="No Portfolios found"
+      />
+    }
   >
     <PortfoliosRowList toast={toast} portfolios={portfolios || []} />
   </LoadItems>
@@ -53,11 +65,6 @@ const AllPortfolios = ({ portfolios, toast }) => (
 
 const PortfoliosRowList = ({ portfolios }) => (
   <div className="container-fluid">
-    <div className="text-right">
-      <Link to="/admin/portfolios/new" className="btn btn-secondary btn-wide">
-        Add Property
-      </Link>
-    </div>
     <Card className="mt-4">
       <div className="table-responsive">
         <table className="table table-borderless table-hover">

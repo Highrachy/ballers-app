@@ -10,6 +10,7 @@ import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { UsersIcon } from 'components/utils/Icons';
 import { getError } from 'utils/helpers';
+import TopTitle from 'components/utils/TopTitle';
 
 const Users = () => {
   const [toast, setToast] = useToast();
@@ -36,6 +37,7 @@ const Users = () => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
+      <TopTitle>All Users</TopTitle>
       <AllUsers users={users} />
     </BackendPage>
   );
@@ -46,7 +48,9 @@ const AllUsers = ({ users, toast }) => (
     Icon={<UsersIcon />}
     items={users}
     loadingText="Loading your Users"
-    noContent={<NoContent isButton text="No Users found" />}
+    noContent={
+      <NoContent Icon={<UsersIcon />} isButton text="No Users found" />
+    }
   >
     <UsersRowList toast={toast} users={users || []} />
   </LoadItems>

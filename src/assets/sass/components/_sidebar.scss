@@ -120,6 +120,7 @@
 
 .content-page {
   padding-left: 0;
+  min-height: 90vh;
   @include media-breakpoint-up(sm) {
     padding-left: $sidebar-width;
     padding-top: 2rem;
