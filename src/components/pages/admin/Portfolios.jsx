@@ -67,14 +67,14 @@ const PortfoliosRowList = ({ portfolios }) => (
   <div className="container-fluid">
     <Card className="mt-4">
       <div className="table-responsive">
-        <table className="table table-borderless table-hover">
+        <table className="table table-border table-hover">
           <thead>
             <tr>
-              <td>S/N</td>
-              <td>Image</td>
-              <td>Name</td>
-              <td>Location</td>
-              <td>Price</td>
+              <th>S/N</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Price</th>
             </tr>
           </thead>
           <tbody>
@@ -106,8 +106,11 @@ const PortfoliosRow = ({ _id, name, address, price, number, mainImage }) => (
         {address.city}, {address.state}
       </strong>
     </td>
+    <td>{moneyFormatInNaira(price)}</td>
     <td>
-      <strong>{moneyFormatInNaira(price)}</strong>
+      <Link className="btn btn-sm btn-secondary" to={`/admin/portfolio/${_id}`}>
+        View property
+      </Link>
     </td>
   </tr>
 );

@@ -52,7 +52,7 @@ Button.defaultProps = {
 
 export const AddNewButton = ({ children, to }) => (
   <div className="text-right">
-    <Link to={to} className="btn btn-secondary btn-wide">
+    <Link to={to} className="btn btn-success btn-wide">
       {children}
     </Link>
   </div>

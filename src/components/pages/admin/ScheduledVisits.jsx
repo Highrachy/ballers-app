@@ -10,6 +10,8 @@ import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { VisitationIcon } from 'components/utils/Icons';
 import { getError } from 'utils/helpers';
+import { getTinyDate } from 'utils/date-helpers';
+import TopTitle from 'components/utils/TopTitle';
 
 const ScheduledVisits = () => {
   const [toast, setToast] = useToast();
@@ -36,6 +38,7 @@ const ScheduledVisits = () => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
+      <TopTitle>Scheduled Visits</TopTitle>
       <AllScheduledVisits scheduledVisits={scheduledVisits} toast={toast} />
     </BackendPage>
   );
@@ -45,8 +48,14 @@ const AllScheduledVisits = ({ scheduledVisits }) => (
   <LoadItems
     Icon={<VisitationIcon />}
     items={scheduledVisits}
-    loadingText="Loading your ScheduledVisits"
-    noContent={<NoContent isButton text="No ScheduledVisits found" />}
+    loadingText="Loading your Scheduled Visits"
+    noContent={
+      <NoContent
+        Icon={<VisitationIcon />}
+        isButton
+        text="No Scheduled Visits found"
+      />
+    }
   >
     <ScheduledVisitsRowList scheduledVisits={scheduledVisits || []} />
   </LoadItems>
@@ -56,14 +65,14 @@ const ScheduledVisitsRowList = ({ scheduledVisits }) => (
   <div className="container-fluid">
     <Card className="mt-4">
       <div className="table-responsive">
-        <table className="table table-borderless table-hover">
+        <table className="table table-border table-hover">
           <thead>
             <tr>
-              <td>S/N</td>
-              <td>DATE</td>
-              <td>DESCRIPTION</td>
-              <td>PHONE</td>
-              <td>PROPERTY</td>
+              <th>S/N</th>
+              <th>Visitor Name</th>
+              <th>Contact Info</th>
+              <th>Date</th>
+              <th>Property</th>
             </tr>
           </thead>
           <tbody>
@@ -90,17 +99,18 @@ const ScheduledVisitsRow = ({
   visitorName,
   visitorEmail,
   visitorPhone,
+  visitDate,
   propertyInfo,
 }) => (
   <tr>
     <td>{number}</td>
     <td>{visitorName}</td>
-
     <td>
-      <strong>{visitorEmail}</strong>
+      <strong>{visitorPhone}</strong> <br />
+      <small>{visitorEmail}</small>
     </td>
     <td>
-      <strong>{visitorPhone}</strong>
+      <strong>{getTinyDate(visitDate)}</strong>
     </td>
     <td>{propertyInfo[0] && propertyInfo[0].name}</td>
   </tr>

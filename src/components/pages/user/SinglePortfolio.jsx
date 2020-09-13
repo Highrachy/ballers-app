@@ -264,7 +264,7 @@ const PropertySidebar = ({ propertyId }) => {
 
       <h5 className="text-smaller">Schedule a tour</h5>
       <Card
-        className="card-container property-holder bg-gray"
+        className="card-container property-holder bg-gray card-link"
         onClick={() => setShowRequestVisitForm(true)}
       >
         <p className="mr-4">

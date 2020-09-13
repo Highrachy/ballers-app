@@ -11,6 +11,9 @@ import NoContent from 'components/utils/NoContent';
 import { UsersIcon } from 'components/utils/Icons';
 import { getError } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
+import ProfileAvatar from 'assets/img/avatar/profile.png';
+import { Link } from '@reach/router';
+import { SuccessIcon, InfoIcon } from 'components/utils/Icons';
 
 const Users = () => {
   const [toast, setToast] = useToast();
@@ -60,13 +63,15 @@ const UsersRowList = ({ users }) => (
   <div className="container-fluid">
     <Card className="mt-4">
       <div className="table-responsive">
-        <table className="table table-borderless table-hover">
+        <table className="table table-border table-hover">
           <thead>
             <tr>
               <td>S/N</td>
-              <td>DATE</td>
-              <td>DESCRIPTION</td>
-              <td>PHONE</td>
+              <td>Avatar</td>
+              <td>Name</td>
+              <td>Phone</td>
+              <td>Status</td>
+              <td></td>
             </tr>
           </thead>
           <tbody>
@@ -84,18 +89,50 @@ UsersRowList.propTypes = {
   users: PropTypes.array.isRequired,
 };
 
-const UsersRow = ({ number, firstName, lastName, email, phone }) => (
+const UsersRow = ({
+  activated,
+  _id,
+  email,
+  number,
+  firstName,
+  lastName,
+  phone,
+  phone2,
+  profileImage,
+}) => (
   <tr>
     <td>{number}</td>
     <td>
-      {firstName} {lastName}
+      <img
+        alt={firstName}
+        className="img-fluid avatar--medium--small"
+        src={profileImage ? profileImage.url : ProfileAvatar}
+        title={firstName}
+      />
     </td>
-
     <td>
-      <strong>{email}</strong>
+      {firstName} {lastName} <br />
+      <small>{email}</small>
     </td>
     <td>
-      <strong>{phone}</strong>
+      {phone} <br />
+      {phone2 || '-'}
+    </td>
+    <td>
+      {activated ? (
+        <span className="text-green">
+          <SuccessIcon />{' '}
+        </span>
+      ) : (
+        <span className="text-muted">
+          <InfoIcon />
+        </span>
+      )}
+    </td>
+    <td>
+      <Link className="btn btn-sm btn-secondary" to={`/admin/user/${_id}`}>
+        View User
+      </Link>
     </td>
   </tr>
 );

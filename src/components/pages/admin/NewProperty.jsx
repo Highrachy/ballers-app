@@ -232,7 +232,7 @@ const PropertyImage = ({ image, setImage }) => (
         <h5 className="mb-4">Property Image</h5>
         {image && (
           <Image
-            className="avatar--large uploaded-image mb-3"
+            className="uploaded-image mb-3"
             name="property image"
             src={image}
           />

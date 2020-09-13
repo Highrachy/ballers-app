@@ -1,31 +1,13 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import { Card, ProgressBar } from 'react-bootstrap';
-import { Link } from '@reach/router';
-// import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
+import { Card } from 'react-bootstrap';
 import Map from 'components/common/Map';
 import { BASE_API_URL } from 'utils/constants';
-import Modal from 'components/common/Modal';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
-import Input from 'components/forms/Input';
-import {
-  setInitialValues,
-  DisplayFormikState,
-} from 'components/forms/form-helper';
-import Button from 'components/forms/Button';
-import { Formik, Form } from 'formik';
-import { createSchema } from 'components/forms/schemas/schema-helpers';
-import {
-  RightArrowIcon,
-  // CameraIcon,
-  CheckIcon,
-  DownloadIcon,
-  MapPinIcon,
-} from 'components/utils/Icons';
+import { CheckIcon, DownloadIcon, MapPinIcon } from 'components/utils/Icons';
 import { getTokenFromStore } from 'utils/localStorage';
 import NoContent from 'components/utils/NoContent';
-import { scheduleTourSchema } from 'components/forms/schemas/propertySchema';
 import { moneyFormatInNaira, getError } from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
 
@@ -64,8 +46,6 @@ const SinglePortfolio = ({ id }) => {
   );
 };
 
-const NOW = 50;
-
 const OwnedPropertyCard = ({ property, toast }) => (
   <div className="container-fluid">
     <Toast {...toast} />
@@ -79,17 +59,8 @@ const OwnedPropertyCard = ({ property, toast }) => (
       </div>
       <PropertyImage property={property} />
       <div className="row mt-5">
-        <div className="col-sm-7">
+        <div className="col-sm-12">
           <PropertyDescription property={property[0]} />
-        </div>
-
-        {/* Side Card */}
-        <div className="col-sm-5">
-          <aside className="ml-md-5">
-            {<PropertySidebar propertyId={property[0]._id} /> || (
-              <AssignedPropertySidebar />
-            )}
-          </aside>
         </div>
       </div>
       <Neighborhood />
@@ -107,44 +78,6 @@ const PropertyImage = ({ property }) => (
         className="img-fluid gallery-main-image  property-img"
       />
     </div>
-    {/* <div className="col-sm-2">
-      <aside className="row gallery-row">
-        <div className="gallery-col col-3 col-md-12">
-          <img
-            src={PropertyPlaceholderImage}
-            alt="Property"
-            className="img-fluid gallery-thumbnails property-img"
-          />
-        </div>
-        <div className="gallery-col col-3 col-md-12">
-          <img
-            src={PropertyPlaceholderImage}
-            alt="Property"
-            className="img-fluid gallery-thumbnails property-img"
-          />
-        </div>
-        <div className="gallery-col col-3 col-md-12">
-          <img
-            src={PropertyPlaceholderImage}
-            alt="Property"
-            className="img-fluid gallery-thumbnails property-img"
-          />
-        </div>
-        <div className="gallery-col col-3 col-md-12">
-          <Link to="/user/gallery" className="overlay overlay__secondary">
-            <img
-              src={PropertyPlaceholderImage}
-              alt="Property"
-              className="img-fluid gallery-thumbnails property-img mb-0"
-            />
-            <span>
-              <CameraIcon /> <br />
-              View Gallery
-            </span>
-          </Link>
-        </div>
-      </aside>
-    </div> */}
   </div>
 );
 
@@ -188,103 +121,6 @@ const PropertyDescription = ({ property }) => (
     </div>
   </>
 );
-
-const AssignedPropertySidebar = () => (
-  <Card className="card-container property-holder">
-    <table className="table table-sm table-borderless">
-      <tbody>
-        <tr>
-          <td>
-            <small className="ml-n1">Amount Contributed</small>{' '}
-          </td>
-          <td>
-            <h5>N35,000,000</h5>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <small className="ml-n1">Equity Contributed</small>{' '}
-          </td>
-          <td>
-            <h5>N35,000,000</h5>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <small className="">Contribution Progress</small>
-
-    <div className="row">
-      <div className="col-sm-12">
-        <small style={{ paddingLeft: `${NOW - 5}%` }}>{NOW}%</small>
-        <ProgressBar variant="success" now={NOW} label={`${NOW}%`} srOnly />
-      </div>
-    </div>
-
-    <hr className="my-4" />
-
-    <small className="">Next Payment</small>
-    <h5 className="text-center my-3">14th September 2020</h5>
-
-    <button className="btn btn-block btn-secondary">Make Payment</button>
-    <Link to="/users/transaction" className="small text-center mt-3">
-      View Transaction History
-    </Link>
-  </Card>
-);
-
-const PropertySidebar = ({ propertyId }) => {
-  const [showRequestVisitForm, setShowRequestVisitForm] = React.useState(false);
-
-  return (
-    <>
-      <Modal
-        title="Schedule visit"
-        show={showRequestVisitForm}
-        onHide={() => setShowRequestVisitForm(false)}
-        showFooter={false}
-      >
-        <ScheduleVisitForm
-          hideForm={() => setShowRequestVisitForm(false)}
-          propertyId={propertyId}
-        />
-      </Modal>
-      <Card className="card-container property-holder bg-gray">
-        <h5>Interested in this property?</h5>
-
-        <p className="">Kindly proceed with property acquisition</p>
-        <Link
-          to="/user/property/enquiry/1"
-          className="btn btn-block btn-secondary my-3"
-        >
-          Proceed
-        </Link>
-      </Card>
-
-      <h5 className="text-smaller">Schedule a tour</h5>
-      <Card
-        className="card-container property-holder bg-gray"
-        onClick={() => setShowRequestVisitForm(true)}
-      >
-        <p className="mr-4">
-          Want to come check the property?
-          <br /> Request a visit.
-        </p>
-        <div className="circle-icon">
-          <RightArrowIcon />
-        </div>
-      </Card>
-
-      <h5 className="text-smaller">Request title document</h5>
-      <Card className="card-container property-holder bg-gray">
-        <p className="mr-4">Request a copy of the property document.</p>
-        <div className="circle-icon bg-green">
-          <RightArrowIcon />
-        </div>
-      </Card>
-    </>
-  );
-};
 
 const Neighborhood = () => (
   <>
@@ -337,75 +173,5 @@ const PropertyMap = ({ mapLocation }) =>
   ) : (
     <></>
   );
-
-const ScheduleVisitForm = ({ propertyId, hideForm }) => {
-  const [toast, setToast] = useToast();
-  return (
-    <section className="row">
-      <div className="col-md-10">
-        <Formik
-          initialValues={setInitialValues(scheduleTourSchema)}
-          onSubmit={(values, actions) => {
-            const payload = { propertyId, ...values };
-
-            Axios.post(`${BASE_API_URL}/visitation/schedule`, payload, {
-              headers: { Authorization: getTokenFromStore() },
-            })
-              .then(function (response) {
-                const { status } = response;
-                if (status === 201) {
-                  setToast({
-                    type: 'success',
-                    message: `Your visitation has been scheduled. We will contact you within 24 hours).`,
-                  });
-                  actions.setSubmitting(false);
-                  actions.resetForm();
-                }
-              })
-              .catch(function (error) {
-                setToast({
-                  message: getError(error),
-                });
-                actions.setSubmitting(false);
-              });
-          }}
-          validationSchema={createSchema(scheduleTourSchema)}
-        >
-          {({ isSubmitting, handleSubmit, ...props }) => (
-            <Form>
-              <Toast {...toast} />
-              <Input
-                isValidMessage="Name looks good"
-                label="Name"
-                name="visitorName"
-                placeholder="Name"
-              />
-              <Input
-                isValidMessage="Email address seems valid"
-                label="Email"
-                name="visitorEmail"
-                placeholder="Email Address"
-              />
-              <Input
-                isValidMessage="Phone number looks good"
-                label="Phone"
-                name="visitorPhone"
-                placeholder="Phone"
-              />
-              <Button
-                className="btn-secondary mt-4"
-                loading={isSubmitting}
-                onClick={handleSubmit}
-              >
-                Schedule
-              </Button>
-              <DisplayFormikState {...props} hide showAll />
-            </Form>
-          )}
-        </Formik>
-      </div>
-    </section>
-  );
-};
 
 export default SinglePortfolio;

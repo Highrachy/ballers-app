@@ -223,3 +223,11 @@
     }
   }
 }
+
+.card-link {
+  transition: all 0.3s ease-out;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+}
