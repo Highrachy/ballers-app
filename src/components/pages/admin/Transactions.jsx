@@ -67,7 +67,7 @@ const AllTransactions = ({ transactions, toast }) => (
 
 const TransactionsRowList = ({ transactions }) => (
   <div className="container-fluid">
-    <Card className="mt-4">
+    <Card className="mt-2">
       <div className="table-responsive">
         <table className="table table-border table-hover">
           <thead>

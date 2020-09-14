@@ -23,14 +23,52 @@ import { UserContext } from 'context/UserContext';
 import { getError } from 'utils/helpers';
 import { getTokenFromStore } from 'utils/localStorage';
 import InputFormat from 'components/forms/InputFormat';
+import { RecommendedPropertyCard } from 'components/common/PropertyCard';
 
-const PropertyEnquiry = ({ id }) => (
-  <BackendPage>
-    <section className="container-fluid">
-      <h4>Property Enquiry</h4>
-      <EnquiryForm id={id} />
-    </section>
-  </BackendPage>
+const PropertyEnquiry = ({ id }) => {
+  const [toast, setToast] = useToast();
+  const [property, setProperty] = React.useState(null);
+
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/property/${id}`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        // handle success
+        if (status === 200) {
+          setProperty(data.property);
+        }
+      })
+      .catch(function (error) {
+        console.log('error.response', error.response);
+        setToast({
+          message: getError(error),
+        });
+      });
+  }, [setToast, id]);
+
+  console.log('property1', property);
+  return (
+    <BackendPage>
+      <section className="container-fluid">
+        <h4>Property Enquiry</h4>
+        <Toast {...toast} showToastOnly />
+        {property && <PropertyInfo property={property[0]} />}
+        <EnquiryForm id={id} />
+      </section>
+    </BackendPage>
+  );
+};
+
+const PropertyInfo = ({ property }) => (
+  <div className="row my-3">
+    <div className="col-sm-8">
+      <RecommendedPropertyCard {...property} />
+    </div>
+  </div>
 );
 
 const EnquiryForm = ({ id }) => {

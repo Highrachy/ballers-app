@@ -63,7 +63,7 @@ const AllScheduledVisits = ({ scheduledVisits }) => (
 
 const ScheduledVisitsRowList = ({ scheduledVisits }) => (
   <div className="container-fluid">
-    <Card className="mt-4">
+    <Card className="mt-2">
       <div className="table-responsive">
         <table className="table table-border table-hover">
           <thead>

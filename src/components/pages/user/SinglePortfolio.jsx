@@ -24,11 +24,11 @@ import {
   MapPinIcon,
 } from 'components/utils/Icons';
 import { getTokenFromStore } from 'utils/localStorage';
-import NoContent from 'components/utils/NoContent';
 import { scheduleTourSchema } from 'components/forms/schemas/propertySchema';
 import { moneyFormatInNaira, getError } from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import DatePicker from 'components/forms/DatePicker';
+import { Loading } from 'components/utils/LoadingItems';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -44,7 +44,6 @@ const SinglePortfolio = ({ id }) => {
         // handle success
         if (status === 200) {
           setProperty(data.property);
-          console.log('data.property', data.property);
         }
       })
       .catch(function (error) {
@@ -59,7 +58,7 @@ const SinglePortfolio = ({ id }) => {
       {property ? (
         <OwnedPropertyCard property={property} toast={toast} />
       ) : (
-        <NoContent text="Loading Property" Icon={<MyPropertyIcon />} />
+        <Loading text="Loading Property" Icon={<MyPropertyIcon />} />
       )}
     </BackendPage>
   );
@@ -236,6 +235,7 @@ const AssignedPropertySidebar = () => (
 
 const PropertySidebar = ({ propertyId }) => {
   const [showRequestVisitForm, setShowRequestVisitForm] = React.useState(false);
+  const [showTitleDocument, setShowTitleDocument] = React.useState(false);
 
   return (
     <>
@@ -255,7 +255,7 @@ const PropertySidebar = ({ propertyId }) => {
 
         <p className="">Kindly proceed with property acquisition</p>
         <Link
-          to="/user/property/enquiry/1"
+          to={`/user/property/enquiry/${propertyId}`}
           className="btn btn-block btn-secondary my-3"
         >
           Proceed
@@ -276,8 +276,29 @@ const PropertySidebar = ({ propertyId }) => {
         </div>
       </Card>
 
-      <h5 className="text-smaller">Request title document</h5>
-      <Card className="card-container property-holder bg-gray">
+      <h5 className="text-smaller">View title document</h5>
+      <Modal
+        title="Title Document"
+        show={showTitleDocument}
+        onHide={() => setShowTitleDocument(false)}
+        showFooter={false}
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ac feugiat sed
+        lectus vestibulum mattis ullamcorper. Cras adipiscing enim eu turpis
+        egestas. Egestas diam in arcu cursus euismod quis viverra nibh.
+        Porttitor lacus luctus accumsan tortor posuere ac ut. Eget lorem dolor
+        sed viverra ipsum nunc aliquet. Lectus urna duis convallis convallis.
+        Mattis aliquam faucibus purus in massa tempor. Dolor magna eget est
+        lorem ipsum dolor sit amet. Quisque sagittis purus sit amet volutpat.
+        Neque egestas congue quisque egestas diam in arcu. Magna fermentum
+        iaculis eu non diam. Mauris vitae ultricies leo integer malesuada nunc
+        vel risus. Malesuada fames ac turpis egestas sed tempus urna et.
+      </Modal>
+      <Card
+        className="card-container property-holder bg-gray card-link"
+        onClick={() => setShowTitleDocument(true)}
+      >
         <p className="mr-4">Request a copy of the property document.</p>
         <div className="circle-icon bg-green">
           <RightArrowIcon />

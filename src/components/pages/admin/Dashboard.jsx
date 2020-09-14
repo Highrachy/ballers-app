@@ -63,10 +63,6 @@ const Welcome = () => {
           number={3}
         />
       </div>
-
-      <Link className="btn btn-secondary btn-wide" to="/admin/offer-letter/1">
-        Create Offer Letter
-      </Link>
     </section>
   );
 };

@@ -8,6 +8,7 @@ import {
   UsersIcon,
 } from 'components/utils/Icons';
 import { VisitationIcon } from 'components/utils/Icons';
+import { MessageIcon } from 'components/utils/Icons';
 // import { ArticlesIcon } from 'components/utils/Icons';
 
 export default [
@@ -33,6 +34,12 @@ export default [
     title: 'Scheduled Visits',
     to: '/admin/scheduled-visits',
     icon: <VisitationIcon />,
+    footer: false,
+  },
+  {
+    title: 'Enquiries',
+    to: '/admin/enquiries',
+    icon: <MessageIcon />,
     footer: false,
   },
   {

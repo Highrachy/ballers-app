@@ -10,6 +10,8 @@ import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { getError } from 'utils/helpers';
 import { MessageIcon } from 'components/utils/Icons';
+import TopTitle from 'components/utils/TopTitle';
+import { Link } from '@reach/router';
 
 const Enquiries = () => {
   const [toast, setToast] = useToast();
@@ -37,6 +39,7 @@ const Enquiries = () => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
+      <TopTitle>All Enquiries</TopTitle>
       <AllEnquiries enquiries={enquiries} toast={toast} />
     </BackendPage>
   );
@@ -55,16 +58,16 @@ const AllEnquiries = ({ enquiries }) => (
 
 const EnquiriesRowList = ({ enquiries }) => (
   <div className="container-fluid">
-    <Card className="mt-4">
+    <Card className="mt-2">
       <div className="table-responsive">
-        <table className="table table-borderless table-hover">
+        <table className="table table-border table-hover">
           <thead>
             <tr>
-              <td>S/N</td>
-              <td>DATE</td>
-              <td>DESCRIPTION</td>
-              <td>PHONE</td>
-              <td>PROPERTY</td>
+              <th>S/N</th>
+              <th>Date</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Property</th>
             </tr>
           </thead>
           <tbody>
@@ -83,6 +86,7 @@ EnquiriesRowList.propTypes = {
 };
 
 const EnquiriesRow = ({
+  _id,
   number,
   title,
   firstName,
@@ -97,13 +101,17 @@ const EnquiriesRow = ({
       {title} {firstName} {lastName}
     </td>
 
-    <td>
-      <strong>{email}</strong>
-    </td>
-    <td>
-      <strong>{phone}</strong>
-    </td>
+    <td>{email}</td>
+    <td>{phone}</td>
     <td>{propertyInfo[0] && propertyInfo[0].name}</td>
+    <td>
+      <Link
+        className="btn btn-sm btn-secondary"
+        to={`/admin/offer-letter/{_id}`}
+      >
+        Create Offer Letter
+      </Link>
+    </td>
   </tr>
 );
 

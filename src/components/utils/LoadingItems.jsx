@@ -5,12 +5,7 @@ import BallersSpinner from 'components/utils/BallersSpinner';
 
 const LoadItems = ({ items, children, loadingText, noContent, Icon }) => {
   if (items == null) {
-    return (
-      <div className="text-center mt-5 loading-icon">
-        {Icon || <HouseIcon />}
-        <h5 className="my-4">{loadingText} &nbsp;</h5> <BallersSpinner />{' '}
-      </div>
-    );
+    return <Loading text={loadingText} Icon={Icon} />;
   }
   if (items.length > 0) {
     return children;
@@ -33,5 +28,12 @@ LoadItems.defaultProps = {
   loadingText: null,
   items: null,
 };
+
+export const Loading = ({ Icon, text }) => (
+  <div className="text-center mt-5 loading-icon">
+    {Icon || <HouseIcon />}
+    <h5 className="my-4">{text} &nbsp;</h5> <BallersSpinner />{' '}
+  </div>
+);
 
 export default LoadItems;
