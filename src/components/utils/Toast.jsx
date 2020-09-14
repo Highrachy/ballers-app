@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Toast as BoostrapToast } from 'react-bootstrap';
 import {
   SuccessIcon,
@@ -101,6 +102,22 @@ const Toast = ({
   );
 };
 
+Toast.propTypes = {
+  message: PropTypes.any,
+  type: PropTypes.string,
+  toastIsClosed: PropTypes.func,
+  showAlertMessageOnly: PropTypes.bool,
+  showToastOnly: PropTypes.bool,
+};
+
+Toast.defaultProps = {
+  message: null,
+  type: null,
+  toastIsClosed: () => {},
+  showAlertMessageOnly: false,
+  showToastOnly: false,
+};
+
 const TOAST_STYLE = {
   error: {
     icon: <ErrorIcon />,
@@ -119,5 +136,14 @@ const TOAST_STYLE = {
     name: 'Warning',
   },
 };
+
+export const InfoBox = ({ children }) => (
+  <div className="card d-flex flex-row toast-alert info">
+    <div className="span toast-icon-holder">
+      <InfoIcon />
+    </div>
+    <span className="d-block ml-2 w-100 toast-message-content">{children}</span>
+  </div>
+);
 
 export default Toast;

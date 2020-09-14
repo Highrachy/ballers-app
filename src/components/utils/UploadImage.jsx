@@ -7,7 +7,7 @@ import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getError } from 'utils/helpers';
 
-const UploadImage = ({ defaultImage, uploadText, afterUpload }) => {
+const UploadImage = ({ defaultImage, uploadText, changeText, afterUpload }) => {
   const MAX_IMG_SIZE = 1000000; //1MB
 
   // HOOKS
@@ -78,7 +78,7 @@ const UploadImage = ({ defaultImage, uploadText, afterUpload }) => {
                 <BallersSpinner small /> &nbsp; &nbsp; Uploading Image
               </>
             ) : image || defaultImage ? (
-              'Change Image'
+              changeText || 'Change Image'
             ) : (
               uploadText || 'Upload New Image'
             )}
@@ -91,6 +91,7 @@ const UploadImage = ({ defaultImage, uploadText, afterUpload }) => {
 
 UploadImage.propTypes = {
   afterUpload: PropTypes.func,
+  changeText: PropTypes.string,
   uploadText: PropTypes.string,
   defaultImage: PropTypes.string,
 };
@@ -99,6 +100,7 @@ UploadImage.defaultProps = {
   afterUpload: () => {},
   uploadText: null,
   defaultImage: null,
+  changeText: null,
 };
 
 export default UploadImage;

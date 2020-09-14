@@ -55,6 +55,36 @@
       color: darken($green, 30%);
     }
   }
+
+  &.info {
+    .toast-icon-holder {
+      color: $secondary;
+    }
+
+    .toast-header,
+    .toast-message-content {
+      color: darken($secondary, 5%);
+    }
+
+    .toast-body {
+      color: darken($secondary, 30%);
+    }
+  }
+
+  &.warning {
+    .toast-icon-holder {
+      color: $orange;
+    }
+
+    .toast-header,
+    .toast-message-content {
+      color: darken($orange, 5%);
+    }
+
+    .toast-body {
+      color: darken($orange, 30%);
+    }
+  }
 }
 
 @keyframes toast-in-right {

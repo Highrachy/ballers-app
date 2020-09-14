@@ -19,7 +19,7 @@ import NoContent from 'components/utils/NoContent';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, getItems } from 'utils/helpers';
-import Toast, { useToast } from 'components/utils/Toast';
+import Toast, { useToast, InfoBox } from 'components/utils/Toast';
 
 const Dashboard = () => {
   const [toast, setToast] = useToast();
@@ -52,6 +52,7 @@ const Dashboard = () => {
     <BackendPage>
       <Toast {...toast} showToastOnly />
       <Welcome />
+      <ShowInfo />
       <Overview />
       <Others recommendedProperties={properties} />
     </BackendPage>
@@ -91,6 +92,27 @@ const Welcome = () => {
     </section>
   );
 };
+
+const ShowInfo = () => (
+  <div className="container-fluid">
+    <InfoBox>
+      <Link
+        className="btn btn-success btn-sm float-right"
+        to="/user/property/offer-letter/1"
+      >
+        View Offer Letter
+      </Link>
+      <h6 className="w-100 font-weight-normal">
+        Highrachy has sent you an offer letter for{' '}
+        <strong>Blissville Estate </strong>
+        <br />
+        <small className="text-muted">
+          Expires on Sept 15, 2020 (in 1 day)
+        </small>
+      </h6>
+    </InfoBox>
+  </div>
+);
 
 const Overview = () => (
   <div className="container-fluid ">
