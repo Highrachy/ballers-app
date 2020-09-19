@@ -105,10 +105,7 @@ const EnquiriesRow = ({
     <td>{phone}</td>
     <td>{propertyInfo[0] && propertyInfo[0].name}</td>
     <td>
-      <Link
-        className="btn btn-sm btn-secondary"
-        to={`/admin/offer-letter/{_id}`}
-      >
+      <Link className="btn btn-sm btn-secondary" to={`/admin/enquiry/${_id}`}>
         Create Offer Letter
       </Link>
     </td>

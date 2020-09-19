@@ -129,3 +129,23 @@ export const getLocationFromAddress = (address) => {
   }
   return output;
 };
+
+export const getFormattedAddress = ({
+  street1,
+  street2,
+  city,
+  state,
+  country,
+}) => (
+  <address>
+    {street1}
+    <br />
+    {street2 && (
+      <>
+        {street2} <br />{' '}
+      </>
+    )}
+    {city}, {state} <br />
+    {country}.
+  </address>
+);

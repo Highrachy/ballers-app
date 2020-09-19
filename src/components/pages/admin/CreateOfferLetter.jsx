@@ -1,8 +1,5 @@
 import React from 'react';
-import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
-// import Axios from 'axios';
-// import Input from 'components/forms/Input';
 import {
   setInitialValues,
   DisplayFormikState,
@@ -10,8 +7,6 @@ import {
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
-// import { BASE_API_URL } from 'utils/constants';
-// import { getTokenFromStore } from 'utils/localStorage';
 import Select from 'components/forms/Select';
 import Toast, { useToast } from 'components/utils/Toast';
 import Textarea from 'components/forms/Textarea';
@@ -27,14 +22,14 @@ import InputFormat from 'components/forms/InputFormat';
 import HighrachyLogo from 'assets/img/logo/highrachy-logo.png';
 import Input from 'components/forms/Input';
 
-const CreateOfferLetter = () => {
+const CreateOfferLetter = ({ enquiry }) => {
+  console.log('enquiry', enquiry);
   const defaultValue = {
-    propertyPrice: '30000000',
-    totalAmountPayable: '32000000',
-    allocation: 70,
-    initialPayment: '20000000',
+    totalAmountPayable: enquiry.propertyInfo[0].price,
+    allocation: 50,
+    initialPayment: enquiry.initialInvestmentAmount,
     monthlyPayment: '5000000',
-    paymentFrequency: '1',
+    paymentFrequency: enquiry.investmentFrequency,
     offerExpires: '7',
     titleDocument:
       'Deed of Assignment for one unit of 3 bedroom apartment within the buildings sited on land covered by duly registered, Governor Consented deed of assignment dated the 20th day of May, 2016 and registered as No. 87 at page 87 in volume 2547v at the office of the Lagos State Land Registry, Ikeja.',
@@ -43,9 +38,10 @@ const CreateOfferLetter = () => {
   };
   const [value, setValue] = React.useState(defaultValue);
   const [showOfferLetter, setShowOfferLetter] = React.useState(false);
+  console.log('value', value);
 
   return (
-    <BackendPage>
+    <>
       {showOfferLetter ? (
         <OfferLetterTemplate
           handleHideOfferLetter={() => setShowOfferLetter(false)}
@@ -58,7 +54,7 @@ const CreateOfferLetter = () => {
           value={value}
         />
       )}
-    </BackendPage>
+    </>
   );
 };
 
@@ -113,12 +109,6 @@ const CreateOfferLetterForm = ({
                   <Toast {...toast} />
                   <div className="form-row">
                     <InputFormat
-                      formGroupClassName="col-md-6 d-none"
-                      label="Total Amount Payable"
-                      name="propertyPrice"
-                      placeholder="Total Amount Payable"
-                    />
-                    <InputFormat
                       formGroupClassName="col-md-6"
                       label="Total Amount Payable"
                       name="totalAmountPayable"
@@ -156,9 +146,9 @@ const CreateOfferLetterForm = ({
                       name="paymentFrequency"
                       placeholder="Payment Frequency"
                       options={[
-                        { value: '0.5', label: 'Bi-Weekly' },
-                        { value: '1', label: 'Monthly' },
-                        { value: '3', label: 'Quarterly' },
+                        { value: 0.5, label: 'Bi-Weekly' },
+                        { value: 1, label: 'Monthly' },
+                        { value: 3, label: 'Quarterly' },
                       ]}
                     />
                     <Select
@@ -210,8 +200,9 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
     // paymentFrequency,
   } = value;
   const rangePrice = totalAmountPayable - initialPayment;
-  const noOfMonths = Math.floor(rangePrice / monthlyPayment);
+  const noOfMonths = Math.floor(rangePrice / monthlyPayment) || 1;
   const lastPayment = rangePrice - monthlyPayment * noOfMonths;
+  console.log('noOfMonths', noOfMonths);
   return (
     <div className="container-fluid">
       <h4 className="text-center">
@@ -321,13 +312,14 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
                           {/* <td>Immediate</td> */}
                           <td>{moneyFormat(initialPayment)}</td>
                         </tr>
-                        {[...Array(noOfMonths).keys()].map((value, index) => (
-                          <tr key={index}>
-                            <td>{numToOrdinal(index + 2)} Deposit</td>
-                            {/* <td>April 2019</td> */}
-                            <td>{moneyFormat(monthlyPayment)}</td>
-                          </tr>
-                        ))}
+                        {noOfMonths > 0 &&
+                          [...Array(noOfMonths).keys()].map((value, index) => (
+                            <tr key={index}>
+                              <td>{numToOrdinal(index + 2)} Deposit</td>
+                              {/* <td>April 2019</td> */}
+                              <td>{moneyFormat(monthlyPayment)}</td>
+                            </tr>
+                          ))}
                         {lastPayment > 0 && (
                           <tr>
                             <td>Last Deposit</td>

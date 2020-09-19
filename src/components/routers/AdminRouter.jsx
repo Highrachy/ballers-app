@@ -9,8 +9,8 @@ import Transactions from 'components/pages/admin/Transactions';
 import NewProperty from 'components/pages/admin/NewProperty';
 import KnowledgeBase from 'components/pages/admin/KnowledgeBase';
 import Menu from 'components/pages/user/Menu';
-import CreateOfferLetter from 'components/pages/admin/CreateOfferLetter';
 import Enquiries from 'components/pages/admin/Enquiries';
+import ViewEnquiry from 'components/pages/admin/ViewEnquiry';
 
 const UserRouter = () => (
   <Router>
@@ -18,9 +18,9 @@ const UserRouter = () => (
     <Users path="users" />
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />
-    <CreateOfferLetter path="offer-letter/:enquiry-id" />
     <NewProperty path="portfolios/new" />
     <ScheduledVisits path="scheduled-visits" />
+    <ViewEnquiry path="enquiry/:id" />
     <Enquiries path="enquiries" />
     <Transactions path="transactions" />
     <KnowledgeBase path="knowledgebase" />

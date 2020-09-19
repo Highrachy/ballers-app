@@ -1,4 +1,3 @@
-import * as yup from 'yup';
 import {
   stringValidation,
   positiveNumberValidation,
@@ -31,11 +30,7 @@ export const scheduleTourSchema = {
 };
 
 export const offerLetterSchema = {
-  propertyPrice: positiveNumberValidation('Property Price'),
-  totalAmountPayable: positiveNumberValidation('Total Amount Payable').moreThan(
-    yup.ref('propertyPrice'),
-    'Total Amount Payable should be greater or equal to than property price'
-  ),
+  totalAmountPayable: positiveNumberValidation('Total Amount Payable'),
   allocation: validPercentage('Allocation'),
   initialPayment: positiveNumberValidation('Initial Payment'),
   monthlyPayment: positiveNumberValidation('Monthly Payment'),
