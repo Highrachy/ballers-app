@@ -202,6 +202,9 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
   const rangePrice = totalAmountPayable - initialPayment;
   const noOfMonths = Math.floor(rangePrice / monthlyPayment) || 1;
   const lastPayment = rangePrice - monthlyPayment * noOfMonths;
+  const initialPercentage = moneyFormat(
+    (initialPayment / totalAmountPayable) * 100
+  );
   console.log('noOfMonths', noOfMonths);
   return (
     <div className="container-fluid">
@@ -482,10 +485,10 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
           {` ${moneyFormatInNaira(value.initialPayment)} (${numToWords(
             value.initialPayment
           )} Naira only)`}
-          , being 31.25% of the purchase price to Highrachy Investment and
-          Technology Ltd within 5 working days (Details of bank account in
-          clause 11). We are delighted that you have decided to access this
-          opportunity being offered. Welcome to BLISSVILLE.
+          , being {initialPercentage}% of the purchase price to Highrachy
+          Investment and Technology Ltd within 5 working days (Details of bank
+          account in clause 11). We are delighted that you have decided to
+          access this opportunity being offered. Welcome to BLISSVILLE.
         </p>
 
         <p>

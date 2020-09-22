@@ -106,7 +106,7 @@ const EnquiriesRow = ({
     <td>{propertyInfo[0] && propertyInfo[0].name}</td>
     <td>
       <Link className="btn btn-sm btn-secondary" to={`/admin/enquiry/${_id}`}>
-        Create Offer Letter
+        View Enquiry
       </Link>
     </td>
   </tr>

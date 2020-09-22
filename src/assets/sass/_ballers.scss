@@ -58,3 +58,13 @@ html {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.signature-pad {
+  height: 5rem;
+  width: 100%;
+  font-family: 'Herr Von Muellerhoff', cursive;
+  &.in-dialog {
+    padding: 1rem;
+    border: 1px solid #f5f5f5;
+  }
+}
