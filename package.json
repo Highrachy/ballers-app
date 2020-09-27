@@ -38,6 +38,7 @@
     "react-slick": "^0.26.1",
     "react-to-print": "^2.10.0",
     "store2": "^2.11.2",
+    "timeago-react": "^3.0.0",
     "yup": "^0.29.1"
   },
   "scripts": {

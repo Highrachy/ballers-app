@@ -20,10 +20,35 @@ import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, getItems } from 'utils/helpers';
 import Toast, { useToast, InfoBox } from 'components/utils/Toast';
+import { getShortDate } from 'utils/date-helpers';
+import TimeAgo from 'timeago-react';
 
 const Dashboard = () => {
   const [toast, setToast] = useToast();
   const [properties, setProperties] = React.useState(null);
+  const [offers, setOffers] = React.useState(null);
+
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/offer/user/all`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        console.log('offer data', data);
+        // handle success
+        if (status === 200) {
+          setOffers(data.offers);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+      });
+  }, [setToast]);
+
   React.useEffect(() => {
     Axios.post(
       `${BASE_API_URL}/property/search`,
@@ -48,11 +73,12 @@ const Dashboard = () => {
         });
       });
   }, [setToast]);
+
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
       <Welcome />
-      <ShowInfo />
+      <ShowInfo offers={offers} />
       <Overview />
       <Others recommendedProperties={properties} />
     </BackendPage>
@@ -93,25 +119,32 @@ const Welcome = () => {
   );
 };
 
-const ShowInfo = () => (
-  <div className="container-fluid">
-    <InfoBox>
-      <Link
-        className="btn btn-success btn-sm float-right"
-        to="/user/property/offer-letter/1"
-      >
-        View Offer Letter
-      </Link>
-      <h6 className="w-100 font-weight-normal">
-        Highrachy has sent you an offer letter for{' '}
-        <strong>Blissville Estate </strong>
-        <br />
-        <small className="text-muted">
-          Expires on Sept 15, 2020 (in 1 day)
-        </small>
-      </h6>
-    </InfoBox>
-  </div>
+const ShowInfo = ({ offers }) =>
+  offers ? (
+    <div className="container-fluid">
+      {offers.map((offer, index) => (
+        <OffersRow key={index} number={index + 1} {...offer} />
+      ))}
+    </div>
+  ) : null;
+
+const OffersRow = ({ _id, expires, propertyInfo }) => (
+  <InfoBox>
+    <Link
+      className="btn btn-success btn-sm float-right"
+      to={`/user/property/offer-letter/${_id}`}
+    >
+      View Offer Letter
+    </Link>
+    <h6 className="w-100 font-weight-normal">
+      Highrachy has sent you an offer letter for{' '}
+      <strong>{propertyInfo.name}</strong>
+      <br />
+      <small className="text-muted">
+        Expires on {getShortDate(expires)} (<TimeAgo datetime={expires} />)
+      </small>
+    </h6>
+  </InfoBox>
 );
 
 const Overview = () => (
