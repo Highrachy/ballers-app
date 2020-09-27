@@ -97,22 +97,21 @@ HelpText.propTypes = {
 };
 
 export const DisplayFormikState = (props) => {
-  return null;
-  // const displayFormikValues = (
-  //   <div className="my-5">
-  //     <pre className="form-control text-small p-3">
-  //       {props.showAll ? (
-  //         <div>
-  //           <strong>props</strong> = {JSON.stringify(props, null, 2)}
-  //         </div>
-  //       ) : (
-  //         JSON.stringify(props.values, null, 2)
-  //       )}
-  //     </pre>
-  //   </div>
-  // );
-  // if (process.env.NODE_ENV === 'production') return null;
-  // return !props.hide && displayFormikValues;
+  const displayFormikValues = (
+    <div className="my-5">
+      <pre className="form-control text-small p-3">
+        {props.showAll ? (
+          <div>
+            <strong>props</strong> = {JSON.stringify(props, null, 2)}
+          </div>
+        ) : (
+          JSON.stringify(props.values, null, 2)
+        )}
+      </pre>
+    </div>
+  );
+  if (process.env.NODE_ENV === 'production') return null;
+  return !props.hide && displayFormikValues;
 };
 
 DisplayFormikState.propTypes = {

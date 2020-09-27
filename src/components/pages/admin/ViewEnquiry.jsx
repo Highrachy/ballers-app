@@ -41,6 +41,7 @@ const ViewEnquiry = ({ id }) => {
         });
       });
   }, [setToast, id]);
+
   return (
     <BackendPage>
       {enquiry ? (
@@ -54,7 +55,7 @@ const ViewEnquiry = ({ id }) => {
           <CreateOfferLetter enquiry={enquiry} />
         )
       ) : (
-        <NoContent text="Loading Enquiry" Icon={<MessageIcon />} />
+        <NoContent text="No Enquiry Found" Icon={<MessageIcon />} />
       )}
     </BackendPage>
   );

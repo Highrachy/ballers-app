@@ -4,11 +4,14 @@ import {
   setInitialValues,
   DisplayFormikState,
 } from 'components/forms/form-helper';
+import Axios from 'axios';
+import { BASE_API_URL } from 'utils/constants';
+import Toast, { useToast } from 'components/utils/Toast';
+import { getTokenFromStore } from 'utils/localStorage';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import Select from 'components/forms/Select';
-import Toast, { useToast } from 'components/utils/Toast';
 import Textarea from 'components/forms/Textarea';
 import {
   generateNumOptions,
@@ -16,39 +19,47 @@ import {
   numToWords,
   numToOrdinal,
   moneyFormat,
+  getError,
+  getFormattedAddress,
+  getLocationFromAddress,
 } from 'utils/helpers';
 import { offerLetterSchema } from 'components/forms/schemas/propertySchema';
 import InputFormat from 'components/forms/InputFormat';
 import HighrachyLogo from 'assets/img/logo/highrachy-logo.png';
 import Input from 'components/forms/Input';
+import { addDays, addMonths } from 'date-fns';
+import Modal from 'components/common/Modal';
+import { getDate } from 'utils/date-helpers';
 
 const CreateOfferLetter = ({ enquiry }) => {
-  console.log('enquiry', enquiry);
   const defaultValue = {
+    enquiryId: enquiry._id,
     totalAmountPayable: enquiry.propertyInfo[0].price,
-    allocation: 50,
+    allocationInPercentage: 100,
     initialPayment: enquiry.initialInvestmentAmount,
     monthlyPayment: '5000000',
     paymentFrequency: enquiry.investmentFrequency,
-    offerExpires: '7',
-    titleDocument:
+    expires: '7',
+    title:
       'Deed of Assignment for one unit of 3 bedroom apartment within the buildings sited on land covered by duly registered, Governor Consented deed of assignment dated the 20th day of May, 2016 and registered as No. 87 at page 87 in volume 2547v at the office of the Lagos State Land Registry, Ikeja.',
     deliveryState:
       'The subject property will be delivered as a finished unit inclusive of Wall painting, floor tiling, and POP ceilings, joinery, internal and external doors, electrical and mechanical fittings and fixtures as prescribed by the project drawings and specification documents. The externals walls will also be finished in line with standard Blissville specifications.',
   };
   const [value, setValue] = React.useState(defaultValue);
-  const [showOfferLetter, setShowOfferLetter] = React.useState(false);
+  const [showOfferLetter, setShowOfferLetter] = React.useState(true);
   console.log('value', value);
 
   return (
     <>
       {showOfferLetter ? (
         <OfferLetterTemplate
+          enquiry={enquiry}
           handleHideOfferLetter={() => setShowOfferLetter(false)}
           value={value}
         />
       ) : (
         <CreateOfferLetterForm
+          enquiry={enquiry}
           handleShowOfferLetter={() => setShowOfferLetter(true)}
           handleValue={(value) => setValue(value)}
           value={value}
@@ -78,29 +89,6 @@ const CreateOfferLetterForm = ({
               onSubmit={(values, actions) => {
                 handleValue(values);
                 handleShowOfferLetter();
-                // Axios.put(`${BASE_API_URL}/user/update`, values, {
-                //   headers: { Authorization: getTokenFromStore() },
-                // })
-                //   .then(function (response) {
-                //     const { status, data } = response;
-                //     if (status === 200) {
-                //       // userDispatch({
-                //       //   type: 'user-profile-update',
-                //       //   user: data.updatedUser,
-                //       // });
-                //       // setToast({
-                //       //   type: 'success',
-                //       //   message: `Your profile has been successfully updated`,
-                //       // });
-                //       actions.setSubmitting(false);
-                //     }
-                //   })
-                //   .catch(function (error) {
-                //     setToast({
-                //       message: getError(error),
-                //     });
-                //     actions.setSubmitting(false);
-                //   });
               }}
               validationSchema={createSchema(offerLetterSchema)}
             >
@@ -117,7 +105,7 @@ const CreateOfferLetterForm = ({
                     <Input
                       formGroupClassName="col-md-6"
                       label="Allocation In Percentage"
-                      name="allocation"
+                      name="allocationInPercentage"
                       type="number"
                       max={100}
                       min={0}
@@ -146,15 +134,15 @@ const CreateOfferLetterForm = ({
                       name="paymentFrequency"
                       placeholder="Payment Frequency"
                       options={[
-                        { value: 0.5, label: 'Bi-Weekly' },
-                        { value: 1, label: 'Monthly' },
-                        { value: 3, label: 'Quarterly' },
+                        { value: '0.5', label: 'Bi-Weekly' },
+                        { value: '1', label: 'Monthly' },
+                        { value: '3', label: 'Quarterly' },
                       ]}
                     />
                     <Select
                       formGroupClassName="col-md-6"
                       label="Offer Expires in"
-                      name="offerExpires"
+                      name="expires"
                       options={generateNumOptions(11, 'Day', { startFrom: 5 })}
                       placeholder="Allocation Month"
                     />
@@ -162,7 +150,7 @@ const CreateOfferLetterForm = ({
 
                   <Textarea
                     label="Title Document"
-                    name="titleDocument"
+                    name="title"
                     placeholder="A detailed description of the property"
                     rows="5"
                   />
@@ -192,25 +180,75 @@ const CreateOfferLetterForm = ({
   );
 };
 
-const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
-  const {
-    totalAmountPayable,
-    initialPayment,
-    monthlyPayment,
-    // paymentFrequency,
-  } = value;
+const OfferLetterTemplate = ({ enquiry, handleHideOfferLetter, value }) => {
+  const [toast, setToast] = useToast();
+  const { totalAmountPayable, initialPayment, monthlyPayment } = value;
   const rangePrice = totalAmountPayable - initialPayment;
-  const noOfMonths = Math.floor(rangePrice / monthlyPayment) || 1;
+  const noOfMonths =
+    rangePrice / monthlyPayment > 1
+      ? Math.floor(rangePrice / monthlyPayment)
+      : 1;
   const lastPayment = rangePrice - monthlyPayment * noOfMonths;
   const initialPercentage = moneyFormat(
     (initialPayment / totalAmountPayable) * 100
   );
-  console.log('noOfMonths', noOfMonths);
+  const [showSubmitOfferModal, setShowSubmitOfferModal] = React.useState(false);
+
+  const buyerName = `${enquiry.title} ${enquiry.firstName} ${enquiry.lastName} ${enquiry.otherName}`;
+  const houseType = enquiry.propertyInfo[0].houseType.toUpperCase();
+  const propertyName = enquiry.propertyInfo[0].name;
+
+  const SubmitOfferModal = () => (
+    <Modal
+      title="Submit Offer"
+      show={showSubmitOfferModal}
+      onHide={() => setShowSubmitOfferModal(false)}
+      showFooter={false}
+    >
+      <section className="row">
+        <div className="col-md-10">
+          <h5>Are you sure you wish to submit the offer letter</h5>
+
+          <button
+            className="btn btn-secondary mb-5"
+            onClick={() => submitOfferLetter()}
+          >
+            Submit Offer Letter
+          </button>
+        </div>
+      </section>
+    </Modal>
+  );
+
+  const submitOfferLetter = () => {
+    console.log('noOfMonths', noOfMonths);
+    const handOverDate = addMonths(new Date(), noOfMonths);
+    const expires = addDays(new Date(), value.expires);
+    const payload = { ...value, expires, handOverDate };
+    console.log('payload', payload);
+
+    Axios.post(`${BASE_API_URL}/offer/create`, payload, {
+      headers: { Authorization: getTokenFromStore() },
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        if (status === 200) {
+          console.log(data);
+          // redirect to enquiry page
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+      });
+  };
   return (
     <div className="container-fluid">
-      <h4 className="text-center">
-        Offer Letter (Expires in {value.offerExpires} days)
-      </h4>
+      <Toast {...toast} />
+      <h5 className="mb-3 text-center">
+        Offer Letter (Expires in {value.expires} days)
+      </h5>
       <Card className="mt-4 p-5">
         <img
           src={HighrachyLogo}
@@ -220,29 +258,25 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
         />
         <p className="mt-4">
           Our Ref: BVC01/OLAXXXX2019
-          <span className="float-right">15th August, 2020</span>
+          <span className="float-right">{getDate(Date.now())}</span>
         </p>
 
         <strong>
-          Mr. Oladele Ademola <br />
+          {buyerName}
+          <br />
         </strong>
-        <address>
-          15, Sebiotimo Street,
-          <br /> Lekki Phase 1,
-          <br /> Lagos.
-        </address>
+        {getFormattedAddress(enquiry.address)}
 
         <p className="">Dear Sir/Ma,</p>
 
         <strong>
-          RE: BLISSVILLE, LEKKI LAGOS - LETTER OF OFFER FOR 3 BEDROOM APARTMENT
+          RE: {enquiry.propertyInfo[0].name} - LETTER OF OFFER FOR {houseType}
         </strong>
 
         <p className="">
-          We refer to your application to purchase a unit in Blissville
-          residential estate on Elder Nwuba Street, Off Dreamworld Africana Way,
-          KM 20 Lekki – Epe expressway, Lekki, Lagoss and are pleased to offer
-          you a 3 BEDROOM APARTMENT on the following terms and conditions:
+          We refer to your application to purchase a unit in {propertyName} on{' '}
+          {getLocationFromAddress(enquiry.address)} and are pleased to offer you
+          a {houseType} on the following terms and conditions:
         </p>
         <div className="table-responsive">
           <table className="table table-md table-borderless">
@@ -260,7 +294,7 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
                   <strong>2. BUYER:</strong>
                 </td>
                 <td>
-                  <strong>Mr. Oladele Ademola </strong>
+                  <strong>{buyerName}</strong>
                 </td>
               </tr>
               <tr>
@@ -277,7 +311,7 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
                 <td>
                   <strong>4. TITLE:</strong>{' '}
                 </td>
-                <td>{value.titleDocument}</td>
+                <td>{value.title}</td>
               </tr>
               <tr>
                 <td>
@@ -372,7 +406,10 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
                 <td>
                   <strong>10. ALLOCATION:</strong>
                 </td>
-                <td>Due after the {value.allocation}% of payment received.</td>
+                <td>
+                  Due after the {value.allocationInPercentage}% of payment
+                  received.
+                </td>
               </tr>
             </tbody>
           </table>
@@ -397,7 +434,8 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
           </li>
           <li>
             <p>
-              Where the subject unit is not completed within the said seven (7)
+              Where the subject unit is not completed within the said{' '}
+              {`${numToWords(noOfMonths)} (${noOfMonths}`}
               months’ time frame, due to the negligence or fault of the Vendor,
               a grace period of two (2) months will be granted to complete all
               works after which the Vendor shall pay to the Buyer, an amount to
@@ -497,11 +535,19 @@ const OfferLetterTemplate = ({ handleHideOfferLetter, value }) => {
         </p>
       </Card>
       <button
-        className="btn btn-secondary btn-wide mt-5"
-        onClick={handleHideOfferLetter}
+        className="btn btn-danger btn-wide mt-5"
+        onClick={() => setShowSubmitOfferModal(true)}
       >
-        Back to Offer Letter Form
+        Submit Offer Letter
       </button>
+      &nbsp;&nbsp;
+      <button
+        onClick={handleHideOfferLetter}
+        className="btn btn-secondary btn-wide mt-5"
+      >
+        Back to Form
+      </button>
+      <SubmitOfferModal />
     </div>
   );
 };

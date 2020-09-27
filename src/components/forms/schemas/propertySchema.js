@@ -5,6 +5,7 @@ import {
   phoneNumber,
   validPercentage,
   minDateValidation,
+  required,
 } from './schema-helpers';
 
 export const newPropertySchema = {
@@ -34,8 +35,8 @@ export const offerLetterSchema = {
   allocation: validPercentage('Allocation'),
   initialPayment: positiveNumberValidation('Initial Payment'),
   monthlyPayment: positiveNumberValidation('Monthly Payment'),
-  paymentFrequency: positiveNumberValidation('Payment Frequency'),
-  offerExpires: positiveNumberValidation('Offer Expires'),
+  paymentFrequency: required('Payment Frequency'),
+  expires: required('Offer Expires'),
   titleDocument: stringValidation('Title Document'),
   deliveryState: stringValidation('Delivery State'),
 };

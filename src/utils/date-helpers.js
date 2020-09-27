@@ -10,6 +10,7 @@ import {
  * Date and Time
  * @param {*} date
  */
+export const getDate = (date) => format(parse(date), 'MMMM DD, YYYY');
 export const getDateTime = (date) =>
   format(parse(date), 'ddd, MMM D, YYYY h:mm A');
 export const getShortDate = (date) => format(parse(date), 'ddd, MMM D, YYYY');
