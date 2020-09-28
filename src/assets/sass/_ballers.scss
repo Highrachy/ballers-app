@@ -68,3 +68,17 @@ html {
     border: 1px solid #f5f5f5;
   }
 }
+
+.memo-border {
+  color: $primary;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.signature-image {
+  height: 5rem;
+}
+
+.director-signature {
+  width: 11rem;
+}

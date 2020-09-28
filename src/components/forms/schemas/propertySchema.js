@@ -32,11 +32,11 @@ export const scheduleTourSchema = {
 
 export const offerLetterSchema = {
   totalAmountPayable: positiveNumberValidation('Total Amount Payable'),
-  allocation: validPercentage('Allocation'),
+  allocationInPercentage: validPercentage('Allocation'),
   initialPayment: positiveNumberValidation('Initial Payment'),
   monthlyPayment: positiveNumberValidation('Monthly Payment'),
   paymentFrequency: required('Payment Frequency'),
   expires: required('Offer Expires'),
-  titleDocument: stringValidation('Title Document'),
+  title: stringValidation('Title Document'),
   deliveryState: stringValidation('Delivery State'),
 };
