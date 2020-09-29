@@ -84,6 +84,7 @@ const UploadImage = ({ defaultImage, uploadText, changeText, afterUpload }) => {
             )}
           </label>
         </div>
+        {/* <small>The image should not exceed 1MB (1,000KB)</small> */}
       </div>
     </>
   );

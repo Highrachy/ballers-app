@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 import {
   moneyFormatInNaira,
@@ -15,6 +16,7 @@ import Image from './Image';
 import DirectorSignature from 'assets/img/placeholder/signature.png';
 
 const OfferLetterTemplate = ({
+  children,
   enquiryInfo,
   offerInfo,
   propertyInfo,
@@ -337,9 +339,9 @@ const OfferLetterTemplate = ({
           </strong>
 
           <h6 className="mt-5 mb-2">Signature</h6>
-          {signature && (
-            <>
-              <h3 className="signature-pad">
+          <h3 className="signature-pad">
+            {signature && (
+              <>
                 {isValidURL(signature) ? (
                   <Image
                     className="signature-image uploaded-image mb-3"
@@ -349,13 +351,31 @@ const OfferLetterTemplate = ({
                 ) : (
                   signature
                 )}
-              </h3>
-            </>
-          )}
+              </>
+            )}
+          </h3>
+          {children}
         </section>
       )}
     </Card>
   );
 };
 
+OfferLetterTemplate.propTypes = {
+  children: PropTypes.any,
+  enquiryInfo: PropTypes.object,
+  offerInfo: PropTypes.object,
+  propertyInfo: PropTypes.object,
+  signature: PropTypes.string,
+  showSignaturePad: PropTypes.bool,
+};
+
+OfferLetterTemplate.defaultProps = {
+  children: null,
+  enquiryInfo: null,
+  offerInfo: null,
+  propertyInfo: null,
+  signature: null,
+  showSignaturePad: false,
+};
 export default OfferLetterTemplate;

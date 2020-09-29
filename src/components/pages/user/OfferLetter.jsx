@@ -37,6 +37,28 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
   const [image, setImage] = React.useState(null);
   const [signature, setSignature] = React.useState(null);
 
+  const acceptOffer = () => {
+    const payload = { offerId, signature };
+
+    Axios.put(`${BASE_API_URL}/offer/accept`, payload, {
+      headers: { Authorization: getTokenFromStore() },
+    })
+      .then(function (response) {
+        const { status } = response;
+        if (status === 200) {
+          setToast({
+            message: 'Your offer letter has been accepted',
+            type: 'success',
+          });
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+      });
+  };
+
   React.useEffect(() => {
     offerId &&
       Axios.get(`${BASE_API_URL}/offer/${offerId}`, {
@@ -69,18 +91,29 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
           propertyInfo={offer.propertyInfo}
           signature={signature}
           showSignaturePad
-        />
-      )}
+        >
+          <div className="mt-5">
+            <DigitalSignaturePad setSignature={setSignature} />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <UploadSignature
+              image={image}
+              setImage={setImage}
+              setSignature={setSignature}
+            />
+          </div>
 
-      <div className="mt-5">
-        <DigitalSignaturePad setSignature={setSignature} />
-        &nbsp;&nbsp;
-        <UploadSignature
-          image={image}
-          setImage={setImage}
-          setSignature={setSignature}
-        />
-      </div>
+          {signature && (
+            <div className="mt-5">
+              <button
+                className="btn btn-success btn-wide"
+                onClick={acceptOffer}
+              >
+                Accept Offer Letter
+              </button>
+            </div>
+          )}
+        </OfferLetterTemplate>
+      )}
     </>
   );
 };
@@ -132,7 +165,7 @@ const DigitalSignaturePad = ({ setSignature }) => {
         </section>
       </Modal>
       <button
-        className="btn btn-secondary"
+        className="btn btn-secondary btn-sm"
         onClick={() => setShowDigital(true)}
       >
         Sign Digitally
@@ -184,7 +217,7 @@ const UploadSignature = ({ image, setImage, setSignature }) => {
         </div>
       </Modal>
       <button
-        className="btn btn-secondary"
+        className="btn btn-secondary btn-sm"
         onClick={() => setShowDigital(true)}
       >
         Upload Signature
