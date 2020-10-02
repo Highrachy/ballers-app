@@ -35,6 +35,7 @@ const Welcome = () => {
           icon={<MyPropertyIcon />}
           name="Added Properties"
           number={7}
+          to="/admin/portfolios"
         />
         <DashboardCardList
           icon={<MessageIcon />}
@@ -46,21 +47,25 @@ const Welcome = () => {
           icon={<AssignedPropertyIcon />}
           name="Assign Properties"
           number={18}
+          to="/admin/assigned-properties"
         />
         <DashboardCardList
           icon={<VisitationIcon />}
           name="Scheduled Visits"
           number={10}
+          to="/admin/schdeduled-visits"
         />
         <DashboardCardList
           icon={<TransactionIcon />}
           name="Completed Transactions"
           number={5}
+          to="/admin/transactions"
         />
         <DashboardCardList
           icon={<UsersIcon />}
           name="Interested Users"
           number={3}
+          to="/admin/users"
         />
       </div>
     </section>

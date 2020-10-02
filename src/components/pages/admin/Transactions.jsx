@@ -40,7 +40,7 @@ const Transactions = () => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
-      <TopTitle buttonText="New Transaction" to="/admin/transactions/new">
+      <TopTitle buttonText="Add Transaction" to="/admin/add-transaction">
         All Transactions
       </TopTitle>
       <AllTransactions transactions={transactions} toast={toast} />
