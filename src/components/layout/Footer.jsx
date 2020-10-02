@@ -37,10 +37,10 @@ const Footer = () => (
             <h5>Legal</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="terms-of-use.php">Terms of Use</a>
+                <a href="/terms-of-use">Terms of Use</a>
               </li>
               <li>
-                <a href="privacy-policy.php">Privacy Policy</a>
+                <a href="/privacy-policy">Privacy Policy</a>
               </li>
             </ul>
           </div>

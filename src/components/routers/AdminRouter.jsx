@@ -11,6 +11,7 @@ import KnowledgeBase from 'components/pages/admin/KnowledgeBase';
 import Menu from 'components/pages/user/Menu';
 import Enquiries from 'components/pages/admin/Enquiries';
 import ViewEnquiry from 'components/pages/admin/ViewEnquiry';
+import AssignedProperties from 'components/pages/admin/AssignedProperties';
 
 const UserRouter = () => (
   <Router>
@@ -21,6 +22,7 @@ const UserRouter = () => (
     <NewProperty path="portfolios/new" />
     <ScheduledVisits path="scheduled-visits" />
     <ViewEnquiry path="enquiry/:id" />
+    <AssignedProperties path="assigned-properties" />
     <Enquiries path="enquiries" />
     <Transactions path="transactions" />
     <KnowledgeBase path="knowledgebase" />

@@ -13,6 +13,7 @@ import SearchPropertyForm from 'components/common/SearchPropertyForm';
 import { Flash, Slide } from 'react-awesome-reveal';
 import useWindowSize from 'hooks/useWindowSize';
 import { MOBILE_WIDTH } from 'utils/constants';
+import { Link } from '@reach/router';
 
 const Home = () => (
   <>
@@ -133,7 +134,9 @@ const HowItWorksSection = () => (
               </p>
             </li>
             <li className="timeline-no-border">
-              <button className="btn btn-secondary">SIGN UP NOW</button>
+              <Link to="/register" className="btn btn-secondary">
+                SIGN UP NOW
+              </Link>
             </li>
           </Flash>
         </ul>

@@ -37,6 +37,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import * as queryString from 'query-string';
 import { Slide } from 'react-awesome-reveal';
 import { MOBILE_WIDTH } from 'utils/constants';
+import { Link } from '@reach/router';
 
 const SearchResult = ({ location }) => {
   const queryParams = queryString.parse(location.search);
@@ -124,7 +125,7 @@ const LoadingSearchResult = () => (
 );
 
 const SearchResultContent = ({ result }) => {
-  const [showResultCard, setshowResultCard] = React.useState(false);
+  const [showResultCard, setShowResultCard] = React.useState(false);
   const [output, setOutput] = React.useState({});
 
   const findEligibilityResult = ({ initial, frequency, periodic }) => {
@@ -136,7 +137,7 @@ const SearchResultContent = ({ result }) => {
       averagePropertyCost,
     });
     setOutput(recommendations);
-    setshowResultCard(true);
+    setShowResultCard(true);
   };
 
   const WINDOW_SIZE = useWindowSize();
@@ -191,7 +192,7 @@ const SearchResultContent = ({ result }) => {
             </section>
           </Slide>
           {showResultCard ? (
-            <ResultCard result={output} />
+            <ResultCard result={output} setShowResultCard={setShowResultCard} />
           ) : (
             <DefineYourEligibility
               findEligibilityResult={findEligibilityResult}
@@ -368,7 +369,7 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
   );
 };
 
-const ResultCard = ({ result }) => {
+const ResultCard = ({ result, setShowResultCard }) => {
   const WINDOW_SIZE = useWindowSize();
   return (
     <div className="search-result__card result-card mb-5">
@@ -428,13 +429,16 @@ const ResultCard = ({ result }) => {
       </div>
 
       <div className="button-container mt-5 mb-3">
-        <button className="btn btn-link">
+        <button
+          className="btn btn-link"
+          onClick={() => setShowResultCard(false)}
+        >
           <ArrowLeftIcon /> Redefine your Eligibility status
         </button>
 
-        <a href="./" className="btn btn-success">
+        <Link to="/register" className="btn btn-success">
           Create a free account
-        </a>
+        </Link>
       </div>
       <small className="text-primary">
         Open a free account and own your dream home
