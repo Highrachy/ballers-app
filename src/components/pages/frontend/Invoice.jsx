@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 import BallersLogo from 'assets/img/logo/ballers-logo.png';
@@ -260,10 +259,5 @@ const InvoiceContent = ({ paymentInfo }) => (
     </section>
   </div>
 );
-
-Invoice.propTypes = {
-  application: PropTypes.object.isRequired,
-  paymentInfo: PropTypes.object.isRequired,
-};
 
 export default Invoice;

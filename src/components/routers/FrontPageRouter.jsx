@@ -20,6 +20,7 @@ import Invoice from 'components/pages/frontend/Invoice';
 const FrontPageRouter = () => (
   <Router>
     <Home path="/" />
+    <Home path="/ref/:referralCode" />
     <AboutUs path="/about-us" />
     <AtoZ path="/a-z-of-ball" />
     <FAQs path="/faqs" />

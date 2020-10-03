@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Header from 'components/layout/Header';
 import { ReactComponent as PolkaDot } from 'assets/img/backgrounds/polka-dot.svg';
 import HomeImage from 'assets/img/home.png';
@@ -12,21 +13,58 @@ import FAQsContent from 'content/faqs';
 import SearchPropertyForm from 'components/common/SearchPropertyForm';
 import { Flash, Slide } from 'react-awesome-reveal';
 import useWindowSize from 'hooks/useWindowSize';
-import { MOBILE_WIDTH } from 'utils/constants';
+import { BASE_API_URL, MOBILE_WIDTH } from 'utils/constants';
 import { Link } from '@reach/router';
+import Modal from 'components/common/Modal';
+import Axios from 'axios';
+import { HouseIcon } from 'components/utils/Icons';
 
-const Home = () => (
-  <>
-    <Header />
-    <HoldingSection />
-    <AboutSection />
-    <BenefitsSection />
-    <HowItWorksSection />
-    <FAQsSection />
-    <CommunityGallery />
-    <Footer />
-  </>
-);
+const Home = ({ referralCode }) => {
+  const [showReferralModal, setShowReferralModal] = React.useState(false);
+  const [referral, setReferral] = React.useState(null);
+
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/referral/ref/${referralCode}`)
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          setReferral(data.user);
+          setShowReferralModal(true);
+          // save referral code
+        }
+      })
+      .catch((error) => {
+        setReferral({});
+      });
+  }, [referralCode]);
+  console.log('referral', referral);
+  return (
+    <>
+      <Header />
+      <HoldingSection />
+      <AboutSection />
+      <BenefitsSection />
+      <HowItWorksSection />
+      <FAQsSection />
+      <CommunityGallery />
+      <ReferralModal
+        referral={referral}
+        showReferralModal={showReferralModal}
+        setShowReferralModal={setShowReferralModal}
+      />
+
+      <Footer />
+    </>
+  );
+};
+
+Home.propTypes = {
+  ref: PropTypes.string,
+};
+
+Home.defaultProps = {
+  ref: null,
+};
 
 const HoldingSection = () => (
   <section>
@@ -163,6 +201,36 @@ const FAQsSection = () => {
       </div>
     </section>
   );
+};
+
+const ReferralModal = ({
+  referral,
+  showReferralModal,
+  setShowReferralModal,
+}) => {
+  return referral ? (
+    <Modal
+      title="Welcome to Ball"
+      show={showReferralModal}
+      onHide={() => setShowReferralModal(false)}
+      showFooter={false}
+    >
+      <section className="row">
+        <div className="col-md-12 my-3 text-center">
+          <HouseIcon />
+          <h3 className="my-4">Hello,</h3>
+          <p className="lead">
+            {referral.firstName} has invited you to{' '}
+            <strong>become a Landlord.</strong>
+          </p>
+
+          <Link to="/register" className="btn btn-secondary my-4">
+            Register for Free
+          </Link>
+        </div>
+      </section>
+    </Modal>
+  ) : null;
 };
 
 export default Home;

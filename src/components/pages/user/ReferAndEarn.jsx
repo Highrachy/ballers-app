@@ -58,7 +58,7 @@ const ReferAndEarn = () => {
 
 const EmailReferral = () => {
   const { userState } = React.useContext(UserContext);
-  const referralCode = `https://ballers.ng?ref=${userState.referralCode}`;
+  const referralCode = `${process.env.REACT_APP_HOST}/ref/${userState.referralCode}`;
 
   return (
     <div className="container-fluid">
@@ -74,7 +74,7 @@ const EmailReferral = () => {
               rewards because we value your friendship.
             </p>
 
-            <ReferralCodeClipBoard />
+            <ReferralCodeClipBoard referralCode={referralCode} />
 
             <Sharer shareUrl={referralCode} />
           </div>
@@ -160,9 +160,7 @@ const InviteFriendByEmailCard = ({ addNewReferral }) => (
   </div>
 );
 
-const ReferralCodeClipBoard = () => {
-  const { userState } = React.useContext(UserContext);
-  const referralCode = `https://ballers.ng?ref=${userState.referralCode}`;
+const ReferralCodeClipBoard = ({ referralCode }) => {
   const [copied, setCopied] = React.useState(false);
 
   React.useEffect(() => {
