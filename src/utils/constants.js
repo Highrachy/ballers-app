@@ -63,3 +63,18 @@ export const HOUSE_TYPES = [
   'Terraced Bungalow (3 bedrooms)',
   'Terraced Bungalow (4 bedrooms)',
 ].sort();
+
+export const REFERRAL_STATUS = {
+  Sent: {
+    text: 'Invite Sent',
+    className: 'text-danger',
+  },
+  Registered: {
+    text: 'Registered',
+    className: 'text-warning',
+  },
+  Rewarded: {
+    text: 'Rewarded',
+    className: 'text-success',
+  },
+};

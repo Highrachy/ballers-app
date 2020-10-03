@@ -51,8 +51,8 @@ export const personalInfoSchema = {
 };
 
 export const preferenceSchema = {
-  location: optionalValidation(stringValidation('State')),
-  houseType: optionalValidation(stringValidation('Last Name')),
+  location: optionalValidation(stringValidation('Location')),
+  houseType: optionalValidation(stringValidation('House Type')),
   minPrice: optionalValidation(numberValidation('Minimum Budget', 'budget')),
   maxPrice: optionalValidation(
     numberValidation('Maximum Budget', 'budget').test(
@@ -71,6 +71,11 @@ export const preferenceSchema = {
     //   'Maximum Budget should be greater than the minimum Budget'
     // )
   ),
+};
+
+export const referralInviteSchema = {
+  email,
+  firstName: optionalValidation(stringValidation('First Name')),
 };
 
 export const forgotPasswordSchema = { email };

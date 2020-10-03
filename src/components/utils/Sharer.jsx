@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import {
   EmailShareButton,
   FacebookShareButton,
-  LinkedinShareButton,
+  // LinkedinShareButton,
   TwitterShareButton,
   WhatsappShareButton,
   EmailIcon,
   FacebookIcon,
-  LinkedinIcon,
+  // LinkedinIcon,
   TwitterIcon,
   WhatsappIcon,
 } from 'react-share';
@@ -27,11 +27,11 @@ const Sharer = ({ shareUrl, content }) => (
         <TwitterIcon round width="48" />
       </TwitterShareButton>
     </li>
-    <li>
+    {/* <li>
       <LinkedinShareButton source={shareUrl} summary={content} title="Ballers">
         <LinkedinIcon round width="48" />
       </LinkedinShareButton>
-    </li>
+    </li> */}
     <li>
       <WhatsappShareButton separator=":: " title={content} url={shareUrl}>
         <WhatsappIcon round width="48" />

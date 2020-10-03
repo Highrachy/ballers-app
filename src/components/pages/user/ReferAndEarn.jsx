@@ -11,25 +11,50 @@ import {
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { registerSchema } from 'components/forms/schemas/userSchema';
+import { referralInviteSchema } from 'components/forms/schemas/userSchema';
 import ReferralImage from 'assets/img/refer-n-earn.png';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, REFERRAL_STATUS } from 'utils/constants';
 import { CopyToClipBoardIcon } from 'components/utils/Icons';
 import { UserContext } from 'context/UserContext';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Sharer from 'components/utils/Sharer';
 import { CheckIcon } from 'components/utils/Icons';
 import { getError } from 'utils/helpers';
+import { getTokenFromStore } from 'utils/localStorage';
+import NoContent from 'components/utils/NoContent';
+import LoadItems from 'components/utils/LoadingItems';
+import { ReferIcon } from 'components/utils/Icons';
+import Humanize from 'humanize-plus';
 
-const ReferAndEarn = () => (
-  <BackendPage>
-    <div className="col-sm-10 mx-auto">
-      <EmailReferral />
-      <InviteFriendByEmailCard />
-      <InviteFriendsTable />
-    </div>
-  </BackendPage>
-);
+const ReferAndEarn = () => {
+  const [referrals, setReferrals] = React.useState(null);
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/referral`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
+      .then((response) => {
+        const { status, data } = response;
+        if (status === 200) {
+          setReferrals(data.referrals);
+        }
+      })
+      .catch((error) => {
+        setReferrals([]);
+      });
+  }, []);
+  const addNewReferral = (referral) => setReferrals([...referrals, referral]);
+  return (
+    <BackendPage>
+      <div className="col-sm-10 mx-auto">
+        <EmailReferral />
+        <InviteFriendByEmailCard addNewReferral={addNewReferral} />
+        <InviteFriendsTable referrals={referrals} />
+      </div>
+    </BackendPage>
+  );
+};
 
 const EmailReferral = () => {
   const { userState } = React.useContext(UserContext);
@@ -59,22 +84,25 @@ const EmailReferral = () => {
   );
 };
 
-const InviteFriendByEmailForm = () => {
+const InviteFriendByEmailForm = ({ addNewReferral }) => {
   const [toast, setToast] = useToast();
   return (
     <Formik
-      initialValues={setInitialValues(registerSchema, { agreement: [] })}
+      initialValues={setInitialValues(referralInviteSchema)}
       onSubmit={(values, actions) => {
-        delete values.agreement;
+        if (!values.firstName) delete values.firstName;
 
-        Axios.post(`${BASE_API_URL}/user/register`, values)
+        Axios.post(`${BASE_API_URL}/referral/invite`, values, {
+          headers: { Authorization: getTokenFromStore() },
+        })
           .then(function (response) {
             const { status } = response;
             if (status === 200) {
               setToast({
                 type: 'success',
-                message: `Your registration is successful. Kindly activate your account by clicking on the confirmation link sent to your inbox (${values.email}).`,
+                message: `Invite sent to ${values.firstName || values.email}.`,
               });
+              addNewReferral({ ...values, status: 'Sent' });
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -86,7 +114,7 @@ const InviteFriendByEmailForm = () => {
             actions.setSubmitting(false);
           });
       }}
-      validationSchema={createSchema(registerSchema)}
+      validationSchema={createSchema(referralInviteSchema)}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
@@ -101,7 +129,7 @@ const InviteFriendByEmailForm = () => {
             />
             <Input
               formGroupClassName="col-md-4"
-              name="name"
+              name="firstName"
               optional
               placeholder="Name (Optional)"
             />
@@ -122,11 +150,11 @@ const InviteFriendByEmailForm = () => {
   );
 };
 
-const InviteFriendByEmailCard = () => (
+const InviteFriendByEmailCard = ({ addNewReferral }) => (
   <div className="container-fluid">
     <Card className="mt-4 card-container">
       <section className="row p-4">
-        <InviteFriendByEmailForm />
+        <InviteFriendByEmailForm addNewReferral={addNewReferral} />
       </section>
     </Card>
   </div>
@@ -154,6 +182,7 @@ const ReferralCodeClipBoard = () => {
           className="form-control"
           aria-label="referral code"
           value={referralCode}
+          readOnly
         />
         <div className="input-group-append">
           <CopyToClipboard text={referralCode} onCopy={() => setCopied(true)}>
@@ -180,36 +209,57 @@ const ReferralCodeClipBoard = () => {
   );
 };
 
-const InviteFriendsTable = () => (
-  <div className="container-fluid mt-5">
-    <h6>Invited friends</h6>
-    <div className="table-responsive">
-      <table className="table">
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Asounju.dadate@gmail.com</td>
-            <td className="text-right text-danger">Invite Sent</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Asounju.dadate@gmail.com</td>
-            <td className="text-right text-warning">Registered</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Asounju.dadate@gmail.com</td>
-            <td className="text-right text-success">Rewarded</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+const InviteFriendsTable = ({ referrals }) => {
+  console.log('referrals', referrals);
+  return (
+    <div className="container-fluid mt-5">
+      <h6>
+        {referrals !== null
+          ? `You have ${referrals.length} invited ${Humanize.pluralize(
+              referrals.length,
+              'friend'
+            )} `
+          : 'Invited friends'}
+      </h6>
+
+      <LoadItems
+        Icon={<ReferIcon />}
+        items={referrals}
+        loadingText="Loading your Referrals"
+        noContent={<NoContent isButton text="No Referrals found" />}
+      >
+        <div className="table-responsive">
+          <table className="table">
+            <tbody>
+              {referrals &&
+                referrals.map((referral, index) => (
+                  <tr key={referral.email}>
+                    <td>{index + 1}</td>
+                    <td>{referral.firstName || '-'}</td>
+                    <td>
+                      <strong>{referral.email}</strong>
+                    </td>
+                    <td
+                      className={`text-right ${
+                        REFERRAL_STATUS[referral.status].className
+                      }`}
+                    >
+                      {REFERRAL_STATUS[referral.status].text}
+                    </td>
+                  </tr>
+                ))}
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </LoadItems>
     </div>
-  </div>
-);
+  );
+};
 
 export default ReferAndEarn;
