@@ -15,7 +15,7 @@ import ForgotPassword from 'components/pages/auth/ForgotPassword';
 import ResetPassword from 'components/pages/auth/ResetPassword';
 import SearchResult from 'components/pages/frontend/SearchResult';
 import FormComponents from 'components/forms/FormComponents';
-import Dashboard from 'components/pages/user/Dashboard';
+import Invoice from 'components/pages/frontend/Invoice';
 
 const FrontPageRouter = () => (
   <Router>
@@ -36,7 +36,7 @@ const FrontPageRouter = () => (
     <SearchResult path="search" />
     <Articles path="articles" />
     <FormComponents path="forms" />
-    <Dashboard path="test" />
+    <Invoice path="payment" />
   </Router>
 );
 
