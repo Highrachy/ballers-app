@@ -105,7 +105,7 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
           {signature && (
             <div className="mt-5">
               <button
-                className="btn btn-success btn-wide"
+                className="btn btn-success btn-wide hide-print"
                 onClick={acceptOffer}
               >
                 Accept Offer Letter
@@ -165,7 +165,7 @@ const DigitalSignaturePad = ({ setSignature }) => {
         </section>
       </Modal>
       <button
-        className="btn btn-secondary btn-sm"
+        className="btn btn-secondary btn-sm hide-print"
         onClick={() => setShowDigital(true)}
       >
         Sign Digitally
@@ -217,7 +217,7 @@ const UploadSignature = ({ image, setImage, setSignature }) => {
         </div>
       </Modal>
       <button
-        className="btn btn-secondary btn-sm"
+        className="btn btn-secondary btn-sm hide-print"
         onClick={() => setShowDigital(true)}
       >
         Upload Signature

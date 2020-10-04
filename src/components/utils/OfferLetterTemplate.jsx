@@ -37,7 +37,7 @@ const OfferLetterTemplate = ({
   const houseType = propertyInfo.houseType.toUpperCase();
   const propertyName = propertyInfo.name;
   return (
-    <Card className="mt-4 p-5">
+    <Card className="mt-4 p-5 offer-letter-template">
       <img
         src={HighrachyLogo}
         width="150"

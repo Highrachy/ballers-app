@@ -83,3 +83,17 @@ html {
 .director-signature {
   width: 11rem;
 }
+
+@media print {
+  @page {
+    size: 210mm 297mm;
+    /* Chrome sets own margins, we change these printer settings */
+    margin: 21mm 16mm 21mm 16mm;
+  }
+  .offer-letter-template {
+    border: none;
+  }
+  .hide-print {
+    display: none;
+  }
+}
