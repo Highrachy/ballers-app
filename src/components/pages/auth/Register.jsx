@@ -19,6 +19,7 @@ import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
 import { BASE_API_URL } from 'utils/constants';
 import { getError } from 'utils/helpers';
+import { getReferralInfo } from 'utils/localStorage';
 
 const Register = () => (
   <>
@@ -31,16 +32,30 @@ const Register = () => (
 );
 
 const Content = ({ redirectTo, sid, token }) => {
+  const referralInfo = getReferralInfo();
   return (
     <section>
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-5 auth__text">
             <h1>
-              Create a <br /> free account
+              {referralInfo ? (
+                <>Hello{` ${referralInfo.firstName}`},</>
+              ) : (
+                <>
+                  Create a <br /> free account
+                </>
+              )}
             </h1>
             <p className="lead">
-              Register to access your profile, rewards and contributions.
+              {referralInfo ? (
+                <>
+                  {referralInfo.referrer.firstName} has invited you to{' '}
+                  <strong>become a Landlord</strong>
+                </>
+              ) : (
+                <>Register to access your profile, rewards and contributions.</>
+              )}
             </p>
           </div>
           <div className="col-lg-6 offset-lg-1">
@@ -97,8 +112,12 @@ const RegisterForm = ({ type }) => {
       initialValues={setInitialValues(registerSchema, { agreement: [] })}
       onSubmit={(values, actions) => {
         delete values.agreement;
+        const { referrer } = getReferralInfo();
+        const payload = referrer
+          ? { ...values, referralCode: referrer.referralCode }
+          : values;
 
-        Axios.post(`${BASE_API_URL}/user/register`, values)
+        Axios.post(`${BASE_API_URL}/user/register`, payload)
           .then(function (response) {
             const { status } = response;
             if (status === 201) {

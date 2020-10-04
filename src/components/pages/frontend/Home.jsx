@@ -18,26 +18,47 @@ import { Link } from '@reach/router';
 import Modal from 'components/common/Modal';
 import Axios from 'axios';
 import { HouseIcon } from 'components/utils/Icons';
+import { storeReferralInfo } from 'utils/localStorage';
 
-const Home = ({ referralCode }) => {
+const Home = ({ referralCode, inviteCode }) => {
   const [showReferralModal, setShowReferralModal] = React.useState(false);
   const [referral, setReferral] = React.useState(null);
 
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/referral/ref/${referralCode}`)
-      .then((response) => {
-        const { status, data } = response;
-        if (status === 200) {
-          setReferral(data.user);
-          setShowReferralModal(true);
-          // save referral code
-        }
-      })
-      .catch((error) => {
-        setReferral({});
-      });
+    referralCode &&
+      Axios.get(`${BASE_API_URL}/referral/ref/${referralCode}`)
+        .then((response) => {
+          const { status, data } = response;
+          if (status === 200) {
+            setReferral({ referrer: data.user });
+            setShowReferralModal(true);
+            storeReferralInfo({ referrer: { ...data.user, referralCode } });
+          }
+        })
+        .catch((error) => {
+          setReferral({});
+        });
   }, [referralCode]);
-  console.log('referral', referral);
+
+  console.log('inviteCode', inviteCode);
+
+  React.useEffect(() => {
+    inviteCode &&
+      Axios.get(`${BASE_API_URL}/referral/${inviteCode}`)
+        .then((response) => {
+          const { status, data } = response;
+          if (status === 200) {
+            console.log('response', response);
+            setReferral(data.referral);
+            setShowReferralModal(true);
+            storeReferralInfo({ ...data.referral });
+          }
+        })
+        .catch((error) => {
+          setReferral({});
+        });
+  }, [inviteCode]);
+
   return (
     <>
       <Header />
@@ -59,11 +80,13 @@ const Home = ({ referralCode }) => {
 };
 
 Home.propTypes = {
-  ref: PropTypes.string,
+  referralCode: PropTypes.string,
+  inviteCode: PropTypes.string,
 };
 
 Home.defaultProps = {
-  ref: null,
+  referralCode: null,
+  inviteCode: null,
 };
 
 const HoldingSection = () => (
@@ -218,9 +241,9 @@ const ReferralModal = ({
       <section className="row">
         <div className="col-md-12 my-3 text-center">
           <HouseIcon />
-          <h3 className="my-4">Hello,</h3>
+          <h3 className="my-4">Hello{` ${referral.firstName}`},</h3>
           <p className="lead">
-            {referral.firstName} has invited you to{' '}
+            {referral.referrer.firstName} has invited you to{' '}
             <strong>become a Landlord.</strong>
           </p>
 

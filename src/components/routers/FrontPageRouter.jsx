@@ -21,6 +21,7 @@ const FrontPageRouter = () => (
   <Router>
     <Home path="/" />
     <Home path="/ref/:referralCode" />
+    <Home path="/invite/:inviteCode" />
     <AboutUs path="/about-us" />
     <AtoZ path="/a-z-of-ball" />
     <FAQs path="/faqs" />
