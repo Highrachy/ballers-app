@@ -18,7 +18,7 @@ const color = 'success';
 export const OwnedPropertyCard = () => (
   <Card className="card-container h-100 property-holder">
     <h5 className={`property-holder__title border-${color}`}>
-      <Link to="/user/portfolio/1">
+      <Link to="/user/portfolio/5f5d262a98f1dc00171a6b17/assigned">
         <span
           className={`badge badge-${color} property-holder__details float-right`}
         >
@@ -61,7 +61,7 @@ export const OwnedPropertyCard = () => (
     </div>
 
     <div className="button-container mt-4 d-block d-md-none">
-      <Link to="/user/portfolio/1">
+      <Link to="/user/portfolio/5f5d262a98f1dc00171a6b17/assigned">
         <span className={`btn btn-${color} btn-block`}>
           Details <RightArrowIcon />
         </span>

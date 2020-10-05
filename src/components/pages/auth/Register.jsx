@@ -40,7 +40,10 @@ const Content = ({ redirectTo, sid, token }) => {
           <div className="col-lg-5 auth__text">
             <h1>
               {referralInfo ? (
-                <>Hello{` ${referralInfo.firstName}`},</>
+                <>
+                  Hello
+                  {referralInfo.firstName ? ` ${referralInfo.firstName}` : ''},
+                </>
               ) : (
                 <>
                   Create a <br /> free account

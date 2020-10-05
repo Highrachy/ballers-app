@@ -30,7 +30,7 @@ import { MyPropertyIcon } from 'components/utils/Icons';
 import DatePicker from 'components/forms/DatePicker';
 import { Loading } from 'components/utils/LoadingItems';
 
-const SinglePortfolio = ({ id }) => {
+const SinglePortfolio = ({ id, assigned }) => {
   const [toast, setToast] = useToast();
   const [property, setProperty] = React.useState(null);
   React.useEffect(() => {
@@ -56,7 +56,11 @@ const SinglePortfolio = ({ id }) => {
   return (
     <BackendPage>
       {property ? (
-        <OwnedPropertyCard property={property} toast={toast} />
+        <OwnedPropertyCard
+          property={property}
+          toast={toast}
+          assigned={assigned}
+        />
       ) : (
         <Loading text="Loading Property" Icon={<MyPropertyIcon />} />
       )}
@@ -66,7 +70,7 @@ const SinglePortfolio = ({ id }) => {
 
 const NOW = 50;
 
-const OwnedPropertyCard = ({ property, toast }) => (
+const OwnedPropertyCard = ({ assigned, property, toast }) => (
   <div className="container-fluid">
     <Toast {...toast} />
     <Card className="card-container mt-4 h-100 property-holder__big">
@@ -86,8 +90,10 @@ const OwnedPropertyCard = ({ property, toast }) => (
         {/* Side Card */}
         <div className="col-sm-5">
           <aside className="ml-md-5">
-            {<PropertySidebar propertyId={property[0]._id} /> || (
+            {assigned ? (
               <AssignedPropertySidebar />
+            ) : (
+              <PropertySidebar propertyId={property[0]._id} />
             )}
           </aside>
         </div>
@@ -189,49 +195,78 @@ const PropertyDescription = ({ property }) => (
   </>
 );
 
-const AssignedPropertySidebar = () => (
-  <Card className="card-container property-holder">
-    <table className="table table-sm table-borderless">
-      <tbody>
-        <tr>
-          <td>
-            <small className="ml-n1">Amount Contributed</small>{' '}
-          </td>
-          <td>
-            <h5>N35,000,000</h5>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <small className="ml-n1">Equity Contributed</small>{' '}
-          </td>
-          <td>
-            <h5>N35,000,000</h5>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+const AssignedPropertySidebar = () => {
+  const initiatePayment = () => {
+    Axios.post(
+      `${BASE_API_URL}/payment/initiate`,
+      {
+        amount: '100000',
+        propertyId: '5f5d262a98f1dc00171a6b17',
+      },
+      {
+        headers: {
+          Authorization: getTokenFromStore(),
+        },
+      }
+    )
+      .then(function (response) {
+        const { status, data } = response;
+        console.log('data', data);
+        // handle success
+        if (status === 201) {
+          window.location.href = data.payment.authorization_url;
+        }
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
+  };
+  return (
+    <Card className="card-container property-holder">
+      <table className="table table-sm table-borderless">
+        <tbody>
+          <tr>
+            <td>
+              <small className="ml-n1">Amount Contributed</small>{' '}
+            </td>
+            <td>
+              <h5>N35,000,000</h5>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <small className="ml-n1">Equity Contributed</small>{' '}
+            </td>
+            <td>
+              <h5>N35,000,000</h5>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <small className="">Contribution Progress</small>
+      <small className="">Contribution Progress</small>
 
-    <div className="row">
-      <div className="col-sm-12">
-        <small style={{ paddingLeft: `${NOW - 5}%` }}>{NOW}%</small>
-        <ProgressBar variant="success" now={NOW} label={`${NOW}%`} srOnly />
+      <div className="row">
+        <div className="col-sm-12">
+          <small style={{ paddingLeft: `${NOW - 5}%` }}>{NOW}%</small>
+          <ProgressBar variant="success" now={NOW} label={`${NOW}%`} srOnly />
+        </div>
       </div>
-    </div>
 
-    <hr className="my-4" />
+      <hr className="my-4" />
 
-    <small className="">Next Payment</small>
-    <h5 className="text-center my-3">14th September 2020</h5>
+      <small className="">Next Payment</small>
+      <h5 className="text-center my-3">14th October 2020</h5>
 
-    <button className="btn btn-block btn-secondary">Make Payment</button>
-    <Link to="/users/transaction" className="small text-center mt-3">
-      View Transaction History
-    </Link>
-  </Card>
-);
+      <button className="btn btn-block btn-secondary" onClick={initiatePayment}>
+        Make Payment
+      </button>
+      <Link to="/users/transaction" className="small text-center mt-3">
+        View Transaction History
+      </Link>
+    </Card>
+  );
+};
 
 const PropertySidebar = ({ propertyId }) => {
   const [showRequestVisitForm, setShowRequestVisitForm] = React.useState(false);

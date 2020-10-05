@@ -241,7 +241,9 @@ const ReferralModal = ({
       <section className="row">
         <div className="col-md-12 my-3 text-center">
           <HouseIcon />
-          <h3 className="my-4">Hello{` ${referral.firstName}`},</h3>
+          <h3 className="my-4">
+            Hello{referral.firstName ? ` ${referral.firstName}` : ''},
+          </h3>
           <p className="lead">
             {referral.referrer.firstName} has invited you to{' '}
             <strong>become a Landlord.</strong>

@@ -17,6 +17,7 @@ const UserRouter = () => (
     <Dashboard path="dashboard" />
     <Portfolio path="portfolio" />
     <SinglePortfolio path="portfolio/:id" />
+    <SinglePortfolio path="portfolio/:id/:assigned" />
     <PropertyEnquiry path="property/enquiry/:id" />
     <Transactions path="transactions" />
     <Settings path="settings" />
