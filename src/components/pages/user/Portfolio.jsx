@@ -13,6 +13,12 @@ import { getError } from 'utils/helpers';
 import LoadItems from 'components/utils/LoadingItems';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import NoContent from 'components/utils/NoContent';
+import PropTypes from 'prop-types';
+import { Card } from 'react-bootstrap';
+import TopTitle from 'components/utils/TopTitle';
+import { MessageIcon } from 'components/utils/Icons';
+import ProfileAvatar from 'assets/img/avatar/profile.png';
+import { getShortDate } from 'utils/date-helpers';
 
 const Portfolio = () => {
   const [toast, setToast] = useToast();
@@ -45,6 +51,7 @@ const Portfolio = () => {
     <BackendPage>
       <Toast {...toast} showToastOnly />
       <Others recommendedProperties={properties} />
+      <Offers />
     </BackendPage>
   );
 };
@@ -101,6 +108,115 @@ const EnjoyingBallers = () => (
       </div>
     </div>
   </section>
+);
+const Offers = () => {
+  const [toast, setToast] = useToast();
+  const [offers, setOffers] = React.useState(null);
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/offer/user/all`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        // handle success
+        if (status === 200) {
+          setOffers(data.offers);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+      });
+  }, [setToast]);
+  return (
+    <>
+      <TopTitle>All Offers</TopTitle>
+      <LoadItems
+        Icon={<MessageIcon />}
+        items={offers}
+        loadingText="Loading your Offers"
+        noContent={
+          <NoContent Icon={<MessageIcon />} isButton text="No Offers found" />
+        }
+      >
+        <OffersRowList toast={toast} offers={offers || []} />
+      </LoadItems>
+    </>
+  );
+};
+
+const OffersRowList = ({ offers }) => (
+  <div className="container-fluid">
+    <Card className="mt-4">
+      <div className="table-responsive">
+        <table className="table table-border table-hover">
+          <thead>
+            <tr>
+              <td>S/N</td>
+              <td>Image</td>
+              <td>Vendor</td>
+              <td>Property Name</td>
+              <td>Property Price</td>
+              <td>Status</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+            {offers.map((offer, index) => (
+              <OffersRow key={index} number={index + 1} {...offer} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+  </div>
+);
+
+OffersRowList.propTypes = {
+  offers: PropTypes.array.isRequired,
+};
+
+const OffersRow = ({
+  status,
+  _id,
+  totalAmountPayable,
+  number,
+  expires,
+  enquiryInfo,
+  propertyInfo,
+}) => (
+  <tr>
+    <td>{number}</td>
+    <td>
+      <img
+        alt={propertyInfo.name}
+        className="img-fluid avatar--medium--small"
+        src={propertyInfo.mainImage ? propertyInfo.mainImage : ProfileAvatar}
+        title={propertyInfo.name}
+      />
+    </td>
+    <td>
+      Highrachy
+      <br />
+      <small>09012345678</small>
+    </td>
+    <td>{propertyInfo.name}</td>
+    <td>{totalAmountPayable}</td>
+    <td>{status}</td>
+    <td>{getShortDate(expires)}</td>
+    <td>
+      <Link
+        className="btn btn-sm btn-secondary"
+        to={`/user/property/offer-letter/${_id}`}
+      >
+        View Offer
+      </Link>
+    </td>
+  </tr>
 );
 
 export default Portfolio;

@@ -22,6 +22,7 @@ import { getError, getItems } from 'utils/helpers';
 import Toast, { useToast, InfoBox } from 'components/utils/Toast';
 import { getShortDate } from 'utils/date-helpers';
 import TimeAgo from 'timeago-react';
+import { isPast } from 'date-fns';
 
 const Dashboard = () => {
   const [toast, setToast] = useToast();
@@ -128,24 +129,29 @@ const ShowInfo = ({ offers }) =>
     </div>
   ) : null;
 
-const OffersRow = ({ _id, expires, propertyInfo }) => (
-  <InfoBox>
-    <Link
-      className="btn btn-success btn-sm float-right"
-      to={`/user/property/offer-letter/${_id}`}
-    >
-      View Offer Letter
-    </Link>
-    <h6 className="w-100 font-weight-normal">
-      Highrachy has sent you an offer letter for{' '}
-      <strong>{propertyInfo.name}</strong>
-      <br />
-      <small className="text-muted">
-        Expires on {getShortDate(expires)} (<TimeAgo datetime={expires} />)
-      </small>
-    </h6>
-  </InfoBox>
-);
+const OffersRow = ({ _id, expires, propertyInfo }) => {
+  if (isPast(expires)) {
+    return null;
+  }
+  return (
+    <InfoBox>
+      <Link
+        className="btn btn-success btn-sm float-right"
+        to={`/user/property/offer-letter/${_id}`}
+      >
+        View Offer Letter
+      </Link>
+      <h6 className="w-100 font-weight-normal">
+        Highrachy has sent you an offer letter for{' '}
+        <strong>{propertyInfo.name}</strong>
+        <br />
+        <small className="text-muted">
+          Expires on {getShortDate(expires)} (<TimeAgo datetime={expires} />)
+        </small>
+      </h6>
+    </InfoBox>
+  );
+};
 
 const Overview = () => (
   <div className="container-fluid ">

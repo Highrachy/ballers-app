@@ -1,6 +1,5 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-// import { moneyFormat } from 'utils/helpers';
 import Toast, { useToast } from 'components/utils/Toast';
 import Modal from 'components/common/Modal';
 import ReactToPrint from 'react-to-print';
@@ -9,7 +8,6 @@ import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
 import OfferLetterTemplate from 'components/utils/OfferLetterTemplate';
-// import TimeAgo from 'timeago-react';
 import Image from 'components/utils/Image';
 import UploadImage from 'components/utils/UploadImage';
 
