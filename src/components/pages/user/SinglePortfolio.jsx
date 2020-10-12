@@ -201,7 +201,8 @@ const AssignedPropertySidebar = () => {
       `${BASE_API_URL}/payment/initiate`,
       {
         amount: '100000',
-        propertyId: '5f5d262a98f1dc00171a6b17',
+        propertyId: '5f5e8e7576fca200172adf6f',
+        offerId: '5f7183398d65710017cfbd1e',
       },
       {
         headers: {

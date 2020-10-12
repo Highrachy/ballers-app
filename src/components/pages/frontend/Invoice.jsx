@@ -3,110 +3,92 @@ import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 import BallersLogo from 'assets/img/logo/ballers-logo.png';
 import { getTinyDate } from 'utils/date-helpers';
-import { moneyFormat } from 'utils/helpers';
-import { LoveIcon } from 'components/utils/Icons';
+import { getFormattedAddress, moneyFormat } from 'utils/helpers';
+import * as queryString from 'query-string';
+import Axios from 'axios';
+import { getTokenFromStore } from 'utils/localStorage';
+import { getError } from 'utils/helpers';
+import Toast, { useToast } from 'components/utils/Toast';
+import { BASE_API_URL } from 'utils/constants';
+import { Loading } from 'components/utils/LoadingItems';
+import { TransactionIcon } from 'components/utils/Icons';
 
-const paymentInfo = {
-  id: 834126615,
-  domain: 'test',
-  status: 'success',
-  reference: 'qmyuyxtl2j',
-  amount: 10000000,
-  message: null,
-  gateway_response: 'Successful',
-  paid_at: '2020-10-03T12:03:18.000Z',
-  created_at: '2020-10-03T12:02:46.000Z',
-  channel: 'card',
-  currency: 'NGN',
-  ip_address: '41.58.98.175',
-  metadata: {
-    custom_fields: [
-      {
-        display_name: 'Property Id',
-        variable_name: 'propertyId',
-        value: '5f660daee0c9ed08f8e4a298',
+const Invoice = (props) => {
+  const queryParams = queryString.parse(props.location.search);
+  const { reference } = queryParams;
+  const [toast, setToast] = useToast();
+  const [payment, setPayment] = React.useState(null);
+  const [paystackResponse, setPaystackResponse] = React.useState(null);
+  const [offer, setOffer] = React.useState(null);
+
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/payment/process/${reference}`, {
+      headers: {
+        Authorization: getTokenFromStore(),
       },
-      {
-        display_name: 'User Id',
-        variable_name: 'userId',
-        value: '5f6bb4ee7a40d3698668a679',
-      },
-    ],
-  },
-  log: {
-    start_time: 1601726590,
-    time_spent: 9,
-    attempts: 1,
-    errors: 0,
-    success: true,
-    mobile: false,
-    input: [],
-    history: [
-      {
-        type: 'action',
-        message: 'Attempted to pay with card',
-        time: 8,
-      },
-      {
-        type: 'success',
-        message: 'Successfully paid with card',
-        time: 9,
-      },
-    ],
-  },
-  fees: 160000,
-  fees_split: null,
-  authorization: {
-    authorization_code: 'AUTH_1fvxqg8v9q',
-    bin: '408408',
-    last4: '4081',
-    exp_month: '12',
-    exp_year: '2020',
-    channel: 'card',
-    card_type: 'visa ',
-    bank: 'TEST BANK',
-    country_code: 'NG',
-    brand: 'visa',
-    reusable: true,
-    signature: 'SIG_u3O0hP1pbv6KEVPNoGtY',
-    account_name: null,
-    receiver_bank_account_number: null,
-    receiver_bank: null,
-  },
-  customer: {
-    id: 23979013,
-    first_name: null,
-    last_name: null,
-    email: 'user1@gmail.com',
-    customer_code: 'CUS_zrqtui4b4m8dvwl',
-    phone: null,
-    metadata: null,
-    risk_action: 'default',
-    international_format_phone: null,
-  },
-  plan: null,
-  split: {},
-  order_id: null,
-  paidAt: '2020-10-03T12:03:18.000Z',
-  createdAt: '2020-10-03T12:02:46.000Z',
-  requested_amount: 10000000,
-  transaction_date: '2020-10-03T12:02:46.000Z',
-  plan_object: {},
-  subaccount: {},
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        setPayment(data.transaction);
+        setPaystackResponse(data.paystackResponse);
+        // handle success
+        if (status === 200) {
+          Axios.get(`${BASE_API_URL}/offer/${data.transaction.offerId}`, {
+            headers: {
+              Authorization: getTokenFromStore(),
+            },
+          })
+            .then(function (response) {
+              const { status, data } = response;
+              console.log('offer data', data);
+              // handle success
+              if (status === 200) {
+                setOffer(data.offer);
+              }
+            })
+            .catch(function (error) {
+              setToast({
+                message: getError(error),
+              });
+            });
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+      });
+  }, [setToast, reference]);
+
+  console.log('payment', payment);
+  console.log('offer', offer);
+  console.log('paystack', paystackResponse);
+  return (
+    <>
+      <Toast {...toast} showToastOnly />
+      <Header />
+      {payment && paystackResponse && offer && offer.propertyInfo ? (
+        <InvoiceContent
+          paymentInfo={{ ...paystackResponse, ...payment }}
+          propertyInfo={offer.propertyInfo}
+        />
+      ) : (
+        <div className="ballers-invoice">
+          <div className="mt-8">
+            <Loading
+              text="Loading Payment Information"
+              Icon={<TransactionIcon />}
+            />
+          </div>
+        </div>
+      )}
+
+      <Footer />
+    </>
+  );
 };
 
-const propertyInfo = {};
-
-const Invoice = () => (
-  <>
-    <Header />
-    <InvoiceContent paymentInfo={paymentInfo} propertyInfo={propertyInfo} />
-
-    <Footer />
-  </>
-);
-
-const InvoiceContent = ({ paymentInfo }) => (
+const InvoiceContent = ({ paymentInfo, propertyInfo }) => (
   <div className="ballers-invoice">
     <section className="invoice__page">
       <div className="row">
@@ -181,16 +163,17 @@ const InvoiceContent = ({ paymentInfo }) => (
                     </p>
                   </td>
                   <td className="text-right text-amount strong">
-                    {paymentInfo.currency}{' '}
-                    {moneyFormat(paymentInfo.amount / 100)}
+                    {paymentInfo.currency} {moneyFormat(paymentInfo.amount)}
                   </td>
                 </tr>
                 <tr className="tr-content">
                   <td>
                     <p>
-                      Property Name: {propertyInfo.name}
+                      <strong>{propertyInfo.name}</strong>
                       <br />
+                      <span>{propertyInfo.houseType}</span>
                     </p>
+                    {getFormattedAddress(propertyInfo.address)}
                   </td>
                   <td>&nbsp;</td>
                 </tr>
@@ -231,8 +214,7 @@ const InvoiceContent = ({ paymentInfo }) => (
                   <td className="text-right text-green">
                     <h4 className="text-amount">
                       {' '}
-                      {paymentInfo.currency}{' '}
-                      {moneyFormat(paymentInfo.amount / 100)}
+                      {paymentInfo.currency} {moneyFormat(paymentInfo.amount)}
                     </h4>
                   </td>
                 </tr>
@@ -240,12 +222,7 @@ const InvoiceContent = ({ paymentInfo }) => (
             </table>
             <div className="row invoice__separator">
               <div className="col-6">
-                <h5>
-                  <span className="svg-love">
-                    <LoveIcon /> &nbsp;
-                  </span>
-                  Thank You!
-                </h5>
+                <h5>Thank You!</h5>
               </div>
               <div className="col-6 text-right">
                 <h5 className="text-uppercase invoice__tag-line">

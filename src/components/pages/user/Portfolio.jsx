@@ -9,7 +9,7 @@ import Axios from 'axios';
 import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
-import { getError } from 'utils/helpers';
+import { getError, moneyFormatInNaira } from 'utils/helpers';
 import LoadItems from 'components/utils/LoadingItems';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import NoContent from 'components/utils/NoContent';
@@ -205,7 +205,7 @@ const OffersRow = ({
       <small>09012345678</small>
     </td>
     <td>{propertyInfo.name}</td>
-    <td>{totalAmountPayable}</td>
+    <td>{moneyFormatInNaira(totalAmountPayable)}</td>
     <td>{status}</td>
     <td>{getShortDate(expires)}</td>
     <td>
