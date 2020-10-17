@@ -6,6 +6,7 @@ import {
   validPercentage,
   minDateValidation,
   required,
+  optionalValidation,
 } from './schema-helpers';
 
 export const newPropertySchema = {
@@ -16,8 +17,8 @@ export const newPropertySchema = {
   bedrooms: positiveNumberValidation('Bedrooms'),
   toilets: positiveNumberValidation('Toilets'),
   description: stringValidation('Description'),
+  titleDocument: optionalValidation(required('Title Document')),
   // floorPlans: optionalValidation(required('Floor Plans')),
-  // titleDocument: optionalValidation(required('Title Document')),
   // mapLocation: optionalValidation(required('Map Location')),
   // neighborhood: Joi.array().label('Property neighborhood').optional(),
   // gallery: Joi.array().label('Property gallery').optional(),

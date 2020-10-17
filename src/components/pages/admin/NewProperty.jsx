@@ -219,6 +219,13 @@ const PropertyInfoForm = () => {
             name="description"
             placeholder="A detailed description of the property"
           />
+
+          <Textarea
+            label="Title Document"
+            name="titleDocument"
+            optional
+            placeholder="Title Document"
+          />
         </div>
       </section>
     </Card>
