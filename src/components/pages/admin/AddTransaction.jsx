@@ -3,16 +3,21 @@ import PropTypes from 'prop-types';
 import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
+import {
+  ACTIVE_OFFER_STATUS,
+  BASE_API_URL,
+  OFFER_STATUS,
+} from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { TransactionIcon } from 'components/utils/Icons';
-import { getError } from 'utils/helpers';
+import { getError, moneyFormatInNaira } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
-import { Link } from '@reach/router';
+import Modal from 'components/common/Modal';
+import { NewTransactionForm } from './NewTransaction';
 
 const AddTransaction = () => {
   const [toast, setToast] = useToast();
@@ -59,23 +64,13 @@ const AllOffers = ({ offers, toast }) => (
 );
 
 const OffersRowList = ({ offers }) => (
-  <div className="container-fluid">
-    <Card className="mt-4">
+  <div className="container-fluid mb-5">
+    <Card>
       <div className="table-responsive">
-        <table className="table table-border table-hover">
-          <thead>
-            <tr>
-              <td>S/N</td>
-              <td>Avatar</td>
-              <td>Name</td>
-              <td>Phone</td>
-              <td>Status</td>
-              <td></td>
-            </tr>
-          </thead>
+        <table className="table table-border table-hover mb-0">
           <tbody>
-            {offers.map((user, index) => (
-              <OffersRow key={index} number={index + 1} {...user} />
+            {offers.map((offer, index) => (
+              <OffersRow key={index} number={index + 1} {...offer} />
             ))}
           </tbody>
         </table>
@@ -89,44 +84,82 @@ OffersRowList.propTypes = {
 };
 
 const OffersRow = ({
+  status,
   _id,
   totalAmountPayable,
-  monthlyPayment,
-  paymentFrequency,
   number,
+  initialPayment,
+  monthlyPayment,
   enquiryInfo,
+  propertyInfo,
   userInfo,
-}) => (
-  <tr>
-    <td>{number}</td>
-    <td>
-      <img
-        alt={userInfo.firstName}
-        className="img-fluid avatar--medium--small"
-        src={userInfo.profileImage ? userInfo.profileImage.url : ProfileAvatar}
-        title={userInfo.firstName}
-      />
-    </td>
-    <td>
-      {enquiryInfo.firstName} {enquiryInfo.lastName} <br />
-      <small>{enquiryInfo.email}</small>
-    </td>
-    <td>
-      {enquiryInfo.phone} <br />
-    </td>
-    <td>
-      {enquiryInfo.phone} <br />
-    </td>
+}) => {
+  const [showAddTransactionModal, setShowAddTransactionModal] = React.useState(
+    false
+  );
+  if (!ACTIVE_OFFER_STATUS.includes(status)) {
+    return null;
+  }
 
-    <td>
-      <Link
-        className="btn btn-sm btn-secondary"
-        to={`/admin/transactions/new/${_id}`}
+  return (
+    <>
+      <tr>
+        {/* <td>{number}</td>{' '} */}
+        <td>
+          <img
+            alt={propertyInfo.name}
+            className="img-fluid avatar--medium--small rounded"
+            src={
+              propertyInfo.mainImage ? propertyInfo.mainImage : ProfileAvatar
+            }
+            title={propertyInfo.name}
+          />
+        </td>
+        <td>
+          <strong>{propertyInfo.name}</strong>
+          <br />
+          <small>
+            {propertyInfo.address.city}, {propertyInfo.address.state}
+          </small>
+        </td>
+        <td>
+          <strong>{moneyFormatInNaira(totalAmountPayable)}</strong>
+        </td>
+        <td>
+          <strong>
+            {enquiryInfo.firstName} {enquiryInfo.lastName}
+          </strong>
+          <br />
+          <small>{enquiryInfo.phone}</small>
+        </td>
+        <td>
+          <button
+            onClick={() => setShowAddTransactionModal(true)}
+            className="btn btn-sm btn-secondary"
+            to={`/admin/transactions/new/${_id}`}
+          >
+            Add Payment
+          </button>
+        </td>
+      </tr>
+      <Modal
+        title="Add Transaction"
+        show={showAddTransactionModal}
+        onHide={() => setShowAddTransactionModal(false)}
+        showFooter={false}
       >
-        Add Payment
-      </Link>
-    </td>
-  </tr>
-);
+        <NewTransactionForm
+          hideForm={() => setShowAddTransactionModal(false)}
+          amount={
+            status === OFFER_STATUS.INTERESTED ? initialPayment : monthlyPayment
+          }
+          offerId={_id}
+          propertyId={propertyInfo._id}
+          userId={userInfo._id}
+        />
+      </Modal>
+    </>
+  );
+};
 
 export default AddTransaction;

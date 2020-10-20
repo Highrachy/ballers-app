@@ -9,14 +9,10 @@ import {
 } from 'components/forms/form-helper';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
-import {
-  createSchema,
-  addressSchema,
-} from 'components/forms/schemas/schema-helpers';
+import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
-import { UserContext } from 'context/UserContext';
-import { newPropertySchema } from 'components/forms/schemas/propertySchema';
+import { addTransactionSchema } from 'components/forms/schemas/transactionSchema';
 import Textarea from 'components/forms/Textarea';
 import InputFormat from 'components/forms/InputFormat';
 import { getError } from 'utils/helpers';
@@ -30,37 +26,40 @@ const NewTransaction = ({ id }) => (
   </BackendPage>
 );
 
-const NewTransactionForm = () => {
+export const NewTransactionForm = ({
+  offerId,
+  propertyId,
+  userId,
+  amount,
+  hideForm,
+}) => {
   const [toast, setToast] = useToast();
-  const { userDispatch } = React.useContext(UserContext);
 
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={
-        ({
-          ...setInitialValues(newPropertySchema),
-          address: setInitialValues(addressSchema),
-        },
-        { address: { country: 'Nigeria' } })
-      }
+      initialValues={setInitialValues(addTransactionSchema, { amount })}
       onSubmit={(values, actions) => {
-        const payload = { ...values };
+        const payload = {
+          ...values,
+          offerId,
+          propertyId,
+          userId,
+          paidOn: values.paidOn.date,
+          paymentSource: 'Website',
+        };
 
         Axios.post(`${BASE_API_URL}/transaction/add`, payload, {
           headers: { Authorization: getTokenFromStore() },
         })
           .then(function (response) {
-            const { status, data } = response;
+            const { status } = response;
             if (status === 201) {
-              userDispatch({
-                type: 'transaction-added',
-                transaction: data.updatedUser,
-              });
               setToast({
                 type: 'success',
                 message: `Your transaction has been successfully added`,
               });
+              hideForm();
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -72,14 +71,11 @@ const NewTransactionForm = () => {
             actions.setSubmitting(false);
           });
       }}
-      validationSchema={createSchema({
-        ...newPropertySchema,
-        address: createSchema(addressSchema),
-      })}
+      validationSchema={createSchema(addTransactionSchema)}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
-          <Toast {...toast} />
+          <Toast {...toast} showToastOnly />
           <TransactionInfoForm {...props} />
           <Button
             className="btn-secondary mt-4"
@@ -99,23 +95,14 @@ const TransactionInfoForm = () => {
   return (
     <Card className="card-container">
       <section className="row">
-        <div className="col-md-10 px-4">
-          <h5 className="mb-4">Transaction Information</h5>
-          <div className="form-row">
-            <InputFormat
-              formGroupClassName="col-md-6"
-              label="Amount"
-              name="amount"
-              placeholder="Transaction Amount"
-            />
+        <div className="px-3 col-sm-12">
+          <InputFormat
+            label="Amount"
+            name="amount"
+            placeholder="Transaction Amount"
+          />
 
-            <DatePicker
-              label="Paid on"
-              formGroupClassName="col-md-6"
-              name="paidOn"
-              placeholder="Paid On"
-            />
-          </div>
+          <DatePicker label="Paid on" name="paidOn" placeholder="Paid On" />
 
           <Textarea
             label="Additional Info"

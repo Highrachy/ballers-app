@@ -10,11 +10,15 @@ import Axios from 'axios';
 import {
   // CameraIcon,
   CheckIcon,
-  DownloadIcon,
+  // DownloadIcon,
   MapPinIcon,
 } from 'components/utils/Icons';
 import { getTokenFromStore } from 'utils/localStorage';
-import { moneyFormatInNaira, getError } from 'utils/helpers';
+import {
+  moneyFormatInNaira,
+  getError,
+  getLocationFromAddress,
+} from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import { Loading } from 'components/utils/LoadingItems';
 
@@ -31,6 +35,7 @@ const SinglePortfolio = ({ id, assigned }) => {
         const { status, data } = response;
         // handle success
         if (status === 200) {
+          console.log('data', data);
           setProperty(data.property);
         }
       })
@@ -45,7 +50,8 @@ const SinglePortfolio = ({ id, assigned }) => {
     <BackendPage>
       {property ? (
         <OwnedPropertyCard
-          property={property.offer.propertyInfo}
+          offer={property.offer}
+          totalPaid={property.totalPaid}
           toast={toast}
         />
       ) : (
@@ -55,37 +61,41 @@ const SinglePortfolio = ({ id, assigned }) => {
   );
 };
 
-const NOW = 50;
+const OwnedPropertyCard = ({ offer, totalPaid, toast }) => {
+  const property = offer.propertyInfo;
+  return (
+    <div className="container-fluid">
+      <Toast {...toast} />
+      <Card className="card-container mt-4 h-100 property-holder__big">
+        <div className="row">
+          <div className="col-sm-10">
+            <h3 className={`property-holder__big-title border-success`}>
+              {property.name}
+            </h3>
+          </div>
+        </div>
+        <PropertyImage property={property} />
+        <div className="row mt-5">
+          <div className="col-sm-7">
+            <PropertyDescription
+              property={property}
+              propertyPrice={offer.totalAmountPayable}
+            />
+          </div>
 
-const OwnedPropertyCard = ({ property, toast }) => (
-  <div className="container-fluid">
-    <Toast {...toast} />
-    <Card className="card-container mt-4 h-100 property-holder__big">
-      <div className="row">
-        <div className="col-sm-10">
-          <h3 className={`property-holder__big-title border-success`}>
-            {property.name}
-          </h3>
+          {/* Side Card */}
+          <div className="col-sm-5">
+            <aside className="ml-md-5">
+              <AssignedPropertySidebar offer={offer} totalPaid={totalPaid} />
+            </aside>
+          </div>
         </div>
-      </div>
-      <PropertyImage property={property} />
-      <div className="row mt-5">
-        <div className="col-sm-7">
-          <PropertyDescription property={property} />
-        </div>
-
-        {/* Side Card */}
-        <div className="col-sm-5">
-          <aside className="ml-md-5">
-            <AssignedPropertySidebar />
-          </aside>
-        </div>
-      </div>
-      <Neighborhood />
-    </Card>
-    <PropertyMap mapLocation={property.mapLocation} />
-  </div>
-);
+        <Neighborhood />
+      </Card>
+      <PropertyMap mapLocation={property.mapLocation} />
+    </div>
+  );
+};
 
 const PropertyImage = ({ property }) => (
   <div className="row">
@@ -137,18 +147,18 @@ const PropertyImage = ({ property }) => (
   </div>
 );
 
-const PropertyDescription = ({ property }) => (
+const PropertyDescription = ({ property, propertyPrice }) => (
   <>
     <h5 className="mb-4">
       <span className="text-secondary">
         <MapPinIcon />
       </span>{' '}
-      {property.address.street1}
+      {getLocationFromAddress(property.address)}
     </h5>
     <div className="row">
       <div className="col-sm-4 col-6">
         <small>Property Value</small>
-        <h5>{moneyFormatInNaira(property.price)}</h5>
+        <h5>{moneyFormatInNaira(propertyPrice)}</h5>
       </div>
       <div className="col-sm-4 col-6">
         <small>House Type</small>
@@ -167,25 +177,30 @@ const PropertyDescription = ({ property }) => (
     <h5 className="mt-5">About Property</h5>
     <p className="">{property.description}</p>
 
-    <div className="my-5">
+    {/* <div className="my-5">
       <a href="/" className="btn-link icon-box">
         View floor plans{' '}
         <span className="d-inline-block ml-2">
           <DownloadIcon />
         </span>
       </a>
-    </div>
+    </div> */}
   </>
 );
 
-const AssignedPropertySidebar = () => {
+const AssignedPropertySidebar = ({ offer, totalPaid }) => {
+  const property = offer.propertyInfo;
+  const amountToPay =
+    totalPaid === 0 ? offer.initialPayment : offer.monthlyPayment;
+  const percentage = Math.floor((totalPaid / offer.totalAmountPayable) * 100);
+
   const initiatePayment = () => {
     Axios.post(
       `${BASE_API_URL}/payment/initiate`,
       {
-        amount: '100000',
-        propertyId: '5f5e8e7576fca200172adf6f',
-        offerId: '5f7183398d65710017cfbd1e',
+        amount: amountToPay,
+        propertyId: property._id,
+        offerId: offer._id,
       },
       {
         headers: {
@@ -211,18 +226,18 @@ const AssignedPropertySidebar = () => {
         <tbody>
           <tr>
             <td>
-              <small className="ml-n1">Amount Contributed</small>{' '}
+              <small className="ml-n1">Property Value</small>{' '}
             </td>
             <td>
-              <h5>N35,000,000</h5>
+              <h5>{moneyFormatInNaira(offer.totalAmountPayable)}</h5>
             </td>
           </tr>
           <tr>
             <td>
-              <small className="ml-n1">Equity Contributed</small>{' '}
+              <small className="ml-n1">Amount Paid</small>{' '}
             </td>
             <td>
-              <h5>N35,000,000</h5>
+              <h5>{totalPaid === 0 ? '-' : moneyFormatInNaira(totalPaid)}</h5>
             </td>
           </tr>
         </tbody>
@@ -232,15 +247,22 @@ const AssignedPropertySidebar = () => {
 
       <div className="row">
         <div className="col-sm-12">
-          <small style={{ paddingLeft: `${NOW - 5}%` }}>{NOW}%</small>
-          <ProgressBar variant="success" now={NOW} label={`${NOW}%`} srOnly />
+          <small style={{ paddingLeft: `${percentage - 5}%` }}>
+            {percentage}%
+          </small>
+          <ProgressBar
+            variant="success"
+            now={percentage}
+            label={`${percentage}%`}
+            srOnly
+          />
         </div>
       </div>
 
       <hr className="my-4" />
 
       <small className="">Next Payment</small>
-      <h5 className="text-center my-3">14th October 2020</h5>
+      <h5 className="text-center my-3">{moneyFormatInNaira(amountToPay)}</h5>
 
       <button className="btn btn-block btn-secondary" onClick={initiatePayment}>
         Make Payment

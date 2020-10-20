@@ -28,7 +28,7 @@ const UserRouter = () => (
     <Enquiries path="enquiries" />
     <Transactions path="transactions" />
     <AddTransaction path="add-transaction" />
-    <NewTransaction path="transactions/new/:id" />
+    <NewTransaction path="transactions/new/:offerId" />
     <KnowledgeBase path="knowledgebase" />
     <Menu path="menu" />
   </Router>

@@ -420,6 +420,7 @@ const ScheduleVisitForm = ({ propertyId, hideForm }) => {
                     type: 'success',
                     message: `Your visitation has been scheduled. We will contact you within 24 hours).`,
                   });
+                  hideForm();
                   actions.setSubmitting(false);
                   actions.resetForm();
                 }

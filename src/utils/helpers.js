@@ -113,21 +113,21 @@ export const getGenderFromTitle = (title) => {
 export const getLocationFromAddress = (address) => {
   let output = '';
   if (address.street1) {
-    output += address.street1;
+    output += address.street1.trim();
 
     if (address.street2) {
-      output += `, ${address.street2}`;
+      output += `, ${address.street2.trim()}`;
     }
 
     if (address.city) {
-      output += `, ${address.city}`;
+      output += `, ${address.city.trim()}`;
     }
 
     if (address.state) {
-      output += `, ${address.state}.`;
+      output += `, ${address.state.trim()}.`;
     }
   }
-  return output;
+  return output.replaceAll(',,', ',');
 };
 
 export const getFormattedAddress = ({

@@ -14,7 +14,6 @@ import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 import { MessageIcon } from 'components/utils/Icons';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
-import { getShortDate } from 'utils/date-helpers';
 import PortfolioCards from 'components/common/PortfolioCards';
 import { FileIcon } from 'components/utils/Icons';
 import { SuccessIcon } from 'components/utils/Icons';

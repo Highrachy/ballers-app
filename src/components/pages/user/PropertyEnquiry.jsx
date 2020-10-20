@@ -82,27 +82,7 @@ const EnquiryForm = ({ id }) => {
           ...setInitialValues(addEnquirySchema, userState),
           address: setInitialValues(addressSchema, userState.address),
         },
-        {
-          address: {
-            city: 'Obanikoro',
-            country: 'Nigeria',
-            state: 'Lagos',
-            street1: 'No 264,Ikorodu Road, Obanikoro',
-            street2: 'Test',
-          },
-          email: 'harunpopson@gmail.com',
-          firstName: 'Popoola',
-          initialInvestmentAmount: '5000000',
-          investmentFrequency: '4',
-          investmentStartDate: '26/08/2020',
-          lastName: 'Oladayo',
-          nameOnTitleDocument: 'Haruna Popoola',
-          occupation: 'Andela',
-          otherName: 'Oladayo',
-          periodicInvestmentAmount: '5000000',
-          phone: '+2348028388185',
-          title: 'Mr',
-        })
+        { ...userState, investmentStartDate: { date: new Date() } })
       }
       onSubmit={(values, actions) => {
         // delete optional fields
