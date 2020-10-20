@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, ProgressBar } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import { RightArrowIcon } from 'components/utils/Icons';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
-import { MapPinIcon, MyPropertyIcon } from 'components/utils/Icons';
 import { moneyFormatInNaira } from 'utils/helpers';
 import { LoveIcon } from 'components/utils/Icons';
 import { UserContext } from 'context/UserContext';
@@ -13,64 +12,7 @@ import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import BallersSpinner from 'components/utils/BallersSpinner';
 
-const now = 60;
-const color = 'success';
-export const OwnedPropertyCard = () => (
-  <Card className="card-container h-100 property-holder">
-    <h5 className={`property-holder__title border-${color}`}>
-      <Link to="/user/portfolio/5f5d262a98f1dc00171a6b17/assigned">
-        <span
-          className={`badge badge-${color} property-holder__details float-right`}
-        >
-          Details <RightArrowIcon />
-        </span>
-      </Link>
-      Property A
-    </h5>
-    <div className="row">
-      <div className="col-md-5">
-        <img
-          src={PropertyPlaceholderImage}
-          alt="Property"
-          className="img-fluid property-holder__img"
-        />
-      </div>
-      <div className="col-md-7 property-holder__icon">
-        <div className="mt-3 mt-md-0">Property Value</div>
-        <h3>N 23,000,000</h3>
-        <div className="property-holder__location">
-          <MapPinIcon /> Ikate, Lagos state
-        </div>
-        <div className="property-holder__house-type">
-          <MyPropertyIcon /> 3 bedroom flat
-        </div>
-        <div className="property-holder__payment-status">Overdue: -3 days </div>
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-sm-12 mt-3">
-        <div className="small" style={{ paddingLeft: `${now - 5}%` }}>
-          {now}%
-        </div>
-        <ProgressBar variant="success" now={now} label={`${now}%`} srOnly />
-        <div className="small">
-          Amount Contributed: <strong>N 18,000 </strong>
-          <span className="float-right text-green">Goal</span>
-        </div>
-      </div>
-    </div>
-
-    <div className="button-container mt-4 d-block d-md-none">
-      <Link to="/user/portfolio/5f5d262a98f1dc00171a6b17/assigned">
-        <span className={`btn btn-${color} btn-block`}>
-          Details <RightArrowIcon />
-        </span>
-      </Link>
-    </div>
-  </Card>
-);
-
-export const RecommendedPropertyCard = (property) => {
+const PropertyCard = (property) => {
   const {
     name,
     address,
@@ -153,15 +95,8 @@ export const RecommendedPropertyCard = (property) => {
             <h5 className="mt-2">{moneyFormatInNaira(price)}</h5>
             <div className="property-holder__separator"></div>
 
-            <span className={`badge badge-secondary property-holder__details`}>
-              Mortgage
-            </span>
-            <span className={`badge badge-secondary property-holder__details`}>
-              Mortgage 2
-            </span>
-
             <Link
-              className="text-uppercase small float-right"
+              className="text-uppercase small float-right badge badge-dark property-holder__details"
               to={`/user/portfolio/${_id}`}
             >
               Details{' '}
@@ -182,7 +117,7 @@ export const RecommendedPropertyLists = ({ properties, propertyClassName }) => {
 
   return properties.map((property) => (
     <div className={propertyClassName} key={property._id}>
-      <RecommendedPropertyCard {...property} favorites={favoritePropertyIds} />
+      <PropertyCard {...property} favorites={favoritePropertyIds} />
     </div>
   ));
 };
@@ -196,4 +131,4 @@ RecommendedPropertyLists.defaultProps = {
   propertyClassName: '',
 };
 
-export default { OwnedPropertyCard, RecommendedPropertyCard };
+export default PropertyCard;

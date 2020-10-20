@@ -13,10 +13,14 @@ const REFERRAL_COLOR = '#F79B18';
 
 const ContributionGraph = () => {
   const [toast, setToast] = useToast();
-  const [accountOverview, setaccountOverview] = React.useState({
+  const initialOverview = {
     contributionReward: 0,
     totalAmountPaid: 0,
     referralRewards: 0,
+  };
+  const [accountOverview, setaccountOverview] = React.useState({
+    ...initialOverview,
+    loading: true,
   });
   React.useEffect(() => {
     Axios.get(`${BASE_API_URL}/user/account-overview`, {
@@ -28,15 +32,16 @@ const ContributionGraph = () => {
         const { status, data } = response;
         // handle success
         if (status === 200) {
-          setaccountOverview(data.accountOverview);
+          setaccountOverview({ ...data.accountOverview, loading: false });
         }
       })
       .catch(function (error) {
+        setaccountOverview({ ...initialOverview, loading: false });
         setToast({
           message: getError(error),
         });
       });
-  }, [setToast]);
+  }, [setToast, initialOverview]);
   return (
     <Card className="card-container h-100">
       <Toast {...toast} showToastOnly />
@@ -46,7 +51,11 @@ const ContributionGraph = () => {
           <OverviewPrice
             title="Property"
             color="green"
-            price={moneyFormatInNaira(accountOverview.totalAmountPaid)}
+            price={
+              accountOverview.loading
+                ? '-'
+                : moneyFormatInNaira(accountOverview.totalAmountPaid)
+            }
           />
         </div>
         <div className="col-sm-4">
@@ -57,7 +66,7 @@ const ContributionGraph = () => {
                 datasets: [
                   {
                     data: [
-                      accountOverview.totalAmountPaid,
+                      accountOverview.totalAmountPaid || 1,
                       accountOverview.contributionReward,
                       accountOverview.referralRewards,
                     ],
@@ -81,11 +90,13 @@ const ContributionGraph = () => {
             />
           </div>
           <h5 className="text-center mt-3">
-            {moneyFormatInNaira(
-              accountOverview.totalAmountPaid +
-                accountOverview.contributionReward +
-                accountOverview.referralRewards
-            )}
+            {accountOverview.loading
+              ? '-'
+              : moneyFormatInNaira(
+                  accountOverview.totalAmountPaid +
+                    accountOverview.contributionReward +
+                    accountOverview.referralRewards
+                )}
           </h5>
           <p className="text-center  mb-0">
             My BALL <span className="text-orange">Net Worth</span>
@@ -96,12 +107,20 @@ const ContributionGraph = () => {
           <OverviewPrice
             title="Contribution Rewards"
             color="purple"
-            price={moneyFormatInNaira(accountOverview.contributionReward)}
+            price={
+              accountOverview.loading
+                ? '-'
+                : moneyFormatInNaira(accountOverview.contributionReward)
+            }
           />
           <OverviewPrice
             title="Referral Bonus"
             color="orange"
-            price={moneyFormatInNaira(accountOverview.referralRewards)}
+            price={
+              accountOverview.loading
+                ? '-'
+                : moneyFormatInNaira(accountOverview.referralRewards)
+            }
           />
         </div>
       </div>

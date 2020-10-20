@@ -23,7 +23,7 @@ import { UserContext } from 'context/UserContext';
 import { getError } from 'utils/helpers';
 import { getTokenFromStore } from 'utils/localStorage';
 import InputFormat from 'components/forms/InputFormat';
-import { RecommendedPropertyCard } from 'components/common/PropertyCard';
+import PropertyCard from 'components/common/PropertyCard';
 
 const PropertyEnquiry = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -66,7 +66,7 @@ const PropertyEnquiry = ({ id }) => {
 const PropertyInfo = ({ property }) => (
   <div className="row my-3">
     <div className="col-sm-8">
-      <RecommendedPropertyCard {...property} />
+      <PropertyCard {...property} />
     </div>
   </div>
 );

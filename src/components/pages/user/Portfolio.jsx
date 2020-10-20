@@ -1,10 +1,7 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Link } from '@reach/router';
-import {
-  OwnedPropertyCard,
-  RecommendedPropertyCard,
-} from 'components/common/PropertyCard';
+import PropertyCard from 'components/common/PropertyCard';
 import Axios from 'axios';
 import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
@@ -15,14 +12,15 @@ import { MyPropertyIcon } from 'components/utils/Icons';
 import NoContent from 'components/utils/NoContent';
 import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
-import TopTitle from 'components/utils/TopTitle';
 import { MessageIcon } from 'components/utils/Icons';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { getShortDate } from 'utils/date-helpers';
+import PortfolioCards from 'components/common/PortfolioCards';
 
 const Portfolio = () => {
   const [toast, setToast] = useToast();
   const [properties, setProperties] = React.useState(null);
+
   React.useEffect(() => {
     Axios.post(
       `${BASE_API_URL}/property/search`,
@@ -50,24 +48,21 @@ const Portfolio = () => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
-      <Others recommendedProperties={properties} />
-      <Offers />
+      <Content setToast={setToast} recommendedProperties={properties} />
     </BackendPage>
   );
 };
 
-const Others = ({ recommendedProperties }) => (
+const Content = ({ setToast, recommendedProperties }) => (
   <>
     <div className="container-fluid">
       <h5>Your active property</h5>
-      <div className="row row-eq-height">
-        <div className="col-sm-6">
-          <OwnedPropertyCard />
-        </div>
-      </div>
+      <PortfolioCards setToast={setToast} />
     </div>
 
     <EnjoyingBallers />
+
+    <Offers />
 
     <LoadItems
       Icon={<MyPropertyIcon />}
@@ -81,7 +76,7 @@ const Others = ({ recommendedProperties }) => (
           {recommendedProperties &&
             recommendedProperties.map((property) => (
               <div className="col-sm-6" key={property._id}>
-                <RecommendedPropertyCard {...property} />
+                <PropertyCard {...property} />
               </div>
             ))}
         </div>
@@ -133,7 +128,7 @@ const Offers = () => {
   }, [setToast]);
   return (
     <>
-      <TopTitle>All Offers</TopTitle>
+      <h5 className="container-fluid mt-4">All Offers</h5>
       <LoadItems
         Icon={<MessageIcon />}
         items={offers}
@@ -150,7 +145,7 @@ const Offers = () => {
 
 const OffersRowList = ({ offers }) => (
   <div className="container-fluid">
-    <Card className="mt-4">
+    <Card>
       <div className="table-responsive">
         <table className="table table-border table-hover">
           <thead>

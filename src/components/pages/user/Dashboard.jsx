@@ -6,10 +6,7 @@ import { ReferIcon } from 'components/utils/Icons';
 import { RightArrowIcon, SearchIcon } from 'components/utils/Icons';
 import SearchForProperty from 'components/common/SearchDashboardPropertyForm';
 import ContributionGraph from 'components/common/ContributionGraph';
-import {
-  OwnedPropertyCard,
-  RecommendedPropertyLists,
-} from 'components/common/PropertyCard';
+import { RecommendedPropertyLists } from 'components/common/PropertyCard';
 import useWindowSize from 'hooks/useWindowSize';
 import { MOBILE_WIDTH, BASE_API_URL } from 'utils/constants';
 import { UserContext } from 'context/UserContext';
@@ -23,6 +20,7 @@ import Toast, { useToast, InfoBox } from 'components/utils/Toast';
 import { getShortDate } from 'utils/date-helpers';
 import TimeAgo from 'timeago-react';
 import { isPast } from 'date-fns';
+import PortfolioCards from 'components/common/PortfolioCards';
 
 const Dashboard = () => {
   const [toast, setToast] = useToast();
@@ -187,9 +185,7 @@ const Others = ({ recommendedProperties }) => (
     <div className="container-fluid">
       <LinkHeader to="/user/portfolio" name="Overview" />
       <div className="row row-eq-height">
-        <div className="col-sm-6">
-          <OwnedPropertyCard />
-        </div>
+        <PortfolioCards isSinglePortfolio />
         <div className="col-sm-6">
           <EnjoyYourBallingExperience />
         </div>
