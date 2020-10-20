@@ -100,6 +100,14 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
         });
       });
   }, [setToast]);
+  const NO_CONTENT = (
+    <NoContent
+      className="w-100 text-center"
+      size="small"
+      Icon={<MyPropertyIcon />}
+      text="You have no active property"
+    />
+  );
 
   if (isSinglePortfolio) {
     if (portfolios === null) {
@@ -114,11 +122,8 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
     if (portfolios.length === 0) {
       return (
         <div className="col-sm-6">
-          <Card className="card-container d-block text-center h-100">
-            <div className="no-content text-muted my-4">
-              <MyPropertyIcon />
-              <h5 className="pt-3">You have no assigned Portfolios</h5>
-            </div>
+          <Card className="card-container d-block text-center py-5 h-100">
+            <div className="no-content text-muted my-4">{NO_CONTENT}</div>
           </Card>
         </div>
       );
@@ -129,14 +134,9 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
     <LoadItems
       Icon={<MyPropertyIcon />}
       items={portfolios}
+      size="small"
       loadingText={'Loading your Portfolios'}
-      noContent={
-        <NoContent
-          Icon={<MyPropertyIcon />}
-          isButton
-          text="You have no assigned portfolio"
-        />
-      }
+      noContent={NO_CONTENT}
     >
       {portfolios &&
         portfolios.map((portfolio) => (

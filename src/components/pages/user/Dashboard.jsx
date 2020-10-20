@@ -16,11 +16,12 @@ import NoContent from 'components/utils/NoContent';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, getItems } from 'utils/helpers';
-import Toast, { useToast, InfoBox } from 'components/utils/Toast';
+import Toast, { useToast } from 'components/utils/Toast';
 import { getShortDate } from 'utils/date-helpers';
 import TimeAgo from 'timeago-react';
 import { isPast } from 'date-fns';
 import PortfolioCards from 'components/common/PortfolioCards';
+import { FileIcon } from 'components/utils/Icons';
 
 const Dashboard = () => {
   const [toast, setToast] = useToast();
@@ -127,19 +128,22 @@ const ShowInfo = ({ offers }) =>
     </div>
   ) : null;
 
-const OffersRow = ({ _id, expires, propertyInfo }) => {
-  if (isPast(expires)) {
+const OffersRow = ({ _id, expires, status, propertyInfo }) => {
+  if (isPast(expires) || status !== 'Generated') {
     return null;
   }
   return (
-    <InfoBox>
-      <Link
-        className="btn btn-success btn-sm float-right"
-        to={`/user/property/offer-letter/${_id}`}
-      >
-        View Offer Letter
-      </Link>
+    <div className="card d-flex flex-row toast-alert info">
+      <div className="span toast-icon-holder">
+        <FileIcon />
+      </div>
       <h6 className="w-100 font-weight-normal">
+        <Link
+          className="btn btn-success btn-sm float-right"
+          to={`/user/property/offer-letter/${_id}`}
+        >
+          View Offer Letter
+        </Link>
         Highrachy has sent you an offer letter for{' '}
         <strong>{propertyInfo.name}</strong>
         <br />
@@ -147,7 +151,7 @@ const OffersRow = ({ _id, expires, propertyInfo }) => {
           Expires on {getShortDate(expires)} (<TimeAgo datetime={expires} />)
         </small>
       </h6>
-    </InfoBox>
+    </div>
   );
 };
 

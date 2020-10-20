@@ -3,7 +3,7 @@ import BackendPage from 'components/layout/BackendPage';
 import { Link } from '@reach/router';
 import PropertyCard from 'components/common/PropertyCard';
 import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
+import { ACTIVE_OFFER_STATUS, BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, moneyFormatInNaira } from 'utils/helpers';
@@ -16,6 +16,9 @@ import { MessageIcon } from 'components/utils/Icons';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { getShortDate } from 'utils/date-helpers';
 import PortfolioCards from 'components/common/PortfolioCards';
+import { FileIcon } from 'components/utils/Icons';
+import { SuccessIcon } from 'components/utils/Icons';
+import { InfoIcon } from 'components/utils/Icons';
 
 const Portfolio = () => {
   const [toast, setToast] = useToast();
@@ -57,12 +60,13 @@ const Content = ({ setToast, recommendedProperties }) => (
   <>
     <div className="container-fluid">
       <h5>Your active property</h5>
-      <PortfolioCards setToast={setToast} />
+      <div className="row">
+        <PortfolioCards setToast={setToast} />
+      </div>
     </div>
 
-    <EnjoyingBallers />
-
     <Offers />
+    <EnjoyingBallers />
 
     <LoadItems
       Icon={<MyPropertyIcon />}
@@ -71,7 +75,7 @@ const Content = ({ setToast, recommendedProperties }) => (
       noContent={<NoContent isButton text="No Properties found" />}
     >
       <div className="container-fluid">
-        <h5 className="mt-4">Just for you (Recommended Properties)</h5>
+        <h5 className="mt-4">Just for you</h5>
         <div className="row">
           {recommendedProperties &&
             recommendedProperties.map((property) => (
@@ -128,13 +132,18 @@ const Offers = () => {
   }, [setToast]);
   return (
     <>
-      <h5 className="container-fluid mt-4">All Offers</h5>
+      <h5 className="container-fluid mt-5">All Offers</h5>
       <LoadItems
         Icon={<MessageIcon />}
         items={offers}
+        size="small"
         loadingText="Loading your Offers"
         noContent={
-          <NoContent Icon={<MessageIcon />} isButton text="No Offers found" />
+          <NoContent
+            size="small"
+            Icon={<MessageIcon />}
+            text="No Offers found"
+          />
         }
       >
         <OffersRowList toast={toast} offers={offers || []} />
@@ -144,22 +153,10 @@ const Offers = () => {
 };
 
 const OffersRowList = ({ offers }) => (
-  <div className="container-fluid">
+  <div className="container-fluid mb-5">
     <Card>
       <div className="table-responsive">
-        <table className="table table-border table-hover">
-          <thead>
-            <tr>
-              <td>S/N</td>
-              <td>Image</td>
-              <td>Vendor</td>
-              <td>Property Name</td>
-              <td>Property Price</td>
-              <td>Status</td>
-              <td></td>
-              <td></td>
-            </tr>
-          </thead>
+        <table className="table table-border table-hover mb-0">
           <tbody>
             {offers.map((offer, index) => (
               <OffersRow key={index} number={index + 1} {...offer} />
@@ -184,34 +181,53 @@ const OffersRow = ({
   enquiryInfo,
   propertyInfo,
 }) => (
-  <tr>
-    <td>{number}</td>
-    <td>
-      <img
-        alt={propertyInfo.name}
-        className="img-fluid avatar--medium--small"
-        src={propertyInfo.mainImage ? propertyInfo.mainImage : ProfileAvatar}
-        title={propertyInfo.name}
-      />
-    </td>
-    <td>
-      Highrachy
-      <br />
-      <small>09012345678</small>
-    </td>
-    <td>{propertyInfo.name}</td>
-    <td>{moneyFormatInNaira(totalAmountPayable)}</td>
-    <td>{status}</td>
-    <td>{getShortDate(expires)}</td>
-    <td>
-      <Link
-        className="btn btn-sm btn-secondary"
-        to={`/user/property/offer-letter/${_id}`}
-      >
-        View Offer
-      </Link>
-    </td>
-  </tr>
+  <>
+    <tr>
+      <td>{number}</td>{' '}
+      <td>
+        <img
+          alt={propertyInfo.name}
+          className="img-fluid avatar--medium--small rounded"
+          src={propertyInfo.mainImage ? propertyInfo.mainImage : ProfileAvatar}
+          title={propertyInfo.name}
+        />
+      </td>
+      <td>
+        <strong>{propertyInfo.name}</strong>
+        <br />
+        <small>
+          {propertyInfo.address.city}, {propertyInfo.address.state}
+        </small>
+      </td>
+      <td>
+        <strong>{moneyFormatInNaira(totalAmountPayable)}</strong>
+      </td>
+      <td>
+        <strong>Highrachy</strong>
+        <br />
+        <small>09012345678</small>
+      </td>
+      <td>
+        {ACTIVE_OFFER_STATUS.includes(status) ? (
+          <span className="text-green">
+            <SuccessIcon />{' '}
+          </span>
+        ) : (
+          <span className="text-danger">
+            <InfoIcon />
+          </span>
+        )}
+      </td>
+      <td>
+        <Link
+          className="btn btn-sm btn-secondary"
+          to={`/user/property/offer-letter/${_id}`}
+        >
+          <FileIcon /> View Offer
+        </Link>
+      </td>
+    </tr>
+  </>
 );
 
 export default Portfolio;

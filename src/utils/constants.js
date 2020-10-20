@@ -78,3 +78,19 @@ export const REFERRAL_STATUS = {
     className: 'text-success',
   },
 };
+
+export const OFFER_STATUS = {
+  GENERATED: 'Generated',
+  INTERESTED: 'Interested',
+  ASSIGNED: 'Assigned',
+  ALLOCATED: 'Allocated',
+  REJECTED: 'Rejected',
+  NEGLECTED: 'Neglected',
+  CANCELLED: 'Cancelled',
+};
+
+export const ACTIVE_OFFER_STATUS = [
+  OFFER_STATUS.INTERESTED,
+  OFFER_STATUS.ASSIGNED,
+  OFFER_STATUS.ALLOCATED,
+];

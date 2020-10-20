@@ -97,3 +97,10 @@ html {
     display: none;
   }
 }
+
+.toast-icon-holder svg,
+.toast-alert-icon-holder.offer-letter-svg svg {
+  height: 2rem;
+  width: 2rem;
+  margin-top: 0.5rem;
+}

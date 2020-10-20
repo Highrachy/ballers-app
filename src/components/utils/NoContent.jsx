@@ -3,12 +3,20 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from '@reach/router';
 
-const NoContent = ({ text, linkText, linkTo, isButton, className, Icon }) => (
+const NoContent = ({
+  text,
+  linkText,
+  linkTo,
+  isButton,
+  className,
+  Icon,
+  size,
+}) => (
   <section
-    className={classNames(className, 'no-content text-center text-muted')}
+    className={classNames(className, 'no-content text-center text-muted', size)}
   >
     {Icon && Icon}
-    <h4 className="text-muted pt-3">{text}</h4>
+    <h4 className={classNames('text-muted pt-3', size)}>{text}</h4>
     {linkText && linkTo && (
       <Link
         className={classNames(
