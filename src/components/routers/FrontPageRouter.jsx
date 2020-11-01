@@ -30,7 +30,7 @@ const FrontPageRouter = () => (
     <PrivacyPolicy path="privacy-policy" />
     <Login path="login" />
     <Login path="login/:sid" />
-    <Login path="activate/:token" />
+    <Login path="activate" />
     <Logout path="logout" />
     <ForgotPassword path="forgot-password" />
     <ResetPassword path="reset-password/:token" />

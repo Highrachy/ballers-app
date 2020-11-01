@@ -10,6 +10,7 @@ import { getError, moneyFormatInNaira } from 'utils/helpers';
 const PROPERTY_COLOR = '#2dca73';
 const CONTRIBUTION_REWARD_COLOR = '#161d3f';
 const REFERRAL_COLOR = '#F79B18';
+const EMPTY_COLOR = '#c4c4c4';
 
 const ContributionGraph = () => {
   const [toast, setToast] = useToast();
@@ -22,6 +23,12 @@ const ContributionGraph = () => {
     ...initialOverview,
     loading: true,
   });
+
+  const contributionIsEmpty =
+    accountOverview.contributionReward === 0 &&
+    accountOverview.totalAmountPaid === 0 &&
+    accountOverview.referralRewards === 0;
+
   React.useEffect(() => {
     Axios.get(`${BASE_API_URL}/user/account-overview`, {
       headers: {
@@ -66,12 +73,12 @@ const ContributionGraph = () => {
                 datasets: [
                   {
                     data: [
-                      accountOverview.totalAmountPaid || 1,
+                      contributionIsEmpty ? 1 : accountOverview.totalAmountPaid,
                       accountOverview.contributionReward,
                       accountOverview.referralRewards,
                     ],
                     backgroundColor: [
-                      PROPERTY_COLOR,
+                      contributionIsEmpty ? EMPTY_COLOR : PROPERTY_COLOR,
                       CONTRIBUTION_REWARD_COLOR,
                       REFERRAL_COLOR,
                     ],

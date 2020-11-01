@@ -139,8 +139,8 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
       noContent={NO_CONTENT}
     >
       {portfolios &&
-        portfolios.map((portfolio) => (
-          <div className="col-sm-6">
+        portfolios.map((portfolio, index) => (
+          <div className="col-sm-6" key={index}>
             <PortfolioCard {...portfolio} />
           </div>
         ))}

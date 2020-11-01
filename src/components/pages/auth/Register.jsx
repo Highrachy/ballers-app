@@ -115,7 +115,8 @@ const RegisterForm = ({ type }) => {
       initialValues={setInitialValues(registerSchema, { agreement: [] })}
       onSubmit={(values, actions) => {
         delete values.agreement;
-        const { referrer } = getReferralInfo();
+        const referrer =
+          (getReferralInfo() && getReferralInfo.referrer) || null;
         const payload = referrer
           ? { ...values, referralCode: referrer.referralCode }
           : values;

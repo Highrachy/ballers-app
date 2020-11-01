@@ -14,6 +14,7 @@ import { EmptyTitleSection } from 'components/common/TitleSection';
 import Toast, { useToast } from 'components/utils/Toast';
 import { BASE_API_URL, DASHBOARD_PAGE } from 'utils/constants';
 import { UserContext } from 'context/UserContext';
+import * as queryString from 'query-string';
 import {
   storeToken,
   storeUserRole,
@@ -21,15 +22,21 @@ import {
 } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
 
-const Login = () => (
-  <>
-    <Header />
-    <EmptyTitleSection>
-      <Content />
-    </EmptyTitleSection>
-    <Footer />
-  </>
-);
+const Login = ({ location }) => {
+  const queryParams = queryString.parse(location.search);
+  const { token } = queryParams;
+
+  return (
+    <>
+      <Header />
+      <EmptyTitleSection>
+        <Content token={token} />
+      </EmptyTitleSection>
+      <Footer />
+    </>
+  );
+};
+
 const Content = ({ redirectTo, sid, token }) => {
   return (
     <section>
@@ -84,12 +91,11 @@ const LoginForm = ({ redirectTo, sid, token }) => {
   // CHECK TOKEN ACTIVATION
   React.useEffect(() => {
     token &&
-      Axios.get('/api/v1/users/activate', { params: { token } })
+      Axios.get(`${BASE_API_URL}/user/activate`, { params: { token } })
         .then(function (response) {
           const { status, data } = response;
           // handle success
           if (status === 200) {
-            console.log('data', data);
             setToast({
               type: 'success',
               message: data.message,
