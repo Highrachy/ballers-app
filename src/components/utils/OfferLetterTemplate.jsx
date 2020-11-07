@@ -23,6 +23,7 @@ const OfferLetterTemplate = ({
   signature,
   showSignaturePad,
 }) => {
+  const shownSignature = signature || offerInfo.signature;
   const { totalAmountPayable, initialPayment, monthlyPayment } = offerInfo;
   const rangePrice = totalAmountPayable - initialPayment;
   const noOfMonths =
@@ -45,7 +46,7 @@ const OfferLetterTemplate = ({
         alt="Highrachy Logo"
       />
       <p className="mt-4">
-        Our Ref: BVC01/OLAXXXX2019
+        Our Ref: {offerInfo.referenceCode || ''}
         <span className="float-right">{getDate(Date.now())}</span>
       </p>
 
@@ -333,23 +334,26 @@ const OfferLetterTemplate = ({
         <section className="signature mt-5">
           <h6>MEMORANDUM OF ACCEPTANCE</h6>
           <strong className="text-muted">
-            I, <span className="memo-border">Haruna Popoola</span> hereby
-            accepts the above terms and conditions on{' '}
+            I,{' '}
+            <span className="memo-border">
+              {enquiryInfo.firstName} {enquiryInfo.lastName}
+            </span>{' '}
+            hereby accepts the above terms and conditions on{' '}
             <span className="memo-border">{getDate(Date.now())}</span>.
           </strong>
 
           <h6 className="mt-5 mb-2">Signature</h6>
           <h3 className="signature-pad">
-            {signature && (
+            {shownSignature && (
               <>
-                {isValidURL(signature) ? (
+                {isValidURL(shownSignature) ? (
                   <Image
                     className="signature-image uploaded-image mb-3"
                     name="Signature"
-                    src={signature}
+                    src={shownSignature}
                   />
                 ) : (
-                  signature
+                  shownSignature
                 )}
               </>
             )}

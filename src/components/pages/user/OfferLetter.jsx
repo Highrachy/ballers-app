@@ -3,7 +3,7 @@ import BackendPage from 'components/layout/BackendPage';
 import Toast, { useToast } from 'components/utils/Toast';
 import Modal from 'components/common/Modal';
 import ReactToPrint from 'react-to-print';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, OFFER_STATUS } from 'utils/constants';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
@@ -19,7 +19,7 @@ const OfferLetter = ({ id }) => {
       <OfferLetterTemplateContainer offerId={id} ref={componentRef} />
       <ReactToPrint
         trigger={() => (
-          <section className="container-fluid mt-5">
+          <section className="container-fluid mt-5 d-none d-md-block">
             <button className="btn btn-info">Print this out!</button>
           </section>
         )}
@@ -66,6 +66,7 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
       })
         .then(function (response) {
           const { status, data } = response;
+          console.log('data', data);
           if (status === 200) {
             setOffer(data.offer);
           }
@@ -88,25 +89,29 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
           signature={signature}
           showSignaturePad
         >
-          <div className="mt-5">
-            <DigitalSignaturePad setSignature={setSignature} />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <UploadSignature
-              image={image}
-              setImage={setImage}
-              setSignature={setSignature}
-            />
-          </div>
+          {offer.status === OFFER_STATUS.GENERATED && (
+            <>
+              <div className="mt-5">
+                <DigitalSignaturePad setSignature={setSignature} />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <UploadSignature
+                  image={image}
+                  setImage={setImage}
+                  setSignature={setSignature}
+                />
+              </div>
 
-          {signature && (
-            <div className="mt-5">
-              <button
-                className="btn btn-success btn-wide hide-print"
-                onClick={acceptOffer}
-              >
-                Accept Offer Letter
-              </button>
-            </div>
+              {signature && (
+                <div className="mt-5">
+                  <button
+                    className="btn btn-success btn-wide hide-print"
+                    onClick={acceptOffer}
+                  >
+                    Accept Offer Letter
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </OfferLetterTemplate>
       )}
