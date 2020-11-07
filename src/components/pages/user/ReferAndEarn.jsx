@@ -208,7 +208,6 @@ const ReferralCodeClipBoard = ({ referralCode }) => {
 };
 
 const InviteFriendsTable = ({ referrals }) => {
-  console.log('referrals', referrals);
   return (
     <div className="container-fluid mt-5">
       <h6>

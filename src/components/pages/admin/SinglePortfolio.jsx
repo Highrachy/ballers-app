@@ -25,11 +25,9 @@ const SinglePortfolio = ({ id }) => {
         // handle success
         if (status === 200) {
           setProperty(data.property);
-          console.log('data.property', data.property);
         }
       })
       .catch(function (error) {
-        console.log('error.response', error.response);
         setToast({
           message: getError(error),
         });

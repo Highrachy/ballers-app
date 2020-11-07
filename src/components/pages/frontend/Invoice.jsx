@@ -40,8 +40,6 @@ const Invoice = (props) => {
           })
             .then(function (response) {
               const { status, data } = response;
-              console.log('offer data', data);
-              // handle success
               if (status === 200) {
                 setOffer(data.offer);
               }
@@ -60,9 +58,6 @@ const Invoice = (props) => {
       });
   }, [setToast, reference]);
 
-  console.log('payment', payment);
-  console.log('offer', offer);
-  console.log('paystack', paystackResponse);
   return (
     <>
       <Toast {...toast} showToastOnly />

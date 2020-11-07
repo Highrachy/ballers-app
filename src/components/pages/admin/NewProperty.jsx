@@ -266,7 +266,6 @@ const PropertyAddress = () => (
 );
 
 const MapLocation = ({ mapAddress, setLocation }) => {
-  console.log('mapAddress', mapAddress);
   const { latLngFromAddress } = useMapGeocoder({
     mapAddress,
   });

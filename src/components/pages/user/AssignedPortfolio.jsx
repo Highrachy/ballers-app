@@ -33,14 +33,11 @@ const SinglePortfolio = ({ id, assigned }) => {
     })
       .then(function (response) {
         const { status, data } = response;
-        // handle success
         if (status === 200) {
-          console.log('data', data);
           setProperty(data.property);
         }
       })
       .catch(function (error) {
-        console.log('error.response', error.response);
         setToast({
           message: getError(error),
         });
@@ -210,15 +207,11 @@ const AssignedPropertySidebar = ({ offer, totalPaid }) => {
     )
       .then(function (response) {
         const { status, data } = response;
-        console.log('data', data);
-        // handle success
         if (status === 201) {
           window.location.href = data.payment.authorization_url;
         }
       })
-      .catch(function (error) {
-        console.log(error.response.data);
-      });
+      .catch(function (error) {});
   };
   return (
     <Card className="card-container property-holder">

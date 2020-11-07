@@ -36,8 +36,6 @@ const Dashboard = () => {
     })
       .then(function (response) {
         const { status, data } = response;
-        console.log('offer data', data);
-        // handle success
         if (status === 200) {
           setOffers(data.offers);
         }
@@ -61,8 +59,6 @@ const Dashboard = () => {
     )
       .then(function (response) {
         const { status, data } = response;
-        console.log('data', data);
-        // handle success
         if (status === 200) {
           setProperties(data.properties);
         }

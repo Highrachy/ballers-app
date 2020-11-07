@@ -47,7 +47,6 @@ const UploadProfileImage = () => {
       })
         .then(function (response) {
           const { status, data } = response;
-          console.log('response', response);
           if (status === 200) {
             userDispatch({
               type: 'user-profile-image',

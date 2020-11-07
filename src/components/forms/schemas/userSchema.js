@@ -59,7 +59,6 @@ export const preferenceSchema = {
       'maximum',
       'Maximum Budget should be greater than the minimum Budget',
       function () {
-        console.log('this.parent', this.parent);
         return this.parent.minPrice
           ? this.parent.maxPrice > this.parent.minPrice
           : true;

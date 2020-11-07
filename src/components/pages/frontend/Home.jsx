@@ -40,15 +40,12 @@ const Home = ({ referralCode, inviteCode }) => {
         });
   }, [referralCode]);
 
-  console.log('inviteCode', inviteCode);
-
   React.useEffect(() => {
     inviteCode &&
       Axios.get(`${BASE_API_URL}/referral/${inviteCode}`)
         .then((response) => {
           const { status, data } = response;
           if (status === 200) {
-            console.log('response', response);
             setReferral(data.referral);
             setShowReferralModal(true);
             storeReferralInfo({ ...data.referral });

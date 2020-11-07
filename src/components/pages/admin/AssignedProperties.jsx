@@ -24,9 +24,7 @@ const AssignedProperties = () => {
     })
       .then(function (response) {
         const { status, data } = response;
-        // handle success
         if (status === 200) {
-          console.log('data', data);
           setEnquiries(data.offers);
         }
       })

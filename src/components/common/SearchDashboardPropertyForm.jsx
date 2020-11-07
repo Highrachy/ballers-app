@@ -45,8 +45,6 @@ const SearchPropertyForm = ({ defaultInputValue, useDashboardStyles }) => {
     if (formValue.houseType) {
       params.push([`houseType=${formValue.houseType}`]);
     }
-
-    console.log('params', params);
     const query = params.length > 0 ? `?${params.join('&')}` : '';
     navigate(`/user/just-for-you${query}`, true);
   };

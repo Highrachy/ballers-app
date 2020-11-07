@@ -47,7 +47,6 @@ const SinglePortfolio = ({ id, assigned }) => {
         }
       })
       .catch(function (error) {
-        console.log('error.response', error.response);
         setToast({
           message: getError(error),
         });
@@ -212,15 +211,11 @@ const AssignedPropertySidebar = () => {
     )
       .then(function (response) {
         const { status, data } = response;
-        console.log('data', data);
-        // handle success
         if (status === 201) {
           window.location.href = data.payment.authorization_url;
         }
       })
-      .catch(function (error) {
-        console.log(error.response.data);
-      });
+      .catch(function (error) {});
   };
   return (
     <Card className="card-container property-holder">

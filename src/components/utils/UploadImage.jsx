@@ -37,16 +37,13 @@ const UploadImage = ({ defaultImage, uploadText, changeText, afterUpload }) => {
     } else {
       const data = new FormData();
       data.append('image', file);
-      console.log('data', data);
 
       Axios.post(`${BASE_API_URL}/user/upload-image`, data, {
         headers: { Authorization: getTokenFromStore() },
       })
         .then(function (response) {
           const { status, data } = response;
-          console.log('response', response);
           if (status === 200) {
-            console.log('data', data);
             setImage(data.file.path);
             afterUpload(data.file.path);
             setLoading(false);

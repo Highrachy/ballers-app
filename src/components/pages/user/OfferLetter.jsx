@@ -66,8 +66,6 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
       })
         .then(function (response) {
           const { status, data } = response;
-          console.log('offer data', data);
-          // handle success
           if (status === 200) {
             setOffer(data.offer);
           }
@@ -119,7 +117,6 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
 class OfferLetterTemplateContainer extends React.Component {
   render() {
     const { offerId } = this.props;
-    console.log('offerId in class', offerId);
     return (
       <div className="container-fluid">
         <DisplayOfferLetterTemplate offerId={offerId} />

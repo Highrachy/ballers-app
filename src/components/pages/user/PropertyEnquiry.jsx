@@ -43,14 +43,12 @@ const PropertyEnquiry = ({ id }) => {
         }
       })
       .catch(function (error) {
-        console.log('error.response', error.response);
         setToast({
           message: getError(error),
         });
       });
   }, [setToast, id]);
 
-  console.log('property1', property);
   return (
     <BackendPage>
       <section className="container-fluid">
@@ -96,7 +94,7 @@ const EnquiryForm = ({ id }) => {
             values.investmentStartDate.date || values.investmentStartDate,
           propertyId: id,
         };
-        console.log('payload', payload);
+
         Axios.post(`${BASE_API_URL}/enquiry/add`, payload, {
           headers: {
             Authorization: getTokenFromStore(),

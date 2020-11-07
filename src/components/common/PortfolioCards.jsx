@@ -87,9 +87,6 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
     })
       .then(function (response) {
         const { status, data } = response;
-        console.log('data', data);
-        // handle success
-        // save in the state here
         if (status === 200) {
           setPortfolios(data.properties);
         }

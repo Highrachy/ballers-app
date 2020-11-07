@@ -19,8 +19,6 @@ export const useAvailableOptions = () => {
       })
         .then(function (response) {
           const { status, data } = response;
-          console.log('data', data);
-          // handle success
           if (status === 200) {
             userDispatch({
               type: 'available-options',

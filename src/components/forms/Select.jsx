@@ -59,7 +59,6 @@ const Select = ({
             }
 
             const handleChange = (option) => {
-              console.log('option', option);
               option && (option.value || option.length > 0)
                 ? isMulti
                   ? form.setFieldValue(

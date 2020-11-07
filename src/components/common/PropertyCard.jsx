@@ -29,7 +29,6 @@ const PropertyCard = (property) => {
   const handleFavorites = (propertyId) => {
     setLoading(true);
     const FAVORITE_URL = isFavorite ? 'remove-favorite' : 'add-to-favorites';
-    console.log('FAVORITE_URL', FAVORITE_URL);
     Axios.post(
       `${BASE_API_URL}/user/${FAVORITE_URL}`,
       { propertyId },

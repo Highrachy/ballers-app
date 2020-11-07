@@ -31,11 +31,9 @@ const ViewEnquiry = ({ id }) => {
         // handle success
         if (status === 200) {
           setEnquiry(data.enquiry);
-          console.log('data.enquiry', data.enquiry);
         }
       })
       .catch(function (error) {
-        console.log('error.response', error.response);
         setToast({
           message: getError(error),
         });
