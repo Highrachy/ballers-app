@@ -10,13 +10,30 @@ import { getError } from 'utils/helpers';
 import OfferLetterTemplate from 'components/utils/OfferLetterTemplate';
 import Image from 'components/utils/Image';
 import UploadImage from 'components/utils/UploadImage';
+import { Form, Formik } from 'formik';
+import Textarea from 'components/forms/Textarea';
+import { createSchema } from 'components/forms/schemas/schema-helpers';
+import {
+  DisplayFormikState,
+  setInitialValues,
+} from 'components/forms/form-helper';
+import { raiseAConcernSchema } from 'components/forms/schemas/offerSchema';
+import Button from 'components/forms/Button';
+import { Accordion, Card } from 'react-bootstrap';
+import { ArrowDownIcon } from 'components/utils/Icons';
+import { ContextAwareToggle } from 'components/common/FAQsAccordion';
 
 const OfferLetter = ({ id }) => {
   const componentRef = React.useRef();
+  const [concerns, setConcerns] = React.useState(null);
 
   return (
     <BackendPage>
-      <OfferLetterTemplateContainer offerId={id} ref={componentRef} />
+      <OfferLetterTemplateContainer
+        offerId={id}
+        ref={componentRef}
+        setConcerns={setConcerns}
+      />
       <ReactToPrint
         trigger={() => (
           <section className="container-fluid mt-5 d-none d-md-block">
@@ -25,11 +42,101 @@ const OfferLetter = ({ id }) => {
         )}
         content={() => componentRef.current}
       />
+      <RaiseAConcern concerns={concerns} offerId={id} />
     </BackendPage>
   );
 };
 
-const DisplayOfferLetterTemplate = ({ offerId }) => {
+const ListConcerns = ({ concerns }) => {
+  return (
+    <Accordion className="search-result-tab-accordion" defaultActiveKey={1}>
+      {concerns.map(({ question, status }, index) => (
+        <Card key={index + 1}>
+          <Accordion.Toggle
+            as={Card.Header}
+            variant="link"
+            eventKey={index + 1}
+          >
+            <ContextAwareToggle
+              iconOpen={<ArrowDownIcon />}
+              iconClose={<ArrowDownIcon />}
+              eventKey={index + 1}
+            >
+              {question}
+            </ContextAwareToggle>
+          </Accordion.Toggle>
+          <Accordion.Collapse eventKey={index + 1}>
+            <Card.Body>{question}</Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      ))}
+    </Accordion>
+  );
+};
+const RaiseAConcern = ({ offerId, concerns }) => {
+  const [toast, setToast] = useToast();
+  console.log('concerns', concerns);
+
+  return (
+    <section className="mt-5">
+      <div className="container-fluid">
+        {concerns && <ListConcerns concerns={concerns} />}
+        <h4>Raise a Concern</h4>
+        <Formik
+          initialValues={setInitialValues(raiseAConcernSchema)}
+          onSubmit={(values, actions) => {
+            const payload = { offerId, ...values };
+            Axios.put(`${BASE_API_URL}/offer/raise-concern`, payload, {
+              headers: { Authorization: getTokenFromStore() },
+            })
+              .then(function (response) {
+                const { status } = response;
+                if (status === 200) {
+                  setToast({
+                    type: 'success',
+                    message: `Your concern has been duly noted.`,
+                  });
+                  actions.setSubmitting(false);
+                  actions.resetForm();
+                }
+              })
+              .catch(function (error) {
+                setToast({
+                  message: getError(error),
+                });
+                actions.setSubmitting(false);
+              });
+          }}
+          validationSchema={createSchema(raiseAConcernSchema)}
+        >
+          {({ isSubmitting, handleSubmit, ...props }) => (
+            <Form>
+              <Toast {...toast} />
+
+              <Textarea
+                label="Question"
+                name="question"
+                placeholder="Raise a concern regarding this offer letter"
+                rows="3"
+              />
+
+              <Button
+                className="btn-secondary mt-4"
+                loading={isSubmitting}
+                onClick={handleSubmit}
+              >
+                Submit Question
+              </Button>
+              <DisplayFormikState {...props} hide showAll />
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </section>
+  );
+};
+
+const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
   const [toast, setToast] = useToast();
   const [offer, setOffer] = React.useState(null);
   const [image, setImage] = React.useState(null);
@@ -66,9 +173,9 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
       })
         .then(function (response) {
           const { status, data } = response;
-          console.log('data', data);
           if (status === 200) {
             setOffer(data.offer);
+            setConcerns(data.offer.concern);
           }
         })
         .catch(function (error) {
@@ -76,7 +183,7 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
             message: getError(error),
           });
         });
-  }, [setToast, offerId]);
+  }, [setToast, setConcerns, offerId]);
 
   return (
     <>
@@ -121,10 +228,13 @@ const DisplayOfferLetterTemplate = ({ offerId }) => {
 
 class OfferLetterTemplateContainer extends React.Component {
   render() {
-    const { offerId } = this.props;
+    const { offerId, setConcerns } = this.props;
     return (
       <div className="container-fluid">
-        <DisplayOfferLetterTemplate offerId={offerId} />
+        <DisplayOfferLetterTemplate
+          offerId={offerId}
+          setConcerns={setConcerns}
+        />
       </div>
     );
   }

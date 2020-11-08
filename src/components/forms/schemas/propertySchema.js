@@ -3,7 +3,6 @@ import {
   positiveNumberValidation,
   email,
   phoneNumber,
-  validPercentage,
   minDateValidation,
   required,
   optionalValidation,
@@ -29,15 +28,4 @@ export const scheduleTourSchema = {
   visitorEmail: email,
   visitorPhone: phoneNumber,
   visitDate: minDateValidation('Visitation Date', new Date()),
-};
-
-export const offerLetterSchema = {
-  totalAmountPayable: positiveNumberValidation('Total Amount Payable'),
-  allocationInPercentage: validPercentage('Allocation'),
-  initialPayment: positiveNumberValidation('Initial Payment'),
-  monthlyPayment: positiveNumberValidation('Monthly Payment'),
-  paymentFrequency: required('Payment Frequency'),
-  expires: required('Offer Expires'),
-  title: stringValidation('Title Document'),
-  deliveryState: stringValidation('Delivery State'),
 };

@@ -14,7 +14,7 @@ import { createSchema } from 'components/forms/schemas/schema-helpers';
 import Select from 'components/forms/Select';
 import Textarea from 'components/forms/Textarea';
 import { generateNumOptions, getError } from 'utils/helpers';
-import { offerLetterSchema } from 'components/forms/schemas/propertySchema';
+import { offerLetterSchema } from 'components/forms/schemas/offerSchema';
 import InputFormat from 'components/forms/InputFormat';
 import Input from 'components/forms/Input';
 import { addDays, addMonths } from 'date-fns';
