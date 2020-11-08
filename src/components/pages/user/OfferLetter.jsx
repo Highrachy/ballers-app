@@ -47,41 +47,71 @@ const OfferLetter = ({ id }) => {
   );
 };
 
-const ListConcerns = ({ concerns }) => {
+const ListConcerns = ({ concerns, title }) => {
+  if (!concerns || concerns.length === 0) {
+    return null;
+  }
   return (
-    <Accordion className="search-result-tab-accordion" defaultActiveKey={1}>
-      {concerns.map(({ question, status }, index) => (
-        <Card key={index + 1}>
-          <Accordion.Toggle
-            as={Card.Header}
-            variant="link"
-            eventKey={index + 1}
-          >
-            <ContextAwareToggle
-              iconOpen={<ArrowDownIcon />}
-              iconClose={<ArrowDownIcon />}
+    <section className="mb-5">
+      <h5 className="secondary-text">{title}</h5>
+      <Accordion className="offer-letter-accordion">
+        {concerns.map(({ question, answer, status }, index) => (
+          <Card key={index + 1}>
+            <Accordion.Toggle
+              as={Card.Header}
+              variant="link"
               eventKey={index + 1}
             >
-              {question}
-            </ContextAwareToggle>
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey={index + 1}>
-            <Card.Body>{question}</Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      ))}
-    </Accordion>
+              <ContextAwareToggle
+                iconOpen={<ArrowDownIcon />}
+                iconClose={<ArrowDownIcon />}
+                eventKey={index + 1}
+              >
+                {question}
+              </ContextAwareToggle>
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={index + 1}>
+              <Card.Body>
+                {answer || 'Awaiting Response from the Vendor'}
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        ))}
+      </Accordion>
+    </section>
   );
 };
+
 const RaiseAConcern = ({ offerId, concerns }) => {
   const [toast, setToast] = useToast();
-  console.log('concerns', concerns);
+
+  const allConcerns =
+    concerns &&
+    concerns.reduce(
+      (acc, concern) => {
+        concern.status === 'Pending'
+          ? acc.pending.push(concern)
+          : acc.answered.push(concern);
+        return acc;
+      },
+      { pending: [], answered: [] }
+    );
 
   return (
     <section className="mt-5">
       <div className="container-fluid">
-        {concerns && <ListConcerns concerns={concerns} />}
-        <h4>Raise a Concern</h4>
+        {allConcerns && (
+          <ListConcerns
+            concerns={allConcerns.pending}
+            title="Pending Concerns"
+          />
+        )}
+        {allConcerns && (
+          <ListConcerns
+            concerns={allConcerns.answered}
+            title="Answered Concerns"
+          />
+        )}
         <Formik
           initialValues={setInitialValues(raiseAConcernSchema)}
           onSubmit={(values, actions) => {
@@ -112,9 +142,10 @@ const RaiseAConcern = ({ offerId, concerns }) => {
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>
               <Toast {...toast} />
-
+              <p>
+                <strong>Have any concerns? Ask your Question here:</strong>
+              </p>
               <Textarea
-                label="Question"
                 name="question"
                 placeholder="Raise a concern regarding this offer letter"
                 rows="3"
