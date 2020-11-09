@@ -4,11 +4,15 @@ export const BASE_API_URL = 'https://staging-ballers-api.herokuapp.com/api/v1';
 export const USER_TYPES = {
   admin: 0,
   user: 1,
+  vendor: 2,
+  editor: 3,
 };
 
 export const DASHBOARD_PAGE = {
   [USER_TYPES.user]: 'user',
   [USER_TYPES.admin]: 'admin',
+  [USER_TYPES.vendor]: 'vendor',
+  [USER_TYPES.editor]: 'editor',
 };
 
 export const COLOR_STYLE = [

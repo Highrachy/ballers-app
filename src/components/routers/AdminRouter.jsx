@@ -15,7 +15,7 @@ import AssignedProperties from 'components/pages/admin/AssignedProperties';
 import AddTransaction from 'components/pages/admin/AddTransaction';
 import NewTransaction from 'components/pages/admin/NewTransaction';
 
-const UserRouter = () => (
+const AdminRouter = () => (
   <Router>
     <Dashboard path="dashboard" />
     <Users path="users" />
@@ -34,4 +34,4 @@ const UserRouter = () => (
   </Router>
 );
 
-export default UserRouter;
+export default AdminRouter;
