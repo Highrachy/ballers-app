@@ -17,8 +17,8 @@ export default [
   },
 
   {
-    title: 'Portfolios',
-    to: '/editor/portfolios',
+    title: 'Content Properties',
+    to: '/editor/content-property',
     icon: <MyPropertyIcon />,
     footer: true,
   },

@@ -24,8 +24,6 @@ import { UserContext } from 'context/UserContext';
 import { newPropertySchema } from 'components/forms/schemas/propertySchema';
 import Textarea from 'components/forms/Textarea';
 import InputFormat from 'components/forms/InputFormat';
-import MapPicker from 'components/utils/MapPicker';
-import useMapGeocoder from 'hooks/useMapGeocoder';
 import {
   getError,
   getLocationFromAddress,
@@ -36,6 +34,7 @@ import Address from 'components/utils/Address';
 import Select from 'components/forms/Select';
 import UploadImage from 'components/utils/UploadImage';
 import Image from 'components/utils/Image';
+import MapLocation from 'components/utils/MapLocation';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
@@ -264,24 +263,5 @@ const PropertyAddress = () => (
     </section>
   </Card>
 );
-
-const MapLocation = ({ mapAddress, setLocation }) => {
-  const { latLngFromAddress } = useMapGeocoder({
-    mapAddress,
-  });
-  return (
-    <Card className="card-container mt-5">
-      <section className="row">
-        <div className="col-md-10 px-4">
-          <h5 className="mb-4">Set Map Picker</h5>
-          <MapPicker
-            mapLocation={latLngFromAddress}
-            processLocation={(value) => setLocation(value)}
-          />
-        </div>
-      </section>
-    </Card>
-  );
-};
 
 export default NewProperty;

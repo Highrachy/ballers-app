@@ -29,3 +29,17 @@ export const scheduleTourSchema = {
   visitorPhone: phoneNumber,
   visitDate: minDateValidation('Visitation Date', new Date()),
 };
+
+export const addAreaSchema = {
+  area: required('Area'),
+  state: required('State'),
+};
+
+export const addContentPropertySchema = {
+  areaId: required('Area Id'),
+  category: required('Category'),
+  houseType: required('Property Type'),
+  price: required('Price'),
+  website: optionalValidation(required('Website')),
+  link: optionalValidation(required('Link')),
+};
