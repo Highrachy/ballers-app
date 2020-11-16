@@ -27,7 +27,7 @@ const Users = () => {
         const { status, data } = response;
         // handle success
         if (status === 200) {
-          setUsers(data.users);
+          setUsers(data.result);
         }
       })
       .catch(function (error) {

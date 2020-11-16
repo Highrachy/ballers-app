@@ -85,7 +85,7 @@ const AddAreaForm = () => {
             loading={isSubmitting}
             onClick={handleSubmit}
           >
-            Add New Property
+            Add Area
           </Button>
           <DisplayFormikState {...props} showAll />
         </Form>
@@ -99,7 +99,7 @@ const PropertyInfoForm = () => {
     <Card className="card-container">
       <section className="row">
         <div className="col-md-10 px-4">
-          <h5 className="mb-4">Property Information</h5>
+          <h5 className="mb-4">Add a new Area</h5>
           <div className="form-row">
             <Select
               formGroupClassName="col-md-6"
