@@ -13,7 +13,7 @@ import { getError, nearestMillion } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
 import { Link } from '@reach/router';
 
-const ContentProperty = () => {
+const AllContentProperty = () => {
   const [toast, setToast] = useToast();
   const [contentProperty, setContentProperty] = React.useState(null);
   React.useEffect(() => {
@@ -44,12 +44,12 @@ const ContentProperty = () => {
       >
         All Content Property
       </TopTitle>
-      <AllContentProperty contentProperty={contentProperty} />
+      <ContentPRoperty contentProperty={contentProperty} />
     </BackendPage>
   );
 };
 
-const AllContentProperty = ({ contentProperty, toast }) => (
+const ContentPRoperty = ({ contentProperty, toast }) => (
   <LoadItems
     Icon={<MyPropertyIcon />}
     items={contentProperty}
@@ -139,7 +139,7 @@ const ContentPropertyRow = ({
       <td>
         <Link
           className="btn btn-sm btn-secondary"
-          to={`/editor/content-property/${_id}`}
+          to={`/editor/content-property/area/${_id}`}
         >
           View
         </Link>
@@ -148,4 +148,4 @@ const ContentPropertyRow = ({
   );
 };
 
-export default ContentProperty;
+export default AllContentProperty;
