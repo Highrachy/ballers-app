@@ -36,7 +36,7 @@ import Axios from 'axios';
 import useWindowSize from 'hooks/useWindowSize';
 import * as queryString from 'query-string';
 import { Slide } from 'react-awesome-reveal';
-import { MOBILE_WIDTH } from 'utils/constants';
+import { BASE_API_URL, MOBILE_WIDTH } from 'utils/constants';
 import { Link } from '@reach/router';
 
 const SearchResult = ({ location }) => {
@@ -57,20 +57,18 @@ const SearchResult = ({ location }) => {
       area: 'Select Area...',
       houseType: 'House Type...',
     };
-    Axios.post('http://staging.ballers.ng/includes/find-house.php', {
-      search: 'true',
-      state,
-      area,
-      type: houseType,
-    }).then(function (response) {
+
+    Axios.get(
+      `${BASE_API_URL}/content-property/?areaId=${area}&houseType=${houseType}`
+    ).then(function (response) {
       const { status, data } = response;
       if (status === 200) {
         setLoading(false);
-        setResult(data);
+        setResult(data.evaluation);
         setDefaultInputValue({
-          state: data.state_name,
-          area: data.area_name,
-          houseType: data.type,
+          state: data.evaluation.stateName,
+          area: data.evaluation.areaName,
+          houseType: data.evaluation.type,
         });
       } else {
         setLoading(false);
@@ -166,10 +164,10 @@ const SearchResultContent = ({ result }) => {
               <h6 className="font-weight-normal search-result-average-price">
                 <InfoIcon /> Average property price
               </h6>
-              <h2>{nearestMillion(result.price)}</h2>
+              <h2>{nearestMillion(result.averagePrice)}</h2>
               <ul className="list-inline">
                 <li className="list-inline-item px-2">
-                  <LocationIcon /> {result.area_name}, {result.state}
+                  <LocationIcon /> {result.areaName}, {result.stateName}
                 </li>
                 <li className="list-inline-item px-2">
                   <ApartmentIcon /> {result.type}
@@ -179,13 +177,13 @@ const SearchResultContent = ({ result }) => {
                 <RangeLine />
                 <div className="row">
                   <div className="col-lg-3 text-left pl-4 font-weight-bold">
-                    {nearestMillion(result.minimum_price)}
+                    {nearestMillion(result.minimumPrice)}
                   </div>
                   <div className="col-lg-6 text-center text-secondary">
                     <InfoIcon /> Property price range of the selected location
                   </div>
                   <div className="col-lg-3 text-right font-weight-bold">
-                    {nearestMillion(result.maximum_price)}
+                    {nearestMillion(result.maximumPrice)}
                   </div>
                 </div>
               </div>

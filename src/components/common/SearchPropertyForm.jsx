@@ -5,6 +5,8 @@ import Select from 'react-select';
 import { customStyles } from 'components/forms/Select';
 import { navigate } from '@reach/router';
 import Toast, { useToast } from 'components/utils/Toast';
+import { BASE_API_URL } from 'utils/constants';
+import { valuesToOptions } from 'utils/helpers';
 
 const SearchPropertyForm = ({ defaultInputValue }) => {
   const LOADING = 'Loading...';
@@ -35,17 +37,11 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   // State
   const [state, setState] = React.useState([{ label: 'Lagos', value: '1' }]);
   React.useEffect(() => {
-    Axios.post('http://staging.ballers.ng/includes/find-house.php', {
-      load_state: 'test',
-    })
+    Axios.get(`${BASE_API_URL}/area/states`)
       .then(function (response) {
         const { status, data } = response;
         if (status === 200) {
-          const output = data.map(({ state_name, state_id }) => ({
-            label: state_name,
-            value: state_id,
-          }));
-          setState(output);
+          setState(valuesToOptions(data.states));
         }
       })
       .catch(function (error) {
@@ -60,16 +56,13 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
     if (value) {
       setFormValue({ ...formValue, state: value, houseType: '' });
       setPlaceholder({ ...placeholder, area: LOADING });
-      Axios.post('http://staging.ballers.ng/includes/find-house.php', {
-        state_id: value,
-        area_id: '',
-      })
+      Axios.get(`${BASE_API_URL}/area/state/${value}`)
         .then(function (response) {
           const { status, data } = response;
           if (status === 200) {
-            const output = data.map(({ area_name, area_id }) => ({
-              label: area_name,
-              value: area_id,
+            const output = data.areas.map(({ area, _id }) => ({
+              label: area,
+              value: _id,
             }));
 
             setPlaceholder({ ...placeholder, houseType: houseTypePlaceholder });
@@ -96,20 +89,13 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
     if (value) {
       setFormValue({ ...formValue, area: value });
       setPlaceholder({ ...placeholder, houseType: LOADING });
-      Axios.post('http://staging.ballers.ng/includes/find-house.php', {
-        state_id: formValue.state,
-        area_id: value,
-      })
+      Axios.get(`${BASE_API_URL}/content-property/area/${value}`)
         .then(function (response) {
           const { status, data } = response;
+          console.log('data', data);
           if (status === 200) {
-            const output = data.map(({ type }) => ({
-              label: type,
-              value: type,
-            }));
-
             setPlaceholder({ ...placeholder, houseType: houseTypePlaceholder });
-            setHouseType(output);
+            setHouseType(valuesToOptions(data.houseTypes));
             setDisableHouseType(false);
           }
         })
