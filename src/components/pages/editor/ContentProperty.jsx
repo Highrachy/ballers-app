@@ -9,14 +9,15 @@ import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { MyPropertyIcon } from 'components/utils/Icons';
-import { getError } from 'utils/helpers';
+import { getError, nearestMillion } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
+import { Link } from '@reach/router';
 
 const ContentProperty = () => {
   const [toast, setToast] = useToast();
   const [contentProperty, setContentProperty] = React.useState(null);
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/user/who-am-i`, {
+    Axios.get(`${BASE_API_URL}/area/all`, {
       headers: {
         Authorization: getTokenFromStore(),
       },
@@ -25,7 +26,7 @@ const ContentProperty = () => {
         const { status, data } = response;
         // handle success
         if (status === 200) {
-          setContentProperty(data);
+          setContentProperty(data.areas);
         }
       })
       .catch(function (error) {
@@ -48,33 +49,10 @@ const ContentProperty = () => {
   );
 };
 
-const sampleProperties = [
-  {
-    name: 'Property 1',
-    area: 'Lekki Phase 1',
-    houseType: '3 Bedroom Flat',
-  },
-  {
-    name: 'Property 2',
-    area: 'Ajegunle',
-    houseType: '2 Bedroom Flat',
-  },
-  {
-    name: 'Property in Lekki',
-    area: 'Lekki Phase 1',
-    houseType: '1 Bedroom Flat',
-  },
-  {
-    name: 'Ajegunle Property',
-    area: 'Ajegunle',
-    houseType: 'Duplex',
-  },
-];
-
 const AllContentProperty = ({ contentProperty, toast }) => (
   <LoadItems
     Icon={<MyPropertyIcon />}
-    items={sampleProperties || contentProperty}
+    items={contentProperty}
     loadingText="Loading your Content Property"
     noContent={
       <NoContent
@@ -86,7 +64,7 @@ const AllContentProperty = ({ contentProperty, toast }) => (
   >
     <ContentPropertyRowList
       toast={toast}
-      contentProperty={sampleProperties || contentProperty || []}
+      contentProperty={contentProperty || []}
     />
   </LoadItems>
 );
@@ -101,11 +79,11 @@ const ContentPropertyRowList = ({ contentProperty }) => {
           <table className="table table-border table-hover">
             <thead>
               <tr>
-                <td>S/N</td>
-                <td>Name</td>
-                <td>Area</td>
-                <td>House Type</td>
-                <td></td>
+                <th>S/N</th>
+                <th>Area</th>
+                <th className="text-center">Properties</th>
+                <th className="text-center">Average Price</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -132,18 +110,40 @@ ContentPropertyRowList.propTypes = {
 const ContentPropertyRow = ({
   _id,
   area,
+  averagePrice,
   number,
-  name,
-  houseType,
-  setToast,
+  numOfProperties,
+  state,
+  minimumPrice,
+  maximumPrice,
 }) => {
   return (
     <tr>
       <td>{number}</td>
-      <td>{name}</td>
-      <td>{area}</td>
-      <td>{houseType}</td>
-      <td></td>
+      <td>
+        {area} <br /> <small>{state}</small>
+      </td>
+      <td className="text-center">{numOfProperties}</td>
+      <td className="text-center">
+        {averagePrice > 0 ? (
+          <>
+            {nearestMillion(averagePrice)} <br />{' '}
+            <small>
+              {nearestMillion(minimumPrice)} - {nearestMillion(maximumPrice)}
+            </small>
+          </>
+        ) : (
+          '0'
+        )}
+      </td>
+      <td>
+        <Link
+          className="btn btn-sm btn-secondary"
+          to={`/editor/content-property/${_id}`}
+        >
+          View
+        </Link>
+      </td>
     </tr>
   );
 };

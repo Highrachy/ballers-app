@@ -11,7 +11,7 @@ import {
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { BASE_API_URL, HOUSE_TYPES, STATES } from 'utils/constants';
+import { BASE_API_URL, HOUSE_TYPES } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { addContentPropertySchema } from 'components/forms/schemas/propertySchema';
 import InputFormat from 'components/forms/InputFormat';
@@ -80,7 +80,49 @@ const AddContentPropertyForm = () => {
   );
 };
 
-const PropertyInfoForm = () => {
+const PropertyInfoForm = ({ values }) => {
+  const state = values.state;
+  // State
+  const [states, setState] = React.useState([]);
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/area/states`)
+      .then(function (response) {
+        const { status, data } = response;
+        if (status === 200) {
+          setState(valuesToOptions(data.states));
+        }
+      })
+      .catch(function (error) {
+        // console.log('error', error.response);
+      });
+  }, []);
+
+  // Area
+  const [areaPlaceholder, setAreaPlaceholder] = React.useState('Select Area');
+  const [areas, setArea] = React.useState([]);
+
+  React.useEffect(() => {
+    if (!state) return;
+
+    setAreaPlaceholder('Loading Area');
+    Axios.get(`${BASE_API_URL}/area/state/${state}`)
+      .then(function (response) {
+        const { status, data } = response;
+        if (status === 200) {
+          const output = data.areas.map(({ area, _id }) => ({
+            label: area,
+            value: _id,
+          }));
+
+          setArea(output);
+          setAreaPlaceholder('Select Area');
+        }
+      })
+      .catch(function (error) {
+        // console.log('error', error.response);
+      });
+  }, [state]);
+
   return (
     <Card className="card-container">
       <section className="row">
@@ -95,18 +137,15 @@ const PropertyInfoForm = () => {
               formGroupClassName="col-md-6"
               label="State"
               name="state"
-              options={valuesToOptions(STATES)}
+              options={states}
               placeholder="Select State"
             />
             <Select
               formGroupClassName="col-md-6"
               label="Area"
               name="areaId"
-              options={[
-                { label: 'Lekki Phase 1', value: '5fb20c467af2280017a873cf' },
-                { label: 'Ajegunle', value: '5fb20c467af2280017a873cf' },
-              ]}
-              placeholder="Select Area"
+              options={areas}
+              placeholder={areaPlaceholder}
             />
           </div>
 

@@ -35,7 +35,7 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   }, [defaultInputValue]);
 
   // State
-  const [state, setState] = React.useState([{ label: 'Lagos', value: '1' }]);
+  const [state, setState] = React.useState([]);
   React.useEffect(() => {
     Axios.get(`${BASE_API_URL}/area/states`)
       .then(function (response) {
