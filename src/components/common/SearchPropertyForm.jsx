@@ -83,11 +83,11 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   const [disableHouseType, setDisableHouseType] = React.useState(true);
   const [houseType, setHouseType] = React.useState({});
 
-  const getHouseType = ({ value }) => {
+  const getHouseType = ({ value, label }) => {
     setHouseType(null);
     setDisableHouseType(true);
     if (value) {
-      setFormValue({ ...formValue, area: value });
+      setFormValue({ ...formValue, area: label });
       setPlaceholder({ ...placeholder, houseType: LOADING });
       Axios.get(`${BASE_API_URL}/content-property/area/${value}`)
         .then(function (response) {

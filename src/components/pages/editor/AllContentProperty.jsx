@@ -81,8 +81,8 @@ const ContentPropertyRowList = ({ contentProperty }) => {
               <tr>
                 <th>S/N</th>
                 <th>Area</th>
+                <th>State</th>
                 <th className="text-center">Properties</th>
-                <th className="text-center">Average Price</th>
                 <th></th>
               </tr>
             </thead>
@@ -120,11 +120,10 @@ const ContentPropertyRow = ({
   return (
     <tr>
       <td>{number}</td>
-      <td>
-        {area} <br /> <small>{state}</small>
-      </td>
+      <td>{area}</td>
+      <td>{state}</td>
       <td className="text-center">{numOfProperties}</td>
-      <td className="text-center">
+      {/* <td className="text-center">
         {averagePrice > 0 ? (
           <>
             {nearestMillion(averagePrice)} <br />{' '}
@@ -135,7 +134,7 @@ const ContentPropertyRow = ({
         ) : (
           '0'
         )}
-      </td>
+      </td> */}
       <td>
         <Link
           className="btn btn-sm btn-secondary"

@@ -59,7 +59,7 @@ const SearchResult = ({ location }) => {
     };
 
     Axios.get(
-      `${BASE_API_URL}/content-property/?areaId=${area}&houseType=${houseType}`
+      `${BASE_API_URL}/content-property/search/?state=${state}&area=${area}&houseType=${houseType}`
     ).then(function (response) {
       const { status, data } = response;
       if (status === 200) {
