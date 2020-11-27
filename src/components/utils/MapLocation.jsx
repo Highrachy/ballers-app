@@ -22,7 +22,9 @@ const MapLocation = ({ mapAddress, setLocation, title }) => {
           </div>
           <MapPicker
             mapLocation={latLngFromAddress}
-            processLocation={(value) => setLocation(value)}
+            processLocation={(value) => {
+              setLocation(value);
+            }}
           />
         </div>
       </section>

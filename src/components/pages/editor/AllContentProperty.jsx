@@ -9,7 +9,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { MyPropertyIcon } from 'components/utils/Icons';
-import { getError, nearestMillion } from 'utils/helpers';
+import { getError } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
 import { Link } from '@reach/router';
 
@@ -107,40 +107,23 @@ ContentPropertyRowList.propTypes = {
   contentProperty: PropTypes.array.isRequired,
 };
 
-const ContentPropertyRow = ({
-  _id,
-  area,
-  averagePrice,
-  number,
-  numOfProperties,
-  state,
-  minimumPrice,
-  maximumPrice,
-}) => {
+const ContentPropertyRow = ({ _id, area, number, numOfProperties, state }) => {
   return (
     <tr>
       <td>{number}</td>
       <td>{area}</td>
       <td>{state}</td>
       <td className="text-center">{numOfProperties}</td>
-      {/* <td className="text-center">
-        {averagePrice > 0 ? (
-          <>
-            {nearestMillion(averagePrice)} <br />{' '}
-            <small>
-              {nearestMillion(minimumPrice)} - {nearestMillion(maximumPrice)}
-            </small>
-          </>
-        ) : (
-          '0'
-        )}
-      </td> */}
       <td>
         <Link
           className="btn btn-sm btn-secondary"
           to={`/editor/content-property/area/${_id}`}
         >
-          View
+          View Properties
+        </Link>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <Link className="btn btn-sm btn-danger" to={`/editor/area/edit/${_id}`}>
+          Edit Area
         </Link>
       </td>
     </tr>

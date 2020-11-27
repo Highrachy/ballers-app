@@ -320,7 +320,7 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
         <section className="col-12 bg-orange">
           <RangeInput
             min={10000}
-            max={result.price}
+            max={result.averagePrice}
             name="initial"
             title="Initial investment amount"
             step={100000}
@@ -342,7 +342,7 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
         <section className="col-12 bg-green">
           <RangeInput
             min={10000}
-            max={result.price}
+            max={result.averagePrice}
             name="periodic"
             title="Periodic investment amount"
             step={10000}

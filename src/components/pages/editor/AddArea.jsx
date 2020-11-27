@@ -17,11 +17,12 @@ import { addAreaSchema } from 'components/forms/schemas/propertySchema';
 import { getError, valuesToOptions } from 'utils/helpers';
 import Select from 'components/forms/Select';
 import MapLocation from 'components/utils/MapLocation';
+import { navigate } from '@reach/router';
 
-const AddArea = () => (
+const AddArea = ({ id }) => (
   <BackendPage>
     <div className="container-fluid">
-      <AddAreaForm />
+      {id ? <EditAreaForm id={id} /> : <AddAreaForm />}
     </div>
   </BackendPage>
 );
@@ -86,6 +87,95 @@ const AddAreaForm = () => {
             onClick={handleSubmit}
           >
             Add Area
+          </Button>
+          <DisplayFormikState {...props} showAll />
+        </Form>
+      )}
+    </Formik>
+  );
+};
+
+const EditAreaForm = ({ id }) => {
+  const [toast, setToast] = useToast();
+  const [location, setLocation] = React.useState(null);
+
+  const [area, setArea] = React.useState(null);
+
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/area/${id}`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        if (status === 200) {
+          setArea(data.area);
+          // setLocation();
+        }
+      })
+      .catch(function (error) {
+        // console.log('error', error.response);
+      });
+  }, [id]);
+
+  return (
+    <Formik
+      enableReinitialize={true}
+      initialValues={setInitialValues(addAreaSchema, { ...area })}
+      onSubmit={(values, actions) => {
+        let payload;
+
+        payload = location
+          ? {
+              ...values,
+              longitude: location.latLng.lng.toString(),
+              latitude: location.latLng.lat.toString(),
+            }
+          : values;
+
+        Axios.put(
+          `${BASE_API_URL}/area/update`,
+          { ...payload, id: area._id },
+          {
+            headers: { Authorization: getTokenFromStore() },
+          }
+        )
+          .then(function (response) {
+            const { status } = response;
+            if (status === 200) {
+              navigate(`/editor/content-property`);
+              actions.setSubmitting(false);
+              actions.resetForm();
+            }
+          })
+          .catch(function (error) {
+            setToast({
+              message: getError(error),
+            });
+            actions.setSubmitting(false);
+          });
+      }}
+      validationSchema={createSchema(addAreaSchema)}
+    >
+      {({ isSubmitting, handleSubmit, ...props }) => (
+        <Form>
+          <Toast {...toast} />
+          <PropertyInfoForm {...props} />
+          <MapLocation
+            setLocation={setLocation}
+            mapAddress={
+              props.values.area
+                ? `${props.values.area}, ${props.values.state}`
+                : props.values.state
+            }
+          />
+          <Button
+            className="btn-secondary mt-4"
+            loading={isSubmitting}
+            onClick={handleSubmit}
+          >
+            Update Area
           </Button>
           <DisplayFormikState {...props} showAll />
         </Form>

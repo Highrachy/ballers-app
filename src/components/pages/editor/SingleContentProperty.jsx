@@ -40,7 +40,10 @@ const SingleContentProperty = ({ id }) => {
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
-      <TopTitle>
+      <TopTitle
+        buttonText="New Content Property"
+        to={`/editor/content-property/new`}
+      >
         {contentProperty && contentProperty.area ? (
           <>
             Content Properties for{' '}
@@ -165,7 +168,6 @@ const ContentPropertyRowList = ({ contentProperty }) => {
                 <th>House Type</th>
                 <th>Price</th>
                 <th>Category</th>
-                <th>Others</th>
                 <th></th>
               </tr>
             </thead>
@@ -199,22 +201,23 @@ const ContentPropertyRow = ({
   website,
   link,
 }) => {
+  const linkAnchor = link ? <a href={link}>{website || link}</a> : null;
   return (
     <tr>
       <td>{number}</td>
-      <td>{houseType}</td>
+      <td>
+        {houseType}
+        <br />
+        <small>{linkAnchor || website}</small>
+      </td>
       <td>{moneyFormatInNaira(price)}</td>
       <td>{category}</td>
-      <td>
-        {website}
-        <br /> <small>{link}</small>
-      </td>
       <td>
         <Link
           className="btn btn-sm btn-danger"
           to={`/editor/content-property/edit/${_id}`}
         >
-          Edit
+          Edit Property
         </Link>
       </td>
     </tr>
