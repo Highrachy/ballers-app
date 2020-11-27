@@ -13,6 +13,7 @@ const EditorRouter = () => (
     <AllContentProperty path="content-property" />
     <SingleContentProperty path="content-property/area/:id" />
     <AddContentProperty path="content-property/new" />
+    <AddContentProperty path="content-property/edit/:id" />
     <AddArea path="area/new" />
     <Menu path="menu" />
   </Router>

@@ -211,10 +211,10 @@ const ContentPropertyRow = ({
       </td>
       <td>
         <Link
-          className="btn btn-sm btn-secondary"
-          to={`/editor/content-property/${_id}`}
+          className="btn btn-sm btn-danger"
+          to={`/editor/content-property/edit/${_id}`}
         >
-          View
+          Edit
         </Link>
       </td>
     </tr>

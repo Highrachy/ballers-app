@@ -17,12 +17,12 @@ import { addContentPropertySchema } from 'components/forms/schemas/propertySchem
 import InputFormat from 'components/forms/InputFormat';
 import { getError, valuesToOptions } from 'utils/helpers';
 import Select from 'components/forms/Select';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 
-const AddContentProperty = () => (
+const AddContentProperty = ({ id }) => (
   <BackendPage>
     <div className="container-fluid">
-      <AddContentPropertyForm />
+      {id ? <EditContentPropertyForm id={id} /> : <AddContentPropertyForm />}
     </div>
   </BackendPage>
 );
@@ -80,8 +80,97 @@ const AddContentPropertyForm = () => {
   );
 };
 
-const PropertyInfoForm = ({ values }) => {
+const EditContentPropertyForm = ({ id }) => {
+  const [toast, setToast] = useToast();
+
+  const [property, setProperty] = React.useState(null);
+
+  React.useEffect(() => {
+    Axios.get(`${BASE_API_URL}/content-property/${id}`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        if (status === 200) {
+          setProperty(data.property);
+        }
+      })
+      .catch(function (error) {
+        // console.log('error', error.response);
+      });
+  }, [id]);
+
+  return (
+    <Formik
+      enableReinitialize={true}
+      initialValues={setInitialValues(addContentPropertySchema, {
+        ...property,
+        areaId: property && property.area && property.area._id,
+      })}
+      onSubmit={(values, actions) => {
+        if (!values.website) delete values.website;
+        if (!values.link) delete values.link;
+        delete values.state;
+
+        const payload = { ...values, id: property._id };
+
+        Axios.put(`${BASE_API_URL}/content-property/update`, payload, {
+          headers: { Authorization: getTokenFromStore() },
+        })
+          .then(function (response) {
+            const { status } = response;
+            if (status === 200) {
+              navigate(`/editor/content-property/area/${values.areaId}`);
+              actions.setSubmitting(false);
+              actions.resetForm();
+            }
+          })
+          .catch(function (error) {
+            setToast({
+              message: getError(error),
+            });
+            actions.setSubmitting(false);
+          });
+      }}
+      validationSchema={createSchema(addContentPropertySchema)}
+    >
+      {({ isSubmitting, handleSubmit, ...props }) => (
+        <Form>
+          <Toast {...toast} />
+          <PropertyInfoForm
+            {...props}
+            id={id}
+            defaultPlaceholder={{
+              area: property && property.area && property.area.area,
+              state: property && property.area && property.area.state,
+            }}
+          />
+          <Button
+            className="btn-secondary mt-4"
+            loading={isSubmitting}
+            onClick={handleSubmit}
+          >
+            Update Content Property
+          </Button>
+          <DisplayFormikState {...props} showAll />
+        </Form>
+      )}
+    </Formik>
+  );
+};
+
+const PropertyInfoForm = ({ values, id, defaultPlaceholder }) => {
   const state = values.state;
+  const placeHolder = {
+    state: 'Select State',
+    area: 'Select Area',
+    ...defaultPlaceholder,
+  };
+
+  console.log('placeHolder', placeHolder);
+
   // State
   const [states, setState] = React.useState([]);
   React.useEffect(() => {
@@ -98,7 +187,7 @@ const PropertyInfoForm = ({ values }) => {
   }, []);
 
   // Area
-  const [areaPlaceholder, setAreaPlaceholder] = React.useState('Select Area');
+  const [areaPlaceholder, setAreaPlaceholder] = React.useState(null);
   const [areas, setArea] = React.useState([]);
 
   React.useEffect(() => {
@@ -127,7 +216,7 @@ const PropertyInfoForm = ({ values }) => {
     <Card className="card-container">
       <section className="row">
         <div className="col-md-10 px-4">
-          <h5 className="mb-2">Add a new Content Property</h5>
+          <h5 className="mb-2">{id ? 'Edit' : 'Add a new'} Content Property</h5>
           <p className="text-muted small mb-4">
             If the property state or area is not in the dropdown, you can{' '}
             <Link to="/editor/area/new">add a new one here</Link>
@@ -138,14 +227,14 @@ const PropertyInfoForm = ({ values }) => {
               label="State"
               name="state"
               options={states}
-              placeholder="Select State"
+              placeholder={placeHolder.state}
             />
             <Select
               formGroupClassName="col-md-6"
               label="Area"
               name="areaId"
               options={areas}
-              placeholder={areaPlaceholder}
+              placeholder={areaPlaceholder || placeHolder.area}
             />
           </div>
 
