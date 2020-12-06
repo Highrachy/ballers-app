@@ -6,6 +6,7 @@ import AllContentProperty from 'components/pages/editor/AllContentProperty';
 import SingleContentProperty from 'components/pages/editor/SingleContentProperty';
 import AddContentProperty from 'components/pages/editor/AddContentProperty';
 import AddArea from 'components/pages/editor/AddArea';
+import UploadContentProperty from 'components/pages/editor/UploadContentProperty';
 
 const EditorRouter = () => (
   <Router>
@@ -14,6 +15,7 @@ const EditorRouter = () => (
     <SingleContentProperty path="content-property/area/:id" />
     <AddContentProperty path="content-property/new" />
     <AddContentProperty path="content-property/edit/:id" />
+    <UploadContentProperty path="content-property/upload" />
     <AddArea path="area/new" />
     <AddArea path="area/edit/:id" />
     <Menu path="menu" />

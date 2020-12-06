@@ -117,6 +117,12 @@ export const customStyles = {
       },
     };
   },
+  menu: (provided, state) => {
+    return {
+      ...provided,
+      zIndex: 10000,
+    };
+  },
   control: (provided, state) => {
     return {
       ...provided,

@@ -39,12 +39,18 @@ const AllContentProperty = () => {
     <BackendPage>
       <Toast {...toast} showToastOnly />
       <TopTitle
-        buttonText="New Content Property"
-        to="/editor/content-property/new"
+        buttonText="Upload From Excel"
+        to="/editor/content-property/upload"
       >
         All Content Property
       </TopTitle>
       <ContentPRoperty contentProperty={contentProperty} />
+
+      <div className="container-fluid">
+        <Link to="/editor/content-property/new" className="btn btn-dark">
+          Add New Content Property
+        </Link>
+      </div>
     </BackendPage>
   );
 };

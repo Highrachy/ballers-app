@@ -122,3 +122,17 @@ html {
     }
   }
 }
+
+.react-excel {
+  @extend .card;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  table {
+    @extend .table;
+  }
+}
+
+.custom-file-label {
+  z-index: 0 !important;
+}

@@ -43,3 +43,7 @@ export const addContentPropertySchema = {
   website: optionalValidation(required('Website')),
   link: optionalValidation(required('Link')),
 };
+export const uploadContentPropertySchema = {
+  areaId: required('Area Id'),
+  state: required('State'),
+};
