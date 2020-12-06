@@ -9,9 +9,9 @@ import {
   feedback,
 } from 'components/forms/form-helper';
 import Label from './Label';
-import NumberFormat from 'react-number-format';
+import PhoneInput from 'react-phone-input-2';
 
-// https://www.npmjs.com/package/react-number-format
+// https://github.com/bl00mber/react-phone-input-2
 const InputFormat = ({
   autoComplete,
   formGroupClassName,
@@ -49,23 +49,21 @@ const InputFormat = ({
         <Field name={name}>
           {({ field, form }) => {
             return (
-              <NumberFormat
+              <PhoneInput
                 {...props}
-                className={classNames(
+                country={'ng'}
+                id={name}
+                name={name}
+                value={getIn(formik.values, name)}
+                onBlur={field.onBlur}
+                inputProps={{ name }}
+                onChange={(phone) => form.setFieldValue(name, phone)}
+                inputClass={classNames(
                   'form-control',
                   inputClassName,
                   getValidityClass(formik, name, showFeedback)
                 )}
-                id={name}
-                name={name}
-                onBlur={field.onBlur}
-                onValueChange={(number) =>
-                  form.setFieldValue(name, number.value)
-                }
-                prefix="&#8358; "
-                thousandSeparator={true}
                 placeholder={placeholder || label}
-                value={getIn(formik.values, name)}
               />
             );
           }}

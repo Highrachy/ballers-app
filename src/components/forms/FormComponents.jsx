@@ -30,6 +30,7 @@ import useMapGeocoder from 'hooks/useMapGeocoder';
 import { generateNumOptions } from 'utils/helpers';
 import ReactSelect from 'react-select';
 import { customStyles } from 'components/forms/Select';
+import PhoneNumber from './PhoneNumber';
 
 const FormComponents = () => (
   <>
@@ -63,7 +64,8 @@ const options = [
 const registerSchema = {
   firstName: stringValidation('First Name'),
   lastName: stringValidation('Last Name'),
-  phoneNumber: optionalValidation(phoneNumber),
+  phoneNumber,
+  phoneNumber2: optionalValidation(phoneNumber),
   email,
   password: strongPassword,
   message: stringValidation('Message'),
@@ -112,10 +114,25 @@ const Forms = () => {
               placeholder="Valid Email"
               tooltipText="A valid email address, needed for login"
             />
+
             <InputFormat
+              formGroupClassName="col-md-6"
+              label="Price"
+              name="price"
+              optional
+            />
+          </div>
+          <div className="form-row">
+            <PhoneNumber
               formGroupClassName="col-md-6"
               label="Phone Number"
               name="phoneNumber"
+            />
+
+            <Input
+              formGroupClassName="col-md-6"
+              label="Phone Number 2"
+              name="phoneNumber2"
               optional
             />
           </div>
@@ -243,7 +260,7 @@ const Forms = () => {
           >
             Show Success
           </Button>
-          <DisplayFormikState {...props} />
+          <DisplayFormikState {...props} showAll />
         </Form>
       )}
       validationSchema={createSchema(registerSchema)}
