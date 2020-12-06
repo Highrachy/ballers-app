@@ -17,6 +17,7 @@
 
 .text-link {
   color: $primary;
+  cursor: pointer;
 
   &:hover {
     color: $secondary;

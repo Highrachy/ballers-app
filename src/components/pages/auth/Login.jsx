@@ -21,6 +21,7 @@ import {
   getUserFirstName,
 } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
+import store from 'store2';
 
 const Login = ({ location }) => {
   const queryParams = queryString.parse(location.search);
@@ -96,6 +97,8 @@ const LoginForm = ({ redirectTo, sid, token }) => {
           const { status, data } = response;
           // handle success
           if (status === 200) {
+            // clear storage
+            store(false);
             setToast({
               type: 'success',
               message: data.message,
@@ -115,7 +118,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
       const dashboardUrl = `/${DASHBOARD_PAGE[userState.role]}/dashboard`;
       navigate(redirectTo || dashboardUrl);
     }
-  }, [userState, redirectTo]);
+  }, [userState, redirectTo, token]);
 
   return (
     <Formik

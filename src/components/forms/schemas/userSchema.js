@@ -27,14 +27,24 @@ export const resetPasswordSchema = {
   confirmPassword: confirmPassword,
 };
 
-export const registerSchema = {
-  firstName: stringValidation('First Name'),
-  lastName: stringValidation('Last Name'),
-  phone: phoneNumber,
-  email,
-  password: strongPassword,
-  confirmPassword: confirmPassword,
-  agreement,
+export const registerSchema = (isUser = true) => {
+  let altSchema = {
+    firstName: stringValidation('First Name'),
+    lastName: stringValidation('Last Name'),
+  };
+
+  if (!isUser) {
+    altSchema = { companyName: stringValidation('Company Name') };
+  }
+
+  return {
+    ...altSchema,
+    phone: phoneNumber,
+    email,
+    password: strongPassword,
+    confirmPassword: confirmPassword,
+    agreement,
+  };
 };
 
 export const changePasswordSchema = {

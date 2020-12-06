@@ -33,37 +33,62 @@ const Register = () => (
 
 const Content = ({ redirectTo, sid, token }) => {
   const referralInfo = getReferralInfo();
+  const [showUserForm, setShowUserForm] = React.useState(true);
+
   return (
     <section>
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-5 auth__text">
-            <h1>
-              {referralInfo ? (
-                <>
-                  Hello
-                  {referralInfo.firstName ? ` ${referralInfo.firstName}` : ''},
-                </>
-              ) : (
-                <>
-                  Create a <br /> free account
-                </>
-              )}
-            </h1>
-            <p className="lead">
-              {referralInfo ? (
-                <>
-                  {referralInfo.referrer.firstName} has invited you to{' '}
-                  <strong>become a Landlord</strong>
-                </>
-              ) : (
-                <>Register to access your profile, rewards and contributions.</>
-              )}
-            </p>
+            {showUserForm ? (
+              <>
+                <h1>
+                  {referralInfo ? (
+                    <>
+                      Hello
+                      {referralInfo.firstName
+                        ? ` ${referralInfo.firstName}`
+                        : ''}
+                      ,
+                    </>
+                  ) : (
+                    <>
+                      Create a <br /> free account
+                    </>
+                  )}
+                </h1>
+                <p className="lead">
+                  {referralInfo ? (
+                    <>
+                      {referralInfo.referrer.firstName} has invited you to{' '}
+                      <strong>become a Landlord</strong>
+                    </>
+                  ) : (
+                    <>
+                      Register to access your profile, rewards and
+                      contributions.
+                    </>
+                  )}
+                </p>
+              </>
+            ) : (
+              <>
+                <h1>Create a free Vendor account</h1>
+                <p className="lead">
+                  Showcase your properties to multiple buyers
+                </p>
+              </>
+            )}
           </div>
           <div className="col-lg-6 offset-lg-1">
             <div className="card p-5 my-6">
-              <RegisterForm redirectTo={redirectTo} sid={sid} token={token} />
+              <RegisterForm
+                redirectTo={redirectTo}
+                sid={sid}
+                setShowUserForm={setShowUserForm}
+                showUserForm={showUserForm}
+                token={token}
+              />
               <section className="auth__footer">
                 <div className="register mt-6 text-center">
                   Registered?{' '}
@@ -94,7 +119,7 @@ Content.defaultProps = {
   token: null,
 };
 
-const RegisterForm = ({ type }) => {
+const RegisterForm = ({ setShowUserForm, showUserForm }) => {
   const agreementText = (
     <small>
       I agree to{' '}
@@ -110,16 +135,34 @@ const RegisterForm = ({ type }) => {
   );
 
   const [toast, setToast] = useToast();
+
   return (
     <Formik
-      initialValues={setInitialValues(registerSchema, { agreement: [] })}
+      initialValues={setInitialValues(registerSchema(showUserForm), {
+        agreement: [],
+      })}
       onSubmit={(values, actions) => {
         delete values.agreement;
+
+        let payload;
+
         const referrer =
           (getReferralInfo() && getReferralInfo.referrer) || null;
-        const payload = referrer
+
+        payload = referrer
           ? { ...values, referralCode: referrer.referralCode }
           : values;
+
+        if (!showUserForm) {
+          payload = {
+            ...payload,
+            firstName: payload.companyName,
+            lastName: 'Company',
+            vendor: { companyName: payload.companyName },
+          };
+
+          delete payload.companyName;
+        }
 
         Axios.post(`${BASE_API_URL}/user/register`, payload)
           .then(function (response) {
@@ -129,9 +172,9 @@ const RegisterForm = ({ type }) => {
                 type: 'success',
                 message: `Your registration is successful. Kindly activate your account via the confirmation link sent to your inbox (${values.email}).`,
               });
-              actions.setSubmitting(false);
               actions.resetForm();
             }
+            actions.setSubmitting(false);
           })
           .catch(function (error) {
             setToast({
@@ -140,39 +183,49 @@ const RegisterForm = ({ type }) => {
             actions.setSubmitting(false);
           });
       }}
-      validationSchema={createSchema(registerSchema)}
+      validationSchema={createSchema(registerSchema(showUserForm))}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
-          <div className="form-row">
+          {showUserForm ? (
+            <div className="form-row">
+              <Input
+                formGroupClassName="col-md-6"
+                isValidMessage="First Name looks good"
+                label="First Name"
+                name="firstName"
+                placeholder="First Name"
+              />
+              <Input
+                formGroupClassName="col-md-6"
+                isValidMessage="Last Name looks good"
+                label="Last Name"
+                name="lastName"
+                placeholder="Last Name"
+              />
+            </div>
+          ) : (
             <Input
-              formGroupClassName="col-md-6"
-              isValidMessage="First Name looks good"
-              label="First Name"
-              name="firstName"
-              placeholder="First Name"
+              isValidMessage="Company Name looks good"
+              label="Company Name"
+              name="companyName"
+              placeholder="Company Name"
             />
-            <Input
-              formGroupClassName="col-md-6"
-              isValidMessage="Last Name looks good"
-              label="Last Name"
-              name="lastName"
-              placeholder="Last Name"
-            />
-          </div>
+          )}
+
           <div className="form-row">
             <Input
               formGroupClassName="col-md-6"
               isValidMessage="Email address seems valid"
-              label="Email"
+              label={showUserForm ? 'Email' : 'Company Email'}
               name="email"
               placeholder="Email Address"
             />
             <Input
               formGroupClassName="col-md-6"
               isValidMessage="Phone number looks good"
-              label="Phone"
+              label={showUserForm ? 'Phone' : 'Company Phone'}
               name="phone"
               placeholder="Phone"
             />
@@ -212,6 +265,28 @@ const RegisterForm = ({ type }) => {
             Register
           </Button>
           <DisplayFormikState {...props} hide showAll />
+
+          {showUserForm ? (
+            <p className="pt-5 text-center">
+              Have properties for sale? Register{' '}
+              <span
+                className="text-link text-secondary"
+                onClick={() => setShowUserForm(false)}
+              >
+                as a Vendor
+              </span>
+            </p>
+          ) : (
+            <p className="pt-5 text-center">
+              Want to become a Baller? Register{' '}
+              <span
+                className="text-link text-secondary"
+                onClick={() => setShowUserForm(true)}
+              >
+                as a User
+              </span>
+            </p>
+          )}
         </Form>
       )}
     </Formik>
