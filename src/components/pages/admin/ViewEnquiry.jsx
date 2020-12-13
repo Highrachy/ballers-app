@@ -203,7 +203,7 @@ const EnquiryDetail = ({ enquiry, showOfferLetter, toast }) => (
   </div>
 );
 
-const CardTableSection = ({ name, className, children }) => (
+export const CardTableSection = ({ name, className, children }) => (
   <Card className={`card-container mb-5 ${className}`}>
     <div className="row mt-3">
       <div className="col-sm-12">

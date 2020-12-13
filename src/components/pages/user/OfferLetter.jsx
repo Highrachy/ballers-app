@@ -271,7 +271,7 @@ class OfferLetterTemplateContainer extends React.Component {
   }
 }
 
-const DigitalSignaturePad = ({ setSignature }) => {
+export const DigitalSignaturePad = ({ setSignature }) => {
   const [showDigital, setShowDigital] = React.useState(false);
   const [input, setInput] = React.useState('');
 
@@ -315,7 +315,7 @@ const DigitalSignaturePad = ({ setSignature }) => {
   );
 };
 
-const UploadSignature = ({ image, setImage, setSignature }) => {
+export const UploadSignature = ({ image, setImage, setSignature }) => {
   const [showDigital, setShowDigital] = React.useState(false);
 
   return (

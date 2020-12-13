@@ -138,3 +138,9 @@ export const STATES = [
   'Yobe',
   'Zamfara',
 ];
+
+export const VENDOR_IDENTIFICATION_TYPE = {
+  'Limited Liability Company': 'RC NUMBER',
+  'Registered Company Name': 'Form BN-01',
+  Individual: 'Valid Identification',
+};
