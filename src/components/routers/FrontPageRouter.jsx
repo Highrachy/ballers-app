@@ -16,6 +16,7 @@ import ResetPassword from 'components/pages/auth/ResetPassword';
 import SearchResult from 'components/pages/frontend/SearchResult';
 import FormComponents from 'components/forms/FormComponents';
 import Invoice from 'components/pages/frontend/Invoice';
+import ReactQuery from 'components/pages/playground/ReactQuery';
 
 const FrontPageRouter = () => (
   <Router>
@@ -37,8 +38,9 @@ const FrontPageRouter = () => (
     <Register path="register" />
     <SearchResult path="search" />
     <Articles path="articles" />
-    <FormComponents path="forms" />
     <Invoice path="payment" />
+    <FormComponents path="forms" />
+    <ReactQuery path="react-query" />
   </Router>
 );
 

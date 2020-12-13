@@ -169,12 +169,14 @@ const PropertyInfoForm = ({ values, id, defaultPlaceholder }) => {
     ...defaultPlaceholder,
   };
 
-  console.log('placeHolder', placeHolder);
-
   // State
   const [states, setState] = React.useState([]);
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/area/states`)
+    Axios.get(`${BASE_API_URL}/area/states`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
       .then(function (response) {
         const { status, data } = response;
         if (status === 200) {
@@ -194,7 +196,11 @@ const PropertyInfoForm = ({ values, id, defaultPlaceholder }) => {
     if (!state) return;
 
     setAreaPlaceholder('Loading Area');
-    Axios.get(`${BASE_API_URL}/area/state/${state}`)
+    Axios.get(`${BASE_API_URL}/area/state/${state}`, {
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+    })
       .then(function (response) {
         const { status, data } = response;
         if (status === 200) {

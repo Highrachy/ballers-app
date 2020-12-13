@@ -20,6 +20,7 @@ import Toast, { useToast } from 'components/utils/Toast';
 import { BASE_API_URL } from 'utils/constants';
 import { getError } from 'utils/helpers';
 import { getReferralInfo } from 'utils/localStorage';
+import PhoneNumber from 'components/forms/PhoneNumber';
 
 const Register = () => (
   <>
@@ -222,7 +223,7 @@ const RegisterForm = ({ setShowUserForm, showUserForm }) => {
               name="email"
               placeholder="Email Address"
             />
-            <Input
+            <PhoneNumber
               formGroupClassName="col-md-6"
               isValidMessage="Phone number looks good"
               label={showUserForm ? 'Phone' : 'Company Phone'}
