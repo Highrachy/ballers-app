@@ -16,3 +16,9 @@ export const companyInfoSchema = {
   identificationType: optionalValidation(required('Identification Type')),
   redanNumber: optionalValidation(required('Redan Number')),
 };
+
+export const signatorySchema = {
+  name: stringValidation('Director Name'),
+  phoneNumber,
+  isSignatory: optionalValidation(required('Signatory')),
+};

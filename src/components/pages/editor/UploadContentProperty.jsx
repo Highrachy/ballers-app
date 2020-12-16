@@ -147,7 +147,6 @@ const UploadExcelFile = ({ initialData, setCurrentSheet, handleUpload }) => (
         </label>
       </div>
     </div>
-    {/* <button onClick={save}>Save to API</button> */}
   </>
 );
 
@@ -169,7 +168,9 @@ const PropertyInfoForm = ({
   // State
   const [states, setState] = React.useState([]);
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/area/states`)
+    Axios.get(`${BASE_API_URL}/area/states`, {
+      headers: { Authorization: getTokenFromStore() },
+    })
       .then(function (response) {
         const { status, data } = response;
         if (status === 200) {
@@ -189,7 +190,9 @@ const PropertyInfoForm = ({
     if (!state) return;
 
     setAreaPlaceholder('Loading Area');
-    Axios.get(`${BASE_API_URL}/area/state/${state}`)
+    Axios.get(`${BASE_API_URL}/area/state/${state}`, {
+      headers: { Authorization: getTokenFromStore() },
+    })
       .then(function (response) {
         const { status, data } = response;
         if (status === 200) {
@@ -212,10 +215,21 @@ const PropertyInfoForm = ({
       <section className="row">
         <div className="col-md-10 px-4">
           <h5 className="mb-2">{id ? 'Edit' : 'Add a new'} Content Property</h5>
-          <p className="text-muted small mb-4">
+          <p className="text-muted small mb-3">
+            <a
+              href="https://docs.google.com/spreadsheets/d/10n8SohrFDqgTvquuiMLf2_1jZFHEc-zQUeL1mkMWbi0/edit#gid=0"
+              target="_blank"
+              className=""
+              rel="noopener noreferrer"
+            >
+              View Recommended Excel template
+            </a>
+          </p>
+          <p className="text-muted small mb-5">
             If the property state or area is not in the dropdown, you can{' '}
             <Link to="/editor/area/new">add a new one here</Link>
           </p>
+
           <div className="form-row">
             <Select
               formGroupClassName="col-md-6"

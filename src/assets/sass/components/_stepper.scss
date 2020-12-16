@@ -1,10 +1,10 @@
-$normal-circle-background: $secondary;
+$normal-circle-background: lighten($secondary, 20);
 $normal-text-color: $secondary;
-$active-circle-background: $primary;
+$active-circle-background: lighten($primary, 5);
 $active-text-color: $primary;
-$approved-circle-background: $green;
+$approved-circle-background: lighten($green, 20);
 $approved-text-color: $green;
-$rejected-circle-background: $red;
+$rejected-circle-background: lighten($red, 20);
 $rejected-text-color: $red;
 
 .stepper {

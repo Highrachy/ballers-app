@@ -22,6 +22,7 @@ import Textarea from 'components/forms/Textarea';
 import { getError, valuesToOptions } from 'utils/helpers';
 import Select from 'components/forms/Select';
 import PhoneNumber from 'components/forms/PhoneNumber';
+import UploadProfileImage from 'components/utils/UploadProfileImage';
 
 const CompanyInformation = () => (
   <BackendPage>
@@ -100,6 +101,9 @@ const CompanyInfoForm = ({ isSubmitting, handleSubmit, ...props }) => {
       <section className="row">
         <div className="col-md-10 px-4">
           <h5 className="mb-4">Company Information</h5>
+
+          <UploadProfileImage />
+
           <Input
             label="Company Name"
             name="companyName"

@@ -306,7 +306,7 @@ export const DigitalSignaturePad = ({ setSignature }) => {
         </section>
       </Modal>
       <button
-        className="btn btn-secondary btn-sm hide-print"
+        className="btn btn-dark btn-sm hide-print"
         onClick={() => setShowDigital(true)}
       >
         Sign Digitally
@@ -358,7 +358,7 @@ export const UploadSignature = ({ image, setImage, setSignature }) => {
         </div>
       </Modal>
       <button
-        className="btn btn-secondary btn-sm hide-print"
+        className="btn btn-dark btn-sm hide-print"
         onClick={() => setShowDigital(true)}
       >
         Upload Signature

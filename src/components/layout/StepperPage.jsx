@@ -26,6 +26,10 @@ const StepperPage = ({
       ? setCurrentStep(MAX_STEP)
       : setCurrentStep(currentStep + 1);
 
+  React.useEffect(() => {
+    setCurrentStep(initialStep);
+  }, [initialStep]);
+
   return (
     <BackendPage title={title}>
       <TopTitle>

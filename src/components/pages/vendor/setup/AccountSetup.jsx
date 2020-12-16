@@ -17,7 +17,7 @@ const AccountSetup = ({ id }) => {
   return (
     <StepperPage
       allSteps={ALL_STEPS}
-      doneStatus={[true, false, false]}
+      doneStatus={[false, false, false, false]}
       initialStep={parseInt(id, 10) || 1}
       pageSteps={ADD_ENTERTAINER_STEPS}
       title="Vendor Verification"
@@ -29,7 +29,7 @@ const ADD_ENTERTAINER_STEPS = {
   companyInformation: { title: 'Company Information' },
   bankInformation: { title: 'Bank Information' },
   signatories: { title: 'Directors and Signatories' },
-  review: { title: 'Review' },
+  review: { title: 'Review Information' },
 };
 
 export default AccountSetup;

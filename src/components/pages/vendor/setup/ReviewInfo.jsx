@@ -12,33 +12,37 @@ const ReviewInfo = () => (
 
 export const ReviewInfoForm = () => {
   return (
-    <CardTableSection name="Client Details">
-      <tr>
-        <td>
-          <strong>Company Name</strong>
-        </td>
-        <td>Highrachy Investment and Technology</td>
-      </tr>
-      <tr>
-        <td>
-          <strong>Email</strong>
-        </td>
-        <td>Nnamdi@Highrachy.com</td>
-      </tr>
-      <tr>
-        <td>
-          <strong>Phone</strong>
-        </td>
-        <td>08123456789</td>
-      </tr>
+    <>
+      <CardTableSection name="Client Details">
+        <tr>
+          <td>
+            <strong>Company Name</strong>
+          </td>
+          <td>Highrachy Investment and Technology</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Email</strong>
+          </td>
+          <td>Nnamdi@Highrachy.com</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Phone</strong>
+          </td>
+          <td>08123456789</td>
+        </tr>
 
-      <tr>
-        <td>
-          <strong>Company Address</strong>
-        </td>
-        <td>Lorem, ipsum dolor.</td>
-      </tr>
-    </CardTableSection>
+        <tr>
+          <td>
+            <strong>Company Address</strong>
+          </td>
+          <td>Lorem, ipsum dolor.</td>
+        </tr>
+      </CardTableSection>
+
+      <button className="btn btn-secondary">Finish Verification</button>
+    </>
   );
 };
 

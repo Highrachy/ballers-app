@@ -2,6 +2,7 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { UserContext } from 'context/UserContext';
 import { Card } from 'react-bootstrap';
+import { Link } from '@reach/router';
 
 const Dashboard = () => (
   <BackendPage>
@@ -30,28 +31,42 @@ const Welcome = () => {
                 <th>Name</th>
                 <th>Comment</th>
                 <th>Status</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Step 1</td>
-                <td>Company Information</td>
+                <td>
+                  <Link to="/vendor/setup/1">Company Information</Link>
+                </td>
                 <td>No information available</td>
-                <td>None</td>
-                <td> </td>
+                <td>Pending</td>
               </tr>
               <tr>
                 <td>Step 2</td>
-                <td>Bank Information</td>
+
+                <td>
+                  <Link to="/vendor/setup/2">Bank Information</Link>
+                </td>
                 <td>No information available</td>
-                <td></td>
+                <td>Pending</td>
               </tr>
               <tr>
                 <td>Step 3</td>
-                <td>Directs and Signatories</td>
+                <td>
+                  <Link to="/vendor/setup/3">Directors and Signatories</Link>
+                </td>
+
                 <td>No information available</td>
-                <td></td>
+                <td>Pending</td>
+              </tr>
+              <tr>
+                <td>Step 4</td>
+                <td>
+                  <Link to="/vendor/setup/4">Review Information</Link>
+                </td>
+                <td>No information available</td>
+                <td>Pending</td>
               </tr>
             </tbody>
           </table>

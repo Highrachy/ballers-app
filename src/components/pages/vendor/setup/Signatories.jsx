@@ -10,14 +10,11 @@ import {
 } from 'components/forms/form-helper';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
-import {
-  createSchema,
-  addressSchema,
-} from 'components/forms/schemas/schema-helpers';
+import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
-import { newPropertySchema } from 'components/forms/schemas/propertySchema';
+import { signatorySchema } from 'components/forms/schemas/vendorSchema';
 import { getError, isValidURL } from 'utils/helpers';
 import Select from 'components/forms/Select';
 import {
@@ -44,11 +41,7 @@ export const SignatoriesForm = () => {
     <Formik
       enableReinitialize={true}
       initialValues={
-        ({
-          ...setInitialValues(newPropertySchema),
-          address: setInitialValues(addressSchema),
-        },
-        { address: { country: 'Nigeria' } })
+        (setInitialValues(signatorySchema), { isSignatory: 'true' })
       }
       onSubmit={(values, actions) => {
         let payload = { ...values, mainImage: image };
@@ -78,10 +71,7 @@ export const SignatoriesForm = () => {
             actions.setSubmitting(false);
           });
       }}
-      validationSchema={createSchema({
-        ...newPropertySchema,
-        address: createSchema(addressSchema),
-      })}
+      validationSchema={createSchema(signatorySchema)}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
@@ -109,7 +99,9 @@ const PropertyInfoForm = ({
   setSignature,
   isSubmitting,
   handleSubmit,
+  ...props
 }) => {
+  console.log('props.values.', props.values.isSignatory);
   return (
     <Card className="card-container">
       <section className="row">
@@ -131,8 +123,9 @@ const PropertyInfoForm = ({
           <div className="row">
             <Select
               formGroupClassName="col-md-6"
-              label="Director is A Signature"
+              label="Signatory"
               name="isSignatory"
+              placeholder="Is Director a Signatory?"
               options={[
                 { value: 'true', label: 'Yes, Director is a Signatory' },
                 { value: 'false', label: 'No, Director is not a Signatory' },
@@ -140,33 +133,35 @@ const PropertyInfoForm = ({
             />
           </div>
 
-          <div className="mt-5">
-            {signature && (
-              <h3 className="signature-pad">
-                <>
-                  {isValidURL(signature) ? (
-                    <Image
-                      className="signature-image uploaded-image mb-3"
-                      name="Signature"
-                      src={signature}
-                    />
-                  ) : (
-                    signature
-                  )}
-                </>
-              </h3>
-            )}
-            <DigitalSignaturePad setSignature={setSignature} />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <UploadSignature
-              image={image}
-              setImage={setImage}
-              setSignature={setSignature}
-            />
-          </div>
+          {props.values.isSignatory === 'true' && (
+            <div className="mt-3">
+              {signature && (
+                <h3 className="signature-pad">
+                  <>
+                    {isValidURL(signature) ? (
+                      <Image
+                        className="signature-image uploaded-image mb-3"
+                        name="Signature"
+                        src={signature}
+                      />
+                    ) : (
+                      signature
+                    )}
+                  </>
+                </h3>
+              )}
+              <DigitalSignaturePad setSignature={setSignature} />
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <UploadSignature
+                image={image}
+                setImage={setImage}
+                setSignature={setSignature}
+              />
+            </div>
+          )}
 
           <Button
-            className="btn-secondary mt-4"
+            className="btn-secondary mt-5"
             loading={isSubmitting}
             onClick={handleSubmit}
           >
