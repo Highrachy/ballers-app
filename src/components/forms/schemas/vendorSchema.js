@@ -1,20 +1,21 @@
 import {
   stringValidation,
   required,
-  email,
   phoneNumber,
   optionalValidation,
+  lengthValidation,
 } from './schema-helpers';
 
 export const companyInfoSchema = {
   companyName: stringValidation('Company Name'),
-  companyAddress: stringValidation('Company Address'),
-  email,
-  phoneNumber,
   registerAs: required('Register As'),
-  identification: required('Identification'),
-  identificationType: optionalValidation(required('Identification Type')),
   redanNumber: optionalValidation(required('Redan Number')),
+};
+
+export const bankSchema = {
+  accountName: stringValidation('Account Name'),
+  accountNumber: lengthValidation('Account Number', 10),
+  bankName: stringValidation('Bank Name'),
 };
 
 export const signatorySchema = {

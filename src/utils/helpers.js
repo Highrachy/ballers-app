@@ -162,3 +162,5 @@ export const isValidURL = (str) => {
   ); // fragment locator
   return !!pattern.test(str);
 };
+
+export const statusIsSuccessful = (status) => status === 200 || status === 201;

@@ -10,15 +10,12 @@ import {
 } from 'components/forms/form-helper';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
-import {
-  createSchema,
-  addressSchema,
-} from 'components/forms/schemas/schema-helpers';
+import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
-import { newPropertySchema } from 'components/forms/schemas/propertySchema';
-import { getError } from 'utils/helpers';
+import { bankSchema } from 'components/forms/schemas/vendorSchema';
+import { getError, statusIsSuccessful } from 'utils/helpers';
 
 const BankInformation = () => (
   <BackendPage>
@@ -28,39 +25,47 @@ const BankInformation = () => (
   </BackendPage>
 );
 
-export const BankInformationForm = () => {
+export const BankInformationForm = ({ moveToNextStep, setStepToast }) => {
   const [toast, setToast] = useToast();
-  const { userDispatch } = React.useContext(UserContext);
+  const { userDispatch, userState } = React.useContext(UserContext);
+
+  const TEST_DATA = {
+    ...userState,
+    bankInfo: {
+      accountName: 'Skye Bank',
+      accountNumber: '12345678900',
+      bankName: 'Skye Bank',
+    },
+  };
 
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={
-        ({
-          ...setInitialValues(newPropertySchema),
-          address: setInitialValues(addressSchema),
-        },
-        { address: { country: 'Nigeria' } })
-      }
+      initialValues={setInitialValues(bankSchema, TEST_DATA.bankInfo)}
       onSubmit={(values, actions) => {
-        let payload = { ...values };
+        let payload = { bankInfo: values };
+        console.log('payload', payload);
 
-        Axios.post(`${BASE_API_URL}/property/add`, payload, {
+        Axios.put(`${BASE_API_URL}/user/vendor/update`, payload, {
           headers: { Authorization: getTokenFromStore() },
         })
           .then(function (response) {
             const { status, data } = response;
-            if (status === 201) {
+            if (statusIsSuccessful(status)) {
               userDispatch({
-                type: 'property-added',
-                property: data.updatedUser,
+                type: 'user-profile-update',
+                property: data.user,
               });
-              setToast({
+
+              const successMessage = {
                 type: 'success',
-                message: `Your property has been successfully added`,
-              });
+                message: `Your Bank information has been successfully saved`,
+              };
+              setToast(successMessage);
+              setStepToast(successMessage);
               actions.setSubmitting(false);
               actions.resetForm();
+              moveToNextStep();
             }
           })
           .catch(function (error) {
@@ -70,16 +75,17 @@ export const BankInformationForm = () => {
             actions.setSubmitting(false);
           });
       }}
-      validationSchema={createSchema({
-        ...newPropertySchema,
-        address: createSchema(addressSchema),
-      })}
+      validationSchema={createSchema(bankSchema)}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
-          <BankInfoForm {...props} />
-          <DisplayFormikState {...props} showAll hide />
+          <BankInfoForm
+            {...props}
+            isSubmitting={isSubmitting}
+            handleSubmit={handleSubmit}
+          />
+          <DisplayFormikState {...props} showAll />
         </Form>
       )}
     </Formik>

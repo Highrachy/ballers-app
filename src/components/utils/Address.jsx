@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Input from 'components/forms/Input';
+import { valuesToOptions } from 'utils/helpers';
+import Select from 'components/forms/Select';
+import { STATES } from 'utils/constants';
 
 const Address = ({ showCountry }) => {
   return (
@@ -23,12 +26,22 @@ const Address = ({ showCountry }) => {
           name="address.city"
           placeholder="City"
         />
-        <Input
-          formGroupClassName="col-md-6"
-          label="State"
-          name="address.state"
-          placeholder="State"
-        />
+        {showCountry ? (
+          <Input
+            formGroupClassName="col-md-6"
+            label="State"
+            name="address.state"
+            placeholder="State"
+          />
+        ) : (
+          <Select
+            formGroupClassName="col-md-6"
+            label="State"
+            name="address.state"
+            options={valuesToOptions(STATES)}
+            placeholder="Select State"
+          />
+        )}
       </div>
       {showCountry && (
         <div className="form-row">

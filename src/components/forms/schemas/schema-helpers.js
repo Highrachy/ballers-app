@@ -143,7 +143,16 @@ export const urlValidation = (label) =>
     .url('Must be a valid url')
     .required(`${label} is required`);
 
-// export const lengthValidation = (label, length = 10) =>
+export const lengthValidation = (label, length = 10) =>
+  yup
+    .string()
+    .matches(/^[0-9]*$/, `${label} must contain numbers only`)
+    .length(length, `Must be exactly ${length} character`);
+// .number()
+// .label(label)
+// .test('len', `Must be exactly ${length} characters`, val => {
+//   return val.length === length;
+// });
 // yup.string().transform((_, originalValue) => {
 //   // return typeof originalValue === 'string' ? originalValue : null;
 // });
@@ -154,15 +163,6 @@ export const urlValidation = (label) =>
 //     });
 //   }
 //   return yup.mixed().notRequired();
-// });
-// yup
-//   .string()
-//   .matches(/^[0-9]*$/, 'Must be a number')
-//   .length(length, `Must be exactly ${length} character`);
-// .number()
-// .label(label)
-// .test('len', `Must be exactly ${length} characters`, val => {
-//   return val.length === length;
 // });
 
 export const createSchema = (object) => {
