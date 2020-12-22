@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import BackendPage from 'components/layout/BackendPage';
 import TopTitle from 'components/utils/TopTitle';
+import { navigate } from '@reach/router';
 
 const MIN_STEP = 1;
 
@@ -28,7 +29,12 @@ const StepperPage = ({
 
   React.useEffect(() => {
     setCurrentStep(initialStep);
+    navigate(`/vendor/setup/${initialStep}`);
   }, [initialStep]);
+
+  React.useEffect(() => {
+    navigate(`/vendor/setup/${currentStep}`);
+  }, [currentStep]);
 
   return (
     <BackendPage title={title}>

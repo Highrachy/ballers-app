@@ -5,6 +5,7 @@ import { CompanyInformationForm } from './CompanyInformation';
 import { BankInformationForm } from './BankInformation';
 import { SignatoriesForm } from './Signatories';
 import { ReviewInfoForm } from './ReviewInfo';
+import { CertificatesForm } from './Certificates';
 
 const AccountSetup = ({ id }) => {
   const [initialStep, setInitialStep] = React.useState(id);
@@ -25,6 +26,10 @@ const AccountSetup = ({ id }) => {
     />,
     <SignatoriesForm
       moveToNextStep={() => moveToStep(4)}
+      setStepToast={setToast}
+    />,
+    <CertificatesForm
+      moveToNextStep={() => moveToStep(5)}
       setStepToast={setToast}
     />,
     <ReviewInfoForm />,
@@ -48,6 +53,7 @@ const ADD_ENTERTAINER_STEPS = {
   companyInformation: { title: 'Company Information' },
   bankInformation: { title: 'Bank Information' },
   signatories: { title: 'Directors and Signatories' },
+  certificates: { title: 'Certificates' },
   review: { title: 'Review Information' },
 };
 

@@ -318,6 +318,8 @@ export const DigitalSignaturePad = ({ setSignature }) => {
 export const UploadSignature = ({ image, setImage, setSignature }) => {
   const [showDigital, setShowDigital] = React.useState(false);
 
+  console.log('upload Signature');
+
   return (
     <>
       <Modal

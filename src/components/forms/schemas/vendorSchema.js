@@ -20,6 +20,6 @@ export const bankSchema = {
 
 export const signatorySchema = {
   name: stringValidation('Director Name'),
-  phoneNumber,
+  phone: phoneNumber,
   isSignatory: optionalValidation(required('Signatory')),
 };

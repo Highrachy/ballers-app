@@ -15,12 +15,9 @@ import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import { signatorySchema } from 'components/forms/schemas/vendorSchema';
-import { getError, isValidURL } from 'utils/helpers';
+import { getError, isValidURL, statusIsSuccessful } from 'utils/helpers';
 import Select from 'components/forms/Select';
-import {
-  DigitalSignaturePad,
-  UploadSignature,
-} from 'components/pages/user/OfferLetter';
+import { UploadSignature } from 'components/pages/user/OfferLetter';
 import Image from 'components/utils/Image';
 
 const Signatories = () => (
@@ -31,35 +28,52 @@ const Signatories = () => (
   </BackendPage>
 );
 
-export const SignatoriesForm = () => {
+export const SignatoriesForm = ({ moveToNextStep }) => {
   const [toast, setToast] = useToast();
-  const { userDispatch } = React.useContext(UserContext);
+  const { userState, userDispatch } = React.useContext(UserContext);
   const [image, setImage] = React.useState(null);
   const [signature, setSignature] = React.useState(null);
 
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={
-        (setInitialValues(signatorySchema), { isSignatory: 'true' })
-      }
+      initialValues={setInitialValues(signatorySchema)}
       onSubmit={(values, actions) => {
-        let payload = { ...values, mainImage: image };
+        let payload = { directors: [{ ...values }] };
 
-        Axios.post(`${BASE_API_URL}/property/add`, payload, {
+        console.log('signature', signature);
+
+        if (values.isSignatory === 'true' && !signature) {
+          setToast({
+            message: 'You need to upload a signatory signature',
+          });
+          actions.setSubmitting(false);
+          return;
+        }
+
+        if (values.isSignatory === 'true') {
+          payload.directors[0].signature = signature;
+        }
+
+        payload.directors[0].isSignatory =
+          values.isSignatory === 'true' ? true : false;
+
+        Axios.put(`${BASE_API_URL}/user/vendor/update`, payload, {
           headers: { Authorization: getTokenFromStore() },
         })
           .then(function (response) {
             const { status, data } = response;
-            if (status === 201) {
+            if (statusIsSuccessful(status)) {
               userDispatch({
-                type: 'property-added',
-                property: data.updatedUser,
+                type: 'user-profile-update',
+                user: data.user,
               });
-              setToast({
+
+              const successMessage = {
                 type: 'success',
-                message: `Your property has been successfully added`,
-              });
+                message: `Director Has been successfully Saved`,
+              };
+              setToast(successMessage);
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -76,15 +90,21 @@ export const SignatoriesForm = () => {
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
-          <PropertyInfoForm
-            {...props}
-            image={image}
-            setImage={setImage}
-            signature={signature}
-            setSignature={setSignature}
-            isSubmitting={isSubmitting}
-            handleSubmit={handleSubmit}
-          />
+          <Card className="card-container">
+            <SignatoriesInfoForm
+              {...props}
+              image={image}
+              setImage={setImage}
+              signature={signature}
+              setSignature={setSignature}
+              isSubmitting={isSubmitting}
+              handleSubmit={handleSubmit}
+            />
+            <ShowDirectorsTable
+              moveToNextStep={moveToNextStep}
+              directors={userState.vendor?.directors || []}
+            />
+          </Card>
           <DisplayFormikState {...props} showAll hide />
         </Form>
       )}
@@ -92,7 +112,7 @@ export const SignatoriesForm = () => {
   );
 };
 
-const PropertyInfoForm = ({
+const SignatoriesInfoForm = ({
   image,
   setImage,
   signature,
@@ -101,75 +121,120 @@ const PropertyInfoForm = ({
   handleSubmit,
   ...props
 }) => {
-  console.log('props.values.', props.values.isSignatory);
   return (
-    <Card className="card-container">
-      <section className="row">
-        <div className="col-md-10 px-4">
-          <h5 className="mb-4"> Directors &amp; Signatories</h5>
-          <div className="form-row">
-            <Input
-              formGroupClassName="col-md-6"
-              label="Director Name"
-              name="name"
-            />
-            <Input
-              formGroupClassName="col-md-6"
-              label="Phone Number"
-              name="phoneNumber"
-            />
-          </div>
-
-          <div className="row">
-            <Select
-              formGroupClassName="col-md-6"
-              label="Signatory"
-              name="isSignatory"
-              placeholder="Is Director a Signatory?"
-              options={[
-                { value: 'true', label: 'Yes, Director is a Signatory' },
-                { value: 'false', label: 'No, Director is not a Signatory' },
-              ]}
-            />
-          </div>
-
-          {props.values.isSignatory === 'true' && (
-            <div className="mt-3">
-              {signature && (
-                <h3 className="signature-pad">
-                  <>
-                    {isValidURL(signature) ? (
-                      <Image
-                        className="signature-image uploaded-image mb-3"
-                        name="Signature"
-                        src={signature}
-                      />
-                    ) : (
-                      signature
-                    )}
-                  </>
-                </h3>
-              )}
-              <DigitalSignaturePad setSignature={setSignature} />
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <UploadSignature
-                image={image}
-                setImage={setImage}
-                setSignature={setSignature}
-              />
-            </div>
-          )}
-
-          <Button
-            className="btn-secondary mt-5"
-            loading={isSubmitting}
-            onClick={handleSubmit}
-          >
-            Add New Property
-          </Button>
+    <section className="row">
+      <div className="col-md-10 px-4">
+        <h5 className="mb-4">Add a New Director / Signatory</h5>
+        <div className="form-row">
+          <Input
+            formGroupClassName="col-md-6"
+            label="Director Name"
+            name="name"
+          />
+          <Input
+            formGroupClassName="col-md-6"
+            label="Phone Number"
+            name="phone"
+          />
         </div>
-      </section>
-    </Card>
+
+        <div className="row">
+          <Select
+            formGroupClassName="col-md-6"
+            label="Signatory"
+            name="isSignatory"
+            placeholder="Is Director a Signatory?"
+            options={[
+              { value: 'true', label: 'Yes, Director is a Signatory' },
+              { value: 'false', label: 'No, Director is not a Signatory' },
+            ]}
+          />
+        </div>
+
+        {props.values.isSignatory === 'true' && (
+          <div className="mt-3">
+            {signature && (
+              <h3 className="signature-pad">
+                <>
+                  {isValidURL(signature) ? (
+                    <Image
+                      className="signature-image uploaded-image mb-3"
+                      name="Signature"
+                      src={signature}
+                    />
+                  ) : (
+                    signature
+                  )}
+                </>
+              </h3>
+            )}
+            <UploadSignature
+              image={image}
+              setImage={setImage}
+              setSignature={setSignature}
+            />
+          </div>
+        )}
+
+        <Button
+          className="btn-primary mt-5"
+          loading={isSubmitting}
+          onClick={handleSubmit}
+        >
+          Add New Director
+        </Button>
+      </div>
+    </section>
+  );
+};
+
+const ShowDirectorsTable = ({ directors, moveToNextStep }) => {
+  if (!directors || directors.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <div className="table-responsive">
+        <table className="table table-border table-hover mb-0 mt-5">
+          <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Is Signatory</th>
+              <th>Signature</th>
+            </tr>
+          </thead>
+          <tbody>
+            {directors.map((director, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{director.name}</td>
+                <td>{director.phone}</td>
+                <td>{director.isSignatory ? 'Yes' : 'No'}</td>
+                <td>
+                  {director.signature ? (
+                    <Image
+                      className="small-image mb-3"
+                      name="image"
+                      src={director.signature}
+                    />
+                  ) : (
+                    '-'
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <Button className="btn-secondary mt-5" onClick={moveToNextStep}>
+          Save Changes
+        </Button>
+      </div>
+    </>
   );
 };
 

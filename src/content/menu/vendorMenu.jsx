@@ -35,7 +35,7 @@ export default [
     footer: true,
   },
   {
-    title: 'Review Info',
+    title: 'Certificates',
     to: '/vendor/setup/4',
     icon: <FileIcon />,
     footer: true,

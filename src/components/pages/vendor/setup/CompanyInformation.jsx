@@ -36,16 +36,7 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
   const { userDispatch, userState } = React.useContext(UserContext);
 
   const TEST_DATA = {
-    ...userState,
-    companyName: 'Total',
-    registerAs: 'Individual',
-    redanNumber: '123456',
-    address: {
-      street1: '123 Testing Street 1',
-      street2: 'yes, street 2',
-      city: 'Alimosho',
-      state: 'Lagos',
-    },
+    ...userState.vendor,
   };
 
   return (
@@ -53,7 +44,7 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
       enableReinitialize={true}
       initialValues={{
         ...setInitialValues(companyInfoSchema, TEST_DATA),
-        address: setInitialValues(addressSchema, TEST_DATA.address),
+        address: setInitialValues(addressSchema, TEST_DATA.companyAddress),
       }}
       onSubmit={(values, actions) => {
         let payload = {
@@ -73,12 +64,12 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
             if (statusIsSuccessful(status)) {
               userDispatch({
                 type: 'user-profile-update',
-                property: data.user,
+                user: data.user,
               });
 
               const successMessage = {
                 type: 'success',
-                message: `Your information has been successfully added`,
+                message: `Company Information has been successfully saved`,
               };
               setToast(successMessage);
               setStepToast(successMessage);
@@ -107,7 +98,7 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
             isSubmitting={isSubmitting}
             handleSubmit={handleSubmit}
           />
-          <DisplayFormikState {...props} />
+          <DisplayFormikState {...props} hide />
         </Form>
       )}
     </Formik>

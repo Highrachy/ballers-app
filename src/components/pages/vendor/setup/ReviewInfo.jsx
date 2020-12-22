@@ -1,6 +1,9 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import CardTableSection from 'components/common/CardTableSection';
+import { UserContext } from 'context/UserContext';
+import { getFormattedAddress } from 'utils/helpers';
+import { navigate } from '@reach/router';
 
 const ReviewInfo = () => (
   <BackendPage>
@@ -11,6 +14,7 @@ const ReviewInfo = () => (
 );
 
 export const ReviewInfoForm = () => {
+  const { userState } = React.useContext(UserContext);
   return (
     <>
       <CardTableSection name="Client Details">
@@ -18,30 +22,38 @@ export const ReviewInfoForm = () => {
           <td>
             <strong>Company Name</strong>
           </td>
-          <td>Highrachy Investment and Technology</td>
+          <td>{userState.vendor?.companyName}</td>
         </tr>
         <tr>
           <td>
             <strong>Email</strong>
           </td>
-          <td>Nnamdi@Highrachy.com</td>
+          <td>{userState.email}</td>
         </tr>
         <tr>
           <td>
             <strong>Phone</strong>
           </td>
-          <td>08123456789</td>
+          <td>{userState.phone}</td>
         </tr>
 
         <tr>
           <td>
             <strong>Company Address</strong>
           </td>
-          <td>Lorem, ipsum dolor.</td>
+          <td>
+            {userState.vendor?.companyAddress &&
+              getFormattedAddress(userState.vendor.companyAddress)}
+          </td>
         </tr>
       </CardTableSection>
 
-      <button className="btn btn-secondary">Finish Verification</button>
+      <button
+        className="btn btn-secondary"
+        onClick={() => navigate('/vendor/dashboard')}
+      >
+        Finish Verification
+      </button>
     </>
   );
 };

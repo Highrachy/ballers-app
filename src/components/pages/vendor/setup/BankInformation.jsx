@@ -30,18 +30,13 @@ export const BankInformationForm = ({ moveToNextStep, setStepToast }) => {
   const { userDispatch, userState } = React.useContext(UserContext);
 
   const TEST_DATA = {
-    ...userState,
-    bankInfo: {
-      accountName: 'Skye Bank',
-      accountNumber: '12345678900',
-      bankName: 'Skye Bank',
-    },
+    ...userState.vendor?.bankInfo,
   };
 
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={setInitialValues(bankSchema, TEST_DATA.bankInfo)}
+      initialValues={setInitialValues(bankSchema, TEST_DATA)}
       onSubmit={(values, actions) => {
         let payload = { bankInfo: values };
         console.log('payload', payload);
@@ -54,7 +49,7 @@ export const BankInformationForm = ({ moveToNextStep, setStepToast }) => {
             if (statusIsSuccessful(status)) {
               userDispatch({
                 type: 'user-profile-update',
-                property: data.user,
+                user: data.user,
               });
 
               const successMessage = {
@@ -85,7 +80,7 @@ export const BankInformationForm = ({ moveToNextStep, setStepToast }) => {
             isSubmitting={isSubmitting}
             handleSubmit={handleSubmit}
           />
-          <DisplayFormikState {...props} showAll />
+          <DisplayFormikState {...props} showAll hide />
         </Form>
       )}
     </Formik>

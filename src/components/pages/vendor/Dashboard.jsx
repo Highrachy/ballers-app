@@ -63,7 +63,7 @@ const Welcome = () => {
               <tr>
                 <td>Step 4</td>
                 <td>
-                  <Link to="/vendor/setup/4">Review Information</Link>
+                  <Link to="/vendor/setup/4">Certificates</Link>
                 </td>
                 <td>No information available</td>
                 <td>Pending</td>
