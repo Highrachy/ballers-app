@@ -24,3 +24,5 @@ yarn-error.log*
 htaccess
 .htaccess
 .env
+cypress/videos/*
+cypress/screenshots/*

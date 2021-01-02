@@ -50,7 +50,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "e2e:open": "npx cypress open",
+    "e2e:run": "npx cypress run"
+
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -66,5 +69,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cypress": "^6.2.0",
+    "eslint-plugin-cypress": "^2.11.2"
   }
 }
