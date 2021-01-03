@@ -39,7 +39,7 @@ export const SignatoriesForm = ({ moveToNextStep }) => {
       enableReinitialize={true}
       initialValues={setInitialValues(signatorySchema)}
       onSubmit={(values, actions) => {
-        let payload = { directors: [{ ...values }] };
+        let payload = { vendor: { directors: [{ ...values }] } };
 
         console.log('signature', signature);
 
@@ -52,10 +52,10 @@ export const SignatoriesForm = ({ moveToNextStep }) => {
         }
 
         if (values.isSignatory === 'true') {
-          payload.directors[0].signature = signature;
+          payload.vendor.directors[0].signature = signature;
         }
 
-        payload.directors[0].isSignatory =
+        payload.vendor.directors[0].isSignatory =
           values.isSignatory === 'true' ? true : false;
 
         Axios.put(`${BASE_API_URL}/user/vendor/update`, payload, {
@@ -188,7 +188,7 @@ const SignatoriesInfoForm = ({
   );
 };
 
-const ShowDirectorsTable = ({ directors, moveToNextStep }) => {
+export const ShowDirectorsTable = ({ directors, moveToNextStep }) => {
   if (!directors || directors.length === 0) {
     return null;
   }
@@ -230,9 +230,11 @@ const ShowDirectorsTable = ({ directors, moveToNextStep }) => {
         </table>
       </div>
       <div>
-        <Button className="btn-secondary mt-5" onClick={moveToNextStep}>
-          Save Changes
-        </Button>
+        {moveToNextStep && (
+          <Button className="btn-secondary mt-5" onClick={moveToNextStep}>
+            Save Changes
+          </Button>
+        )}
       </div>
     </>
   );

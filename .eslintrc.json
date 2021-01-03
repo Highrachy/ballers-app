@@ -1,5 +1,4 @@
 {
-  "plugins": [
-    "cypress"
-  ]
+  "extends": "react-app",
+  "plugins": ["react", "cypress"]
 }

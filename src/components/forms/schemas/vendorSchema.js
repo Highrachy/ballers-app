@@ -8,8 +8,13 @@ import {
 
 export const companyInfoSchema = {
   companyName: stringValidation('Company Name'),
-  registerAs: required('Register As'),
+  entity: required('Register As'),
   redanNumber: optionalValidation(required('Redan Number')),
+};
+
+export const phoneNumbersSchema = {
+  phone: phoneNumber,
+  phone2: optionalValidation(phoneNumber),
 };
 
 export const bankSchema = {
@@ -22,4 +27,7 @@ export const signatorySchema = {
   name: stringValidation('Director Name'),
   phone: phoneNumber,
   isSignatory: optionalValidation(required('Signatory')),
+};
+export const certificateSchema = {
+  type: optionalValidation(required('Certificate Type')),
 };

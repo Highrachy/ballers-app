@@ -38,7 +38,7 @@ export const BankInformationForm = ({ moveToNextStep, setStepToast }) => {
       enableReinitialize={true}
       initialValues={setInitialValues(bankSchema, TEST_DATA)}
       onSubmit={(values, actions) => {
-        let payload = { bankInfo: values };
+        let payload = { vendor: { bankInfo: values } };
         console.log('payload', payload);
 
         Axios.put(`${BASE_API_URL}/user/vendor/update`, payload, {
@@ -107,7 +107,7 @@ const BankInfoForm = ({ isSubmitting, handleSubmit, ...props }) => {
             />
             <Input
               formGroupClassName="col-md-6"
-              label="Account Number"
+              label="Account Number (NUBAN)"
               name="accountNumber"
             />
           </div>

@@ -7,12 +7,23 @@ import { SignatoriesForm } from './Signatories';
 import { ReviewInfoForm } from './ReviewInfo';
 import { CertificatesForm } from './Certificates';
 
+export const COMPLETED_STEPS = [
+  //logo and maybe entity type
+  // any bank info
+  // One signatory info
+  // tax certificate and one certificate
+];
+
 const AccountSetup = ({ id }) => {
   const [initialStep, setInitialStep] = React.useState(id);
 
+  React.useEffect(() => {
+    setInitialStep(id);
+  }, [id]);
+
   const [toast, setToast] = useToast();
 
-  const moveToStep = (no) => setInitialStep(no);
+  const moveToStep = (number) => setInitialStep(number);
 
   const ALL_STEPS = [
     null,

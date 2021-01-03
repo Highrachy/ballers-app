@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
+import classNames from 'classnames';
 import { Link } from '@reach/router';
 import { NotificationIcon, ThreeDotsIcon } from 'components/utils/Icons';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
@@ -14,6 +15,10 @@ const Empty = React.forwardRef(({ children, onClick }, ref) => (
 const Header = () => {
   let { userState } = React.useContext(UserContext);
   const userName = `${userState.firstName} ${userState.lastName}`;
+  const isCompanyLogo =
+    !userState.profileImage.url &&
+    userState.vendor &&
+    userState.vendor.companyLogo;
   return (
     <>
       <Navbar
@@ -31,8 +36,16 @@ const Header = () => {
               <Dropdown.Toggle as={Empty} id="dropdown-basic">
                 <img
                   alt={userName}
-                  className="img-fluid dashboard-top-nav__avatar"
-                  src={userState.profileImage.url || ProfileAvatar}
+                  className={classNames(
+                    'img-fluid',
+                    { 'dashboard-top-nav__avatar': !isCompanyLogo },
+                    { 'dashboard-top-nav__company-logo': isCompanyLogo }
+                  )}
+                  src={
+                    isCompanyLogo
+                      ? userState.vendor.companyLogo
+                      : userState.profileImage.url || ProfileAvatar
+                  }
                   title={userName}
                 />{' '}
                 <ThreeDotsIcon />

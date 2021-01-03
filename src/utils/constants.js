@@ -144,3 +144,12 @@ export const VENDOR_IDENTIFICATION_TYPE = {
   'Registered Company Name': 'Form BN-01',
   Individual: 'Valid Identification',
 };
+
+export const INDIVIDUAL_IDENTIFICATION_TYPE = [
+  'Drivers License',
+  'International Passport',
+  'National Identification Card',
+];
+
+// add and remove directors
+// add and remove certificates ***
