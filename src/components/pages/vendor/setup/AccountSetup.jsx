@@ -6,16 +6,23 @@ import { BankInformationForm } from './BankInformation';
 import { SignatoriesForm } from './Signatories';
 import { ReviewInfoForm } from './ReviewInfo';
 import { CertificatesForm } from './Certificates';
+import { UserContext } from 'context/UserContext';
 
-export const COMPLETED_STEPS = [
+export const getCompletedSteps = (userState) => [
   //logo and maybe entity type
+  userState.vendor?.companyLogo && userState.vendor?.entity,
   // any bank info
-  // One signatory info
+  userState.vendor?.bankInfo?.bankName,
+  // One signatory info, check all with some
+  userState.vendor?.directors[0]?.isSignatory ||
+    userState.vendor?.directors[1]?.isSignatory,
   // tax certificate and one certificate
+  userState.vendor?.identification[0]?.url && userState.vendor?.taxCertificate,
 ];
 
 const AccountSetup = ({ id }) => {
   const [initialStep, setInitialStep] = React.useState(id);
+  const { userState } = React.useContext(UserContext);
 
   React.useEffect(() => {
     setInitialStep(id);
@@ -51,7 +58,7 @@ const AccountSetup = ({ id }) => {
       <Toast {...toast} showToastOnly />
       <StepperPage
         allSteps={ALL_STEPS}
-        doneStatus={[false, false, false, false]}
+        doneStatus={getCompletedSteps(userState)}
         initialStep={parseInt(initialStep, 10) || 1}
         pageSteps={ADD_ENTERTAINER_STEPS}
         title="Vendor Verification"

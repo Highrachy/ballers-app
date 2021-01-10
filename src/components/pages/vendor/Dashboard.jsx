@@ -3,6 +3,7 @@ import BackendPage from 'components/layout/BackendPage';
 import { UserContext } from 'context/UserContext';
 import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
+import { getCompletedSteps } from 'components/pages/vendor/setup/AccountSetup';
 
 const Dashboard = () => (
   <BackendPage>
@@ -12,6 +13,7 @@ const Dashboard = () => (
 
 const Welcome = () => {
   const { userState } = React.useContext(UserContext);
+  const completedSteps = getCompletedSteps(userState);
   return (
     <section className="container-fluid">
       <div className="card bg-primary dashboard mb-3">
@@ -39,8 +41,8 @@ const Welcome = () => {
                 <td>
                   <Link to="/vendor/setup/1">Company Information</Link>
                 </td>
-                <td>No information available</td>
-                <td>Pending</td>
+                <td>Upload Company Logo &amp; Update Company Infomation</td>
+                <td>{completedSteps[0] ? 'Pending' : 'Not Completed'}</td>
               </tr>
               <tr>
                 <td>Step 2</td>
@@ -48,8 +50,8 @@ const Welcome = () => {
                 <td>
                   <Link to="/vendor/setup/2">Bank Information</Link>
                 </td>
-                <td>No information available</td>
-                <td>Pending</td>
+                <td>Add Bank Details</td>
+                <td>{completedSteps[1] ? 'Pending' : 'Not Completed'}</td>
               </tr>
               <tr>
                 <td>Step 3</td>
@@ -57,16 +59,16 @@ const Welcome = () => {
                   <Link to="/vendor/setup/3">Directors and Signatories</Link>
                 </td>
 
-                <td>No information available</td>
-                <td>Pending</td>
+                <td>Add Directors and Signatories</td>
+                <td>{completedSteps[2] ? 'Pending' : 'Not Completed'}</td>
               </tr>
               <tr>
                 <td>Step 4</td>
                 <td>
                   <Link to="/vendor/setup/4">Certificates</Link>
                 </td>
-                <td>No information available</td>
-                <td>Pending</td>
+                <td>Upload Identification &amp; Tax Certificates</td>
+                <td>{completedSteps[3] ? 'Pending' : 'Not Completed'}</td>
               </tr>
             </tbody>
           </table>
