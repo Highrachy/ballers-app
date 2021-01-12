@@ -140,8 +140,8 @@ export const STATES = [
 ];
 
 export const VENDOR_IDENTIFICATION_TYPE = {
-  'Limited Liability Company': 'RC NUMBER',
-  'Registered Company Name': 'Form BN-01',
+  'Limited Liability Company': 'Incorporation Document',
+  'Registered Company Name': 'Company Registration Document',
   Individual: 'Valid Identification',
 };
 
@@ -151,5 +151,14 @@ export const INDIVIDUAL_IDENTIFICATION_TYPE = [
   'National Identification Card',
 ];
 
+export const VENDOR_STEPS = {
+  companyInfo: 'Company Information',
+  bankDetails: 'Bank Details',
+  directorInfo: 'Directors Information',
+  documentUpload: 'Document Upload',
+};
+
 // add and remove directors
 // add and remove certificates ***
+// add instructions to prevent admin from seeing buttons
+// all vendor verification to set updates to in review

@@ -20,6 +20,13 @@ export const getCompletedSteps = (userState) => [
   userState.vendor?.identification[0]?.url && userState.vendor?.taxCertificate,
 ];
 
+export const getVerifiedSteps = (userState) => [
+  userState.vendor?.verification?.companyInfo?.status,
+  userState.vendor?.verification?.bankDetails?.status,
+  userState.vendor?.verification?.directorInfo?.status,
+  userState.vendor?.verification?.documentUpload?.status,
+];
+
 const AccountSetup = ({ id }) => {
   const [initialStep, setInitialStep] = React.useState(id);
   const { userState } = React.useContext(UserContext);

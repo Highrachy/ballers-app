@@ -136,7 +136,6 @@ const OffersRow = ({
           <button
             onClick={() => setShowAddTransactionModal(true)}
             className="btn btn-sm btn-secondary"
-            to={`/admin/transactions/new/${_id}`}
           >
             Add Payment
           </button>

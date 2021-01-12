@@ -104,7 +104,7 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
                 <UploadCertificate
                   image={certificateImage}
                   setImage={setCertificateImage}
-                  title="Upload Company Certificate"
+                  title={`Upload ${type ? type : 'Company Identification'}`}
                 >
                   {isIndividual && (
                     <Select

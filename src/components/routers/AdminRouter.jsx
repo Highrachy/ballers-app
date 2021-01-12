@@ -2,6 +2,7 @@ import React from 'react';
 import { Router } from '@reach/router';
 import Dashboard from 'components/pages/admin/Dashboard';
 import Users from 'components/pages/admin/Users';
+import SingleUser from 'components/pages/admin/SingleUser';
 import Portfolios from 'components/pages/admin/Portfolios';
 import SinglePortfolio from 'components/pages/admin/SinglePortfolio';
 import ScheduledVisits from 'components/pages/admin/ScheduledVisits';
@@ -19,6 +20,7 @@ const AdminRouter = () => (
   <Router>
     <Dashboard path="dashboard" />
     <Users path="users" />
+    <SingleUser path="user/:id" />
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />
     <NewProperty path="portfolios/new" />

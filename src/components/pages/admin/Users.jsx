@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, DASHBOARD_PAGE } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
@@ -13,6 +13,8 @@ import { getError } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { SuccessIcon, InfoIcon } from 'components/utils/Icons';
+import { Link } from '@reach/router';
+import Humanize from 'humanize-plus';
 
 const Users = () => {
   const [toast, setToast] = useToast();
@@ -72,6 +74,7 @@ const UsersRowList = ({ users }) => {
                 <td>Avatar</td>
                 <td>Name</td>
                 <td>Phone</td>
+                <td>Role</td>
                 <td>Status</td>
                 <td></td>
               </tr>
@@ -110,34 +113,34 @@ const UsersRow = ({
   role,
   setToast,
 }) => {
-  const userId = _id;
-  const [userRole, setUserRole] = React.useState(role);
-  const processRoleChange = () => {
-    const action = userRole === 1 ? 'upgrade' : 'downgrade';
+  // const userId = _id;
+  // const [userRole, setUserRole] = React.useState(role);
+  // const processRoleChange = () => {
+  //   const action = userRole === 1 ? 'upgrade' : 'downgrade';
 
-    Axios.put(
-      `${BASE_API_URL}/user/editor/${action}`,
-      { userId },
-      {
-        headers: { Authorization: getTokenFromStore() },
-      }
-    )
-      .then(function (response) {
-        const { status, data } = response;
-        if (status === 200) {
-          setToast({
-            message: data.message,
-            type: 'success',
-          });
-          setUserRole(userRole === 1 ? 3 : 1);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  };
+  //   Axios.put(
+  //     `${BASE_API_URL}/user/editor/${action}`,
+  //     { userId },
+  //     {
+  //       headers: { Authorization: getTokenFromStore() },
+  //     }
+  //   )
+  //     .then(function (response) {
+  //       const { status, data } = response;
+  //       if (status === 200) {
+  //         setToast({
+  //           message: data.message,
+  //           type: 'success',
+  //         });
+  //         setUserRole(userRole === 1 ? 3 : 1);
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       setToast({
+  //         message: getError(error),
+  //       });
+  //     });
+  // };
   return (
     <tr>
       <td>{number}</td>
@@ -168,7 +171,7 @@ const UsersRow = ({
           </span>
         )}
       </td>
-      <td>
+      {/* <td>
         {userRole === 1 && (
           <button
             className="btn btn-sm btn-secondary"
@@ -186,6 +189,11 @@ const UsersRow = ({
             Downgrade to a User
           </button>
         )}
+      </td> */}
+      <td>
+        <Link className="btn btn-sm btn-secondary" to={`/admin/user/${_id}`}>
+          View {Humanize.capitalize(DASHBOARD_PAGE[role])}
+        </Link>
       </td>
     </tr>
   );

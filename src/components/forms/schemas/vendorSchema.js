@@ -31,3 +31,6 @@ export const signatorySchema = {
 export const certificateSchema = {
   type: optionalValidation(required('Certificate Type')),
 };
+export const commentSchema = {
+  comment: required('Comment'),
+};

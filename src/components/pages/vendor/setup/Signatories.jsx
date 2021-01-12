@@ -103,6 +103,7 @@ export const SignatoriesForm = ({ moveToNextStep }) => {
             <ShowDirectorsTable
               moveToNextStep={moveToNextStep}
               directors={userState.vendor?.directors || []}
+              setToast={setToast}
             />
           </Card>
           <DisplayFormikState {...props} showAll hide />
@@ -188,7 +189,33 @@ const SignatoriesInfoForm = ({
   );
 };
 
-export const ShowDirectorsTable = ({ directors, moveToNextStep }) => {
+export const ShowDirectorsTable = ({ directors, moveToNextStep, setToast }) => {
+  const { userDispatch } = React.useContext(UserContext);
+  const [loading, setLoading] = React.useState(0);
+  const deleteSignatory = (id) => {
+    setLoading(id);
+    Axios.delete(`${BASE_API_URL}/user/vendor/director/${id}`, {
+      headers: { Authorization: getTokenFromStore() },
+    })
+      .then(function (response) {
+        const { status, data } = response;
+        if (statusIsSuccessful(status)) {
+          setToast({
+            type: 'success',
+            message: `Director has been successfully deleted`,
+          });
+          userDispatch({ type: 'user-info', user: data.user });
+          setLoading(0);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(0);
+      });
+  };
+
   if (!directors || directors.length === 0) {
     return null;
   }
@@ -204,6 +231,7 @@ export const ShowDirectorsTable = ({ directors, moveToNextStep }) => {
               <th>Phone</th>
               <th>Is Signatory</th>
               <th>Signature</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -223,6 +251,15 @@ export const ShowDirectorsTable = ({ directors, moveToNextStep }) => {
                   ) : (
                     '-'
                   )}
+                </td>
+                <td>
+                  <Button
+                    loading={loading === director._id}
+                    onClick={() => deleteSignatory(director._id)}
+                    className="btn btn-sm btn-secondary"
+                  >
+                    Delete
+                  </Button>{' '}
                 </td>
               </tr>
             ))}
