@@ -19,6 +19,7 @@ import { getError, isValidURL, statusIsSuccessful } from 'utils/helpers';
 import Select from 'components/forms/Select';
 import { UploadSignature } from 'components/pages/user/OfferLetter';
 import Image from 'components/utils/Image';
+import { VerificationComments } from './AccountSetup';
 
 const Signatories = () => (
   <BackendPage>
@@ -126,6 +127,7 @@ const SignatoriesInfoForm = ({
     <section className="row">
       <div className="col-md-10 px-4">
         <h5 className="mb-4">Add a New Director / Signatory</h5>
+        <VerificationComments step="3" />
         <div className="form-row">
           <Input
             formGroupClassName="col-md-6"

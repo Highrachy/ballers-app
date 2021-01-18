@@ -26,6 +26,7 @@ import Address from 'components/utils/Address';
 import Select from 'components/forms/Select';
 import UploadImage from 'components/utils/UploadImage';
 import Image from 'components/utils/Image';
+import { VerificationComments } from './AccountSetup';
 
 const CompanyInformation = () => (
   <BackendPage>
@@ -101,11 +102,11 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
-          <CompanyLogo
+          <CompanyInfoForm
+            {...props}
             image={logo || userState.vendor?.companyLogo}
             setImage={setLogo}
           />
-          <CompanyInfoForm {...props} />
           <CompanyAddress />
           <Button
             className="btn-secondary my-4"
@@ -122,13 +123,25 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
   );
 };
 
-const CompanyInfoForm = ({ values }) => {
+const CompanyInfoForm = ({ image, setImage, values }) => {
   console.log('vendor', values.vendor);
   return (
     <Card className="card-container">
       <section className="row">
         <div className="col-md-10 px-4">
           <h5 className="mb-4">Company Information</h5>
+
+          <VerificationComments step="1" />
+
+          <div className="mb-5 mt-4">
+            {image && (
+              <Image className="uploaded-image mb-3" name="logo" src={image} />
+            )}
+            <UploadImage
+              afterUpload={(image) => setImage(image)}
+              defaultImage={image}
+            />
+          </div>
 
           <Input
             label="Company Name"
@@ -171,23 +184,6 @@ const CompanyInfoForm = ({ values }) => {
     </Card>
   );
 };
-
-const CompanyLogo = ({ image, setImage }) => (
-  <Card className="card-container my-5">
-    <section className="row">
-      <div className="col-md-10 px-4">
-        <h5 className="mt-2 mb-4">Company Logo</h5>
-        {image && (
-          <Image className="uploaded-image mb-3" name="logo" src={image} />
-        )}
-        <UploadImage
-          afterUpload={(image) => setImage(image)}
-          defaultImage={image}
-        />
-      </div>
-    </section>
-  </Card>
-);
 
 const CompanyAddress = () => (
   <Card className="card-container mt-5">

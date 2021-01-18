@@ -121,6 +121,42 @@ export const CameraIcon = () => (
   </svg>
 );
 
+export const CompanyInfoIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-folder"
+  >
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
+export const BankInfoIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-archive"
+  >
+    <polyline points="21 8 21 21 3 21 3 8" />
+    <rect x={1} y={3} width={22} height={5} />
+    <line x1={10} y1={12} x2={14} y2={12} />
+  </svg>
+);
+
 export const FileIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -206,18 +242,37 @@ export const TransactionIcon = () => (
 
 export const QuestionMarkIcon = () => (
   <svg
-    width={19}
-    height={18}
-    viewBox="0 0 19 18"
-    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-help-circle"
   >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M6.625 7.125C6.625 5.6775 7.8025 4.5 9.25 4.5C10.6975 4.5 11.875 5.6775 11.875 7.125C11.875 8.31 11.08 9.30225 10 9.62775V10.5C10 10.9148 9.66475 11.25 9.25 11.25C8.83525 11.25 8.5 10.9148 8.5 10.5V9C8.5 8.58525 8.83525 8.25 9.25 8.25C9.87025 8.25 10.375 7.74525 10.375 7.125C10.375 6.50475 9.87025 6 9.25 6C8.62975 6 8.125 6.50475 8.125 7.125C8.125 7.53975 7.78975 7.875 7.375 7.875C6.96025 7.875 6.625 7.53975 6.625 7.125ZM8.5 12.75C8.5 12.3352 8.83525 12 9.25 12C9.66475 12 10 12.3352 10 12.75C10 13.1648 9.66475 13.5 9.25 13.5C8.83525 13.5 8.5 13.1648 8.5 12.75ZM9.25 15C5.94175 15 3.25 12.3082 3.25 9C3.25 5.69175 5.94175 3 9.25 3C12.5582 3 15.25 5.69175 15.25 9C15.25 12.3082 12.5582 15 9.25 15ZM9.25 1.5C5.1145 1.5 1.75 4.8645 1.75 9C1.75 13.1355 5.1145 16.5 9.25 16.5C13.3855 16.5 16.75 13.1355 16.75 9C16.75 4.8645 13.3855 1.5 9.25 1.5Z"
-      fill="#5775FA"
-    />
+    <circle cx={12} cy={12} r={10} />
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+    <line x1={12} y1={17} x2="12.01" y2={17} />
+  </svg>
+);
+
+export const RightChevronIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-chevron-right"
+  >
+    <polyline points="9 18 15 12 9 6" />
   </svg>
 );
 

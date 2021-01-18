@@ -70,9 +70,8 @@ const ProfileForm = () => {
           }}
           onSubmit={(values, actions) => {
             const payload = { ...values };
-            !payload.address.street2 && delete payload.address.street2;
 
-            Axios.put(`${BASE_API_URL}/user/update`, values, {
+            Axios.put(`${BASE_API_URL}/user/update`, payload, {
               headers: { Authorization: getTokenFromStore() },
             })
               .then(function (response) {
@@ -100,8 +99,6 @@ const ProfileForm = () => {
             ...personalInfoSchema,
             address: createSchema(addressSchema),
           })}
-          // address: createSchema(addressSchema),
-          // }
         >
           {({ isSubmitting, handleSubmit, ...props }) => (
             <Form>

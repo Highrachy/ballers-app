@@ -26,6 +26,7 @@ import Textarea from 'components/forms/Textarea';
 import { VENDOR_STEPS } from 'utils/constants';
 import Image from 'components/utils/Image';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
+import Modal from 'components/common/Modal';
 
 const SingleUser = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -102,6 +103,31 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
         setLoadingVerification(false);
       });
   };
+  const certifyVendor = () => {
+    setLoadingVerification(true);
+    const payload = { vendorId };
+    Axios.put(`${BASE_API_URL}/user/vendor/certify`, payload, {
+      headers: { Authorization: getTokenFromStore() },
+    })
+      .then(function (response) {
+        const { status } = response;
+        if (statusIsSuccessful(status)) {
+          setToast({
+            type: 'success',
+            message: `Vendor has been successfully certified`,
+          });
+          user.vendor.verified = true;
+          setUser(user);
+          setLoadingVerification(false);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoadingVerification(false);
+      });
+  };
 
   const StepAction = ({ step }) => {
     const [hideForm, setHideForm] = React.useState(true);
@@ -164,72 +190,81 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
         }}
         validationSchema={createSchema(commentSchema)}
       >
-        {({ isSubmitting, handleSubmit, ...props }) => (
-          <Form>
-            <p>
-              <strong>Status: {user.vendor?.verification[step]?.status}</strong>
-            </p>
+        {({ isSubmitting, handleSubmit, ...props }) => {
+          if (user.vendor?.verification[step]?.status === 'Verified') {
+            return null;
+          }
+          return (
+            <Form>
+              <p>
+                <strong>
+                  Status: {user.vendor?.verification[step]?.status}
+                </strong>
+              </p>
 
-            {user.vendor?.verification[step]?.comments.length > 0 && (
-              <section className="my-4">
-                <h6>Past Comments</h6>
-                {user.vendor?.verification[step].comments.map(
-                  ({ comment }, index) => (
-                    <p className="speech-bubble">{comment}</p>
-                  )
-                )}
-              </section>
-            )}
-            {hideForm ? (
-              <>
-                <button
-                  onClick={() => {
-                    setHideForm(false);
-                  }}
-                  className="btn btn-sm btn-primary"
-                >
-                  Add Comment
-                </button>
-                &nbsp; &nbsp; &nbsp;
-                <Button
-                  loading={loading}
-                  onClick={approveVerificationStep}
-                  className="btn btn-sm btn-secondary"
-                >
-                  Approve {VENDOR_STEPS[step]}
-                </Button>{' '}
-              </>
-            ) : (
-              <>
-                <Textarea label="Comment" name="comment" />
-                <Button
-                  color="primary"
-                  className="btn-primary btn-sm mt-3"
-                  loading={isSubmitting}
-                  onClick={handleSubmit}
-                >
-                  Add Comment
-                </Button>{' '}
-                &nbsp; &nbsp; &nbsp;
-                <button
-                  onClick={() => {
-                    setHideForm(true);
-                  }}
-                  className="btn btn-sm btn-danger mt-3"
-                >
-                  Close Comment
-                </button>
-                <DisplayFormikState {...props} showAll />
-              </>
-            )}
-          </Form>
-        )}
+              {user.vendor?.verification[step]?.comments.length > 0 && (
+                <section className="my-4">
+                  <h6>Comments</h6>
+                  {user.vendor?.verification[step].comments.map(
+                    ({ comment }, index) => (
+                      <p className="speech-bubble">{comment}</p>
+                    )
+                  )}
+                </section>
+              )}
+              {hideForm ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setHideForm(false);
+                    }}
+                    className="btn btn-sm btn-primary"
+                  >
+                    Add Comment
+                  </button>
+                  &nbsp; &nbsp; &nbsp;
+                  <Button
+                    loading={loading}
+                    onClick={approveVerificationStep}
+                    className="btn btn-sm btn-secondary"
+                  >
+                    Approve {VENDOR_STEPS[step]}
+                  </Button>{' '}
+                </>
+              ) : (
+                <>
+                  <Textarea label="Comment" name="comment" />
+                  <Button
+                    color="primary"
+                    className="btn-primary btn-sm mt-3"
+                    loading={isSubmitting}
+                    onClick={handleSubmit}
+                  >
+                    Add Comment
+                  </Button>{' '}
+                  &nbsp; &nbsp; &nbsp;
+                  <button
+                    onClick={() => {
+                      setHideForm(true);
+                    }}
+                    className="btn btn-sm btn-danger mt-3"
+                  >
+                    Close Comment
+                  </button>
+                  <DisplayFormikState {...props} showAll />
+                </>
+              )}
+            </Form>
+          );
+        }}
       </Formik>
     );
   };
 
   const VENDOR_STEPS_KEY = Object.keys(VENDOR_STEPS);
   const isVendor = user.role === USER_TYPES.vendor;
+
+  const [showVerifyVendorModal, setVerifyVendorModal] = React.useState(false);
 
   return (
     <>
@@ -333,90 +368,90 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
 
       {isVendor && (
         <>
-          {user.vendor?.bankInfo?.bankName && (
-            <CardTableSection name="Bank Information">
-              <tr>
-                <td>
-                  <strong>Account Name</strong>
-                </td>
-                <td>{user.vendor?.bankInfo?.accountName}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Bank Name</strong>
-                </td>
-                <td>{user.vendor?.bankInfo?.bankName}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Account Number</strong>
-                </td>
-                <td>{user.vendor?.bankInfo?.accountNumber}</td>
-              </tr>
-
+          <CardTableSection name="Bank Information">
+            <tr>
+              <td>
+                <strong>Account Name</strong>
+              </td>
+              <td>{user.vendor?.bankInfo?.accountName}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Bank Name</strong>
+              </td>
+              <td>{user.vendor?.bankInfo?.bankName}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Account Number</strong>
+              </td>
+              <td>{user.vendor?.bankInfo?.accountNumber}</td>
+            </tr>
+            {user.vendor?.bankInfo?.bankName && (
               <tr>
                 <td colSpan="5">
                   <StepAction step={VENDOR_STEPS_KEY[1]} />
                 </td>
               </tr>
-            </CardTableSection>
-          )}
-          {user.vendor?.directors[0] && (
-            <Card className="card-container mb-5">
-              <h5 className="mb-4">Directors / Signatories</h5>
-              <ShowDirectorsTable
-                directors={user.vendor?.directors}
-                moveToNextStep={null}
-              />
+            )}
+          </CardTableSection>
+          <Card className="card-container mb-5">
+            <h5 className="mb-4">Directors / Signatories</h5>
+            <ShowDirectorsTable
+              directors={user.vendor?.directors}
+              moveToNextStep={null}
+            />
 
+            {user.vendor?.directors[0] && (
               <StepAction step={VENDOR_STEPS_KEY[2]} />
-            </Card>
-          )}
-          {((user.vendor?.identification &&
-            user.vendor?.identification[0]?.url) ||
-            user.vendor?.taxCertificate) && (
-            <CardTableSection name="Certificates">
-              <tr>
-                <td>
-                  <strong>Identification</strong>
-                </td>
-                <td>
-                  <img
-                    alt="Tax Certificate"
-                    className="img-fluid mb-3"
-                    src={
-                      user.vendor?.identification &&
-                      user.vendor?.identification[0]?.url
-                    }
-                    title="Tax Certificate"
-                  />
-                  {user.vendor?.identification &&
-                    user.vendor?.identification[0].type}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Tax Certificate</strong>
-                </td>
-                <td>
-                  <img
-                    alt="Tax Certificate"
-                    className="img-fluid mb-3"
-                    src={user.vendor?.taxCertificate}
-                    title="Tax Certificate"
-                  />
-                </td>
-              </tr>
+            )}
+          </Card>
 
+          <CardTableSection name="Certificates">
+            <tr>
+              <td>
+                <strong>Identification</strong>
+              </td>
+              <td>
+                <img
+                  alt="Tax Certificate"
+                  className="img-fluid mb-3"
+                  src={
+                    user.vendor?.identification &&
+                    user.vendor?.identification.url
+                  }
+                  title="Tax Certificate"
+                />
+                {user.vendor?.identification &&
+                  user.vendor?.identification.type}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Tax Certificate</strong>
+              </td>
+              <td>
+                <img
+                  alt="Tax Certificate"
+                  className="img-fluid mb-3"
+                  src={user.vendor?.taxCertificate}
+                  title="Tax Certificate"
+                />
+              </td>
+            </tr>
+            {((user.vendor?.identification &&
+              user.vendor?.identification?.url) ||
+              user.vendor?.taxCertificate) && (
               <tr>
                 <td colSpan="5">
                   <StepAction step={VENDOR_STEPS_KEY[3]} />
                 </td>
               </tr>
-            </CardTableSection>
-          )}
+            )}
+          </CardTableSection>
 
-          {user.vendor?.verification?.companyInfo?.status === 'Verified' &&
+          {!user.vendor?.verified &&
+            user.vendor?.verification?.companyInfo?.status === 'Verified' &&
             user.vendor?.verification?.bankDetails?.status === 'Verified' &&
             user.vendor?.verification?.directorInfo?.status === 'Verified' &&
             user.vendor?.verification?.documentUpload?.status ===
@@ -429,6 +464,38 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                 Verify Vendor
               </Button>
             )}
+          {user.vendor?.verified && !user.vendor?.certified && (
+            <Button
+              loading={loadingVerification}
+              onClick={() => setVerifyVendorModal(true)}
+              className="btn btn-secondary"
+            >
+              Certify Vendor
+            </Button>
+          )}
+
+          {/*  Modals */}
+          <Modal
+            title="Verify Vendor"
+            show={showVerifyVendorModal}
+            onHide={() => setVerifyVendorModal(false)}
+            showFooter={false}
+          >
+            <section className="row">
+              <div className="col-md-12 my-3 text-center">
+                <h5 className="my-2">
+                  Are you sure you want to{' '}
+                  {user.vendor?.verified ? 'certify' : 'verify'} this vendor.
+                </h5>
+                <button
+                  className="btn btn-secondary mb-5"
+                  onClick={user.vendor?.verified ? verifyVendor : certifyVendor}
+                >
+                  Verify Vendor
+                </button>
+              </div>
+            </section>
+          </Modal>
         </>
       )}
     </>

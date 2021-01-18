@@ -16,6 +16,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import { bankSchema } from 'components/forms/schemas/vendorSchema';
 import { getError, statusIsSuccessful } from 'utils/helpers';
+import { VerificationComments } from './AccountSetup';
 
 const BankInformation = () => (
   <BackendPage>
@@ -93,6 +94,8 @@ const BankInfoForm = ({ isSubmitting, handleSubmit, ...props }) => {
       <section className="row">
         <div className="col-md-10 px-4">
           <h5 className="mb-4">Bank Information</h5>
+          <VerificationComments step="2" />
+
           <Input
             label="Account Name"
             name="accountName"

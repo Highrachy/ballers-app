@@ -22,6 +22,7 @@ import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { certificateSchema } from 'components/forms/schemas/vendorSchema';
 import Select from 'components/forms/Select';
+import { VerificationComments } from './AccountSetup';
 
 const Certificates = () => (
   <BackendPage>
@@ -36,6 +37,8 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
   const [taxImage, setTaxImage] = React.useState(null);
   const [certificateImage, setCertificateImage] = React.useState(null);
   const { userDispatch, userState } = React.useContext(UserContext);
+  console.log('taxImage', taxImage);
+  console.log('certificateImage', certificateImage);
 
   const entity = userState.vendor && userState.vendor.entity;
   const isIndividual =
@@ -57,12 +60,10 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
         };
 
         if (certificateImage) {
-          payload.vendor.identification = [
-            {
-              type: values.type,
-              url: certificateImage,
-            },
-          ];
+          payload.vendor.identification = {
+            type: values.type,
+            url: certificateImage,
+          };
         }
 
         Axios.put(`${BASE_API_URL}/user/vendor/update`, payload, {
@@ -146,6 +147,7 @@ const UploadCertificate = ({ children, title, image, setImage }) => (
     <section className="row">
       <div className="col-md-10 px-4">
         <h5 className="mb-4">{title}</h5>
+        <VerificationComments step="4" />
         {image && (
           <Image
             className="uploaded-image mb-3"

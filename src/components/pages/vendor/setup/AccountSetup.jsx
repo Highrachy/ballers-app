@@ -7,18 +7,37 @@ import { SignatoriesForm } from './Signatories';
 import { ReviewInfoForm } from './ReviewInfo';
 import { CertificatesForm } from './Certificates';
 import { UserContext } from 'context/UserContext';
+import { VENDOR_STEPS } from 'utils/constants';
 
 export const getCompletedSteps = (userState) => [
   //logo and maybe entity type
-  userState.vendor?.companyLogo && userState.vendor?.entity,
+  !!(userState.vendor?.companyLogo && userState.vendor?.entity),
   // any bank info
-  userState.vendor?.bankInfo?.bankName,
+  !!userState.vendor?.bankInfo?.bankName,
   // One signatory info, check all with some
-  userState.vendor?.directors[0]?.isSignatory ||
-    userState.vendor?.directors[1]?.isSignatory,
+  !!(
+    userState.vendor?.directors[0]?.isSignatory ||
+    userState.vendor?.directors[1]?.isSignatory
+  ),
   // tax certificate and one certificate
-  userState.vendor?.identification[0]?.url && userState.vendor?.taxCertificate,
+  !!(userState.vendor?.identification?.url && userState.vendor?.taxCertificate),
 ];
+
+export const VerificationComments = ({ step }) => {
+  const { userState } = React.useContext(UserContext);
+  const currentStep = Object.keys(VENDOR_STEPS)[step - 1];
+  const comments = userState.vendor?.verification[currentStep].comments || [];
+  return comments.length > 0 ? (
+    <section className="my-4">
+      <h6>Past Comments</h6>
+      {comments.map(({ comment }, index) => (
+        <p key={index} className="speech-bubble">
+          {comment}
+        </p>
+      ))}
+    </section>
+  ) : null;
+};
 
 export const getVerifiedSteps = (userState) => [
   userState.vendor?.verification?.companyInfo?.status,

@@ -1,12 +1,22 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { UserContext } from 'context/UserContext';
-import { Card } from 'react-bootstrap';
+// import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import {
   getCompletedSteps,
   getVerifiedSteps,
 } from 'components/pages/vendor/setup/AccountSetup';
+import { CompanyInfoIcon } from 'components/utils/Icons';
+import { SuccessIcon } from 'components/utils/Icons';
+import { InfoIcon } from 'components/utils/Icons';
+import { QuestionMarkIcon } from 'components/utils/Icons';
+import { BankInfoIcon } from 'components/utils/Icons';
+import { FileIcon } from 'components/utils/Icons';
+import { UsersIcon } from 'components/utils/Icons';
+import { ErrorIcon } from 'components/utils/Icons';
+import { VENDOR_STEPS } from 'utils/constants';
+import { MessageIcon } from 'components/utils/Icons';
 
 const Dashboard = () => (
   <BackendPage>
@@ -19,11 +29,43 @@ const Welcome = () => {
   const completedSteps = getCompletedSteps(userState);
   const verifiedSteps = getVerifiedSteps(userState);
 
-  const getComment = (step, comment) => {
-    const length = userState.vendor?.verification[step].comments.length || 0;
-    return length > 0
-      ? userState.vendor?.verification[step].comments[length - 1].comment
-      : comment;
+  const getVerificationStatus = (index) => {
+    const status = completedSteps[index] ? verifiedSteps[index] : 'Pending';
+    const currentStep = Object.keys(VENDOR_STEPS)[index];
+    const comments = userState.vendor?.verification[currentStep].comments || [];
+
+    switch (status) {
+      case 'Verified':
+        return {
+          className: 'text-success',
+          icon: <SuccessIcon />,
+          status: 'Information has been verified',
+        };
+      case 'Pending':
+        return comments.length > 0
+          ? {
+              className: 'text-danger',
+              icon: <MessageIcon />,
+              status: `${comments.length} pending comments`,
+            }
+          : {
+              className: 'text-danger',
+              icon: <QuestionMarkIcon />,
+              status: 'Awaiting your input',
+            };
+      case 'In Review':
+        return {
+          className: 'text-secondary',
+          icon: <InfoIcon />,
+          status: 'Currently in Review',
+        };
+      default:
+        return {
+          class: 'text-muted',
+          icon: <ErrorIcon />,
+          status: 'Loading',
+        };
+    }
   };
 
   return (
@@ -36,78 +78,78 @@ const Welcome = () => {
           </div>
         </div>
       </div>
-      <Card className="mt-4">
-        <div className="table-responsive">
-          <table className="table table-border table-hover">
-            <thead>
-              <tr>
-                <th>S/N</th>
-                <th>Name</th>
-                <th>Comment</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Step 1</td>
-                <td>
-                  <Link to="/vendor/setup/1">Company Information</Link>
-                </td>
-                <td>
-                  {getComment(
-                    'companyInfo',
-                    <>Upload Company Logo &amp; Update Company Infomation</>
-                  )}
-                </td>
-                <td>
-                  {completedSteps[0] ? verifiedSteps[0] : 'Not Completed'}
-                </td>
-              </tr>
-              <tr>
-                <td>Step 2</td>
+      {userState.vendor?.verified ? (
+        <h3>You have been verified</h3>
+      ) : (
+        <div className="row">
+          <VerificationCard
+            icon={<CompanyInfoIcon />}
+            title="Company Information"
+            index={0}
+            key={0}
+            status={getVerificationStatus(0)}
+          >
+            See your profile data and manage your Account to choose what is
+            saved in our system.
+          </VerificationCard>
 
-                <td>
-                  <Link to="/vendor/setup/2">Bank Information</Link>
-                </td>
-                <td>{getComment('bankDetails', 'Add Bank Details')}</td>
-                <td>
-                  {completedSteps[1] ? verifiedSteps[1] : 'Not Completed'}
-                </td>
-              </tr>
-              <tr>
-                <td>Step 3</td>
-                <td>
-                  <Link to="/vendor/setup/3">Directors and Signatories</Link>
-                </td>
+          <VerificationCard
+            icon={<BankInfoIcon />}
+            title="Bank Information"
+            index={1}
+            key={1}
+            status={getVerificationStatus(1)}
+          >
+            See your profile data and manage your Account to choose what is
+            saved in our system.
+          </VerificationCard>
 
-                <td>
-                  {getComment('directorInfo', 'Add Directors and Signatories')}
-                </td>
-                <td>
-                  {completedSteps[2] ? verifiedSteps[2] : 'Not Completed'}
-                </td>
-              </tr>
-              <tr>
-                <td>Step 4</td>
-                <td>
-                  <Link to="/vendor/setup/4">Certificates</Link>
-                </td>
-                <td>
-                  {getComment(
-                    'documentUpload',
-                    <>Upload Identification &amp; Tax Certificates</>
-                  )}
-                </td>
-                <td>
-                  {completedSteps[3] ? verifiedSteps[3] : 'Not Completed'}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <VerificationCard
+            icon={<UsersIcon />}
+            title="Signatories"
+            index={2}
+            key={2}
+            status={getVerificationStatus(2)}
+          >
+            See your profile data and manage your Account to choose what is
+            saved in our system.
+          </VerificationCard>
+
+          <VerificationCard
+            icon={<FileIcon />}
+            title="Certificates"
+            status={getVerificationStatus(3)}
+            index={3}
+            key={3}
+          >
+            See your profile data and manage your Account to choose what is
+            saved in our system.
+          </VerificationCard>
         </div>
-      </Card>
+      )}
     </section>
   );
 };
 
+const VerificationCard = ({ title, children, icon, index, status }) => (
+  <Link to={`/vendor/setup/${index + 1}`} className="col-md-6 mb-4">
+    <div className="card verification-card">
+      <div className="verification-card__block">
+        <div className="verification-card__img">{icon}</div>
+        <div>
+          <h5 className="verification-card__title">
+            {title}{' '}
+            <span className={`${status.className} verification__icon`}>
+              {status.icon}
+            </span>
+          </h5>
+          <p className="verification-card__text">{children}</p>
+        </div>
+      </div>
+      <div className="verification-card__action">
+        {status.icon} {status.status}
+      </div>
+    </div>
+  </Link>
+);
 export default Dashboard;
