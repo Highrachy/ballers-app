@@ -162,7 +162,6 @@ html {
   margin-left: -20px;
 }
 
-// new
 .verification-card {
   height: 100%;
   display: flex;
@@ -232,4 +231,25 @@ html {
 
 .verification__icon svg {
   height: 1.25rem;
+}
+
+.card-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  .progress-bar {
+    width: 0px;
+    height: 3px;
+    border-radius: 0 3px 3px 3px;
+    background-color: $secondary;
+  }
+}
+
+.resolve-comment-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  color: $success;
 }

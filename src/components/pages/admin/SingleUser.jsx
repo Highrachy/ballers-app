@@ -1,6 +1,6 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import { BASE_API_URL, USER_TYPES } from 'utils/constants';
+import { BASE_API_URL, STATUS, USER_TYPES } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
@@ -27,6 +27,9 @@ import { VENDOR_STEPS } from 'utils/constants';
 import Image from 'components/utils/Image';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import Modal from 'components/common/Modal';
+import { SuccessIcon } from 'components/utils/Icons';
+import BallersSpinner from 'components/utils/BallersSpinner';
+import { QuestionMarkIcon } from 'components/utils/Icons';
 
 const SingleUser = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -132,6 +135,8 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   const StepAction = ({ step }) => {
     const [hideForm, setHideForm] = React.useState(true);
     const [loading, setLoading] = React.useState(false);
+    const [commentLoading, setCommentLoading] = React.useState(null);
+
     const approveVerificationStep = () => {
       setLoading(true);
       const payload = { vendorId, step };
@@ -157,6 +162,33 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           setLoading(false);
         });
     };
+
+    const resolveSingleComment = ({ vendorId, step, commentId }) => {
+      console.log('vendorId, step, commentId', vendorId, step, commentId);
+      setCommentLoading(commentId);
+      const payload = { vendorId, step, commentId };
+
+      Axios.put(`${BASE_API_URL}/user/vendor/verify/comment/resolve`, payload, {
+        headers: { Authorization: getTokenFromStore() },
+      })
+        .then(function (response) {
+          const { status, data } = response;
+          if (statusIsSuccessful(status)) {
+            setToast({
+              type: 'success',
+              message: `${VENDOR_STEPS[step]} has been successfully resolved`,
+            });
+            setUser(data.vendor);
+            setCommentLoading(null);
+          }
+        })
+        .catch(function (error) {
+          setToast({
+            message: getError(error),
+          });
+          setCommentLoading(null);
+        });
+    };
     return (
       <Formik
         enableReinitialize={true}
@@ -167,15 +199,14 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
             headers: { Authorization: getTokenFromStore() },
           })
             .then(function (response) {
-              const { status } = response;
+              const { status, data } = response;
               if (statusIsSuccessful(status)) {
                 setToast({
                   type: 'success',
                   message: `Your comment has been successfully added`,
                 });
                 setHideForm(true);
-                user.vendor.verification[step].comments.push({ comment });
-                setUser(user);
+                setUser(data.vendor);
                 actions.setSubmitting(false);
                 actions.resetForm();
               }
@@ -206,8 +237,36 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                 <section className="my-4">
                   <h6>Comments</h6>
                   {user.vendor?.verification[step].comments.map(
-                    ({ comment }, index) => (
-                      <p className="speech-bubble">{comment}</p>
+                    ({ comment, _id, status }, index) => (
+                      <p key={index} className="speech-bubble">
+                        {comment}
+
+                        <span
+                          className="btn btn-sm text-primary resolve-comment-btn"
+                          onClick={() =>
+                            resolveSingleComment({
+                              step,
+                              commentId: _id,
+                              vendorId: user._id,
+                            })
+                          }
+                        >
+                          {commentLoading && commentLoading === _id ? (
+                            <>
+                              <BallersSpinner small /> Loading
+                            </>
+                          ) : status === STATUS.Resolved ? (
+                            <span className="text-success">
+                              {' '}
+                              <SuccessIcon />
+                            </span>
+                          ) : (
+                            <span className="text-danger">
+                              <QuestionMarkIcon /> Mark As Resolved
+                            </span>
+                          )}
+                        </span>
+                      </p>
                     )
                   )}
                 </section>
@@ -503,3 +562,13 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
 };
 
 export default SingleUser;
+
+// resolve comments
+// better display for verfied users
+// add cerified badge
+// better user profile page
+// add verification status and action plans
+// better user list display
+// for vendor, better UI on dashboard
+// test property adding, and others.
+// Loading dashboard side menu for vendor.

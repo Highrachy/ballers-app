@@ -17,6 +17,7 @@ import { UsersIcon } from 'components/utils/Icons';
 import { ErrorIcon } from 'components/utils/Icons';
 import { VENDOR_STEPS } from 'utils/constants';
 import { MessageIcon } from 'components/utils/Icons';
+import Humanize from 'humanize-plus';
 
 const Dashboard = () => (
   <BackendPage>
@@ -33,6 +34,9 @@ const Welcome = () => {
     const status = completedSteps[index] ? verifiedSteps[index] : 'Pending';
     const currentStep = Object.keys(VENDOR_STEPS)[index];
     const comments = userState.vendor?.verification[currentStep].comments || [];
+    const pendingComments = comments.filter(
+      (comment) => comment.status === 'Pending'
+    );
 
     switch (status) {
       case 'Verified':
@@ -42,11 +46,14 @@ const Welcome = () => {
           status: 'Information has been verified',
         };
       case 'Pending':
-        return comments.length > 0
+        return pendingComments.length > 0
           ? {
               className: 'text-danger',
               icon: <MessageIcon />,
-              status: `${comments.length} pending comments`,
+              status: `${pendingComments.length} pending  ${Humanize.pluralize(
+                comments.length,
+                'comment'
+              )}`,
             }
           : {
               className: 'text-danger',
@@ -78,54 +85,87 @@ const Welcome = () => {
           </div>
         </div>
       </div>
+
       {userState.vendor?.verified ? (
         <h3>You have been verified</h3>
       ) : (
-        <div className="row">
-          <VerificationCard
-            icon={<CompanyInfoIcon />}
-            title="Company Information"
-            index={0}
-            key={0}
-            status={getVerificationStatus(0)}
-          >
-            See your profile data and manage your Account to choose what is
-            saved in our system.
-          </VerificationCard>
+        <>
+          <section>
+            <div className="card card-bordered my-4">
+              <div className="card-inner p-4">
+                <div className="row">
+                  <div className="col-md-8">
+                    <h6>You need to setup your Account to get started</h6>
+                    <p className="text-muted">
+                      Unlimited access with priority support, 99.95% uptime,
+                      powerfull features and more...
+                    </p>
+                  </div>
+                  <div className="col-md-4 text-right">
+                    <Link
+                      to="/vendor/setup/1"
+                      className="btn btn-sm btn-wide btn-secondary mt-3"
+                    >
+                      Continue Setup
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="card-progress-bar">
+                <div
+                  className="progress-bar"
+                  data-progress={25}
+                  style={{ width: '25%' }}
+                />
+              </div>
+            </div>
+          </section>
+          <div className="row">
+            <VerificationCard
+              icon={<CompanyInfoIcon />}
+              title="Company Information"
+              index={0}
+              key={0}
+              status={getVerificationStatus(0)}
+            >
+              See your profile data and manage your Account to choose what is
+              saved in our system.
+            </VerificationCard>
 
-          <VerificationCard
-            icon={<BankInfoIcon />}
-            title="Bank Information"
-            index={1}
-            key={1}
-            status={getVerificationStatus(1)}
-          >
-            See your profile data and manage your Account to choose what is
-            saved in our system.
-          </VerificationCard>
+            <VerificationCard
+              icon={<BankInfoIcon />}
+              title="Bank Information"
+              index={1}
+              key={1}
+              status={getVerificationStatus(1)}
+            >
+              See your profile data and manage your Account to choose what is
+              saved in our system.
+            </VerificationCard>
 
-          <VerificationCard
-            icon={<UsersIcon />}
-            title="Signatories"
-            index={2}
-            key={2}
-            status={getVerificationStatus(2)}
-          >
-            See your profile data and manage your Account to choose what is
-            saved in our system.
-          </VerificationCard>
+            <VerificationCard
+              icon={<UsersIcon />}
+              title="Signatories"
+              index={2}
+              key={2}
+              status={getVerificationStatus(2)}
+            >
+              See your profile data and manage your Account to choose what is
+              saved in our system.
+            </VerificationCard>
 
-          <VerificationCard
-            icon={<FileIcon />}
-            title="Certificates"
-            status={getVerificationStatus(3)}
-            index={3}
-            key={3}
-          >
-            See your profile data and manage your Account to choose what is
-            saved in our system.
-          </VerificationCard>
-        </div>
+            <VerificationCard
+              icon={<FileIcon />}
+              title="Certificates"
+              status={getVerificationStatus(3)}
+              index={3}
+              key={3}
+            >
+              See your profile data and manage your Account to choose what is
+              saved in our system.
+            </VerificationCard>
+          </div>
+        </>
       )}
     </section>
   );
@@ -147,7 +187,8 @@ const VerificationCard = ({ title, children, icon, index, status }) => (
         </div>
       </div>
       <div className="verification-card__action">
-        {status.icon} {status.status}
+        {status.icon}
+        {status.status}
       </div>
     </div>
   </Link>

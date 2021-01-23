@@ -158,6 +158,11 @@ export const VENDOR_STEPS = {
   documentUpload: 'Document Upload',
 };
 
+export const STATUS = {
+  Pending: 'Pending',
+  Resolved: 'Resolved',
+};
+
 // add and remove directors
 // add and remove certificates ***
 // add instructions to prevent admin from seeing buttons

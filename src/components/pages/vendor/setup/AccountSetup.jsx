@@ -27,10 +27,14 @@ export const VerificationComments = ({ step }) => {
   const { userState } = React.useContext(UserContext);
   const currentStep = Object.keys(VENDOR_STEPS)[step - 1];
   const comments = userState.vendor?.verification[currentStep].comments || [];
+  const pendingComments = comments.filter(
+    (comment) => comment.status === 'Pending'
+  );
+
   return comments.length > 0 ? (
     <section className="my-4">
-      <h6>Past Comments</h6>
-      {comments.map(({ comment }, index) => (
+      <h6>Pending Comments</h6>
+      {pendingComments.map(({ comment }, index) => (
         <p key={index} className="speech-bubble">
           {comment}
         </p>

@@ -164,3 +164,16 @@ export const isValidURL = (str) => {
 };
 
 export const statusIsSuccessful = (status) => status === 200 || status === 201;
+
+// Manual Waiting
+//  manualWait(() => {
+//   setCommentLoading(null);
+//   console.log('payload', payload);
+// }, 3000);
+export const manualWait = async (func, delay = 1000) =>
+  await new Promise((resolve) =>
+    setTimeout(() => {
+      func();
+      resolve();
+    }, delay)
+  );

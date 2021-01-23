@@ -114,10 +114,10 @@ export const ReviewInfoForm = () => {
             <img
               alt="Tax Certificate"
               className="img-fluid mb-3"
-              src={userState.vendor?.identification.url}
+              src={userState.vendor?.identification?.url}
               title="Tax Certificate"
             />
-            {userState.vendor?.identification.type}
+            {userState.vendor?.identification?.type}
           </td>
         </tr>
         <tr>
