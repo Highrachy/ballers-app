@@ -6,6 +6,7 @@ import { Link } from '@reach/router';
 import {
   getCompletedSteps,
   getVerifiedSteps,
+  getVerificationState,
 } from 'components/pages/vendor/setup/AccountSetup';
 import { CompanyInfoIcon } from 'components/utils/Icons';
 import { SuccessIcon } from 'components/utils/Icons';
@@ -18,6 +19,9 @@ import { ErrorIcon } from 'components/utils/Icons';
 import { VENDOR_STEPS } from 'utils/constants';
 import { MessageIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
+import { Loading } from 'components/utils/LoadingItems';
+import { MyPropertyIcon } from 'components/utils/Icons';
+import { TransactionIcon } from 'components/utils/Icons';
 
 const Dashboard = () => (
   <BackendPage>
@@ -30,13 +34,30 @@ const Welcome = () => {
   const completedSteps = getCompletedSteps(userState);
   const verifiedSteps = getVerifiedSteps(userState);
 
+  const noOfCompletedSteps = completedSteps.filter(Boolean).length;
+  const currentProgress = noOfCompletedSteps * 25;
+
+  const verificationState = getVerificationState(userState);
+
   const getVerificationStatus = (index) => {
     const status = completedSteps[index] ? verifiedSteps[index] : 'Pending';
     const currentStep = Object.keys(VENDOR_STEPS)[index];
-    const comments = userState.vendor?.verification[currentStep].comments || [];
+    const comments =
+      userState.vendor?.verification?.[currentStep].comments || [];
     const pendingComments = comments.filter(
       (comment) => comment.status === 'Pending'
     );
+
+    if (pendingComments.length > 0) {
+      return {
+        className: 'text-danger',
+        icon: <MessageIcon />,
+        status: `${pendingComments.length} pending  ${Humanize.pluralize(
+          comments.length,
+          'comment'
+        )}`,
+      };
+    }
 
     switch (status) {
       case 'Verified':
@@ -46,20 +67,11 @@ const Welcome = () => {
           status: 'Information has been verified',
         };
       case 'Pending':
-        return pendingComments.length > 0
-          ? {
-              className: 'text-danger',
-              icon: <MessageIcon />,
-              status: `${pendingComments.length} pending  ${Humanize.pluralize(
-                comments.length,
-                'comment'
-              )}`,
-            }
-          : {
-              className: 'text-danger',
-              icon: <QuestionMarkIcon />,
-              status: 'Awaiting your input',
-            };
+        return {
+          className: 'text-danger',
+          icon: <QuestionMarkIcon />,
+          status: 'Awaiting your input',
+        };
       case 'In Review':
         return {
           className: 'text-secondary',
@@ -70,24 +82,97 @@ const Welcome = () => {
         return {
           class: 'text-muted',
           icon: <ErrorIcon />,
-          status: 'Loading',
+          status: '',
         };
     }
   };
+
+  if (!userState.firstName) {
+    return <Loading Icon={<UsersIcon />} text="Retrieving your Information" />;
+  }
 
   return (
     <section className="container-fluid">
       <div className="card bg-primary dashboard mb-3">
         <div className="row">
           <div className="col-sm-12">
-            <h4>Hello, {userState.firstName} </h4>
-            <p className="lead">Welcome to the Vendor Page!</p>
+            <h4>
+              Hello, {userState.vendor?.companyName || userState.firstName}{' '}
+              {userState.vendor.certified && <SuccessIcon />}{' '}
+            </h4>
+            <p className="lead">Welcome to Ballers</p>
           </div>
         </div>
       </div>
 
       {userState.vendor?.verified ? (
-        <h3>You have been verified</h3>
+        <>
+          <section>
+            <div className="card card-bordered my-4">
+              <div className="card-inner px-4 py-3">
+                <div className="row">
+                  <div className="col-md-8">
+                    <h6 className="pt-2">
+                      {' '}
+                      <MessageIcon /> You have no unresolved enquiries
+                    </h6>
+                  </div>
+                  <div className="col-md-4 text-right">
+                    <Link
+                      to={`/vendor/setup/${verificationState.page}`}
+                      className="btn btn-sm btn-wide btn-secondary"
+                    >
+                      View Enquiries
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div className="row">
+            <DashboardCard
+              icon={<MyPropertyIcon />}
+              title="Properties"
+              to="vendor/portfolios"
+              key={2}
+              footer="See list of your properties"
+            >
+              See your profile data and manage your Account to choose what is
+              saved in our system.
+            </DashboardCard>
+
+            <DashboardCard
+              icon={<FileIcon />}
+              title="Offer Letters"
+              to="vendor/users"
+              key={2}
+              footer="See list of past offer letters"
+            >
+              See your profile data and manage your Account to choose what is
+              saved in our system.
+            </DashboardCard>
+            <DashboardCard
+              icon={<UsersIcon />}
+              title="My Users"
+              to="vendor/users"
+              key={2}
+              footer="See list of your users"
+            >
+              See your profile data and manage your Account to choose what is
+              saved in our system.
+            </DashboardCard>
+            <DashboardCard
+              icon={<TransactionIcon />}
+              title="Transactions"
+              to="vendor/users"
+              key={2}
+              footer="See list of your transactions"
+            >
+              See your profile data and manage your Account to choose what is
+              saved in our system.
+            </DashboardCard>
+          </div>
+        </>
       ) : (
         <>
           <section>
@@ -95,15 +180,15 @@ const Welcome = () => {
               <div className="card-inner p-4">
                 <div className="row">
                   <div className="col-md-8">
-                    <h6>You need to setup your Account to get started</h6>
+                    <h6>You need a verified Account to get started</h6>
                     <p className="text-muted">
-                      Unlimited access with priority support, 99.95% uptime,
-                      powerfull features and more...
+                      <strong>Status: </strong>
+                      {verificationState.status}
                     </p>
                   </div>
                   <div className="col-md-4 text-right">
                     <Link
-                      to="/vendor/setup/1"
+                      to={`/vendor/setup/${verificationState.page}`}
                       className="btn btn-sm btn-wide btn-secondary mt-3"
                     >
                       Continue Setup
@@ -113,9 +198,19 @@ const Welcome = () => {
               </div>
               <div className="card-progress-bar">
                 <div
+                  className="pl-4 text-right text-smaller text-lighter px-2"
+                  style={{ width: `${currentProgress}%` }}
+                >
+                  {noOfCompletedSteps > 0 ? (
+                    <>{currentProgress}% information has been submitted</>
+                  ) : (
+                    <>Waiting for your submission</>
+                  )}
+                </div>
+                <div
                   className="progress-bar"
-                  data-progress={25}
-                  style={{ width: '25%' }}
+                  data-progress={currentProgress}
+                  style={{ width: `${currentProgress}%` }}
                 />
               </div>
             </div>
@@ -193,4 +288,20 @@ const VerificationCard = ({ title, children, icon, index, status }) => (
     </div>
   </Link>
 );
+
+const DashboardCard = ({ title, children, icon, footer, to }) => (
+  <Link to={to} className="col-md-6 mb-4">
+    <div className="card verification-card">
+      <div className="verification-card__block">
+        <div className="verification-card__img">{icon}</div>
+        <div>
+          <h5 className="verification-card__title">{title}</h5>
+          <p className="verification-card__text">{children}</p>
+        </div>
+      </div>
+      <div className="verification-card__action">{footer}</div>
+    </div>
+  </Link>
+);
+
 export default Dashboard;

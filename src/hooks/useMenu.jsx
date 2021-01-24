@@ -2,7 +2,9 @@ import React from 'react';
 import userSideMenu from 'content/menu/userMenu';
 import adminSideMenu from 'content/menu/adminMenu';
 import editorSideMenu from 'content/menu/editorMenu';
-import vendorSideMenu from 'content/menu/vendorMenu';
+import vendorSideMenu, {
+  unVerifiedVendorSideMenu,
+} from 'content/menu/vendorMenu';
 import { USER_TYPES } from 'utils/constants';
 import { UserContext } from 'context/UserContext';
 import { getUserRoleFromStore } from 'utils/localStorage';
@@ -16,6 +18,10 @@ const SIDE_MENU = {
 
 export const useMenu = () => {
   const { userState } = React.useContext(UserContext);
-  const currentUserRole = userState.type || getUserRoleFromStore();
+  // unverified vendor
+  if (userState?.role === USER_TYPES.vendor && !userState?.vendor?.verified) {
+    return unVerifiedVendorSideMenu;
+  }
+  const currentUserRole = userState.role || getUserRoleFromStore();
   return SIDE_MENU[currentUserRole];
 };

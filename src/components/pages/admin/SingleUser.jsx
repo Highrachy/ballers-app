@@ -239,7 +239,11 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                   {user.vendor?.verification[step].comments.map(
                     ({ comment, _id, status }, index) => (
                       <p key={index} className="speech-bubble">
-                        {comment}
+                        {status === STATUS.Resolved ? (
+                          <strike>{comment}</strike>
+                        ) : (
+                          <>{comment}</>
+                        )}
 
                         <span
                           className="btn btn-sm text-primary resolve-comment-btn"
@@ -328,6 +332,14 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   return (
     <>
       <Toast {...toast} showToastOnly />
+      {/* add a status page here like the one in the userdashbard, something like user is currently onboarding */}
+      {/* user has been verified, certified, not started onboarding, currently onboarding, needs review, has pending comment */}
+      {/*
+      Not Started = all completed steps is false,
+      current Onboarding = At least 1 completed Step is true,
+      Needs review = all completed step but not veriried
+      Has Pending comment = has pending comment
+       */}
       <CardTableSection name="User Information">
         <tr>
           <td colSpan="5" className="text-center">
@@ -572,3 +584,5 @@ export default SingleUser;
 // for vendor, better UI on dashboard
 // test property adding, and others.
 // Loading dashboard side menu for vendor.
+
+// story for what changed

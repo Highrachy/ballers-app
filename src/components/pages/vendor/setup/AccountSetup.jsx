@@ -7,7 +7,7 @@ import { SignatoriesForm } from './Signatories';
 import { ReviewInfoForm } from './ReviewInfo';
 import { CertificatesForm } from './Certificates';
 import { UserContext } from 'context/UserContext';
-import { VENDOR_STEPS } from 'utils/constants';
+import { VENDOR_STEPS, VENDOR_VERIFICATION_STATUS } from 'utils/constants';
 
 export const getCompletedSteps = (userState) => [
   //logo and maybe entity type
@@ -15,23 +15,23 @@ export const getCompletedSteps = (userState) => [
   // any bank info
   !!userState.vendor?.bankInfo?.bankName,
   // One signatory info, check all with some
-  !!(
-    userState.vendor?.directors[0]?.isSignatory ||
-    userState.vendor?.directors[1]?.isSignatory
-  ),
+  companyHasSignatory(userState.vendor?.directors || []),
   // tax certificate and one certificate
   !!(userState.vendor?.identification?.url && userState.vendor?.taxCertificate),
 ];
 
+export const companyHasSignatory = (directors) =>
+  directors.some(({ isSignatory }) => isSignatory);
+
 export const VerificationComments = ({ step }) => {
   const { userState } = React.useContext(UserContext);
   const currentStep = Object.keys(VENDOR_STEPS)[step - 1];
-  const comments = userState.vendor?.verification[currentStep].comments || [];
+  const comments = userState.vendor?.verification?.[currentStep].comments || [];
   const pendingComments = comments.filter(
     (comment) => comment.status === 'Pending'
   );
 
-  return comments.length > 0 ? (
+  return pendingComments.length > 0 ? (
     <section className="my-4">
       <h6>Pending Comments</h6>
       {pendingComments.map(({ comment }, index) => (
@@ -49,6 +49,67 @@ export const getVerifiedSteps = (userState) => [
   userState.vendor?.verification?.directorInfo?.status,
   userState.vendor?.verification?.documentUpload?.status,
 ];
+
+export const getVerifiedProgress = (userState) => {
+  const verifiedSteps = getVerifiedSteps(userState);
+  const numberOfVerifiedSteps = verifiedSteps.filter(
+    (step) => step === 'Verified'
+  );
+  return (numberOfVerifiedSteps.length / verifiedSteps.length) * 100;
+};
+
+export const getVerificationState = (userState) => {
+  // check if user has not started
+  const completedSteps = getCompletedSteps(userState);
+
+  const vendorHasStarted = completedSteps.some((startedStep) => startedStep);
+
+  if (!vendorHasStarted) {
+    return { status: VENDOR_VERIFICATION_STATUS.NOT_STARTED, page: 1 };
+  }
+
+  //pending comments
+  let allPendingComments = 0;
+  let firstCommentPage = 0;
+
+  Object.keys(VENDOR_STEPS).map((step, index) => {
+    const comments = userState.vendor?.verification?.[step].comments || [];
+    const pendingComments = comments.filter(
+      (comment) => comment.status === 'Pending'
+    );
+    if (firstCommentPage === 0 && pendingComments.length > 0) {
+      firstCommentPage = index + 1;
+    }
+    allPendingComments += pendingComments.length;
+    return step;
+  });
+
+  if (allPendingComments > 0) {
+    return {
+      status: VENDOR_VERIFICATION_STATUS.PENDING_COMMENTS,
+      page: firstCommentPage,
+      numberOfComments: allPendingComments,
+    };
+  }
+
+  let currentOnboardingPage = 5;
+  const verifiedSteps = getVerifiedSteps(userState);
+  const vendorHasAllStepsVerified = verifiedSteps.every((status, index) => {
+    currentOnboardingPage = index + 1;
+    return status === 'Verified';
+  });
+
+  // Current In Review
+  if (vendorHasAllStepsVerified) {
+    return { status: VENDOR_VERIFICATION_STATUS.IN_REVIEW, page: 5 };
+  }
+
+  // Still Onboarding
+  return {
+    status: VENDOR_VERIFICATION_STATUS.STILL_ONBOARDING,
+    page: currentOnboardingPage,
+  };
+};
 
 const AccountSetup = ({ id }) => {
   const [initialStep, setInitialStep] = React.useState(id);

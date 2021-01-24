@@ -163,7 +163,9 @@ export const STATUS = {
   Resolved: 'Resolved',
 };
 
-// add and remove directors
-// add and remove certificates ***
-// add instructions to prevent admin from seeing buttons
-// all vendor verification to set updates to in review
+export const VENDOR_VERIFICATION_STATUS = {
+  NOT_STARTED: 'Not Started',
+  PENDING_COMMENTS: 'Pending Comments',
+  IN_REVIEW: 'In Review',
+  STILL_ONBOARDING: 'Still Onboarding',
+};

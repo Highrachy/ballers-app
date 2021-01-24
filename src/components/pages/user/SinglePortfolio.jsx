@@ -293,7 +293,7 @@ const PropertySidebar = ({ propertyId }) => {
         </Link>
       </Card>
 
-      <h5 className="text-smaller">Schedule a tour</h5>
+      <h5 className="header-smaller">Schedule a tour</h5>
       <Card
         className="card-container property-holder bg-gray card-link"
         onClick={() => setShowRequestVisitForm(true)}
@@ -307,7 +307,7 @@ const PropertySidebar = ({ propertyId }) => {
         </div>
       </Card>
 
-      <h5 className="text-smaller">View title document</h5>
+      <h5 className="header-smaller">View title document</h5>
       <Modal
         title="Title Document"
         show={showTitleDocument}

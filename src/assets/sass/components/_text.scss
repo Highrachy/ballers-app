@@ -28,6 +28,14 @@
   font-size: 0.75rem;
 }
 
+.text-smaller {
+  font-size: 0.65rem;
+}
+
+.text-lighter {
+  color: lighten($text-muted, 20%);
+}
+
 .text-height-0 {
   line-height: 1 !important;
 }
@@ -47,7 +55,7 @@
   line-height: 2.5 !important;
 }
 
-.text-smaller {
+.header-smaller {
   font-size: 100%;
 }
 

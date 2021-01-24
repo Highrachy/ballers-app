@@ -29,4 +29,5 @@ export const INITIAL_STATE = {
     houseTypes: [],
   },
   alert: null,
+  vendor: {},
 };
