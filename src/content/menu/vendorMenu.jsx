@@ -5,7 +5,6 @@ import {
   ReferIcon,
   MyPropertyIcon,
   TransactionIcon,
-  UsersIcon,
 } from 'components/utils/Icons';
 import { MessageIcon } from 'components/utils/Icons';
 import { FileIcon } from 'components/utils/Icons';
@@ -18,12 +17,6 @@ export default [
     to: '/vendor/dashboard',
     icon: <HomeIcon />,
     footer: true,
-  },
-  {
-    title: 'Users',
-    to: '/vendor/users',
-    icon: <UsersIcon />,
-    footer: false,
   },
   {
     title: 'Portfolios',

@@ -19,7 +19,7 @@ export const useToast = () => {
   return [{ ...toast, toastIsClosed }, setToast];
 };
 
-const AlertToast = ({ message, type }) => (
+export const AlertToast = ({ message, type }) => (
   <div
     className={`card d-flex flex-row toast-alert ${
       TOAST_STYLE[type] ? type : 'error'

@@ -164,8 +164,8 @@ export const STATUS = {
 };
 
 export const VENDOR_VERIFICATION_STATUS = {
-  NOT_STARTED: 'Not Started',
+  NOT_STARTED: 'No Submitted Information',
   PENDING_COMMENTS: 'Pending Comments',
-  IN_REVIEW: 'In Review',
-  STILL_ONBOARDING: 'Still Onboarding',
+  IN_REVIEW: 'Currently In Review',
+  AWAITING_INFO: 'Awaiting Information',
 };

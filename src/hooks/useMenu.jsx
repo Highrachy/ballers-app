@@ -1,5 +1,5 @@
 import React from 'react';
-import userSideMenu from 'content/menu/userMenu';
+import userSideMenu, { userLoadingMenu } from 'content/menu/userMenu';
 import adminSideMenu from 'content/menu/adminMenu';
 import editorSideMenu from 'content/menu/editorMenu';
 import vendorSideMenu, {
@@ -18,10 +18,17 @@ const SIDE_MENU = {
 
 export const useMenu = () => {
   const { userState } = React.useContext(UserContext);
+
   // unverified vendor
   if (userState?.role === USER_TYPES.vendor && !userState?.vendor?.verified) {
     return unVerifiedVendorSideMenu;
   }
+
+  //unloaded userState
+  if (!userState.isLoggedIn) {
+    return userLoadingMenu;
+  }
+
   const currentUserRole = userState.role || getUserRoleFromStore();
   return SIDE_MENU[currentUserRole];
 };

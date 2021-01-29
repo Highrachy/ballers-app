@@ -106,7 +106,7 @@ export const getVerificationState = (userState) => {
 
   // Still Onboarding
   return {
-    status: VENDOR_VERIFICATION_STATUS.STILL_ONBOARDING,
+    status: VENDOR_VERIFICATION_STATUS.AWAITING_INFO,
     page: currentOnboardingPage,
   };
 };

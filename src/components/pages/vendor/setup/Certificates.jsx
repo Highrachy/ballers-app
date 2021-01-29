@@ -1,7 +1,7 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
-import Toast, { useToast } from 'components/utils/Toast';
+import Toast, { useToast, AlertToast } from 'components/utils/Toast';
 import Axios from 'axios';
 import Button from 'components/forms/Button';
 import {
@@ -37,10 +37,8 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
   const [taxImage, setTaxImage] = React.useState(null);
   const [certificateImage, setCertificateImage] = React.useState(null);
   const { userDispatch, userState } = React.useContext(UserContext);
-  console.log('taxImage', taxImage);
-  console.log('certificateImage', certificateImage);
 
-  const entity = userState.vendor && userState.vendor.entity;
+  const entity = userState.vendor?.entity;
   const isIndividual =
     entity &&
     VENDOR_IDENTIFICATION_TYPE[entity] &&
@@ -102,36 +100,51 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
           <Card className="card-container">
             <section className="row">
               <div className="col-md-10 px-4">
-                <UploadCertificate
-                  image={certificateImage}
-                  setImage={setCertificateImage}
-                  title={`Upload ${type ? type : 'Company Identification'}`}
-                >
-                  {isIndividual && (
-                    <Select
-                      label="Identification Type"
-                      name="type"
-                      options={valuesToOptions(INDIVIDUAL_IDENTIFICATION_TYPE)}
-                      placeholder="Select Identfication Type"
+                {entity ? (
+                  <>
+                    <UploadCertificate
+                      image={
+                        certificateImage ||
+                        userState.vendor?.identification?.url
+                      }
+                      setImage={setCertificateImage}
+                      title={`Upload ${type ? type : 'Company Identification'}`}
+                    >
+                      {isIndividual && (
+                        <Select
+                          label="Identification Type"
+                          name="type"
+                          options={valuesToOptions(
+                            INDIVIDUAL_IDENTIFICATION_TYPE
+                          )}
+                          placeholder="Select Identfication Type"
+                        />
+                      )}
+                    </UploadCertificate>
+                    <UploadCertificate
+                      image={taxImage || userState.vendor?.taxCertificate}
+                      setImage={setTaxImage}
+                      title="Upload Tax Certificate"
                     />
-                  )}
-                </UploadCertificate>
-                <UploadCertificate
-                  image={taxImage}
-                  setImage={setTaxImage}
-                  title="Upload Tax Certificate"
-                />
 
-                <DisplayFormikState {...props} showAll />
+                    <DisplayFormikState {...props} showAll />
 
-                <Button
-                  className="btn-secondary my-4"
-                  loading={isSubmitting}
-                  onClick={handleSubmit}
-                  diasabled={!(taxImage || certificateImage)}
-                >
-                  Save Changes
-                </Button>
+                    <Button
+                      className="btn-secondary my-4"
+                      loading={isSubmitting}
+                      onClick={handleSubmit}
+                      diasabled={!(taxImage || certificateImage)}
+                    >
+                      Save Changes
+                    </Button>
+                  </>
+                ) : (
+                  <AlertToast
+                    type="danger"
+                    message="You need to complete your Company Information in Step 1 to
+                  know the required documents"
+                  />
+                )}
               </div>
             </section>
           </Card>

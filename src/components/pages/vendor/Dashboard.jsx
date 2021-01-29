@@ -180,7 +180,7 @@ const Welcome = () => {
               <div className="card-inner p-4">
                 <div className="row">
                   <div className="col-md-8">
-                    <h6>You need a verified Account to get started</h6>
+                    <h6>You need setup a verified Account to get started</h6>
                     <p className="text-muted">
                       <strong>Status: </strong>
                       {verificationState.status}
@@ -191,7 +191,9 @@ const Welcome = () => {
                       to={`/vendor/setup/${verificationState.page}`}
                       className="btn btn-sm btn-wide btn-secondary mt-3"
                     >
-                      Continue Setup
+                      {noOfCompletedSteps > 0
+                        ? 'Continue Setup'
+                        : 'Start Setup'}
                     </Link>
                   </div>
                 </div>
@@ -201,10 +203,8 @@ const Welcome = () => {
                   className="pl-4 text-right text-smaller text-lighter px-2"
                   style={{ width: `${currentProgress}%` }}
                 >
-                  {noOfCompletedSteps > 0 ? (
+                  {noOfCompletedSteps > 0 && (
                     <>{currentProgress}% information has been submitted</>
-                  ) : (
-                    <>Waiting for your submission</>
                   )}
                 </div>
                 <div
