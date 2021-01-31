@@ -42,8 +42,6 @@ export const SignatoriesForm = ({ moveToNextStep }) => {
       onSubmit={(values, actions) => {
         let payload = { vendor: { directors: [{ ...values }] } };
 
-        console.log('signature', signature);
-
         if (values.isSignatory === 'true' && !signature) {
           setToast({
             message: 'You need to upload a signatory signature',

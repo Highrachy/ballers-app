@@ -278,7 +278,7 @@ export const DigitalSignaturePad = ({ setSignature }) => {
   return (
     <>
       <Modal
-        title="Sign Digitally"
+        title="Signature"
         show={showDigital}
         onHide={() => setShowDigital(false)}
         showFooter={false}
@@ -316,20 +316,18 @@ export const DigitalSignaturePad = ({ setSignature }) => {
 };
 
 export const UploadSignature = ({ image, setImage, setSignature }) => {
-  const [showDigital, setShowDigital] = React.useState(false);
-
-  console.log('upload Signature');
+  const [showSignature, setShowSignature] = React.useState(false);
 
   return (
     <>
       <Modal
-        title="Sign Digitally"
-        show={showDigital}
-        onHide={() => setShowDigital(false)}
+        title="Signature"
+        show={showSignature}
+        onHide={() => setShowSignature(false)}
         showFooter={false}
       >
         <div className="row">
-          <div className="mt-4">
+          <div className="mt-4 px-4">
             <h6 className="mb-3">Upload Your Signature</h6>
             {image && (
               <Image
@@ -349,7 +347,7 @@ export const UploadSignature = ({ image, setImage, setSignature }) => {
               <button
                 className="btn btn-success mb-5"
                 onClick={() => {
-                  setShowDigital(false);
+                  setShowSignature(false);
                   setSignature(image);
                 }}
               >
@@ -361,7 +359,10 @@ export const UploadSignature = ({ image, setImage, setSignature }) => {
       </Modal>
       <button
         className="btn btn-dark btn-sm hide-print"
-        onClick={() => setShowDigital(true)}
+        type="button"
+        onClick={() => {
+          setShowSignature(true);
+        }}
       >
         Upload Signature
       </button>

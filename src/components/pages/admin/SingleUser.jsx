@@ -10,10 +10,10 @@ import {
   getFormattedAddress,
   statusIsSuccessful,
 } from 'utils/helpers';
+import { Card, Tabs, Tab } from 'react-bootstrap';
 import { UsersIcon } from 'components/utils/Icons';
 import CardTableSection from 'components/common/CardTableSection';
 import { ShowDirectorsTable } from '../vendor/setup/Signatories';
-import { Card } from 'react-bootstrap';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { commentSchema } from 'components/forms/schemas/vendorSchema';
@@ -30,6 +30,12 @@ import Modal from 'components/common/Modal';
 import { SuccessIcon } from 'components/utils/Icons';
 import BallersSpinner from 'components/utils/BallersSpinner';
 import { QuestionMarkIcon } from 'components/utils/Icons';
+import { AlertToast } from 'components/utils/Toast';
+import { getVerificationStatus } from '../vendor/setup/AccountSetup';
+import Timeline from 'components/common/Timeline';
+import { LogTimeline } from 'components/common/Timeline';
+// import UserCard from 'components/common/UserCard';
+// import { getVerificationState } from '../vendor/setup/AccountSetup';
 
 const SingleUser = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -189,6 +195,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           setCommentLoading(null);
         });
     };
+
     return (
       <Formik
         enableReinitialize={true}
@@ -329,9 +336,319 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
 
   const [showVerifyVendorModal, setVerifyVendorModal] = React.useState(false);
 
+  console.log(
+    '----------------------------------------------------------------'
+  );
+  console.log('CONSOLE LOG ', user);
+  console.log(
+    '----------------------------------------------------------------'
+  );
+  console.log(' ');
+  const verificationState = {
+    userInfo: getVerificationStatus(user, 0),
+    bankDetails: getVerificationStatus(user, 1),
+    directorInfo: getVerificationStatus(user, 2),
+    documentUpload: getVerificationStatus(user, 3),
+  };
+
+  // to remove all
+  // const verificationState = getVerificationState(user);
+
+  const UserInformation = () => (
+    <CardTableSection
+      name={
+        <span className="title">
+          User Information{' '}
+          <span className={verificationState.userInfo.className}>
+            {verificationState.userInfo.icon}
+          </span>
+        </span>
+      }
+      className="border-0"
+    >
+      <tr>
+        <td colSpan="5" className="text-center">
+          <Image
+            bordered
+            rounded
+            alt={user.firstName}
+            className={'img-fluid avatar--large'}
+            src={user.profileImage?.url || ProfileAvatar}
+            name={user.firstName}
+          />
+        </td>
+      </tr>
+      {isVendor ? (
+        <>
+          <tr>
+            <td>
+              <strong>Company Logo</strong>
+            </td>
+            <td colSpan="4">
+              {user.vendor?.companyLogo && (
+                <img
+                  alt={user.firstName}
+                  className="img-fluid dashboard-top-nav__company-logo mb-3"
+                  src={user.vendor.companyLogo}
+                  title={user.firstName}
+                />
+              )}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <strong>Company Name</strong>
+            </td>
+            <td colSpan="4">{user.vendor?.companyName}</td>
+          </tr>
+        </>
+      ) : (
+        <tr>
+          <td>
+            <strong>First Name</strong>
+          </td>
+          <td>{user.firstName}</td>
+          <td>&nbsp;</td>
+          <td>
+            <strong>Last Name</strong>
+          </td>
+          <td>{user.lastName}</td>
+        </tr>
+      )}
+      <tr>
+        <td>
+          <strong>Email</strong>
+        </td>
+        <td>{user.email}</td>
+        <td></td>
+        <td>
+          <strong>Phone</strong>
+        </td>
+        <td>
+          {user.phone} <br /> {user.phone2}
+        </td>
+      </tr>
+
+      {isVendor && (
+        <tr>
+          <td>
+            <strong>Entity Type</strong>
+          </td>
+          <td>{user.vendor?.entity}</td>
+          <td></td>
+          <td>
+            <strong>Redan Number</strong>
+          </td>
+          <td>{user.vendor?.redanNumber}</td>
+        </tr>
+      )}
+
+      <tr>
+        <td>
+          <strong>Address</strong>
+        </td>
+        <td colSpan="4">{user.address && getFormattedAddress(user.address)}</td>
+      </tr>
+
+      {isVendor && (
+        <tr>
+          <td colSpan="5">
+            <StepAction step={VENDOR_STEPS_KEY[0]} />
+          </td>
+        </tr>
+      )}
+    </CardTableSection>
+  );
+
+  const BankInformation = () => (
+    <CardTableSection
+      name={
+        <span className="title">
+          Bank Details{' '}
+          <span className={verificationState.bankDetails.className}>
+            {verificationState.bankDetails.icon}
+          </span>
+        </span>
+      }
+      className="border-0"
+    >
+      <tr>
+        <td>
+          <strong>Account Name</strong>
+        </td>
+        <td>{user.vendor?.bankInfo?.accountName}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Bank Name</strong>
+        </td>
+        <td>{user.vendor?.bankInfo?.bankName}</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Account Number</strong>
+        </td>
+        <td>{user.vendor?.bankInfo?.accountNumber}</td>
+      </tr>
+      {user.vendor?.bankInfo?.bankName && (
+        <tr>
+          <td colSpan="5">
+            <StepAction step={VENDOR_STEPS_KEY[1]} />
+          </td>
+        </tr>
+      )}
+    </CardTableSection>
+  );
+
+  const Directors = () => (
+    <Card className="card-container my-5 pt-5 border-0">
+      <span className="title">
+        Directors / Signatories{' '}
+        <span className={verificationState.directorInfo.className}>
+          {verificationState.directorInfo.icon}
+        </span>
+      </span>
+      <ShowDirectorsTable
+        directors={user.vendor?.directors}
+        moveToNextStep={null}
+      />
+
+      {user.vendor?.directors[0] && <StepAction step={VENDOR_STEPS_KEY[2]} />}
+    </Card>
+  );
+
+  const Certificates = () => (
+    <CardTableSection
+      name={
+        <span className="title">
+          Certificates{' '}
+          <span className={verificationState.documentUpload.className}>
+            {verificationState.documentUpload.icon}
+          </span>
+        </span>
+      }
+      className="border-0 my-5 pt-4"
+    >
+      <tr>
+        <td>
+          <strong>Identification</strong>
+        </td>
+        <td>
+          <img
+            alt="Tax Certificate"
+            className="img-fluid mb-3"
+            src={user.vendor?.identification && user.vendor?.identification.url}
+            title="Tax Certificate"
+          />
+          {user.vendor?.identification && user.vendor?.identification.type}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Tax Certificate</strong>
+        </td>
+        <td>
+          <img
+            alt="Tax Certificate"
+            className="img-fluid mb-3"
+            src={user.vendor?.taxCertificate}
+            title="Tax Certificate"
+          />
+        </td>
+      </tr>
+      {((user.vendor?.identification && user.vendor?.identification?.url) ||
+        user.vendor?.taxCertificate) && (
+        <tr>
+          <td colSpan="5">
+            <StepAction step={VENDOR_STEPS_KEY[3]} />
+          </td>
+        </tr>
+      )}
+    </CardTableSection>
+  );
+
+  const Logs = () => (
+    <div className="card h-100 my-5 pt-5 border-0">
+      <div className="card-container">
+        <h5 className="title">Logs</h5>
+
+        <Timeline>
+          {user.vendor?.logs.map((log) => (
+            <LogTimeline log={log} />
+          ))}
+        </Timeline>
+      </div>
+    </div>
+  );
+
   return (
-    <>
+    <Timeline>
       <Toast {...toast} showToastOnly />
+      {/* <AlertToast message="Awaiting your Review" /> */}
+      <Card className="card-container">
+        <Tabs defaultActiveKey="0">
+          <Tab
+            eventKey="0"
+            title={
+              <>
+                User Information{' '}
+                <span className={verificationState.userInfo.className}>
+                  {verificationState.userInfo.icon}
+                </span>
+              </>
+            }
+          >
+            <div className="card-tab-content py-5">
+              <UserInformation />
+            </div>
+          </Tab>
+          <Tab
+            eventKey="1"
+            title={
+              <>
+                Bank Details{' '}
+                <span className={verificationState.bankDetails.className}>
+                  {verificationState.bankDetails.icon}
+                </span>
+              </>
+            }
+          >
+            <div className="card-tab-content py-5">
+              <BankInformation />
+            </div>
+          </Tab>
+          <Tab
+            eventKey="2"
+            title={
+              <>
+                Directors / Signatories{' '}
+                <span className={verificationState.directorInfo.className}>
+                  {verificationState.directorInfo.icon}
+                </span>
+              </>
+            }
+          >
+            <Directors />
+          </Tab>
+          <Tab
+            eventKey="3"
+            title={
+              <>
+                Document Upload{' '}
+                <span className={verificationState.documentUpload.className}>
+                  {verificationState.documentUpload.icon}
+                </span>
+              </>
+            }
+          >
+            <Certificates />
+          </Tab>
+          <Tab eventKey="4" title="Logs">
+            <Logs />
+          </Tab>
+        </Tabs>
+      </Card>
       {/* add a status page here like the one in the userdashbard, something like user is currently onboarding */}
       {/* user has been verified, certified, not started onboarding, currently onboarding, needs review, has pending comment */}
       {/*
@@ -340,187 +657,12 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
       Needs review = all completed step but not veriried
       Has Pending comment = has pending comment
        */}
-      <CardTableSection name="User Information">
-        <tr>
-          <td colSpan="5" className="text-center">
-            <Image
-              bordered
-              rounded
-              alt={user.firstName}
-              className={'img-fluid avatar--large'}
-              src={user.profileImage?.url || ProfileAvatar}
-              name={user.firstName}
-            />
-          </td>
-        </tr>
-        {isVendor ? (
-          <>
-            <tr>
-              <td>
-                <strong>Company Logo</strong>
-              </td>
-              <td colSpan="4">
-                {user.vendor?.companyLogo && (
-                  <img
-                    alt={user.firstName}
-                    className="img-fluid dashboard-top-nav__company-logo mb-3"
-                    src={user.vendor.companyLogo}
-                    title={user.firstName}
-                  />
-                )}
-              </td>
-            </tr>
 
-            <tr>
-              <td>
-                <strong>Company Name</strong>
-              </td>
-              <td colSpan="4">{user.vendor?.companyName}</td>
-            </tr>
-          </>
-        ) : (
-          <tr>
-            <td>
-              <strong>First Name</strong>
-            </td>
-            <td>{user.firstName}</td>
-            <td>&nbsp;</td>
-            <td>
-              <strong>Last Name</strong>
-            </td>
-            <td>{user.lastName}</td>
-          </tr>
-        )}
-        <tr>
-          <td>
-            <strong>Email</strong>
-          </td>
-          <td>{user.email}</td>
-          <td></td>
-          <td>
-            <strong>Phone</strong>
-          </td>
-          <td>
-            {user.phone} <br /> {user.phone2}
-          </td>
-        </tr>
-
-        {isVendor && (
-          <tr>
-            <td>
-              <strong>Entity Type</strong>
-            </td>
-            <td>{user.vendor?.entity}</td>
-            <td></td>
-            <td>
-              <strong>Redan Number</strong>
-            </td>
-            <td>{user.vendor?.redanNumber}</td>
-          </tr>
-        )}
-
-        <tr>
-          <td>
-            <strong>Address</strong>
-          </td>
-          <td colSpan="4">
-            {user.address && getFormattedAddress(user.address)}
-          </td>
-        </tr>
-
-        {isVendor && (
-          <tr>
-            <td colSpan="5">
-              <StepAction step={VENDOR_STEPS_KEY[0]} />
-            </td>
-          </tr>
-        )}
-      </CardTableSection>
+      {/* <UserCard showEmail />
+      <UserCard /> */}
 
       {isVendor && (
         <>
-          <CardTableSection name="Bank Information">
-            <tr>
-              <td>
-                <strong>Account Name</strong>
-              </td>
-              <td>{user.vendor?.bankInfo?.accountName}</td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Bank Name</strong>
-              </td>
-              <td>{user.vendor?.bankInfo?.bankName}</td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Account Number</strong>
-              </td>
-              <td>{user.vendor?.bankInfo?.accountNumber}</td>
-            </tr>
-            {user.vendor?.bankInfo?.bankName && (
-              <tr>
-                <td colSpan="5">
-                  <StepAction step={VENDOR_STEPS_KEY[1]} />
-                </td>
-              </tr>
-            )}
-          </CardTableSection>
-          <Card className="card-container mb-5">
-            <h5 className="mb-4">Directors / Signatories</h5>
-            <ShowDirectorsTable
-              directors={user.vendor?.directors}
-              moveToNextStep={null}
-            />
-
-            {user.vendor?.directors[0] && (
-              <StepAction step={VENDOR_STEPS_KEY[2]} />
-            )}
-          </Card>
-
-          <CardTableSection name="Certificates">
-            <tr>
-              <td>
-                <strong>Identification</strong>
-              </td>
-              <td>
-                <img
-                  alt="Tax Certificate"
-                  className="img-fluid mb-3"
-                  src={
-                    user.vendor?.identification &&
-                    user.vendor?.identification.url
-                  }
-                  title="Tax Certificate"
-                />
-                {user.vendor?.identification &&
-                  user.vendor?.identification.type}
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Tax Certificate</strong>
-              </td>
-              <td>
-                <img
-                  alt="Tax Certificate"
-                  className="img-fluid mb-3"
-                  src={user.vendor?.taxCertificate}
-                  title="Tax Certificate"
-                />
-              </td>
-            </tr>
-            {((user.vendor?.identification &&
-              user.vendor?.identification?.url) ||
-              user.vendor?.taxCertificate) && (
-              <tr>
-                <td colSpan="5">
-                  <StepAction step={VENDOR_STEPS_KEY[3]} />
-                </td>
-              </tr>
-            )}
-          </CardTableSection>
-
           {!user.vendor?.verified &&
             user.vendor?.verification?.companyInfo?.status === 'Verified' &&
             user.vendor?.verification?.bankDetails?.status === 'Verified' &&
@@ -569,7 +711,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           </Modal>
         </>
       )}
-    </>
+    </Timeline>
   );
 };
 

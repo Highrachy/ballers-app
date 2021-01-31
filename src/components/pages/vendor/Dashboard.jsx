@@ -1,27 +1,22 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { UserContext } from 'context/UserContext';
-// import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import {
   getCompletedSteps,
-  getVerifiedSteps,
   getVerificationState,
 } from 'components/pages/vendor/setup/AccountSetup';
 import { CompanyInfoIcon } from 'components/utils/Icons';
 import { SuccessIcon } from 'components/utils/Icons';
-import { InfoIcon } from 'components/utils/Icons';
-import { QuestionMarkIcon } from 'components/utils/Icons';
 import { BankInfoIcon } from 'components/utils/Icons';
 import { FileIcon } from 'components/utils/Icons';
 import { UsersIcon } from 'components/utils/Icons';
-import { ErrorIcon } from 'components/utils/Icons';
-import { VENDOR_STEPS } from 'utils/constants';
 import { MessageIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
 import { Loading } from 'components/utils/LoadingItems';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import { TransactionIcon } from 'components/utils/Icons';
+import { getVerificationStatus } from './setup/AccountSetup';
 
 const Dashboard = () => (
   <BackendPage>
@@ -32,60 +27,11 @@ const Dashboard = () => (
 const Welcome = () => {
   const { userState } = React.useContext(UserContext);
   const completedSteps = getCompletedSteps(userState);
-  const verifiedSteps = getVerifiedSteps(userState);
 
   const noOfCompletedSteps = completedSteps.filter(Boolean).length;
   const currentProgress = noOfCompletedSteps * 25;
 
   const verificationState = getVerificationState(userState);
-
-  const getVerificationStatus = (index) => {
-    const status = completedSteps[index] ? verifiedSteps[index] : 'Pending';
-    const currentStep = Object.keys(VENDOR_STEPS)[index];
-    const comments =
-      userState.vendor?.verification?.[currentStep].comments || [];
-    const pendingComments = comments.filter(
-      (comment) => comment.status === 'Pending'
-    );
-
-    if (pendingComments.length > 0) {
-      return {
-        className: 'text-danger',
-        icon: <MessageIcon />,
-        status: `${pendingComments.length} pending  ${Humanize.pluralize(
-          comments.length,
-          'comment'
-        )}`,
-      };
-    }
-
-    switch (status) {
-      case 'Verified':
-        return {
-          className: 'text-success',
-          icon: <SuccessIcon />,
-          status: 'Information has been verified',
-        };
-      case 'Pending':
-        return {
-          className: 'text-danger',
-          icon: <QuestionMarkIcon />,
-          status: 'Awaiting your input',
-        };
-      case 'In Review':
-        return {
-          className: 'text-secondary',
-          icon: <InfoIcon />,
-          status: 'Currently in Review',
-        };
-      default:
-        return {
-          class: 'text-muted',
-          icon: <ErrorIcon />,
-          status: '',
-        };
-    }
-  };
 
   if (!userState.firstName) {
     return <Loading Icon={<UsersIcon />} text="Retrieving your Information" />;
@@ -183,7 +129,18 @@ const Welcome = () => {
                     <h6>You need setup a verified Account to get started</h6>
                     <p className="text-muted">
                       <strong>Status: </strong>
-                      {verificationState.status}
+
+                      {verificationState.noOfComments ? (
+                        <>
+                          {verificationState.noOfComments} Pending{' '}
+                          {Humanize.pluralize(
+                            verificationState.noOfComments,
+                            'Comment'
+                          )}
+                        </>
+                      ) : (
+                        verificationState.status
+                      )}
                     </p>
                   </div>
                   <div className="col-md-4 text-right">
@@ -200,10 +157,10 @@ const Welcome = () => {
               </div>
               <div className="card-progress-bar">
                 <div
-                  className="pl-4 text-right text-smaller text-lighter px-2"
+                  className="pl-4 text-right text-smaller text-secondary px-2"
                   style={{ width: `${currentProgress}%` }}
                 >
-                  {noOfCompletedSteps > 0 && (
+                  {noOfCompletedSteps > 0 && currentProgress !== 100 && (
                     <>{currentProgress}% information has been submitted</>
                   )}
                 </div>
@@ -221,7 +178,7 @@ const Welcome = () => {
               title="Company Information"
               index={0}
               key={0}
-              status={getVerificationStatus(0)}
+              status={getVerificationStatus(userState, 0)}
             >
               See your profile data and manage your Account to choose what is
               saved in our system.
@@ -232,7 +189,7 @@ const Welcome = () => {
               title="Bank Information"
               index={1}
               key={1}
-              status={getVerificationStatus(1)}
+              status={getVerificationStatus(userState, 1)}
             >
               See your profile data and manage your Account to choose what is
               saved in our system.
@@ -243,7 +200,7 @@ const Welcome = () => {
               title="Signatories"
               index={2}
               key={2}
-              status={getVerificationStatus(2)}
+              status={getVerificationStatus(userState, 2)}
             >
               See your profile data and manage your Account to choose what is
               saved in our system.
@@ -252,7 +209,7 @@ const Welcome = () => {
             <VerificationCard
               icon={<FileIcon />}
               title="Certificates"
-              status={getVerificationStatus(3)}
+              status={getVerificationStatus(userState, 3)}
               index={3}
               key={3}
             >
