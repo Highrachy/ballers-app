@@ -29,7 +29,7 @@ const Dashboard = () => {
   const [offers, setOffers] = React.useState(null);
 
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/offer/user/all`, {
+    Axios.get(`${BASE_API_URL}/offer/all`, {
       headers: {
         Authorization: getTokenFromStore(),
       },

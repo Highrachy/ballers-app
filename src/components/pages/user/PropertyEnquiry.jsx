@@ -13,17 +13,18 @@ import { addEnquirySchema } from 'components/forms/schemas/enquirySchema';
 import { Card } from 'react-bootstrap';
 import DatePicker from 'components/forms/DatePicker';
 import RadioSelect from 'components/forms/RadioSelect';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, TITLES } from 'utils/constants';
 import Address from 'components/utils/Address';
 import {
   createSchema,
   addressSchema,
 } from 'components/forms/schemas/schema-helpers';
 import { UserContext } from 'context/UserContext';
-import { getError } from 'utils/helpers';
+import { getError, valuesToOptions } from 'utils/helpers';
 import { getTokenFromStore } from 'utils/localStorage';
 import InputFormat from 'components/forms/InputFormat';
 import PropertyCard from 'components/common/PropertyCard';
+import Select from 'components/forms/Select';
 
 const PropertyEnquiry = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -54,7 +55,7 @@ const PropertyEnquiry = ({ id }) => {
       <section className="container-fluid">
         <h4>Property Enquiry</h4>
         <Toast {...toast} showToastOnly />
-        {property && <PropertyInfo property={property[0]} />}
+        {property && <PropertyInfo property={property} />}
         <EnquiryForm id={id} />
       </section>
     </BackendPage>
@@ -75,13 +76,14 @@ const EnquiryForm = ({ id }) => {
 
   return (
     <Formik
-      initialValues={
-        ({
-          ...setInitialValues(addEnquirySchema, userState),
-          address: setInitialValues(addressSchema, userState.address),
-        },
-        { ...userState, investmentStartDate: { date: new Date() } })
-      }
+      enableReinitialize={true}
+      initialValues={{
+        ...setInitialValues(addEnquirySchema, {
+          ...userState,
+          investmentStartDate: { date: new Date() },
+        }),
+        address: setInitialValues(addressSchema, userState.address),
+      }}
       onSubmit={(values, actions) => {
         // delete optional fields
         !values.address.street2 && delete values.address.street2;
@@ -150,11 +152,12 @@ const ClientDetailsForm = () => (
       <div className="col-md-10">
         <h5>Client Details</h5>
         <div className="form-row">
-          <Input
+          <Select
+            placeholder="Select Title"
             formGroupClassName="col-md-6"
             label="Title"
             name="title"
-            placeholder="Title"
+            options={valuesToOptions(TITLES)}
           />
           <Input
             formGroupClassName="col-md-6"
@@ -174,6 +177,7 @@ const ClientDetailsForm = () => (
             formGroupClassName="col-md-6"
             label="Other Names"
             name="otherName"
+            optional
             placeholder="Other Names"
           />
         </div>

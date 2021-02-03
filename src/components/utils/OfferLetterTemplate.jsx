@@ -14,6 +14,7 @@ import HighrachyLogo from 'assets/img/logo/highrachy-logo.png';
 import { getDate } from 'utils/date-helpers';
 import Image from './Image';
 import DirectorSignature from 'assets/img/placeholder/signature.png';
+import { UserContext } from 'context/UserContext';
 
 const OfferLetterTemplate = ({
   children,
@@ -23,6 +24,10 @@ const OfferLetterTemplate = ({
   signature,
   showSignaturePad,
 }) => {
+  const { userState } = React.useContext(UserContext);
+  const companyName = userState.vendor?.companyName
+    ? userState.vendor?.companyName
+    : 'Highrachy Investment and Technology Ltd';
   const shownSignature = signature || offerInfo.signature;
   const { totalAmountPayable, initialPayment, monthlyPayment } = offerInfo;
   const rangePrice = totalAmountPayable - initialPayment;
@@ -40,7 +45,7 @@ const OfferLetterTemplate = ({
   return (
     <Card className="mt-4 p-5 offer-letter-template">
       <img
-        src={HighrachyLogo}
+        src={userState.vendor?.companyLogo || HighrachyLogo}
         width="150"
         className="img-fluid"
         alt="Highrachy Logo"
@@ -75,7 +80,7 @@ const OfferLetterTemplate = ({
                 <strong>1. VENDOR:</strong>
               </td>
               <td>
-                <strong>Highrachy Investment and Technology Ltd</strong>
+                <strong>{companyName}</strong>
               </td>
             </tr>
             <tr>
@@ -314,21 +319,27 @@ const OfferLetterTemplate = ({
         , being {initialPercentage}% of the purchase price to Highrachy
         Investment and Technology Ltd within 5 working days (Details of bank
         account in clause 11). We are delighted that you have decided to access
-        this opportunity being offered. Welcome to BLISSVILLE.
+        this opportunity being offered.
       </p>
 
       <p className="mb-5">
         Yours faithfully,
-        <br /> For: Highrachy Investment and Technology Ltd
+        <br /> For: {companyName}
       </p>
 
-      <Image
-        className="director-signature"
-        name="Signature"
-        src={DirectorSignature}
-      />
+      {userState.vendor?.directors.length > 0 ? (
+        <CompanySignatories />
+      ) : (
+        <>
+          <Image
+            className="director-signature"
+            name="Signature"
+            src={DirectorSignature}
+          />
 
-      <h6>Director</h6>
+          <h6>Director</h6>
+        </>
+      )}
 
       {showSignaturePad && (
         <section className="signature mt-5">
@@ -381,5 +392,22 @@ OfferLetterTemplate.defaultProps = {
   propertyInfo: null,
   signature: null,
   showSignaturePad: false,
+};
+
+const CompanySignatories = () => {
+  const { userState } = React.useContext(UserContext);
+  const directors = userState.vendor?.directors || [];
+  const signatories = directors.filter(({ isSignatory }) => isSignatory);
+  console.log('signatories', signatories);
+  return signatories.map((signatory) => (
+    <div className="col-sm-6">
+      <Image
+        className="director-signature"
+        name="Signature"
+        src={signatory.signature}
+      />
+      <h6>{signatory.name}</h6>
+    </div>
+  ));
 };
 export default OfferLetterTemplate;

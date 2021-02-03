@@ -30,7 +30,7 @@ import Modal from 'components/common/Modal';
 import { SuccessIcon } from 'components/utils/Icons';
 import BallersSpinner from 'components/utils/BallersSpinner';
 import { QuestionMarkIcon } from 'components/utils/Icons';
-import { AlertToast } from 'components/utils/Toast';
+// import { AlertToast } from 'components/utils/Toast';
 import { getVerificationStatus } from '../vendor/setup/AccountSetup';
 import Timeline from 'components/common/Timeline';
 import { LogTimeline } from 'components/common/Timeline';
@@ -89,6 +89,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   const [loadingVerification, setLoadingVerification] = React.useState(false);
   const verifyVendor = () => {
     setLoadingVerification(true);
+    setVerifyVendorModal(false);
     const payload = { vendorId };
     Axios.put(`${BASE_API_URL}/user/vendor/verify`, payload, {
       headers: { Authorization: getTokenFromStore() },
@@ -112,8 +113,10 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
         setLoadingVerification(false);
       });
   };
+
   const certifyVendor = () => {
     setLoadingVerification(true);
+    setVerifyVendorModal(false);
     const payload = { vendorId };
     Axios.put(`${BASE_API_URL}/user/vendor/certify`, payload, {
       headers: { Authorization: getTokenFromStore() },
@@ -336,14 +339,6 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
 
   const [showVerifyVendorModal, setVerifyVendorModal] = React.useState(false);
 
-  console.log(
-    '----------------------------------------------------------------'
-  );
-  console.log('CONSOLE LOG ', user);
-  console.log(
-    '----------------------------------------------------------------'
-  );
-  console.log(' ');
   const verificationState = {
     userInfo: getVerificationStatus(user, 0),
     bankDetails: getVerificationStatus(user, 1),
@@ -359,9 +354,11 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
       name={
         <span className="title">
           User Information{' '}
-          <span className={verificationState.userInfo.className}>
-            {verificationState.userInfo.icon}
-          </span>
+          {isVendor && (
+            <span className={verificationState.userInfo.className}>
+              {verificationState.userInfo.icon}
+            </span>
+          )}
         </span>
       }
       className="border-0"
@@ -574,8 +571,8 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
         <h5 className="title">Logs</h5>
 
         <Timeline>
-          {user.vendor?.logs.map((log) => (
-            <LogTimeline log={log} />
+          {user.vendor?.logs.map((log, index) => (
+            <LogTimeline log={log} key={index} />
           ))}
         </Timeline>
       </div>
@@ -586,68 +583,72 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
     <Timeline>
       <Toast {...toast} showToastOnly />
       {/* <AlertToast message="Awaiting your Review" /> */}
-      <Card className="card-container">
-        <Tabs defaultActiveKey="0">
-          <Tab
-            eventKey="0"
-            title={
-              <>
-                User Information{' '}
-                <span className={verificationState.userInfo.className}>
-                  {verificationState.userInfo.icon}
-                </span>
-              </>
-            }
-          >
-            <div className="card-tab-content py-5">
-              <UserInformation />
-            </div>
-          </Tab>
-          <Tab
-            eventKey="1"
-            title={
-              <>
-                Bank Details{' '}
-                <span className={verificationState.bankDetails.className}>
-                  {verificationState.bankDetails.icon}
-                </span>
-              </>
-            }
-          >
-            <div className="card-tab-content py-5">
-              <BankInformation />
-            </div>
-          </Tab>
-          <Tab
-            eventKey="2"
-            title={
-              <>
-                Directors / Signatories{' '}
-                <span className={verificationState.directorInfo.className}>
-                  {verificationState.directorInfo.icon}
-                </span>
-              </>
-            }
-          >
-            <Directors />
-          </Tab>
-          <Tab
-            eventKey="3"
-            title={
-              <>
-                Document Upload{' '}
-                <span className={verificationState.documentUpload.className}>
-                  {verificationState.documentUpload.icon}
-                </span>
-              </>
-            }
-          >
-            <Certificates />
-          </Tab>
-          <Tab eventKey="4" title="Logs">
-            <Logs />
-          </Tab>
-        </Tabs>
+      <Card className="card-container mb-5">
+        {isVendor ? (
+          <Tabs defaultActiveKey="0">
+            <Tab
+              eventKey="0"
+              title={
+                <>
+                  User Information{' '}
+                  <span className={verificationState.userInfo.className}>
+                    {verificationState.userInfo.icon}
+                  </span>
+                </>
+              }
+            >
+              <div className="card-tab-content py-5">
+                <UserInformation />
+              </div>
+            </Tab>
+            <Tab
+              eventKey="1"
+              title={
+                <>
+                  Bank Details{' '}
+                  <span className={verificationState.bankDetails.className}>
+                    {verificationState.bankDetails.icon}
+                  </span>
+                </>
+              }
+            >
+              <div className="card-tab-content py-5">
+                <BankInformation />
+              </div>
+            </Tab>
+            <Tab
+              eventKey="2"
+              title={
+                <>
+                  Directors / Signatories{' '}
+                  <span className={verificationState.directorInfo.className}>
+                    {verificationState.directorInfo.icon}
+                  </span>
+                </>
+              }
+            >
+              <Directors />
+            </Tab>
+            <Tab
+              eventKey="3"
+              title={
+                <>
+                  Document Upload{' '}
+                  <span className={verificationState.documentUpload.className}>
+                    {verificationState.documentUpload.icon}
+                  </span>
+                </>
+              }
+            >
+              <Certificates />
+            </Tab>
+            <Tab eventKey="4" title="Logs">
+              <Logs />
+            </Tab>
+          </Tabs>
+        ) : (
+          <UserInformation />
+        )}
       </Card>
       {/* add a status page here like the one in the userdashbard, something like user is currently onboarding */}
       {/* user has been verified, certified, not started onboarding, currently onboarding, needs review, has pending comment */}
@@ -671,7 +672,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
               'Verified' && (
               <Button
                 loading={loadingVerification}
-                onClick={verifyVendor}
+                onClick={() => setVerifyVendorModal(true)}
                 className="btn btn-secondary"
               >
                 Verify Vendor
@@ -702,9 +703,9 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                 </h5>
                 <button
                   className="btn btn-secondary mb-5"
-                  onClick={user.vendor?.verified ? verifyVendor : certifyVendor}
+                  onClick={user.vendor?.verified ? certifyVendor : verifyVendor}
                 >
-                  Verify Vendor
+                  {user.vendor?.verified ? 'Certify Vendor' : 'Verify Vendor'}
                 </button>
               </div>
             </section>
@@ -716,15 +717,3 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
 };
 
 export default SingleUser;
-
-// resolve comments
-// better display for verfied users
-// add cerified badge
-// better user profile page
-// add verification status and action plans
-// better user list display
-// for vendor, better UI on dashboard
-// test property adding, and others.
-// Loading dashboard side menu for vendor.
-
-// story for what changed

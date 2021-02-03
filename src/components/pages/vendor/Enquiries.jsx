@@ -26,7 +26,7 @@ const Enquiries = () => {
         const { status, data } = response;
         // handle success
         if (status === 200) {
-          setEnquiries(data.enquiries);
+          setEnquiries(data.result);
         }
       })
       .catch(function (error) {

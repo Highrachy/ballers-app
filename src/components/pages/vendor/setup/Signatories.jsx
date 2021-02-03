@@ -73,6 +73,8 @@ export const SignatoriesForm = ({ moveToNextStep }) => {
                 message: `Director Has been successfully Saved`,
               };
               setToast(successMessage);
+              setImage(null);
+              setSignature(null);
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -178,7 +180,8 @@ const SignatoriesInfoForm = ({
         )}
 
         <Button
-          className="btn-primary mt-5"
+          className="mt-3"
+          color="primary"
           loading={isSubmitting}
           onClick={handleSubmit}
         >
@@ -223,7 +226,7 @@ export const ShowDirectorsTable = ({ directors, moveToNextStep, setToast }) => {
   return (
     <>
       <div className="table-responsive">
-        <table className="table table-border table-hover mb-0 mt-5">
+        <table className="table table-border mb-0 mt-5">
           <thead>
             <tr>
               <th>S/N</th>

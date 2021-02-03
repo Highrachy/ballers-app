@@ -84,7 +84,7 @@ const PropertyCard = (property) => {
             <div className="property-holder__location">
               Location:{' '}
               <strong>
-                {address.city}, {address.state}
+                {address?.city}, {address?.state}
               </strong>
             </div>
             <div className="property-holder__house-type">

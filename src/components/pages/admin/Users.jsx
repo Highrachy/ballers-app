@@ -20,7 +20,7 @@ const Users = () => {
   const [toast, setToast] = useToast();
   const [users, setUsers] = React.useState(null);
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/user/all`, {
+    Axios.get(`${BASE_API_URL}/user/all?limit=50`, {
       headers: {
         Authorization: getTokenFromStore(),
       },

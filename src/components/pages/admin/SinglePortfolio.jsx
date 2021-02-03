@@ -51,19 +51,19 @@ const OwnedPropertyCard = ({ property, toast }) => (
       <div className="row">
         <div className="col-sm-10">
           <h3 className={`property-holder__big-title border-success`}>
-            {property[0].name}
+            {property.name}
           </h3>
         </div>
       </div>
       <PropertyImage property={property} />
       <div className="row mt-5">
         <div className="col-sm-12">
-          <PropertyDescription property={property[0]} />
+          <PropertyDescription property={property} />
         </div>
       </div>
       <Neighborhood />
     </Card>
-    <PropertyMap mapLocation={property[0].mapLocation} />
+    <PropertyMap mapLocation={property.mapLocation} />
   </div>
 );
 
@@ -71,7 +71,7 @@ const PropertyImage = ({ property }) => (
   <div className="row">
     <div className="col-sm-12">
       <img
-        src={property[0].mainImage}
+        src={property.mainImage}
         alt="Property"
         className="img-fluid gallery-main-image  property-img"
       />

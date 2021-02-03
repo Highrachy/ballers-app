@@ -26,7 +26,7 @@ const ScheduledVisits = () => {
         const { status, data } = response;
         // handle success
         if (status === 200) {
-          setScheduledVisits(data.schedules);
+          setScheduledVisits(data.result);
         }
       })
       .catch(function (error) {

@@ -109,7 +109,7 @@ const Offers = () => {
   const [toast, setToast] = useToast();
   const [offers, setOffers] = React.useState(null);
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/offer/user/all`, {
+    Axios.get(`${BASE_API_URL}/offer/all`, {
       headers: {
         Authorization: getTokenFromStore(),
       },
@@ -118,7 +118,7 @@ const Offers = () => {
         const { status, data } = response;
         // handle success
         if (status === 200) {
-          setOffers(data.offers);
+          setOffers(data.result);
         }
       })
       .catch(function (error) {

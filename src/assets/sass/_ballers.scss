@@ -277,7 +277,7 @@ html {
 }
 
 .timeline-item {
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
 }
 
 .timeline-item:before {
@@ -343,4 +343,13 @@ html {
   .timeline-data {
     padding: 0.75rem 0 0 24px;
   }
+}
+
+.nav-tabs svg {
+  height: 1rem;
+  color: $text-muted;
+}
+
+.nav-tabs .active svg {
+  color: $secondary;
 }

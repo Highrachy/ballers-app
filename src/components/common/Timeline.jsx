@@ -11,6 +11,7 @@ export const LogTimeline = ({ log }) => {
       lists.push(
         <SingleTimeLineItem
           title={property}
+          key={property}
           content={
             <>
               <div className="text-success small">+ {log[property]?.new}</div>
@@ -33,7 +34,7 @@ export const SingleTimeLineItem = ({ title, content }) => (
     <div className="timeline-status bg-secondary" />
     <div className="timeline-data">
       <h6 className="timeline-title">{title}</h6>
-      <p>{content}</p>
+      {content}
     </div>
   </li>
 );
