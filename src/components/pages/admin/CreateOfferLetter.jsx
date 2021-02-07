@@ -23,7 +23,7 @@ import OfferLetterTemplate from 'components/utils/OfferLetterTemplate';
 
 const CreateOfferLetter = ({ enquiry }) => {
   const defaultValue = {
-    totalAmountPayable: enquiry.propertyInfo[0].price,
+    totalAmountPayable: enquiry.propertyInfo.price,
     allocationInPercentage: 100,
     initialPayment: enquiry.initialInvestmentAmount,
     monthlyPayment: '1000000',
@@ -235,7 +235,8 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
       <OfferLetterTemplate
         enquiryInfo={enquiry}
         offerInfo={value}
-        propertyInfo={enquiry.propertyInfo[0]}
+        propertyInfo={enquiry.propertyInfo}
+        vendorInfo={enquiry.vendorInfo}
       />
       <button
         className="btn btn-danger btn-wide mt-5"

@@ -114,43 +114,43 @@ const EnquiryDetail = ({ enquiry, showOfferLetter, toast }) => (
         <td>
           <strong>Property Name</strong>
         </td>
-        <td>{enquiry.propertyInfo[0].name}</td>
+        <td>{enquiry.propertyInfo.name}</td>
       </tr>
       <tr>
         <td>
           <strong>House Type</strong>
         </td>
-        <td>{enquiry.propertyInfo[0].houseType}</td>
+        <td>{enquiry.propertyInfo.houseType}</td>
       </tr>
       <tr>
         <td>
           <strong>Price</strong>
         </td>
-        <td>{moneyFormatInNaira(enquiry.propertyInfo[0].price)}</td>
+        <td>{moneyFormatInNaira(enquiry.propertyInfo.price)}</td>
       </tr>
       <tr>
         <td>
           <strong>Units</strong>
         </td>
-        <td>{enquiry.propertyInfo[0].units}</td>
+        <td>{enquiry.propertyInfo.units}</td>
       </tr>
       <tr>
         <td>
           <strong>Bedrooms</strong>
         </td>
-        <td>{enquiry.propertyInfo[0].bedrooms}</td>
+        <td>{enquiry.propertyInfo.bedrooms}</td>
       </tr>
       <tr>
         <td>
           <strong>Toilets</strong>
         </td>
-        <td>{enquiry.propertyInfo[0].toilets}</td>
+        <td>{enquiry.propertyInfo.toilets}</td>
       </tr>
       <tr>
         <td>
           <strong>Address</strong>
         </td>
-        <td>{getFormattedAddress(enquiry.propertyInfo[0].address)}</td>
+        <td>{getFormattedAddress(enquiry.propertyInfo.address)}</td>
       </tr>
     </CardTableSection>
     <CardTableSection name="Investment details">

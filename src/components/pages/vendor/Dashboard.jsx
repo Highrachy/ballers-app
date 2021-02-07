@@ -7,7 +7,6 @@ import {
   getVerificationState,
 } from 'components/pages/vendor/setup/AccountSetup';
 import { CompanyInfoIcon } from 'components/utils/Icons';
-import { SuccessIcon } from 'components/utils/Icons';
 import { BankInfoIcon } from 'components/utils/Icons';
 import { FileIcon } from 'components/utils/Icons';
 import { UsersIcon } from 'components/utils/Icons';
@@ -17,6 +16,7 @@ import { Loading } from 'components/utils/LoadingItems';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import { TransactionIcon } from 'components/utils/Icons';
 import { getVerificationStatus } from './setup/AccountSetup';
+import { CertifyIcon } from 'components/utils/Icons';
 
 const Dashboard = () => (
   <BackendPage>
@@ -44,7 +44,7 @@ const Welcome = () => {
           <div className="col-sm-12">
             <h4>
               Hello, {userState.vendor?.companyName || userState.firstName}{' '}
-              {userState.vendor.certified && <SuccessIcon />}{' '}
+              {userState.vendor.certified && <CertifyIcon />}{' '}
             </h4>
             <p className="lead">Welcome to Ballers</p>
           </div>

@@ -29,7 +29,7 @@ const Dashboard = () => {
   const [offers, setOffers] = React.useState(null);
 
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/offer/all`, {
+    Axios.get(`${BASE_API_URL}/offer/active`, {
       headers: {
         Authorization: getTokenFromStore(),
       },
@@ -124,7 +124,7 @@ const ShowInfo = ({ offers }) =>
     </div>
   ) : null;
 
-const OffersRow = ({ _id, expires, status, propertyInfo }) => {
+const OffersRow = ({ _id, expires, status, propertyInfo, vendorInfo }) => {
   if (isPast(expires) || status !== 'Generated') {
     return null;
   }
@@ -140,7 +140,14 @@ const OffersRow = ({ _id, expires, status, propertyInfo }) => {
         >
           View Offer Letter
         </Link>
-        Highrachy has sent you an offer letter for{' '}
+        <img
+          alt={vendorInfo?.vendor?.companyName || ''}
+          className="img-fluid img-small"
+          src={vendorInfo?.vendor?.companyLogo}
+          title={vendorInfo?.vendor?.companyName}
+        />
+        <br />
+        {vendorInfo?.vendor?.companyName} has sent you an offer letter for{' '}
         <strong>{propertyInfo.name}</strong>
         <br />
         <small className="text-muted">

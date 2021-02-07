@@ -226,6 +226,7 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
           propertyInfo={offer.propertyInfo}
           signature={signature}
           showSignaturePad
+          vendorInfo={offer.vendorInfo}
         >
           {offer.status === OFFER_STATUS.GENERATED && (
             <>

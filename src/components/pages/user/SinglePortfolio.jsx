@@ -2,7 +2,7 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
-// import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
+import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
 import Map from 'components/common/Map';
 import { BASE_API_URL } from 'utils/constants';
 import Modal from 'components/common/Modal';
@@ -29,10 +29,13 @@ import { moneyFormatInNaira, getError } from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import DatePicker from 'components/forms/DatePicker';
 import { Loading } from 'components/utils/LoadingItems';
+import { getLongDate } from 'utils/date-helpers';
+import { VisitationIcon } from 'components/utils/Icons';
 
 const SinglePortfolio = ({ id, assigned }) => {
   const [toast, setToast] = useToast();
   const [property, setProperty] = React.useState(null);
+  console.log('property', property);
   React.useEffect(() => {
     Axios.get(`${BASE_API_URL}/property/${id}`, {
       headers: {
@@ -92,7 +95,11 @@ const OwnedPropertyCard = ({ assigned, property, toast }) => (
             {assigned ? (
               <AssignedPropertySidebar />
             ) : (
-              <PropertySidebar propertyId={property._id} />
+              <PropertySidebar
+                propertyId={property._id}
+                visitationInfo={property?.visitationInfo}
+                enquiryInfo={property?.enquiryInfo}
+              />
             )}
           </aside>
         </div>
@@ -107,7 +114,7 @@ const PropertyImage = ({ property }) => (
   <div className="row">
     <div className="col-sm-12">
       <img
-        src={property.mainImage}
+        src={property?.mainImage || PropertyPlaceholderImage}
         alt="Property"
         className="img-fluid gallery-main-image  property-img"
       />
@@ -179,6 +186,14 @@ const PropertyDescription = ({ property }) => (
         <h5>{property.toilets}</h5>
       </div>
     </div>
+
+    <h5 className="mt-5">Vendor</h5>
+    <img
+      alt={property?.vendorInfo?.vendor?.companyName || ''}
+      className="img-fluid img-small"
+      src={property?.vendorInfo?.vendor?.companyLogo}
+      title={property?.vendorInfo?.vendor?.companyName}
+    />
 
     <h5 className="mt-5">About Property</h5>
     <p className="">{property.description}</p>
@@ -264,9 +279,12 @@ const AssignedPropertySidebar = () => {
   );
 };
 
-const PropertySidebar = ({ propertyId }) => {
+const PropertySidebar = ({ propertyId, visitationInfo, enquiryInfo }) => {
+  console.log('visitationInfo', visitationInfo);
   const [showRequestVisitForm, setShowRequestVisitForm] = React.useState(false);
   const [showTitleDocument, setShowTitleDocument] = React.useState(false);
+  const userHasScheduledVisit = visitationInfo?.length > 0;
+  const userHasPreviousEnquiry = !!enquiryInfo;
 
   return (
     <>
@@ -276,36 +294,86 @@ const PropertySidebar = ({ propertyId }) => {
         onHide={() => setShowRequestVisitForm(false)}
         showFooter={false}
       >
-        <ScheduleVisitForm
-          hideForm={() => setShowRequestVisitForm(false)}
-          propertyId={propertyId}
-        />
+        {userHasScheduledVisit ? (
+          <>
+            <table className="table table-hover table-borderless">
+              <tr>
+                <td>Name </td>
+                <td>{visitationInfo[0].visitorName}</td>
+              </tr>
+              <tr>
+                <td>Email </td>
+                <td>{visitationInfo[0].visitorEmail}</td>
+              </tr>
+              <tr>
+                <td>Phone </td>
+                <td>{visitationInfo[0].visitorPhone}</td>
+              </tr>
+              <tr>
+                <td>Visit Date </td>
+                <td>{getLongDate(visitationInfo[0].visitDate)}</td>
+              </tr>
+            </table>
+          </>
+        ) : (
+          <ScheduleVisitForm
+            hideForm={() => setShowRequestVisitForm(false)}
+            propertyId={propertyId}
+          />
+        )}
       </Modal>
       <Card className="card-container property-holder bg-gray">
         <h5>Interested in this property?</h5>
 
-        <p className="">Kindly proceed with property acquisition</p>
+        <p className="">
+          {userHasPreviousEnquiry
+            ? 'You already made previous enquiries'
+            : 'Kindly proceed with property acquisition'}
+        </p>
         <Link
           to={`/user/property/enquiry/${propertyId}`}
           className="btn btn-block btn-secondary my-3"
         >
-          Proceed
+          {userHasPreviousEnquiry ? 'Make Another Enquiry' : 'Proceed'}
         </Link>
       </Card>
 
-      <h5 className="header-smaller">Schedule a tour</h5>
-      <Card
-        className="card-container property-holder bg-gray card-link"
-        onClick={() => setShowRequestVisitForm(true)}
-      >
-        <p className="mr-4">
-          Want to come check the property?
-          <br /> Request a visit.
-        </p>
-        <div className="circle-icon">
-          <RightArrowIcon />
-        </div>
-      </Card>
+      {userHasScheduledVisit ? (
+        <>
+          <h5 className="header-smaller">You have an upcoming visit</h5>
+          <Card
+            className="card-container property-holder bg-gray card-link"
+            onClick={() => setShowRequestVisitForm(true)}
+          >
+            <p className="mr-4">
+              Your visitation date is on
+              <br />{' '}
+              <strong className="text-danger">
+                {getLongDate(visitationInfo[0].visitDate)}
+              </strong>
+            </p>
+            <div className="circle-icon">
+              <VisitationIcon />
+            </div>
+          </Card>
+        </>
+      ) : (
+        <>
+          <h5 className="header-smaller">Schedule a tour</h5>
+          <Card
+            className="card-container property-holder bg-gray card-link"
+            onClick={() => setShowRequestVisitForm(true)}
+          >
+            <p className="mr-4">
+              Want to come check the property?
+              <br /> Request a visit.
+            </p>
+            <div className="circle-icon">
+              <RightArrowIcon />
+            </div>
+          </Card>
+        </>
+      )}
 
       <h5 className="header-smaller">View title document</h5>
       <Modal

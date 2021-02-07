@@ -22,7 +22,6 @@ const Users = () => (
     pageName="User"
     DataComponent={UsersRowList}
     FilterComponent={AddAreaForm}
-    limit={2}
   />
 );
 
