@@ -353,3 +353,28 @@ html {
 .nav-tabs .active svg {
   color: $secondary;
 }
+
+.badge-filters {
+  background: rgba($gray-600, 0.8);
+  display: inline-block;
+  padding: 0.6rem 2rem 0.6rem 1rem;
+  color: rgba($white, 0.7);
+  margin-right: 0.5rem;
+  position: relative;
+  transition: color 0.3s ease-out;
+
+  &:hover {
+    color: $white;
+    background: rgba($secondary, 0.8);
+  }
+
+  svg {
+    height: 1rem;
+    display: block;
+    width: 2rem;
+    font-size: 0.8rem;
+    position: absolute;
+    right: 0.2rem;
+    top: 0.4rem;
+  }
+}

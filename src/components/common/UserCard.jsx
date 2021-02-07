@@ -1,23 +1,31 @@
 import React from 'react';
+import ProfileAvatar from 'assets/img/avatar/profile.png';
 
-const UserCard = ({ showEmail }) => {
+const UserCard = ({ user }) => {
+  const { firstName, lastName, email, profileImage } = user;
+  const userName = `${firstName} ${lastName}`;
   return (
     <div className="user-card">
       <div className="user-avatar user-avatar-sm bg-purple">
-        <span>AB</span>
+        <img
+          alt={firstName}
+          className="img-fluid avatar--medium--small"
+          src={profileImage ? profileImage.url : ProfileAvatar}
+          title={firstName}
+        />
       </div>
 
-      {showEmail ? (
-        <div className="user-name">
-          <span className="tb-lead">Abu Bin Ishtiyak</span>
-        </div>
-      ) : (
+      {email ? (
         <div className="user-info">
           <span className="user-name">
-            Abu Bin Ishtiyak{' '}
+            {userName}
             <span className="dot dot-success d-md-none ml-1"></span>
           </span>
-          <small className="user-email">info@softnio.com</small>
+          <small className="user-email">{email}</small>
+        </div>
+      ) : (
+        <div className="user-name">
+          <span className="tb-lead">{userName}</span>
         </div>
       )}
     </div>

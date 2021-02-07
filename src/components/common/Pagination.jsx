@@ -11,35 +11,37 @@ const Pagination = ({ currentPage, lastPage, size, setCurrentPage }) => {
   }
 
   return (
-    <BPagination size={size}>
-      {currentPage !== 1 && (
-        <>
-          <BPagination.First onClick={() => setCurrentPage(1)} />
-          <BPagination.Prev onClick={() => setCurrentPage(currentPage - 1)} />
-        </>
-      )}
+    <section className="container-fluid mt-3">
+      <BPagination size={size}>
+        {currentPage !== 1 && (
+          <>
+            <BPagination.First onClick={() => setCurrentPage(1)} />
+            <BPagination.Prev onClick={() => setCurrentPage(currentPage - 1)} />
+          </>
+        )}
 
-      {pagination.map((page) =>
-        page === ELLIPSIS ? (
-          <BPagination.Ellipsis key={page} />
-        ) : (
-          <BPagination.Item
-            key={page}
-            active={page === currentPage}
-            onClick={() => setCurrentPage(page)}
-          >
-            {page}
-          </BPagination.Item>
-        )
-      )}
+        {pagination.map((page) =>
+          page === ELLIPSIS ? (
+            <BPagination.Ellipsis key={page} />
+          ) : (
+            <BPagination.Item
+              key={page}
+              active={page === currentPage}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </BPagination.Item>
+          )
+        )}
 
-      {currentPage !== lastPage && (
-        <>
-          <BPagination.Next onClick={() => setCurrentPage(currentPage + 1)} />
-          <BPagination.Last onClick={() => setCurrentPage(lastPage)} />
-        </>
-      )}
-    </BPagination>
+        {currentPage !== lastPage && (
+          <>
+            <BPagination.Next onClick={() => setCurrentPage(currentPage + 1)} />
+            <BPagination.Last onClick={() => setCurrentPage(lastPage)} />
+          </>
+        )}
+      </BPagination>
+    </section>
   );
 };
 

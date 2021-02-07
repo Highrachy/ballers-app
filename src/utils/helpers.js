@@ -104,6 +104,19 @@ export const valuesToOptions = (values, defaultLabel = null) => {
     : output;
 };
 
+export const objectToOptions = (obj, defaultLabel = null, inverse = false) => {
+  const output = Object.entries(obj).map(([label, value]) => ({
+    value: inverse ? label.toString() : value.toString(),
+    label: inverse
+      ? Humanize.titleCase(value.toString())
+      : Humanize.titleCase(label.toString()),
+  }));
+
+  return defaultLabel
+    ? [{ value: '', label: defaultLabel }, ...output]
+    : output;
+};
+
 export const getGenderFromTitle = (title) => {
   if (MALE_TITLES.includes(title)) return 'Sir';
   if (FEMALE_TITLES.includes(title)) return 'Ma';

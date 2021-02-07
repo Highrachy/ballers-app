@@ -6,7 +6,7 @@ import { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
 
-export const usePagination = ({ url, limit, page }) => {
+export const usePagination = ({ url, limit, page, filters }) => {
   const [toast, setToast] = useToast();
   const [output, setOutput] = React.useState(null);
 
@@ -16,7 +16,7 @@ export const usePagination = ({ url, limit, page }) => {
       headers: {
         Authorization: getTokenFromStore(),
       },
-      params: { limit, page },
+      params: { limit, page, ...filters },
     })
       .then(function (response) {
         const { status, data } = response;
@@ -31,17 +31,19 @@ export const usePagination = ({ url, limit, page }) => {
           message: getError(error),
         });
       });
-  }, [limit, page, setToast, url]);
+  }, [limit, page, setToast, url, filters]);
 
   return [output?.result, output?.pagination, toast];
 };
 
 usePagination.propTypes = {
-  url: PropTypes.string.isRequired,
-  page: PropTypes.number.isRequired,
   limit: PropTypes.number,
+  page: PropTypes.number.isRequired,
+  filters: PropTypes.object,
+  url: PropTypes.string.isRequired,
 };
 
 usePagination.defaultProps = {
+  filters: {},
   limit: 10,
 };

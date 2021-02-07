@@ -1,18 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
-import { DASHBOARD_PAGE } from 'utils/constants';
-import ProfileAvatar from 'assets/img/avatar/profile.png';
+import { DASHBOARD_PAGE, USER_TYPES } from 'utils/constants';
 import { SuccessIcon, InfoIcon } from 'components/utils/Icons';
 import { Link } from '@reach/router';
 import Humanize from 'humanize-plus';
 import AdminList from 'components/common/AdminList';
+import { Form, Formik } from 'formik';
+import { setInitialValues } from 'components/forms/form-helper';
+import { addAreaSchema } from 'components/forms/schemas/propertySchema';
+// import { createSchema } from 'components/forms/schemas/schema-helpers';
+import Select from 'components/forms/Select';
+import { objectToOptions } from 'utils/helpers';
+import Input from 'components/forms/Input';
+import Button from 'components/forms/Button';
+import UserCard from 'components/common/UserCard';
 
 const Users = () => (
   <AdminList
     url="user/all"
     pageName="User"
     DataComponent={UsersRowList}
+    FilterComponent={AddAreaForm}
     limit={2}
   />
 );
@@ -20,13 +29,12 @@ const Users = () => (
 const UsersRowList = ({ results, offset }) => {
   return (
     <div className="container-fluid">
-      <Card className="mt-4">
+      <Card>
         <div className="table-responsive">
           <table className="table table-border table-hover">
             <thead>
               <tr>
                 <td>S/N</td>
-                <td>Avatar</td>
                 <td>Name</td>
                 <td>Phone</td>
                 <td>Role</td>
@@ -94,16 +102,7 @@ const UsersRow = ({
     <tr>
       <td>{number}</td>
       <td>
-        <img
-          alt={firstName}
-          className="img-fluid avatar--medium--small"
-          src={profileImage ? profileImage.url : ProfileAvatar}
-          title={firstName}
-        />
-      </td>
-      <td>
-        {firstName} {lastName} <br />
-        <small>{email}</small>
+        <UserCard user={{ firstName, lastName, email, profileImage }} />
       </td>
       <td>
         {phone} <br />
@@ -145,6 +144,59 @@ const UsersRow = ({
         </Link>
       </td>
     </tr>
+  );
+};
+
+const AddAreaForm = ({ setFilterTerms }) => {
+  return (
+    <Formik
+      initialValues={setInitialValues(addAreaSchema)}
+      onSubmit={(values, actions) => {
+        setFilterTerms(
+          { ...values },
+          {
+            role: `User Type : ${Humanize.titleCase(
+              Object.keys(USER_TYPES)[values.role]
+            )}`,
+          }
+        );
+      }}
+      // validationSchema={{}}
+    >
+      {({ isSubmitting, handleSubmit, ...props }) => (
+        <Form>
+          <Card className="card-container">
+            <section className="row">
+              <div className="col-md-10 px-4">
+                <h5 className="mb-4">Filter Users</h5>
+                <div className="form-row">
+                  <Select
+                    formGroupClassName="col-md-6"
+                    label="Role"
+                    name="role"
+                    options={objectToOptions(USER_TYPES)}
+                    placeholder="Select Role"
+                  />
+                  <Input
+                    formGroupClassName="col-md-6"
+                    label="First Name"
+                    name="firstName"
+                  />
+                </div>
+              </div>
+            </section>
+          </Card>
+
+          <Button
+            className="btn-secondary mt-4"
+            loading={isSubmitting}
+            onClick={handleSubmit}
+          >
+            Filter Users
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 };
 
