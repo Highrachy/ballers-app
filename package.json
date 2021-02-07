@@ -19,7 +19,6 @@
     "humanize-plus": "^1.8.2",
     "node-sass": "^4.14.1",
     "number-to-words": "^1.2.4",
-    "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-awesome-reveal": "^2.4.2",
     "react-bootstrap": "^1.0.1",
@@ -40,6 +39,7 @@
     "react-select": "^3.1.0",
     "react-share": "^4.2.1",
     "react-slick": "^0.26.1",
+    "react-slidedown": "^2.4.5",
     "react-to-print": "^2.10.0",
     "store2": "^2.11.2",
     "timeago-react": "^3.0.0",
@@ -53,7 +53,6 @@
     "eject": "react-scripts eject",
     "e2e:open": "npx cypress open",
     "e2e:run": "npx cypress run"
-
   },
   "eslintConfig": {
     "extends": "react-app"

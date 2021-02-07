@@ -1,70 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
-import Axios from 'axios';
-import { BASE_API_URL, DASHBOARD_PAGE } from 'utils/constants';
-import Toast, { useToast } from 'components/utils/Toast';
-import { getTokenFromStore } from 'utils/localStorage';
-import LoadItems from 'components/utils/LoadingItems';
-import NoContent from 'components/utils/NoContent';
-import { UsersIcon } from 'components/utils/Icons';
-import { getError } from 'utils/helpers';
-import TopTitle from 'components/utils/TopTitle';
+import { DASHBOARD_PAGE } from 'utils/constants';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { SuccessIcon, InfoIcon } from 'components/utils/Icons';
 import { Link } from '@reach/router';
 import Humanize from 'humanize-plus';
+import AdminList from 'components/common/AdminList';
 
-const Users = () => {
-  const [toast, setToast] = useToast();
-  const [users, setUsers] = React.useState(null);
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/user/all?limit=50`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        // handle success
-        if (status === 200) {
-          setUsers(data.result);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast]);
-  return (
-    <BackendPage>
-      <Toast {...toast} showToastOnly />
-      <TopTitle>All Users</TopTitle>
-      <AllUsers users={users} />
-    </BackendPage>
-  );
-};
-
-const AllUsers = ({ users, toast }) => (
-  <LoadItems
-    Icon={<UsersIcon />}
-    items={users}
-    loadingText="Loading your Users"
-    noContent={
-      <NoContent Icon={<UsersIcon />} isButton text="No Users found" />
-    }
-  >
-    <UsersRowList toast={toast} users={users || []} />
-  </LoadItems>
+const Users = () => (
+  <AdminList
+    url="user/all"
+    pageName="User"
+    DataComponent={UsersRowList}
+    limit={2}
+  />
 );
 
-const UsersRowList = ({ users }) => {
-  const [toast, setToast] = useToast();
+const UsersRowList = ({ results, offset }) => {
   return (
     <div className="container-fluid">
-      <Toast {...toast} showToastOnly />
       <Card className="mt-4">
         <div className="table-responsive">
           <table className="table table-border table-hover">
@@ -80,13 +35,8 @@ const UsersRowList = ({ users }) => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
-                <UsersRow
-                  key={index}
-                  setToast={setToast}
-                  number={index + 1}
-                  {...user}
-                />
+              {results.map((user, index) => (
+                <UsersRow key={index} number={offset + index + 1} {...user} />
               ))}
             </tbody>
           </table>
@@ -97,7 +47,7 @@ const UsersRowList = ({ users }) => {
 };
 
 UsersRowList.propTypes = {
-  users: PropTypes.array.isRequired,
+  results: PropTypes.array.isRequired,
 };
 
 const UsersRow = ({
@@ -111,7 +61,6 @@ const UsersRow = ({
   phone2,
   profileImage,
   role,
-  setToast,
 }) => {
   // const userId = _id;
   // const [userRole, setUserRole] = React.useState(role);

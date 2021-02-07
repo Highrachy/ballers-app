@@ -31,6 +31,7 @@ import { generateNumOptions } from 'utils/helpers';
 import ReactSelect from 'react-select';
 import { customStyles } from 'components/forms/Select';
 import PhoneNumber from './PhoneNumber';
+import Pagination from 'components/common/Pagination';
 
 const FormComponents = () => (
   <>
@@ -234,6 +235,15 @@ const Forms = () => {
 
           <MapPicker />
 
+          {/* <Pagination currentPage={1} lastPage={10} />
+          <Pagination currentPage={5} lastPage={10} />
+          <Pagination currentPage={7} lastPage={10} />
+
+          <Pagination currentPage={1} lastPage={20} />
+          <Pagination currentPage={5} lastPage={20} />
+          <Pagination currentPage={10} lastPage={20} /> */}
+          <Pagination currentPage={17} lastPage={20} />
+
           <Button
             className="btn-danger"
             loading={isSubmitting}
@@ -269,3 +279,7 @@ const Forms = () => {
 };
 
 export default FormComponents;
+
+// Offer Letter
+// Enquiries
+// Property view for
