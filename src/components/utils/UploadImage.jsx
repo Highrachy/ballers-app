@@ -6,6 +6,31 @@ import BallersSpinner from 'components/utils/BallersSpinner';
 import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getError } from 'utils/helpers';
+import Image from './Image';
+import { FileIcon } from './Icons';
+
+export const UploadedDocument = ({ document }) => {
+  if (!document) return null;
+
+  const extension = document.split('.').pop();
+  const allowedFormats = ['jpg', 'jpeg', 'gif', 'png', 'pdf'];
+  if (!allowedFormats.includes(extension)) return null;
+
+  return extension !== 'pdf' ? (
+    <Image
+      className="uploaded-image mb-3"
+      name="document upload"
+      src={document}
+    />
+  ) : (
+    <>
+      <div className="large-icon text-center">
+        <FileIcon />
+      </div>
+      <a href={document}>{document}</a>
+    </>
+  );
+};
 
 const UploadImage = ({ defaultImage, uploadText, changeText, afterUpload }) => {
   const MAX_IMG_SIZE = 1000000; //1MB
@@ -19,6 +44,12 @@ const UploadImage = ({ defaultImage, uploadText, changeText, afterUpload }) => {
     setLoading(true);
     setToast({ message: null });
     const file = event.target.files[0];
+    if (!file) {
+      setToast({
+        message: 'Invalid file',
+      });
+      setLoading(false);
+    }
     if (file.size > MAX_IMG_SIZE) {
       setToast({
         message: `'${
@@ -28,10 +59,15 @@ const UploadImage = ({ defaultImage, uploadText, changeText, afterUpload }) => {
         }kb`,
       });
       setLoading(false);
-    } else if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+    } else if (
+      file.type !== 'image/png' &&
+      file.type !== 'image/jpeg' &&
+      file.type !== 'image/gif' &&
+      file.type !== 'application/pdf'
+    ) {
       setToast({
         message:
-          "Unsupported format. Only '.png' and '.jpg' files are supported",
+          "Unsupported format. Only 'image' and 'pdf' files are supported",
       });
       setLoading(false);
     } else {

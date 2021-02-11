@@ -169,17 +169,29 @@ const AddAreaForm = ({ setFilterTerms }) => {
               <div className="col-md-10 px-4">
                 <h5 className="mb-4">Filter Users</h5>
                 <div className="form-row">
+                  <Input
+                    formGroupClassName="col-md-6"
+                    label="First Name"
+                    name="firstName"
+                  />
+                  <Input
+                    formGroupClassName="col-md-6"
+                    label="Last Name"
+                    name="lastName"
+                  />
+                </div>
+                <div className="form-row">
+                  <Input
+                    formGroupClassName="col-md-6"
+                    label="Phone Number"
+                    name="phone"
+                  />
                   <Select
                     formGroupClassName="col-md-6"
                     label="Role"
                     name="role"
                     options={objectToOptions(USER_TYPES)}
                     placeholder="Select Role"
-                  />
-                  <Input
-                    formGroupClassName="col-md-6"
-                    label="First Name"
-                    name="firstName"
                   />
                 </div>
               </div>

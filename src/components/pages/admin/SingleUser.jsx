@@ -36,6 +36,7 @@ import Timeline from 'components/common/Timeline';
 import { LogTimeline } from 'components/common/Timeline';
 // import UserCard from 'components/common/UserCard';
 // import { getVerificationState } from '../vendor/setup/AccountSetup';
+import { UploadedDocument } from 'components/utils/UploadImage';
 
 const SingleUser = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -532,11 +533,10 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           <strong>Identification</strong>
         </td>
         <td>
-          <img
-            alt="Tax Certificate"
-            className="img-fluid mb-3"
-            src={user.vendor?.identification && user.vendor?.identification.url}
-            title="Tax Certificate"
+          <UploadedDocument
+            document={
+              user.vendor?.identification && user.vendor?.identification.url
+            }
           />
           {user.vendor?.identification && user.vendor?.identification.type}
         </td>
@@ -546,12 +546,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           <strong>Tax Certificate</strong>
         </td>
         <td>
-          <img
-            alt="Tax Certificate"
-            className="img-fluid mb-3"
-            src={user.vendor?.taxCertificate}
-            title="Tax Certificate"
-          />
+          <UploadedDocument document={user.vendor?.taxCertificate} />
         </td>
       </tr>
       {((user.vendor?.identification && user.vendor?.identification?.url) ||

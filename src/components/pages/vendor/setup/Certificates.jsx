@@ -13,7 +13,6 @@ import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import { getError, statusIsSuccessful, valuesToOptions } from 'utils/helpers';
 import UploadImage from 'components/utils/UploadImage';
-import Image from 'components/utils/Image';
 import {
   setInitialValues,
   DisplayFormikState,
@@ -23,6 +22,7 @@ import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { certificateSchema } from 'components/forms/schemas/vendorSchema';
 import Select from 'components/forms/Select';
 import { VerificationComments } from './AccountSetup';
+import { UploadedDocument } from 'components/utils/UploadImage';
 
 const Certificates = () => (
   <BackendPage>
@@ -161,13 +161,7 @@ const UploadCertificate = ({ children, title, image, setImage }) => (
       <div className="col-md-10 px-4">
         <h5 className="mb-4">{title}</h5>
         <VerificationComments step="4" />
-        {image && (
-          <Image
-            className="uploaded-image mb-3"
-            name="property image"
-            src={image}
-          />
-        )}
+        <UploadedDocument document={image} />
         {children}
         <UploadImage
           afterUpload={(image) => setImage(image)}
