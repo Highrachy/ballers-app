@@ -32,6 +32,7 @@ import ReactSelect from 'react-select';
 import { customStyles } from 'components/forms/Select';
 import PhoneNumber from './PhoneNumber';
 import Pagination from 'components/common/Pagination';
+import Upload from 'components/utils/Upload';
 
 const FormComponents = () => (
   <>
@@ -93,6 +94,7 @@ const Forms = () => {
       render={({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
+          <Upload />
           <div className="form-row">
             <Input
               formGroupClassName="col-md-6"

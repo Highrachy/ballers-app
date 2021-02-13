@@ -49,11 +49,11 @@ export const getProxy = () =>
   isDevEnvironment() ? 'http://localhost:8080' : '';
 
 export const getError = (error) =>
-  (error &&
-    error.response &&
-    error.response.data &&
-    (error.response.data.error || error.response.data.message)) ||
-  'An error has occured. Please try again later.';
+  error?.response?.data
+    ? JSON.stringify(error?.response?.data?.error) ||
+      JSON.stringify(error?.response?.data?.message) ||
+      JSON.stringify(error)
+    : 'An error has occured. Please try again later.';
 
 export const generateNumOptions = (number = 12, type = '', options = {}) => {
   const startFrom =

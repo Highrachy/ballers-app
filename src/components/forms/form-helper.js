@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getIn } from 'formik';
+import { isDevEnvironment } from 'utils/helpers';
 
 const validityOptions = {
   valid: 'is-valid',
@@ -110,7 +111,7 @@ export const DisplayFormikState = (props) => {
       </pre>
     </div>
   );
-  if (process.env.NODE_ENV === 'production') return null;
+  if (!isDevEnvironment()) return null;
   return !props.hide && displayFormikValues;
 };
 
