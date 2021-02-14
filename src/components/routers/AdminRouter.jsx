@@ -3,11 +3,10 @@ import { Router } from '@reach/router';
 import Dashboard from 'components/pages/admin/Dashboard';
 import Users from 'components/pages/admin/Users';
 import SingleUser from 'components/pages/admin/SingleUser';
-import Portfolios from 'components/pages/admin/Portfolios';
-import SinglePortfolio from 'components/pages/admin/SinglePortfolio';
+import Portfolios from 'components/pages/shared/Portfolios';
+import SinglePortfolio from 'components/pages/shared/SinglePortfolio';
 import ScheduledVisits from 'components/pages/admin/ScheduledVisits';
 import Transactions from 'components/pages/admin/Transactions';
-import NewProperty from 'components/pages/admin/NewProperty';
 import KnowledgeBase from 'components/pages/admin/KnowledgeBase';
 import Menu from 'components/pages/user/Menu';
 import Enquiries from 'components/pages/admin/Enquiries';
@@ -23,7 +22,6 @@ const AdminRouter = () => (
     <SingleUser path="user/:id" />
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />
-    <NewProperty path="portfolios/new" />
     <ScheduledVisits path="scheduled-visits" />
     <ViewEnquiry path="enquiry/:id" />
     <AssignedProperties path="assigned-properties" />

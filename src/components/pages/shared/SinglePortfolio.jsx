@@ -10,6 +10,8 @@ import { getTokenFromStore } from 'utils/localStorage';
 import NoContent from 'components/utils/NoContent';
 import { moneyFormatInNaira, getError } from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
+import Image from 'components/utils/Image';
+import PropertyPlaceholderImage from 'assets/img/placeholder/property.gif';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -70,10 +72,11 @@ const OwnedPropertyCard = ({ property, toast }) => (
 const PropertyImage = ({ property }) => (
   <div className="row">
     <div className="col-sm-12">
-      <img
+      <Image
+        defaultImage={PropertyPlaceholderImage}
         src={property.mainImage}
         alt="Property"
-        className="img-fluid gallery-main-image  property-img"
+        className="img-fluid gallery-main-image property-img"
       />
     </div>
   </div>

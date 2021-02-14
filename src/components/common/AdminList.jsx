@@ -1,5 +1,4 @@
 import React from 'react';
-import BackendPage from 'components/layout/BackendPage';
 import Toast from 'components/utils/Toast';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
@@ -14,13 +13,14 @@ import { MenuIcon } from 'components/utils/Icons';
 import { CloseIcon } from 'components/utils/Icons';
 
 const AdminList = ({
+  addNewUrl,
   DataComponent,
   FilterComponent,
   limit,
   PageIcon,
   pageName,
   pluralPageName,
-  url,
+  endpoint,
 }) => {
   const pluralizePageName = pluralPageName || Humanize.pluralize(2, pageName);
   const Icon = PageIcon || <UsersIcon />;
@@ -28,15 +28,15 @@ const AdminList = ({
   const [filters, setFilters] = React.useState({});
   const [currentPage, setCurrentPage] = React.useState(1);
   const [results, pagination, toast] = usePagination({
-    url,
+    url: endpoint,
     page: currentPage,
     limit,
     filters,
   });
 
   return (
-    <BackendPage>
-      <TopTitle>
+    <>
+      <TopTitle buttonText={`New ${pageName}`} to={addNewUrl}>
         {pagination?.total} {Humanize.pluralize(pagination?.total, pageName)}
       </TopTitle>
       <Toast {...toast} showToastOnly />
@@ -71,13 +71,15 @@ const AdminList = ({
           setCurrentPage={setCurrentPage}
         />
       </LoadItems>
-    </BackendPage>
+    </>
   );
 };
 
 const TopFilter = ({ FilterComponent, filters, setFilters }) => {
   const [openFilter, setOpenFilter] = React.useState(false);
   const [filterInWords, setFilterInWords] = React.useState({});
+
+  console.log('filters', filters);
 
   const setFilterTerms = (terms, filterInWords) => {
     setFilters(terms);
@@ -96,13 +98,13 @@ const TopFilter = ({ FilterComponent, filters, setFilters }) => {
     let output = [];
     for (let item in filters) {
       if (
-        filters[item] &&
+        filters?.[item] &&
         Object.prototype.hasOwnProperty.call(filters, item) &&
         filters[item] !== JSON.stringify('')
       ) {
         output.push(
           <button className="btn badge badge-filters" key={item}>
-            {filterInWords[item] || filters[item]}{' '}
+            {filterInWords?.[item] || filters[item]}{' '}
             <span
               className="icon icon-cancel"
               onClick={() => removeFilterTerm(item)}
@@ -119,10 +121,10 @@ const TopFilter = ({ FilterComponent, filters, setFilters }) => {
   return (
     <section className="container-fluid">
       <div className="row">
-        <div className="col-sm-12">
+        <div className="col-sm-12 mt-3">
           <div>
             <p
-              className="filter-text text-right"
+              className="filter-text text-right font-weight-bold"
               onClick={() => {
                 setOpenFilter((openFilter) => !openFilter);
               }}

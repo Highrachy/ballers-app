@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AddNewButton } from 'components/forms/Button';
+import { PlusIcon } from './Icons';
 
 const TopTitle = ({ children, buttonText, to }) => {
   return (
@@ -9,7 +10,9 @@ const TopTitle = ({ children, buttonText, to }) => {
         {children}
         {buttonText && to && (
           <div className="float-right">
-            <AddNewButton to={to}>{buttonText}</AddNewButton>
+            <AddNewButton to={to}>
+              {<PlusIcon />} {buttonText}
+            </AddNewButton>
           </div>
         )}
       </h4>

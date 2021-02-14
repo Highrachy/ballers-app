@@ -1,13 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { INITIAL_STATE } from './initialStates';
+import { isDevEnvironment } from 'utils/helpers';
 
 // CONTEXT
 let UserContext = React.createContext();
 
 // REDUCERS
 let reducer = (state, action) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevEnvironment()) {
     console.info('%c[USER CONTEXT STATE] state', 'color: blue', state);
     console.info('%c[USER CONTEXT ACTION] action', 'color: green', action);
   }

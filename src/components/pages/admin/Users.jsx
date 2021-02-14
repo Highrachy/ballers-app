@@ -8,21 +8,26 @@ import Humanize from 'humanize-plus';
 import AdminList from 'components/common/AdminList';
 import { Form, Formik } from 'formik';
 import { setInitialValues } from 'components/forms/form-helper';
-import { addAreaSchema } from 'components/forms/schemas/propertySchema';
+import { userFilterSchema } from 'components/forms/schemas/userSchema';
 // import { createSchema } from 'components/forms/schemas/schema-helpers';
 import Select from 'components/forms/Select';
 import { objectToOptions } from 'utils/helpers';
 import Input from 'components/forms/Input';
 import Button from 'components/forms/Button';
 import UserCard from 'components/common/UserCard';
+import BackendPage from 'components/layout/BackendPage';
+import { UsersIcon } from 'components/utils/Icons';
 
 const Users = () => (
-  <AdminList
-    url="user/all"
-    pageName="User"
-    DataComponent={UsersRowList}
-    FilterComponent={AddAreaForm}
-  />
+  <BackendPage>
+    <AdminList
+      endpoint="user/all"
+      pageName="User"
+      DataComponent={UsersRowList}
+      FilterComponent={FilterForm}
+      PageIcon={<UsersIcon />}
+    />
+  </BackendPage>
 );
 
 const UsersRowList = ({ results, offset }) => {
@@ -146,17 +151,18 @@ const UsersRow = ({
   );
 };
 
-const AddAreaForm = ({ setFilterTerms }) => {
+const FilterForm = ({ setFilterTerms }) => {
   return (
     <Formik
-      initialValues={setInitialValues(addAreaSchema)}
+      initialValues={setInitialValues(userFilterSchema)}
       onSubmit={(values, actions) => {
         setFilterTerms(
           { ...values },
           {
-            role: `User Type : ${Humanize.titleCase(
-              Object.keys(USER_TYPES)[values.role]
-            )}`,
+            role: `User Type : ${
+              values.role &&
+              Humanize.titleCase(Object.keys(USER_TYPES)[values.role])
+            }`,
           }
         );
       }}

@@ -20,6 +20,7 @@ const Image = ({
   options,
   watermark,
   serveImageFromCloud,
+  ...otherProps
 }) => {
   const IMAGE_SERVE_URL = '//images.weserv.nl';
 
@@ -58,7 +59,13 @@ const Image = ({
       opacity={0.3}
       coordinate={[30, 30]}
     >
-      <img alt={name} className={classes} src={imgSrc} title={name} />
+      <img
+        alt={name}
+        className={classes}
+        src={imgSrc}
+        title={name}
+        {...otherProps}
+      />
     </ReactImageProcess>
   ) : (
     <img
@@ -66,6 +73,7 @@ const Image = ({
       className={classes}
       src={serveImageFromCloud ? imgSrc : src}
       title={name}
+      {...otherProps}
     />
   );
 };
@@ -79,7 +87,7 @@ Image.propTypes = {
   responsiveImage: PropTypes.bool,
   rounded: PropTypes.bool,
   serveImageFromCloud: PropTypes.bool,
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   watermark: PropTypes.bool,
 };
 
@@ -91,6 +99,7 @@ Image.defaultProps = {
   responsiveImage: true,
   rounded: false,
   serveImageFromCloud: true,
+  src: null,
   watermark: false,
 };
 

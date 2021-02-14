@@ -1,5 +1,5 @@
 import React from 'react';
-import ProfileAvatar from 'assets/img/avatar/profile.png';
+import ProfileAvatar from 'assets/img/placeholder/user.jpg';
 import Image from 'components/utils/Image';
 
 const UserCard = ({ user }) => {
@@ -14,6 +14,8 @@ const UserCard = ({ user }) => {
           className="img-fluid avatar--medium--small"
           src={profileImage}
           title={firstName}
+          name={firstName}
+          width={80}
         />
       </div>
 

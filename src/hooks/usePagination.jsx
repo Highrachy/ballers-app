@@ -4,7 +4,7 @@ import Axios from 'axios';
 import { BASE_API_URL } from 'utils/constants';
 import { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
-import { getError } from 'utils/helpers';
+import { getError, isDevEnvironment } from 'utils/helpers';
 
 export const usePagination = ({ url, limit, page, filters }) => {
   const [toast, setToast] = useToast();
@@ -21,8 +21,15 @@ export const usePagination = ({ url, limit, page, filters }) => {
       .then(function (response) {
         const { status, data } = response;
         // handle success
+        if (isDevEnvironment()) {
+          console.info(
+            '%c[ADMIN LIST] URL',
+            'color: orange',
+            `${BASE_API_URL}/${url}`
+          );
+          console.info('%c[ADMIN LIST DATA]', 'color: red', response?.data);
+        }
         if (status === 200) {
-          console.log('data', data);
           setOutput(data);
         }
       })

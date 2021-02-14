@@ -52,14 +52,14 @@ Button.defaultProps = {
 
 export const AddNewButton = ({ children, to }) => (
   <div className="text-right">
-    <Link to={to} className="btn btn-success btn-wide">
+    <Link to={to} className="btn btn-dark btn-xs btn-wide">
       {children}
     </Link>
   </div>
 );
 
 AddNewButton.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.any.isRequired,
   to: PropTypes.string.isRequired,
 };
 

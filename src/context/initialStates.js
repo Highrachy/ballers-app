@@ -28,10 +28,3 @@ export const INITIAL_STATE = {
   alert: null,
   vendor: {},
 };
-
-// property creation
-// property description
-// offer letter (done)
-// offer letter expiration
-// enquiries and visitation list pagination
-// upload pdf

@@ -9,6 +9,7 @@ import {
   phoneNumber,
   optionalValidation,
   numberValidation,
+  required,
   // OptionalPhoneNumber,
 } from './schema-helpers';
 
@@ -85,6 +86,13 @@ export const preferenceSchema = {
 export const referralInviteSchema = {
   email,
   firstName: optionalValidation(stringValidation('First Name')),
+};
+
+export const userFilterSchema = {
+  firstName: optionalValidation(required('First Name')),
+  lastName: optionalValidation(required('Last Name')),
+  phone: optionalValidation(required('phone')),
+  role: optionalValidation(required('role')),
 };
 
 export const forgotPasswordSchema = { email };

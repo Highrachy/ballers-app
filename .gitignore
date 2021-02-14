@@ -26,3 +26,4 @@ htaccess
 .env
 cypress/videos/*
 cypress/screenshots/*
+todo.md
