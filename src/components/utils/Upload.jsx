@@ -3,15 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
-// import ReactImageProcess from 'react-image-process';
-// import BallersLogo from 'assets/img/logo/ballers-logo.png';
 import { useToast } from './Toast';
 import { getError } from 'utils/helpers';
 import Toast from './Toast';
 import BallersSpinner from './BallersSpinner';
 import { UploadIcon } from './Icons';
-
-// import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
+import Image from './Image';
 
 const Upload = ({
   defaultImage,
@@ -20,16 +17,10 @@ const Upload = ({
   afterUpload,
   maxFileSize,
 }) => {
-  // HOOKS
   const [toast, setToast] = useToast();
   const [loading, setLoading] = React.useState(false);
-
   const [uploadedFile, setUploadedFile] = React.useState(null);
-  // const [image, setImage] = React.useState(
-  //   '//images.weserv.nl/?url=https://ballers-staging.s3.amazonaws.com/5fa0f991628a153738eb43c2/36b9ff40-6bf9-11eb-ae8f-6d3c95e3643e.pdf&trim=10'
-  // );
 
-  // access
   const onFileChange = async (event) => {
     const fileToUpload = event?.target?.files?.[0];
 
@@ -104,13 +95,12 @@ const Upload = ({
     }
   };
 
-  const inputHasAnImage = !!(uploadedFile || defaultImage);
-
-  // https://github.com/lijinke666/react-image-process/blob/abf8db4b81a22cab2a12c2786718ce0029696401/example/example.js
+  const currentImage = uploadedFile || defaultImage;
+  const inputHasAnImage = !!currentImage;
   return (
     <>
       <Toast {...toast} showToastOnly />
-      {uploadedFile && <img src={uploadedFile} alt="test" />}
+      {currentImage && <Image src={currentImage} alt="upload" />}
       <div className="custom-file-upload mt-3">
         <input
           type="file"
@@ -139,21 +129,6 @@ const Upload = ({
     </>
   );
 };
-
-/* <ReactImageProcess
-mode="waterMark"
-waterMarkType="image"
-waterMark={BallersLogo}
-width={60}
-height={40}
-opacity={0.3}
-coordinate={[30, 30]}
->
-<img
-  alt="test"
-  src="//images.weserv.nl/?url=https://ballers-staging.s3.amazonaws.com/5fa0f991628a153738eb43c2/f4334660-6bf6-11eb-9b40-2d2a78a6bf71.jpeg"
-/>
-</ReactImageProcess> */
 
 Upload.propTypes = {
   afterUpload: PropTypes.func,

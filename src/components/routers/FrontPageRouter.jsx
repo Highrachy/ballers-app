@@ -17,6 +17,8 @@ import SearchResult from 'components/pages/frontend/SearchResult';
 import FormComponents from 'components/forms/FormComponents';
 import Invoice from 'components/pages/frontend/Invoice';
 import ReactQuery from 'components/pages/playground/ReactQuery';
+import { isDevEnvironment } from 'utils/helpers';
+import ImagesComponent from 'components/pages/playground/ImagesComponent';
 
 const FrontPageRouter = () => (
   <Router>
@@ -39,8 +41,13 @@ const FrontPageRouter = () => (
     <SearchResult path="search" />
     <Articles path="articles" />
     <Invoice path="payment" />
-    <FormComponents path="forms" />
-    <ReactQuery path="react-query" />
+    {isDevEnvironment() && (
+      <>
+        <FormComponents path="forms" />
+        <ReactQuery path="react-query" />
+        <ImagesComponent path="images" />
+      </>
+    )}
   </Router>
 );
 
