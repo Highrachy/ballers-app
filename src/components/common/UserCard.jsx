@@ -1,5 +1,6 @@
 import React from 'react';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
+import Image from 'components/utils/Image';
 
 const UserCard = ({ user }) => {
   const { firstName, lastName, email, profileImage } = user;
@@ -7,10 +8,11 @@ const UserCard = ({ user }) => {
   return (
     <div className="user-card">
       <div className="user-avatar user-avatar-sm bg-purple">
-        <img
+        <Image
           alt={firstName}
+          defaultImage={ProfileAvatar}
           className="img-fluid avatar--medium--small"
-          src={profileImage ? profileImage.url : ProfileAvatar}
+          src={profileImage}
           title={firstName}
         />
       </div>

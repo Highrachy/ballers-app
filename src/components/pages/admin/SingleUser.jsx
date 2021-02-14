@@ -36,7 +36,6 @@ import Timeline from 'components/common/Timeline';
 import { LogTimeline } from 'components/common/Timeline';
 // import UserCard from 'components/common/UserCard';
 // import { getVerificationState } from '../vendor/setup/AccountSetup';
-import { UploadedDocument } from 'components/utils/UploadImage';
 
 const SingleUser = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -368,10 +367,11 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
         <td colSpan="5" className="text-center">
           <Image
             bordered
-            rounded
+            circle
             alt={user.firstName}
             className={'img-fluid avatar--large'}
-            src={user.profileImage?.url || ProfileAvatar}
+            src={user.profileImage}
+            defaultImage={ProfileAvatar}
             name={user.firstName}
           />
         </td>
@@ -384,7 +384,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
             </td>
             <td colSpan="4">
               {user.vendor?.companyLogo && (
-                <img
+                <Image
                   alt={user.firstName}
                   className="img-fluid dashboard-top-nav__company-logo mb-3"
                   src={user.vendor.companyLogo}
@@ -533,12 +533,15 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           <strong>Identification</strong>
         </td>
         <td>
-          <UploadedDocument
-            document={
-              user.vendor?.identification && user.vendor?.identification.url
-            }
+          <Image
+            src={user.vendor?.identification && user.vendor?.identification.url}
+            name="identification"
+            bordered
           />
-          {user.vendor?.identification && user.vendor?.identification.type}
+          <br />
+          <strong>
+            {user.vendor?.identification && user.vendor?.identification.type}
+          </strong>
         </td>
       </tr>
       <tr>
@@ -546,7 +549,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           <strong>Tax Certificate</strong>
         </td>
         <td>
-          <UploadedDocument document={user.vendor?.taxCertificate} />
+          <Image name="tax" src={user.vendor?.taxCertificate} bordered />
         </td>
       </tr>
       {((user.vendor?.identification && user.vendor?.identification?.url) ||

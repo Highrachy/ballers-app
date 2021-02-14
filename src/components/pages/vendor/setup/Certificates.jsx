@@ -12,7 +12,6 @@ import {
 import { getTokenFromStore } from 'utils/localStorage';
 import { UserContext } from 'context/UserContext';
 import { getError, statusIsSuccessful, valuesToOptions } from 'utils/helpers';
-import UploadImage from 'components/utils/UploadImage';
 import {
   setInitialValues,
   DisplayFormikState,
@@ -22,7 +21,10 @@ import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { certificateSchema } from 'components/forms/schemas/vendorSchema';
 import Select from 'components/forms/Select';
 import { VerificationComments } from './AccountSetup';
-import { UploadedDocument } from 'components/utils/UploadImage';
+import Upload from 'components/utils/Upload';
+import Image from 'components/utils/Image';
+import { FileIcon } from 'components/utils/Icons';
+import { Loading } from 'components/utils/LoadingItems';
 
 const Certificates = () => (
   <BackendPage>
@@ -34,8 +36,8 @@ const Certificates = () => (
 
 export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
   const [toast, setToast] = useToast();
-  const [taxImage, setTaxImage] = React.useState(null);
-  const [certificateImage, setCertificateImage] = React.useState(null);
+  const [taxDocument, setTaxDocument] = React.useState(null);
+  const [certificateDocument, setCertificateDocument] = React.useState(null);
   const { userDispatch, userState } = React.useContext(UserContext);
 
   const entity = userState.vendor?.entity;
@@ -46,6 +48,10 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
       VENDOR_IDENTIFICATION_TYPE.Individual;
   const type = isIndividual ? '' : VENDOR_IDENTIFICATION_TYPE[entity];
 
+  if (!userState._id) {
+    return <Loading Icon={<FileIcon />} text="Loading Information" />;
+  }
+
   return (
     <Formik
       enableReinitialize={true}
@@ -53,14 +59,14 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
       onSubmit={(values, actions) => {
         let payload = {
           vendor: {
-            taxCertificate: taxImage || userState.vendor?.taxCertificate,
+            taxCertificate: taxDocument || userState.vendor?.taxCertificate,
           },
         };
 
-        if (certificateImage) {
+        if (certificateDocument) {
           payload.vendor.identification = {
             type: values.type,
-            url: certificateImage,
+            url: certificateDocument,
           };
         }
 
@@ -99,16 +105,27 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
           <Toast {...toast} />
           <Card className="card-container">
             <section className="row">
-              <div className="col-md-10 px-4">
+              <div className="col-12 px-4">
+                <VerificationComments step="4" />
                 {entity ? (
                   <>
-                    <UploadCertificate
-                      image={
-                        certificateImage ||
+                    <UploadDocument
+                      key="1"
+                      name="tax"
+                      document={taxDocument || userState.vendor?.taxCertificate}
+                      setDocument={setTaxDocument}
+                      title="Tax Certificate"
+                    />
+
+                    <UploadDocument
+                      key="0"
+                      name="certificate"
+                      document={
+                        certificateDocument ||
                         userState.vendor?.identification?.url
                       }
-                      setImage={setCertificateImage}
-                      title={`Upload ${type ? type : 'Company Identification'}`}
+                      setDocument={setCertificateDocument}
+                      title={`${type ? type : 'Company Identification'}`}
                     >
                       {isIndividual && (
                         <Select
@@ -120,12 +137,7 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
                           placeholder="Select Identfication Type"
                         />
                       )}
-                    </UploadCertificate>
-                    <UploadCertificate
-                      image={taxImage || userState.vendor?.taxCertificate}
-                      setImage={setTaxImage}
-                      title="Upload Tax Certificate"
-                    />
+                    </UploadDocument>
 
                     <DisplayFormikState {...props} showAll />
 
@@ -133,7 +145,7 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
                       className="btn-secondary my-4"
                       loading={isSubmitting}
                       onClick={handleSubmit}
-                      diasabled={!(taxImage || certificateImage)}
+                      diasabled={!(taxDocument || certificateDocument)}
                     >
                       Save Changes
                     </Button>
@@ -155,21 +167,32 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
   );
 };
 
-const UploadCertificate = ({ children, title, image, setImage }) => (
-  <Card className="card-container mt-5">
-    <section className="row">
-      <div className="col-md-10 px-4">
-        <h5 className="mb-4">{title}</h5>
-        <VerificationComments step="4" />
-        <UploadedDocument document={image} />
-        {children}
-        <UploadImage
-          afterUpload={(image) => setImage(image)}
-          defaultImage={image}
-        />
+const UploadDocument = ({ children, title, document, name, setDocument }) => {
+  return (
+    <section className="row mt-5 border-bottom">
+      <div className="col-md-10 px-4 pb-5">
+        <h5 className="mb-4">Upload {title}</h5>
+        <Upload
+          afterUpload={(docs) => setDocument(docs)}
+          allowPdf
+          changeText={`Change ${title}`}
+          defaultImage={document}
+          maxFileSize={2_000_000}
+          name={name}
+          uploadText={`Upload ${title}`}
+        >
+          {children}
+          <Image
+            bordered
+            name={`${name}_uploaded_document`}
+            src={document}
+            alt="uploaded document"
+            className="mb-3"
+          />
+        </Upload>
       </div>
     </section>
-  </Card>
-);
+  );
+};
 
 export default Certificates;

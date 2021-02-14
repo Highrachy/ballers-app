@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
-import classNames from 'classnames';
 import { Link } from '@reach/router';
 import { NotificationIcon, ThreeDotsIcon } from 'components/utils/Icons';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { UserContext } from 'context/UserContext';
+import Image from 'components/utils/Image';
 
 const Empty = React.forwardRef(({ children, onClick }, ref) => (
   <div className="top-nav-dropdown" onClick={onClick}>
@@ -16,9 +16,7 @@ const Header = () => {
   let { userState } = React.useContext(UserContext);
   const userName = `${userState.firstName} ${userState.lastName}`;
   const isCompanyLogo =
-    !userState.profileImage.url &&
-    userState.vendor &&
-    userState.vendor.companyLogo;
+    !userState.profileImage && userState.vendor && userState.vendor.companyLogo;
   return (
     <>
       <Navbar
@@ -34,19 +32,21 @@ const Header = () => {
             </Nav.Link>
             <Dropdown>
               <Dropdown.Toggle as={Empty} id="dropdown-basic">
-                <img
-                  alt={userName}
-                  className={classNames(
-                    'img-fluid',
-                    { 'dashboard-top-nav__avatar': !isCompanyLogo },
-                    { 'dashboard-top-nav__company-logo': isCompanyLogo }
-                  )}
+                <Image
+                  name={userName}
+                  className={
+                    isCompanyLogo
+                      ? 'dashboard-top-nav__company-logo'
+                      : 'dashboard-top-nav__avatar'
+                  }
+                  defaultImage={ProfileAvatar}
+                  rounded
                   src={
                     isCompanyLogo
                       ? userState.vendor.companyLogo
-                      : userState.profileImage.url || ProfileAvatar
+                      : userState.profileImage
                   }
-                  title={userName}
+                  options={{ h: 200 }}
                 />{' '}
                 <ThreeDotsIcon />
               </Dropdown.Toggle>

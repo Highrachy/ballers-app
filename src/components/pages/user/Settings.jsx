@@ -27,7 +27,8 @@ import { feedback } from 'components/forms/form-helper';
 import { getError, generateBudgetOptions, ONE_MILLION } from 'utils/helpers';
 import Select from 'components/forms/Select';
 import { useAvailableOptions } from 'hooks/useAvailableOptions';
-import UploadProfileImage from 'components/utils/UploadProfileImage';
+import ProfileAvatar from 'assets/img/avatar/profile.png';
+import Upload from 'components/utils/Upload';
 
 const Settings = () => (
   <BackendPage>
@@ -58,6 +59,7 @@ const Settings = () => (
 const ProfileForm = () => {
   const [toast, setToast] = useToast();
   const { userState, userDispatch } = React.useContext(UserContext);
+  const [image, setImage] = React.useState(null);
 
   return (
     <section className="row">
@@ -71,6 +73,10 @@ const ProfileForm = () => {
           onSubmit={(values, actions) => {
             const payload = { ...values };
 
+            if (image) {
+              payload.profileImage = image;
+            }
+
             Axios.put(`${BASE_API_URL}/user/update`, payload, {
               headers: { Authorization: getTokenFromStore() },
             })
@@ -79,7 +85,7 @@ const ProfileForm = () => {
                 if (status === 200) {
                   userDispatch({
                     type: 'user-profile-update',
-                    user: data.updatedUser,
+                    user: data.user,
                   });
                   setToast({
                     type: 'success',
@@ -104,7 +110,18 @@ const ProfileForm = () => {
             <Form>
               <Toast {...toast} />
 
-              <UploadProfileImage />
+              <div className="text-center">
+                <Upload
+                  defaultImage={userState.profileImage || ProfileAvatar}
+                  uploadText="Upload Image"
+                  changeText="Change Image"
+                  afterUpload={setImage}
+                  maxFileSize={500_000}
+                  imgOptions={{
+                    className: 'avatar-display',
+                  }}
+                />
+              </div>
               <div className="form-row">
                 <Input
                   formGroupClassName="col-md-6"

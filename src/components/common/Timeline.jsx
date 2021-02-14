@@ -1,10 +1,10 @@
 import React from 'react';
-import { getDate } from 'utils/date-helpers';
+import { getDateTime } from 'utils/date-helpers';
 
 const Timeline = ({ children }) => <div className="timeline">{children}</div>;
 
 export const LogTimeline = ({ log }) => {
-  const updatedDate = getDate(log.updatedAt);
+  const updatedDate = getDateTime(log.updatedAt);
   let lists = [];
   for (const property in log) {
     if (property !== '_id' && property !== 'updatedAt')

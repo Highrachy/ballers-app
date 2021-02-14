@@ -24,9 +24,8 @@ import {
 import { getError, statusIsSuccessful, valuesToOptions } from 'utils/helpers';
 import Address from 'components/utils/Address';
 import Select from 'components/forms/Select';
-import UploadImage from 'components/utils/UploadImage';
-import Image from 'components/utils/Image';
 import { VerificationComments } from './AccountSetup';
+import Upload from 'components/utils/Upload';
 
 const CompanyInformation = () => (
   <BackendPage>
@@ -124,7 +123,6 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
 };
 
 const CompanyInfoForm = ({ image, setImage, values }) => {
-  console.log('vendor', values.vendor);
   return (
     <Card className="card-container">
       <section className="row">
@@ -133,13 +131,13 @@ const CompanyInfoForm = ({ image, setImage, values }) => {
 
           <VerificationComments step="1" />
 
-          <div className="mb-5 mt-4">
-            {image && (
-              <Image className="uploaded-image mb-3" name="logo" src={image} />
-            )}
-            <UploadImage
+          <div className="my-4">
+            <Upload
               afterUpload={(image) => setImage(image)}
+              changeText={`Update Company Logo`}
               defaultImage={image}
+              imgOptions={{ options: { h: 100 }, className: 'mb-3' }}
+              uploadText={`Upload Company Logo`}
             />
           </div>
 

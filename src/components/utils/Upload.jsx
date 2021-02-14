@@ -11,11 +11,15 @@ import { UploadIcon } from './Icons';
 import Image from './Image';
 
 const Upload = ({
-  defaultImage,
-  uploadText,
-  changeText,
   afterUpload,
+  allowPdf,
+  changeText,
+  children,
+  defaultImage,
+  imgOptions,
   maxFileSize,
+  name,
+  uploadText,
 }) => {
   const [toast, setToast] = useToast();
   const [loading, setLoading] = React.useState(false);
@@ -26,13 +30,7 @@ const Upload = ({
 
     setLoading(true);
     setToast({ message: null });
-    if (!fileToUpload) {
-      setToast({
-        message: 'Invalid file / No file selected',
-      });
-      setLoading(false);
-      return null;
-    }
+    if (!fileToUpload) return null;
 
     if (fileToUpload.size > maxFileSize) {
       setToast({
@@ -48,9 +46,22 @@ const Upload = ({
 
     if (fileToUpload) {
       const type = fileToUpload.type;
-      const extension = fileToUpload.name.split('.').pop() || 'jpeg';
-      const allowedFormats = ['jpg', 'jpeg', 'gif', 'png', 'pdf'];
-      if (!allowedFormats.includes(extension)) return null;
+      const extension = fileToUpload.name.split('.').pop();
+      let allowedFormats = ['jpg', 'jpeg', 'gif', 'png'];
+
+      if (allowPdf) {
+        allowedFormats.push('pdf');
+      }
+
+      if (!allowedFormats.includes(extension)) {
+        setToast({
+          message: `Unsupported extension. Only ${allowedFormats.join(
+            ', '
+          )} are allowed.`,
+        });
+        setLoading(false);
+        return null;
+      }
 
       const uploadConfig = await Axios.get(`${BASE_API_URL}/user/upload`, {
         params: {
@@ -61,11 +72,11 @@ const Upload = ({
           Authorization: getTokenFromStore(),
         },
       }).catch(function (error) {
-        console.log('error', error);
         setToast({
           message: getError(error),
         });
         setLoading(false);
+        return null;
       });
 
       if (uploadConfig) {
@@ -86,30 +97,41 @@ const Upload = ({
             });
             setLoading(false);
           });
-      } else {
-        setToast({
-          message: 'Unable to upload file',
-        });
-        setLoading(false);
+
+        return null;
       }
+      setToast({
+        message: 'Unable to upload file',
+      });
+      setLoading(false);
     }
   };
 
   const currentImage = uploadedFile || defaultImage;
   const inputHasAnImage = !!currentImage;
+  const accept = `image/*${allowPdf ? ',.pdf' : ''}`;
+  const id = name || 'upload-file';
   return (
     <>
       <Toast {...toast} showToastOnly />
-      {currentImage && <Image src={currentImage} alt="upload" />}
+      {children ||
+        (currentImage && (
+          <Image
+            defaultImage={defaultImage}
+            src={currentImage}
+            name={name || 'uploaded-image'}
+            {...imgOptions}
+          />
+        ))}
       <div className="custom-file-upload mt-3">
         <input
           type="file"
-          id="upload-file"
-          name="myfile"
-          accept="image/*,.pdf"
+          id={id}
+          name={name || 'myfile'}
+          accept={accept}
           onChange={onFileChange}
         />
-        <label htmlFor="upload-file">
+        <label htmlFor={id}>
           {loading ? (
             <>
               <BallersSpinner small /> Uploading File
@@ -132,18 +154,26 @@ const Upload = ({
 
 Upload.propTypes = {
   afterUpload: PropTypes.func,
+  allowPdf: PropTypes.bool,
   changeText: PropTypes.string,
-  uploadText: PropTypes.string,
+  children: PropTypes.any,
   defaultImage: PropTypes.string,
+  imgOptions: PropTypes.bool,
   maxFileSize: PropTypes.number,
+  name: PropTypes.string,
+  uploadText: PropTypes.string,
 };
 
 Upload.defaultProps = {
   afterUpload: () => {},
-  uploadText: null,
-  defaultImage: null,
+  allowPdf: false,
   changeText: null,
-  maxFileSize: 1000000, // 1 MB
+  children: null,
+  defaultImage: null,
+  imgOptions: {},
+  maxFileSize: 1_000_000, // 1 MB
+  name: null,
+  uploadText: null,
 };
 
 export default Upload;

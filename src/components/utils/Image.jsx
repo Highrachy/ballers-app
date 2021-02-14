@@ -4,11 +4,13 @@ import classNames from 'classnames';
 import queryString from 'query-string';
 import ReactImageProcess from 'react-image-process';
 import BallersLogo from 'assets/img/logo/ballers-logo.png';
+import PlaceholderImage from 'assets/img/placeholder/image.png';
 
 // https://github.com/lijinke666/react-image-process/blob/abf8db4b81a22cab2a12c2786718ce0029696401/example/example.js
 
 const Image = ({
   src,
+  defaultImage,
   name,
   className,
   bordered,
@@ -17,14 +19,19 @@ const Image = ({
   circle,
   options,
   watermark,
+  serveImageFromCloud,
 }) => {
   const IMAGE_SERVE_URL = '//images.weserv.nl';
+
   const query = {
     url: src,
     ...options,
   };
 
-  const imgSrc = `${IMAGE_SERVE_URL}?${queryString.stringify(query)}`;
+  const imgSrc = src
+    ? `${IMAGE_SERVE_URL}?${queryString.stringify(query)}`
+    : defaultImage;
+
   const classes = classNames(
     className,
     {
@@ -54,27 +61,36 @@ const Image = ({
       <img alt={name} className={classes} src={imgSrc} title={name} />
     </ReactImageProcess>
   ) : (
-    <img alt={name} className={classes} src={imgSrc} title={name} />
+    <img
+      alt={name}
+      className={classes}
+      src={serveImageFromCloud ? imgSrc : src}
+      title={name}
+    />
   );
 };
 
 Image.propTypes = {
   bordered: PropTypes.bool,
   className: PropTypes.string,
+  defaultImage: PropTypes.any,
   name: PropTypes.string.isRequired,
+  options: PropTypes.object,
   responsiveImage: PropTypes.bool,
   rounded: PropTypes.bool,
+  serveImageFromCloud: PropTypes.bool,
   src: PropTypes.string.isRequired,
-  options: PropTypes.object,
   watermark: PropTypes.bool,
 };
 
 Image.defaultProps = {
   bordered: false,
   className: '',
+  defaultImage: PlaceholderImage,
+  options: {},
   responsiveImage: true,
   rounded: false,
-  options: {},
+  serveImageFromCloud: true,
   watermark: false,
 };
 

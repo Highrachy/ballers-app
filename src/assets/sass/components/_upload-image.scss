@@ -53,3 +53,12 @@
 .img-small {
   height: 2rem;
 }
+
+.avatar-display {
+  height: 12rem;
+  width: 12rem;
+  object-fit: cover;
+  border-radius: 0.4rem;
+  display: inline-block;
+  overflow: hidden;
+}

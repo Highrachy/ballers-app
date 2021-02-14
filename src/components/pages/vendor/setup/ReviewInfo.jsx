@@ -6,7 +6,7 @@ import { UserContext } from 'context/UserContext';
 import { getFormattedAddress } from 'utils/helpers';
 import { navigate } from '@reach/router';
 import { ShowDirectorsTable } from './Signatories';
-import { UploadedDocument } from 'components/utils/UploadImage';
+import Image from 'components/utils/Image';
 
 const ReviewInfo = () => (
   <BackendPage>
@@ -112,10 +112,13 @@ export const ReviewInfoForm = () => {
             <strong>Identification</strong>
           </td>
           <td>
-            <UploadedDocument
-              document={userState.vendor?.identification?.url}
+            <Image
+              src={userState.vendor?.identification?.url}
+              name="identification"
+              bordered
             />
-            {userState.vendor?.identification?.type}
+            <br />
+            <strong>{userState.vendor?.identification?.type}</strong>
           </td>
         </tr>
         <tr>
@@ -123,7 +126,7 @@ export const ReviewInfoForm = () => {
             <strong>Tax Certificate</strong>
           </td>
           <td>
-            <UploadedDocument document={userState.vendor?.taxCertificate} />
+            <Image name="tax" src={userState.vendor?.taxCertificate} bordered />
           </td>
         </tr>
       </CardTableSection>
