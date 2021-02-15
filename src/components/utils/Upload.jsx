@@ -115,10 +115,10 @@ const Upload = ({
     <>
       <Toast {...toast} showToastOnly />
       {children ||
-        (currentImage && (
+        (inputHasAnImage && (
           <Image
             defaultImage={defaultImage}
-            src={currentImage}
+            src={uploadedFile}
             name={name || 'uploaded-image'}
             {...imgOptions}
           />
@@ -139,7 +139,7 @@ const Upload = ({
           ) : (
             <>
               <UploadIcon />{' '}
-              {inputHasAnImage ? (
+              {uploadedFile ? (
                 <>{changeText || 'Change File'}</>
               ) : (
                 <>{uploadText || 'Upload New File'}</>
@@ -158,7 +158,7 @@ Upload.propTypes = {
   changeText: PropTypes.string,
   children: PropTypes.any,
   defaultImage: PropTypes.string,
-  imgOptions: PropTypes.bool,
+  imgOptions: PropTypes.object,
   maxFileSize: PropTypes.number,
   name: PropTypes.string,
   uploadText: PropTypes.string,

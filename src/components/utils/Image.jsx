@@ -49,7 +49,7 @@ const Image = ({
     }
   );
 
-  return watermark ? (
+  return watermark && src ? (
     <ReactImageProcess
       mode="waterMark"
       waterMarkType="image"

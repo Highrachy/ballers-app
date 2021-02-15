@@ -50,8 +50,18 @@
 }
 
 .small-image,
-.img-small {
+.img-small,
+.img-xs {
   height: 2rem;
+}
+.img-sm {
+  height: 10rem;
+}
+.img-md {
+  height: 25rem;
+}
+.img-lg {
+  height: 40rem;
 }
 
 .avatar-display {

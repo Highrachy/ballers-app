@@ -16,9 +16,9 @@ import Button from 'components/forms/Button';
 import BackendPage from 'components/layout/BackendPage';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import { moneyFormatInNaira } from 'utils/helpers';
-// import Humanize from 'humanize-plus';
+import Humanize from 'humanize-plus';
 import Image from 'components/utils/Image';
-import PropertyPlaceholderImage from 'assets/img/placeholder/property.gif';
+import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import { UserContext } from 'context/UserContext';
 import { HOUSE_TYPES, USER_TYPES } from 'utils/constants';
 
@@ -104,10 +104,10 @@ const FilterForm = ({ setFilterTerms }) => {
       initialValues={setInitialValues(propertyFilterSchema)}
       onSubmit={(values, actions) => {
         setFilterTerms(
-          { ...values }
-          // {
-          //   houseType: `House Type : ${Humanize.titleCase(values.houseType)}`,
-          // }
+          { ...values },
+          {
+            houseType: `House Type : ${Humanize.titleCase(values.houseType)}`,
+          }
         );
       }}
       // validationSchema={{}}
@@ -117,7 +117,7 @@ const FilterForm = ({ setFilterTerms }) => {
           <Card className="card-container">
             <section className="row">
               <div className="col-md-10 px-4">
-                <h5 className="mb-4">Filter Users</h5>
+                <h5 className="mb-4">Filter Portfolios</h5>
                 <div className="form-row">
                   <Input
                     formGroupClassName="col-md-6"

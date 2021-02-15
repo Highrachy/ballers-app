@@ -32,9 +32,10 @@ import {
 } from 'utils/helpers';
 import Address from 'components/utils/Address';
 import Select from 'components/forms/Select';
-import UploadImage from 'components/utils/UploadImage';
-import Image from 'components/utils/Image';
 import MapLocation from 'components/utils/MapLocation';
+import Upload from 'components/utils/Upload';
+import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
+import FloorPlanPlaceholderImage from 'assets/img/placeholder/floor-plan.png';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
@@ -50,6 +51,7 @@ const NewPropertyForm = () => {
   const [toast, setToast] = useToast();
   const [location, setLocation] = React.useState(null);
   const [image, setImage] = React.useState(getPropertyImage());
+  const [floorPlans, setFloorPlans] = React.useState(null);
   const { userDispatch } = React.useContext(UserContext);
   const saveImage = (image) => {
     setImage(image);
@@ -68,7 +70,7 @@ const NewPropertyForm = () => {
       }
       onSubmit={(values, actions) => {
         let payload;
-        const payloadData = { ...values, mainImage: image };
+        const payloadData = { ...values, mainImage: image, floorPlans };
 
         payload = location
           ? {
@@ -113,9 +115,10 @@ const NewPropertyForm = () => {
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
-          <PropertyInfoForm {...props} />
+          <PropertyInfoForm image={image} setImage={saveImage} {...props} />
           <PropertyAddress />
           <PropertyImage image={image} setImage={saveImage} />
+          <PropertyFloorPlans setFloorPlans={setFloorPlans} />
           <MapLocation
             setLocation={setLocation}
             mapAddress={getLocationFromAddress(props.values.address)}
@@ -144,14 +147,29 @@ const PropertyInfoForm = () => {
       <section className="row">
         <div className="col-md-10 px-4">
           <h5 className="mb-4">Property Information</h5>
-          <div className="form-row">
-            <Input
-              formGroupClassName="col-md-6"
-              label="Property Name"
-              name="name"
-              placeholder="Property Name"
-            />
+          <Input
+            label="Property Name"
+            name="name"
+            placeholder="Property Name"
+          />
 
+          <div className="form-row">
+            <InputFormat
+              formGroupClassName="col-md-6"
+              label="Price"
+              name="price"
+              placeholder="Price"
+            />
+            <Input
+              type="number"
+              formGroupClassName="col-md-6"
+              label="Units"
+              name="units"
+              placeholder="Available Units"
+            />
+          </div>
+
+          <div className="form-row">
             {displayForm.houseType ? (
               <Input
                 formGroupClassName="col-md-6"
@@ -178,31 +196,22 @@ const PropertyInfoForm = () => {
                 options={valuesToOptions(HOUSE_TYPES)}
               />
             )}
-          </div>
-
-          <div className="form-row">
-            <InputFormat
-              formGroupClassName="col-md-6"
-              label="Price"
-              name="price"
-              placeholder="Price"
-            />
-            <Input
-              type="number"
-              formGroupClassName="col-md-6"
-              label="Units"
-              name="units"
-              placeholder="Available Units"
-            />
-          </div>
-
-          <div className="form-row">
             <Select
               formGroupClassName="col-md-6"
               label="Bedrooms"
               name="bedrooms"
               options={generateNumOptions(9, 'Bedroom')}
               placeholder="Select Bedrooms"
+            />
+          </div>
+
+          <div className="form-row">
+            <Select
+              formGroupClassName="col-md-6"
+              label="Bathrooms"
+              name="bathrooms"
+              options={generateNumOptions(9, 'Bathroom')}
+              placeholder="Select Bathrooms"
             />
             <Select
               formGroupClassName="col-md-6"
@@ -231,22 +240,45 @@ const PropertyInfoForm = () => {
   );
 };
 
-const PropertyImage = ({ image, setImage }) => (
+const PropertyImage = ({ setImage }) => (
   <Card className="card-container mt-5">
     <section className="row">
       <div className="col-md-10 px-4">
         <h5 className="mb-4">Property Image</h5>
-        {image && (
-          <Image
-            className="uploaded-image mb-3"
-            name="property image"
-            src={image}
+        <div className="my-4">
+          <Upload
+            afterUpload={(image) => setImage(image)}
+            changeText={`Update Property Image`}
+            defaultImage={PropertyPlaceholderImage}
+            imgOptions={{ className: 'mb-3', watermark: true }}
+            name="property-image"
+            uploadText={`Upload Property Image`}
           />
-        )}
-        <UploadImage
-          afterUpload={(image) => setImage(image)}
-          defaultImage={image}
-        />
+        </div>
+      </div>
+    </section>
+  </Card>
+);
+
+const PropertyFloorPlans = ({ setFloorPlans }) => (
+  <Card className="card-container mt-5">
+    <section className="row">
+      <div className="col-md-10 px-4">
+        <h5 className="mb-4">Property Floor Plan</h5>
+        <div className="my-4">
+          <Upload
+            afterUpload={(image) => setFloorPlans(image)}
+            changeText={`Update Floor Plan`}
+            defaultImage={FloorPlanPlaceholderImage}
+            imgOptions={{
+              className: 'mb-3 img-md',
+              bordered: true,
+            }}
+            allowPdf
+            name="floor-plans"
+            uploadText={`Upload Floor Plan`}
+          />
+        </div>
       </div>
     </section>
   </Card>

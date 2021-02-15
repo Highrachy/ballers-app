@@ -31,6 +31,7 @@ import DatePicker from 'components/forms/DatePicker';
 import { Loading } from 'components/utils/LoadingItems';
 import { getLongDate } from 'utils/date-helpers';
 import { VisitationIcon } from 'components/utils/Icons';
+import Image from 'components/utils/Image';
 
 const SinglePortfolio = ({ id, assigned }) => {
   const [toast, setToast] = useToast();
@@ -160,54 +161,74 @@ const PropertyImage = ({ property }) => (
   </div>
 );
 
-const PropertyDescription = ({ property }) => (
-  <>
-    <h5 className="mb-4">
-      <span className="text-secondary">
-        <MapPinIcon />
-      </span>{' '}
-      {property.address.street1}
-    </h5>
-    <div className="row">
-      <div className="col-sm-4 col-6">
-        <small>Property Value</small>
-        <h5>{moneyFormatInNaira(property.price)}</h5>
-      </div>
-      <div className="col-sm-4 col-6">
-        <small>House Type</small>
-        <h5>{property.houseType}</h5>
-      </div>
-      <div className="col-sm-2 col-6">
-        <small>Bedroom</small>
-        <h5>{property.bedrooms}</h5>
-      </div>
-      <div className="col-sm-2 col-6">
-        <small>Bathroom</small>
-        <h5>{property.toilets}</h5>
-      </div>
-    </div>
+const PropertyDescription = ({ property }) => {
+  const [showFloorPlansModal, setShowFloorPlansModal] = React.useState(false);
 
-    <h5 className="mt-5">Vendor</h5>
-    <img
-      alt={property?.vendorInfo?.vendor?.companyName || ''}
-      className="img-fluid img-small"
-      src={property?.vendorInfo?.vendor?.companyLogo}
-      title={property?.vendorInfo?.vendor?.companyName}
-    />
+  return (
+    <>
+      <Modal
+        title="Floor Plans"
+        show={showFloorPlansModal}
+        onHide={() => setShowFloorPlansModal(false)}
+        showFooter={false}
+        size="lg"
+      >
+        <Image
+          src={property.floorPlans}
+          name={property.name}
+          options={{ h: 1000 }}
+        />
+      </Modal>
+      <h5 className="mb-4">
+        <span className="text-secondary">
+          <MapPinIcon />
+        </span>{' '}
+        {property.address.street1}
+      </h5>
+      <div className="row">
+        <div className="col-sm-4 col-6">
+          <small>Property Value</small>
+          <h5>{moneyFormatInNaira(property.price)}</h5>
+        </div>
+        <div className="col-sm-4 col-6">
+          <small>House Type</small>
+          <h5>{property.houseType}</h5>
+        </div>
+        <div className="col-sm-2 col-6">
+          <small>Bedroom</small>
+          <h5>{property.bedrooms}</h5>
+        </div>
+        <div className="col-sm-2 col-6">
+          <small>Bathroom</small>
+          <h5>{property.toilets}</h5>
+        </div>
+      </div>
 
-    <h5 className="mt-5">About Property</h5>
-    <p className="">{property.description}</p>
+      <h5 className="mt-5">Vendor</h5>
+      <img
+        alt={property?.vendorInfo?.vendor?.companyName || ''}
+        className="img-fluid img-small"
+        src={property?.vendorInfo?.vendor?.companyLogo}
+        title={property?.vendorInfo?.vendor?.companyName}
+      />
 
-    <div className="my-5">
-      <a href="/" className="btn-link icon-box">
-        View floor plans{' '}
-        <span className="d-inline-block ml-2">
-          <DownloadIcon />
-        </span>
-      </a>
-    </div>
-  </>
-);
+      <h5 className="mt-5">About Property</h5>
+      <p className="">{property.description}</p>
+
+      <div className="my-5">
+        <button
+          onClick={() => setShowFloorPlansModal(false)}
+          className="btn-link icon-box"
+        >
+          View floor plans{' '}
+          <span className="d-inline-block ml-2">
+            <DownloadIcon />
+          </span>
+        </button>
+      </div>
+    </>
+  );
+};
 
 const AssignedPropertySidebar = () => {
   const initiatePayment = () => {

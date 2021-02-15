@@ -14,6 +14,7 @@ export const newPropertySchema = {
   units: positiveNumberValidation('Units'),
   houseType: stringValidation('House Type'),
   bedrooms: positiveNumberValidation('Bedrooms'),
+  bathrooms: positiveNumberValidation('Bathrooms'),
   toilets: positiveNumberValidation('Toilets'),
   description: stringValidation('Description'),
   titleDocument: optionalValidation(required('Title Document')),

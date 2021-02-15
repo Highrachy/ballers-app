@@ -25,6 +25,8 @@ import Upload from 'components/utils/Upload';
 import Image from 'components/utils/Image';
 import { FileIcon } from 'components/utils/Icons';
 import { Loading } from 'components/utils/LoadingItems';
+import CertificatePlaceholderImage from 'assets/img/placeholder/document.png';
+import TaxPlaceholderImage from 'assets/img/placeholder/image.png';
 
 const Certificates = () => (
   <BackendPage>
@@ -110,16 +112,9 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
                 {entity ? (
                   <>
                     <UploadDocument
-                      key="1"
-                      name="tax"
-                      document={taxDocument || userState.vendor?.taxCertificate}
-                      setDocument={setTaxDocument}
-                      title="Tax Certificate"
-                    />
-
-                    <UploadDocument
                       key="0"
                       name="certificate"
+                      defaultImage={CertificatePlaceholderImage}
                       document={
                         certificateDocument ||
                         userState.vendor?.identification?.url
@@ -138,6 +133,15 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
                         />
                       )}
                     </UploadDocument>
+
+                    <UploadDocument
+                      key="1"
+                      name="tax"
+                      defaultImage={TaxPlaceholderImage}
+                      document={taxDocument || userState.vendor?.taxCertificate}
+                      setDocument={setTaxDocument}
+                      title="Tax Certificate"
+                    />
 
                     <DisplayFormikState {...props} showAll />
 
@@ -167,7 +171,14 @@ export const CertificatesForm = ({ moveToNextStep, setStepToast }) => {
   );
 };
 
-const UploadDocument = ({ children, title, document, name, setDocument }) => {
+const UploadDocument = ({
+  children,
+  title,
+  document,
+  defaultImage,
+  name,
+  setDocument,
+}) => {
   return (
     <section className="row mt-5 border-bottom">
       <div className="col-md-10 px-4 pb-5">
@@ -176,7 +187,6 @@ const UploadDocument = ({ children, title, document, name, setDocument }) => {
           afterUpload={(docs) => setDocument(docs)}
           allowPdf
           changeText={`Change ${title}`}
-          defaultImage={document}
           maxFileSize={2_000_000}
           name={name}
           uploadText={`Upload ${title}`}
@@ -186,6 +196,7 @@ const UploadDocument = ({ children, title, document, name, setDocument }) => {
             bordered
             name={`${name}_uploaded_document`}
             src={document}
+            defaultImage={defaultImage}
             alt="uploaded document"
             className="mb-3"
           />
