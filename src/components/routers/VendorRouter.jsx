@@ -20,6 +20,7 @@ const VendorRouter = () => (
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />
     <NewProperty path="portfolios/new" />
+    <NewProperty path="portfolios/edit/:id" />
     <ScheduledVisits path="scheduled-visits" />
     <ViewEnquiry path="enquiry/:id" />
     <AssignedProperties path="assigned-properties" />

@@ -20,7 +20,6 @@ import {
   storePropertyImage,
   getPropertyImage,
 } from 'utils/localStorage';
-import { UserContext } from 'context/UserContext';
 import { newPropertySchema } from 'components/forms/schemas/propertySchema';
 import Textarea from 'components/forms/Textarea';
 import InputFormat from 'components/forms/InputFormat';
@@ -29,6 +28,7 @@ import {
   getLocationFromAddress,
   valuesToOptions,
   generateNumOptions,
+  statusIsSuccessful,
 } from 'utils/helpers';
 import Address from 'components/utils/Address';
 import Select from 'components/forms/Select';
@@ -36,23 +36,54 @@ import MapLocation from 'components/utils/MapLocation';
 import Upload from 'components/utils/Upload';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import FloorPlanPlaceholderImage from 'assets/img/placeholder/floor-plan.png';
+import { navigate } from '@reach/router';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
-const NewProperty = () => (
-  <BackendPage>
-    <div className="container-fluid">
-      <NewPropertyForm />
-    </div>
-  </BackendPage>
-);
-
-const NewPropertyForm = () => {
+const NewProperty = ({ id }) => {
   const [toast, setToast] = useToast();
+  const [property, setProperty] = React.useState(null);
+
+  React.useEffect(() => {
+    id &&
+      Axios.get(`${BASE_API_URL}/property/${id}`, {
+        headers: {
+          Authorization: getTokenFromStore(),
+        },
+      })
+        .then(function (response) {
+          const { status, data } = response;
+          // handle success
+          if (status === 200) {
+            setProperty(data.property);
+            console.log('data.property', data.property);
+          }
+        })
+        .catch(function (error) {
+          setToast({
+            message: getError(error),
+          });
+        });
+  }, [setToast, id]);
+  return (
+    <BackendPage>
+      <div className="container-fluid">
+        <NewPropertyForm
+          toast={toast}
+          setToast={setToast}
+          property={property}
+        />
+      </div>
+    </BackendPage>
+  );
+};
+
+const NewPropertyForm = ({ property, toast, setToast }) => {
   const [location, setLocation] = React.useState(null);
-  const [image, setImage] = React.useState(getPropertyImage());
+  const [image, setImage] = React.useState(
+    property?.mainImage || getPropertyImage()
+  );
   const [floorPlans, setFloorPlans] = React.useState(null);
-  const { userDispatch } = React.useContext(UserContext);
   const saveImage = (image) => {
     setImage(image);
     storePropertyImage(image);
@@ -61,16 +92,17 @@ const NewPropertyForm = () => {
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={
-        ({
-          ...setInitialValues(newPropertySchema),
-          address: setInitialValues(addressSchema),
-        },
-        { address: { country: 'Nigeria' } })
-      }
+      initialValues={{
+        ...setInitialValues(newPropertySchema, { ...property }),
+        address: setInitialValues(addressSchema, { ...property?.address }),
+      }}
       onSubmit={(values, actions) => {
         let payload;
-        const payloadData = { ...values, mainImage: image, floorPlans };
+        const payloadData = {
+          ...values,
+          mainImage: image || property?.mainImage,
+          floorPlans,
+        };
 
         payload = location
           ? {
@@ -82,19 +114,26 @@ const NewPropertyForm = () => {
             }
           : payloadData;
 
-        Axios.post(`${BASE_API_URL}/property/add`, payload, {
+        Axios({
+          method: property?._id ? 'put' : 'post',
+          url: property?._id
+            ? `${BASE_API_URL}/property/update`
+            : `${BASE_API_URL}/property/add`,
+          data: property?._id ? { ...payload, id: property?._id } : payload,
           headers: { Authorization: getTokenFromStore() },
         })
           .then(function (response) {
-            const { status, data } = response;
-            if (status === 201) {
-              userDispatch({
-                type: 'property-added',
-                property: data.updatedUser,
-              });
+            const { status } = response;
+            if (statusIsSuccessful(status)) {
+              if (property?._id) {
+                navigate(`/vendor/portfolio/${property?._id}`);
+                return;
+              }
               setToast({
                 type: 'success',
-                message: `Your property has been successfully added`,
+                message: `Your property has been successfully ${
+                  property?._id ? 'updated' : 'added'
+                }`,
               });
               actions.setSubmitting(false);
               actions.resetForm();
@@ -117,7 +156,11 @@ const NewPropertyForm = () => {
           <Toast {...toast} />
           <PropertyInfoForm image={image} setImage={saveImage} {...props} />
           <PropertyAddress />
-          <PropertyImage image={image} setImage={saveImage} />
+          <PropertyImage
+            image={image}
+            setImage={saveImage}
+            oldImage={property?.mainImage}
+          />
           <PropertyFloorPlans setFloorPlans={setFloorPlans} />
           <MapLocation
             setLocation={setLocation}
@@ -128,7 +171,7 @@ const NewPropertyForm = () => {
             loading={isSubmitting}
             onClick={handleSubmit}
           >
-            Add New Property
+            {property?._id ? 'Update' : 'Add New'} Property
           </Button>
           <DisplayFormikState {...props} showAll />
         </Form>
@@ -240,7 +283,7 @@ const PropertyInfoForm = () => {
   );
 };
 
-const PropertyImage = ({ setImage }) => (
+const PropertyImage = ({ setImage, oldImage }) => (
   <Card className="card-container mt-5">
     <section className="row">
       <div className="col-md-10 px-4">
@@ -252,6 +295,7 @@ const PropertyImage = ({ setImage }) => (
             defaultImage={PropertyPlaceholderImage}
             imgOptions={{ className: 'mb-3', watermark: true }}
             name="property-image"
+            oldImage={oldImage}
             uploadText={`Upload Property Image`}
           />
         </div>

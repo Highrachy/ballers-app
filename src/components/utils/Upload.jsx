@@ -19,6 +19,7 @@ const Upload = ({
   imgOptions,
   maxFileSize,
   name,
+  oldImage,
   uploadText,
 }) => {
   const [toast, setToast] = useToast();
@@ -107,8 +108,10 @@ const Upload = ({
     }
   };
 
-  const currentImage = uploadedFile || defaultImage;
+  const currentImage = uploadedFile || oldImage || defaultImage;
   const inputHasAnImage = !!currentImage;
+  const hasUploadedFile = !!uploadedFile || !!oldImage;
+
   const accept = `image/*${allowPdf ? ',.pdf' : ''}`;
   const id = name || 'upload-file';
   return (
@@ -118,7 +121,7 @@ const Upload = ({
         (inputHasAnImage && (
           <Image
             defaultImage={defaultImage}
-            src={uploadedFile}
+            src={uploadedFile || oldImage}
             name={name || 'uploaded-image'}
             {...imgOptions}
           />
@@ -139,7 +142,7 @@ const Upload = ({
           ) : (
             <>
               <UploadIcon />{' '}
-              {uploadedFile ? (
+              {hasUploadedFile ? (
                 <>{changeText || 'Change File'}</>
               ) : (
                 <>{uploadText || 'Upload New File'}</>
@@ -161,6 +164,7 @@ Upload.propTypes = {
   imgOptions: PropTypes.object,
   maxFileSize: PropTypes.number,
   name: PropTypes.string,
+  oldImage: PropTypes.string,
   uploadText: PropTypes.string,
 };
 
@@ -173,6 +177,7 @@ Upload.defaultProps = {
   imgOptions: {},
   maxFileSize: 1_000_000, // 1 MB
   name: null,
+  oldImage: null,
   uploadText: null,
 };
 

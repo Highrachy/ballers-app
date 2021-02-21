@@ -176,7 +176,7 @@ export const isValidURL = (str) => {
   return !!pattern.test(str);
 };
 
-export const statusIsSuccessful = (status) => status === 200 || status === 201;
+export const statusIsSuccessful = (status) => status >= 200 && status <= 204;
 
 // Manual Waiting
 //  manualWait(() => {

@@ -2,7 +2,7 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import Map from 'components/common/Map';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, USER_TYPES } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
 import { CheckIcon, DownloadIcon, MapPinIcon } from 'components/utils/Icons';
@@ -13,6 +13,8 @@ import { MyPropertyIcon } from 'components/utils/Icons';
 import Image from 'components/utils/Image';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import Modal from 'components/common/Modal';
+import { Link } from '@reach/router';
+import { UserContext } from 'context/UserContext';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -76,8 +78,9 @@ const PropertyImage = ({ property }) => (
       <Image
         defaultImage={PropertyPlaceholderImage}
         src={property.mainImage}
-        alt="Property"
+        name="Property Image"
         className="img-fluid gallery-main-image property-img"
+        watermark
       />
     </div>
   </div>
@@ -85,6 +88,7 @@ const PropertyImage = ({ property }) => (
 
 const PropertyDescription = ({ property }) => {
   const [showFloorPlansModal, setShowFloorPlansModal] = React.useState(false);
+  const { userState } = React.useContext(UserContext);
 
   return (
     <>
@@ -117,17 +121,26 @@ const PropertyDescription = ({ property }) => {
           <h5>{property.houseType}</h5>
         </div>
         <div className="col-sm-2 col-6">
-          <small>Bedroom</small>
-          <h5>{property.bedrooms}</h5>
+          <small>Bathrooms</small>
+          <h5>{property.bathrooms}</h5>
         </div>
         <div className="col-sm-2 col-6">
-          <small>Bathroom</small>
+          <small>Toilets</small>
           <h5>{property.toilets}</h5>
         </div>
       </div>
 
       <h5 className="mt-5">About Property</h5>
       <p className="">{property.description}</p>
+
+      {userState?.role === USER_TYPES.vendor && (
+        <Link
+          className="btn btn-secondary"
+          to={`/vendor/portfolios/edit/${property._id}`}
+        >
+          Edit Property
+        </Link>
+      )}
 
       <div className="my-5">
         <button
