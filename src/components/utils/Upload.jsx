@@ -9,6 +9,7 @@ import Toast from './Toast';
 import BallersSpinner from './BallersSpinner';
 import { UploadIcon } from './Icons';
 import Image from './Image';
+import Humanize from 'humanize-plus';
 
 const Upload = ({
   afterUpload,
@@ -37,9 +38,9 @@ const Upload = ({
       setToast({
         message: `'${
           fileToUpload.name
-        }' is too large, please pick a file smaller than ${
-          maxFileSize / 1000
-        }kb`,
+        }' is too large, please pick a file smaller than ${Humanize.fileSize(
+          maxFileSize
+        )}`,
       });
       setLoading(false);
       return null;
@@ -112,7 +113,10 @@ const Upload = ({
   const inputHasAnImage = !!currentImage;
   const hasUploadedFile = !!uploadedFile || !!oldImage;
 
-  const accept = `image/*${allowPdf ? ',.pdf' : ''}`;
+  const supportedFormats = ['.jpg', '.jpeg', '.gif', '.png'];
+  if (allowPdf) supportedFormats.push('.pdf');
+
+  const accept = supportedFormats.join(',');
   const id = name || 'upload-file';
   return (
     <>
@@ -151,6 +155,10 @@ const Upload = ({
           )}
         </label>
       </div>
+      <div className="small mb-3 text-muted">
+        Supported Formats: {Humanize.oxford(supportedFormats)} files. File size
+        should be less than {Humanize.fileSize(maxFileSize)}
+      </div>
     </>
   );
 };
@@ -175,7 +183,7 @@ Upload.defaultProps = {
   children: null,
   defaultImage: null,
   imgOptions: {},
-  maxFileSize: 1_000_000, // 1 MB
+  maxFileSize: 1_024 * 1_000, // 1 MB
   name: null,
   oldImage: null,
   uploadText: null,

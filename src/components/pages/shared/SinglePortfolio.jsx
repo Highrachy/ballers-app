@@ -15,6 +15,7 @@ import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import Modal from 'components/common/Modal';
 import { Link } from '@reach/router';
 import { UserContext } from 'context/UserContext';
+import { CameraIcon } from 'components/utils/Icons';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -72,7 +73,7 @@ const OwnedPropertyCard = ({ property, toast }) => (
   </div>
 );
 
-const PropertyImage = ({ property }) => (
+export const PropertyImage = ({ property }) => (
   <div className="row">
     <div className="col-sm-12">
       <Image
@@ -83,12 +84,56 @@ const PropertyImage = ({ property }) => (
         watermark
       />
     </div>
+    {true || <Gallery />}
   </div>
 );
 
-const PropertyDescription = ({ property }) => {
+const Gallery = () => (
+  <div className="col-sm-2">
+    <aside className="row gallery-row">
+      <div className="gallery-col col-3 col-md-12">
+        <img
+          src={PropertyPlaceholderImage}
+          alt="Property"
+          className="img-fluid gallery-thumbnails property-img"
+        />
+      </div>
+      <div className="gallery-col col-3 col-md-12">
+        <img
+          src={PropertyPlaceholderImage}
+          alt="Property"
+          className="img-fluid gallery-thumbnails property-img"
+        />
+      </div>
+      <div className="gallery-col col-3 col-md-12">
+        <img
+          src={PropertyPlaceholderImage}
+          alt="Property"
+          className="img-fluid gallery-thumbnails property-img"
+        />
+      </div>
+      <div className="gallery-col col-3 col-md-12">
+        <Link to="/user/gallery" className="overlay overlay__secondary">
+          <img
+            src={PropertyPlaceholderImage}
+            alt="Property"
+            className="img-fluid gallery-thumbnails property-img mb-0"
+          />
+          <span>
+            <CameraIcon /> <br />
+            View Gallery
+          </span>
+        </Link>
+      </div>
+    </aside>
+  </div>
+);
+
+export const PropertyDescription = ({ property }) => {
   const [showFloorPlansModal, setShowFloorPlansModal] = React.useState(false);
   const { userState } = React.useContext(UserContext);
+  const [showPhoneNumber, setShowPhoneNumber] = React.useState(false);
+  console.log('property', property);
 
   return (
     <>
@@ -112,23 +157,38 @@ const PropertyDescription = ({ property }) => {
         {property.address.street1}
       </h5>
       <div className="row">
-        <div className="col-sm-4 col-6">
+        <div className="col-6">
           <small>Property Value</small>
           <h5>{moneyFormatInNaira(property.price)}</h5>
         </div>
-        <div className="col-sm-4 col-6">
+        <div className="col-6">
           <small>House Type</small>
           <h5>{property.houseType}</h5>
         </div>
-        <div className="col-sm-2 col-6">
+        <div className="col-6">
           <small>Bathrooms</small>
           <h5>{property.bathrooms}</h5>
         </div>
-        <div className="col-sm-2 col-6">
+        <div className="col-6">
           <small>Toilets</small>
           <h5>{property.toilets}</h5>
         </div>
       </div>
+
+      <h5 className="mt-5">Vendor</h5>
+      <img
+        alt={property?.vendorInfo?.vendor?.companyName || ''}
+        className="img-fluid img-small"
+        src={property?.vendorInfo?.vendor?.companyLogo}
+        title={property?.vendorInfo?.vendor?.companyName}
+      />
+      {!showPhoneNumber ? (
+        <p onClick={() => setShowPhoneNumber(true)}>
+          Click to reveal Phone Number
+        </p>
+      ) : (
+        <p className="strong">Phone Number: {property?.vendorInfo?.phone}</p>
+      )}
 
       <h5 className="mt-5">About Property</h5>
       <p className="">{property.description}</p>
@@ -142,22 +202,24 @@ const PropertyDescription = ({ property }) => {
         </Link>
       )}
 
-      <div className="my-5">
-        <button
-          onClick={() => setShowFloorPlansModal(true)}
-          className="btn btn-link icon-box"
-        >
-          View floor plans{' '}
-          <span className="d-inline-block ml-2">
-            <DownloadIcon />
-          </span>
-        </button>
-      </div>
+      {true || (
+        <div className="my-5">
+          <button
+            onClick={() => setShowFloorPlansModal(true)}
+            className="btn btn-link icon-box"
+          >
+            View floor plans{' '}
+            <span className="d-inline-block ml-2">
+              <DownloadIcon />
+            </span>
+          </button>
+        </div>
+      )}
     </>
   );
 };
 
-const Neighborhood = () => (
+export const Neighborhood = () => (
   <>
     <h5 className="mt-5">The neighbourhood</h5>
     <div className="row">
@@ -192,7 +254,7 @@ const NeighborhoodCheck = ({ name, color }) => (
   </div>
 );
 
-const PropertyMap = ({ mapLocation }) =>
+export const PropertyMap = ({ mapLocation }) =>
   mapLocation ? (
     mapLocation.latitude &&
     mapLocation.longitude && (

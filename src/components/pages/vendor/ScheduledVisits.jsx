@@ -12,6 +12,7 @@ import { VisitationIcon } from 'components/utils/Icons';
 import { getError } from 'utils/helpers';
 import { getTinyDate } from 'utils/date-helpers';
 import TopTitle from 'components/utils/TopTitle';
+import Button from 'components/forms/Button';
 
 const ScheduledVisits = () => {
   const [toast, setToast] = useToast();
@@ -61,59 +62,111 @@ const AllScheduledVisits = ({ scheduledVisits }) => (
   </LoadItems>
 );
 
-const ScheduledVisitsRowList = ({ scheduledVisits }) => (
-  <div className="container-fluid">
-    <Card className="mt-2">
-      <div className="table-responsive">
-        <table className="table table-border table-hover">
-          <thead>
-            <tr>
-              <th>S/N</th>
-              <th>Visitor Name</th>
-              <th>Contact Info</th>
-              <th>Date</th>
-              <th>Property</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scheduledVisits.map((scheduledVisit, index) => (
-              <ScheduledVisitsRow
-                key={index}
-                number={index + 1}
-                {...scheduledVisit}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
-  </div>
-);
+const ScheduledVisitsRowList = ({ scheduledVisits }) => {
+  const [toast, setToast] = useToast();
+  return (
+    <div className="container-fluid">
+      <Toast {...toast} showToastOnly />
+      <Card className="mt-2">
+        <div className="table-responsive">
+          <table className="table table-border table-hover">
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Visitor Name</th>
+                <th>Contact Info</th>
+                <th>Date</th>
+                <th>Property</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {scheduledVisits.map((scheduledVisit, index) => (
+                <ScheduledVisitsRow
+                  key={index}
+                  number={index + 1}
+                  {...scheduledVisit}
+                  setToast={setToast}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
 
 ScheduledVisitsRowList.propTypes = {
   scheduledVisits: PropTypes.array.isRequired,
 };
 
 const ScheduledVisitsRow = ({
+  _id,
   number,
   visitorName,
   visitorEmail,
   visitorPhone,
   visitDate,
   propertyInfo,
-}) => (
-  <tr>
-    <td>{number}</td>
-    <td>{visitorName}</td>
-    <td>
-      <strong>{visitorPhone}</strong> <br />
-      <small>{visitorEmail}</small>
-    </td>
-    <td>
-      <strong>{getTinyDate(visitDate)}</strong>
-    </td>
-    <td>{propertyInfo[0] && propertyInfo[0].name}</td>
-  </tr>
-);
+  status,
+  setToast,
+}) => {
+  const [loading, setLoading] = React.useState(false);
+  const resolveVisitation = () => {
+    setLoading(true);
+    Axios.put(
+      `${BASE_API_URL}/visitation/resolve`,
+      { visitationId: _id },
+      {
+        headers: { Authorization: getTokenFromStore() },
+      }
+    )
+      .then(function (response) {
+        const { status, data } = response;
+        if (status === 200) {
+          setToast({
+            message: data.message,
+            type: 'success',
+          });
+        }
+        setLoading(false);
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(false);
+      });
+  };
+  return (
+    <tr>
+      <td>{number}</td>
+      <td>{visitorName}</td>
+      <td>
+        <strong>{visitorPhone}</strong> <br />
+        <small>{visitorEmail}</small>
+      </td>
+      <td>
+        <strong>{getTinyDate(visitDate)}</strong>
+      </td>
+      <td>{propertyInfo[0] && propertyInfo[0].name}</td>
+      <td>
+        {' '}
+        {status === 'Pending' ? (
+          <Button
+            className="btn-secondary"
+            loading={loading}
+            onClick={resolveVisitation}
+          >
+            Resolve
+          </Button>
+        ) : (
+          status
+        )}
+      </td>
+    </tr>
+  );
+};
 
 export default ScheduledVisits;

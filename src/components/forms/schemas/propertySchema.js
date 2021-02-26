@@ -31,6 +31,15 @@ export const scheduleTourSchema = {
   visitDate: minDateValidation('Visitation Date', new Date()),
 };
 
+export const updateScheduleTourSchema = {
+  reason: stringValidation('Reason'),
+  visitDate: minDateValidation('Visitation Date', new Date()),
+};
+
+export const cancelScheduleTourSchema = {
+  reason: stringValidation('Reason'),
+};
+
 export const addAreaSchema = {
   area: required('Area'),
   state: required('State'),

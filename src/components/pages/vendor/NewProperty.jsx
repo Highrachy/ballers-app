@@ -88,20 +88,24 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
     setImage(image);
     storePropertyImage(image);
   };
+  console.log('floorPlans', floorPlans);
 
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
         ...setInitialValues(newPropertySchema, { ...property }),
-        address: setInitialValues(addressSchema, { ...property?.address }),
+        address: setInitialValues(addressSchema, {
+          ...property?.address,
+          country: 'Nigeria',
+        }),
       }}
       onSubmit={(values, actions) => {
         let payload;
         const payloadData = {
           ...values,
           mainImage: image || property?.mainImage,
-          floorPlans,
+          floorPlans: [],
         };
 
         payload = location
