@@ -11,7 +11,7 @@ import {
   statusIsSuccessful,
 } from 'utils/helpers';
 import { Card, Tabs, Tab } from 'react-bootstrap';
-import { UsersIcon } from 'components/utils/Icons';
+import { UserIcon } from 'components/utils/Icons';
 import CardTableSection from 'components/common/CardTableSection';
 import { ShowDirectorsTable } from '../vendor/setup/Signatories';
 import Button from 'components/forms/Button';
@@ -72,7 +72,7 @@ const SingleUser = ({ id }) => {
             setToast={setToast}
           />
         ) : (
-          <NoContent text="Loading User" Icon={<UsersIcon />} />
+          <NoContent text="Loading User" Icon={<UserIcon />} />
         )}
       </div>
     </BackendPage>

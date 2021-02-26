@@ -16,7 +16,7 @@ import Input from 'components/forms/Input';
 import Button from 'components/forms/Button';
 import UserCard from 'components/common/UserCard';
 import BackendPage from 'components/layout/BackendPage';
-import { UsersIcon } from 'components/utils/Icons';
+import { UserIcon } from 'components/utils/Icons';
 
 const Users = () => (
   <BackendPage>
@@ -25,7 +25,7 @@ const Users = () => (
       pageName="User"
       DataComponent={UsersRowList}
       FilterComponent={FilterForm}
-      PageIcon={<UsersIcon />}
+      PageIcon={<UserIcon />}
     />
   </BackendPage>
 );

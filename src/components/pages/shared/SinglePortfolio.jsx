@@ -16,6 +16,8 @@ import Modal from 'components/common/Modal';
 import { Link } from '@reach/router';
 import { UserContext } from 'context/UserContext';
 import { CameraIcon } from 'components/utils/Icons';
+import { BathIcon } from 'components/utils/Icons';
+import { ToiletIcon } from 'components/utils/Icons';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -166,12 +168,15 @@ export const PropertyDescription = ({ property }) => {
           <h5>{property.houseType}</h5>
         </div>
         <div className="col-6">
-          <small>Bathrooms</small>
-          <h5>{property.bathrooms}</h5>
+          <h5>
+            <BathIcon />
+            {property.bathrooms}
+          </h5>
         </div>
         <div className="col-6">
-          <small>Toilets</small>
-          <h5>{property.toilets}</h5>
+          <h5>
+            <ToiletIcon /> {property.toilets}
+          </h5>
         </div>
       </div>
 

@@ -1,687 +1,93 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {
+  FiGrid,
+  FiHome,
+  FiPlus,
+  FiMessageSquare,
+  FiUploadCloud,
+  FiHeart,
+  FiMenu,
+  FiSettings,
+  FiCamera,
+  FiFolder,
+  FiArchive,
+  FiFileText,
+  FiServer,
+  FiGift,
+  FiRepeat,
+  FiHelpCircle,
+  FiChevronRight,
+  FiArrowLeft,
+  FiArrowDown,
+  FiBell,
+  FiGitBranch,
+  FiFacebook,
+  FiTwitter,
+  FiBookOpen,
+  FiX,
+  FiMapPin,
+  FiCheck,
+  FiDownload,
+  FiClipboard,
+  FiSearch,
+  FiUser,
+} from 'react-icons/fi';
+import {
+  FaCheckCircle,
+  FaInfoCircle,
+  FaExclamationTriangle,
+  FaFileContract,
+  FaTimesCircle,
+  FaBath,
+  FaToilet,
+} from 'react-icons/fa';
+import { BsThreeDots } from 'react-icons/bs';
+import { VscVerified } from 'react-icons/vsc';
+import { BiBed } from 'react-icons/bi';
 
-export const HomeIcon = () => (
-  <svg
-    width={24}
-    height={24}
-    viewBox="0 0 28 28"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M18.5 24.5V18.5H24.5L24.5015 24.5H18.5ZM24.5 15.5H18.5C16.8455 15.5 15.5 16.8455 15.5 18.5V24.5C15.5 26.1545 16.8455 27.5 18.5 27.5H24.5C26.1545 27.5 27.5 26.1545 27.5 24.5V18.5C27.5 16.8455 26.1545 15.5 24.5 15.5ZM3.5 24.5V18.5H9.5L9.5015 24.5H3.5ZM9.5 15.5H3.5C1.8455 15.5 0.5 16.8455 0.5 18.5V24.5C0.5 26.1545 1.8455 27.5 3.5 27.5H9.5C11.1545 27.5 12.5 26.1545 12.5 24.5V18.5C12.5 16.8455 11.1545 15.5 9.5 15.5ZM18.5 9.5V3.5H24.5L24.5015 9.5H18.5ZM24.5 0.5H18.5C16.8455 0.5 15.5 1.8455 15.5 3.5V9.5C15.5 11.1545 16.8455 12.5 18.5 12.5H24.5C26.1545 12.5 27.5 11.1545 27.5 9.5V3.5C27.5 1.8455 26.1545 0.5 24.5 0.5ZM3.5 9.5V3.5H9.5L9.5015 9.5H3.5ZM9.5 0.5H3.5C1.8455 0.5 0.5 1.8455 0.5 3.5V9.5C0.5 11.1545 1.8455 12.5 3.5 12.5H9.5C11.1545 12.5 12.5 11.1545 12.5 9.5V3.5C12.5 1.8455 11.1545 0.5 9.5 0.5Z"
-    />
-  </svg>
-);
-
-export const MyPropertyIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-home"
-  >
-    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-    <polyline points="9 22 9 12 15 12 15 22" />
-  </svg>
-);
-
-export const PlusIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-plus"
-  >
-    <line x1={12} y1={5} x2={12} y2={19} />
-    <line x1={5} y1={12} x2={19} y2={12} />
-  </svg>
-);
-
-export const UploadIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-upload-cloud"
-  >
-    <polyline points="16 16 12 12 8 16" />
-    <line x1={12} y1={12} x2={12} y2={21} />
-    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
-    <polyline points="16 16 12 12 8 16" />
-  </svg>
-);
-
-export const MessageIcon = () => (
-  <svg
-    width={24}
-    height={24}
-    viewBox="0 0 31 31"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M7.5002 15.4989C7.5002 14.6709 8.1722 13.9989 9.0002 13.9989C9.8282 13.9989 10.5002 14.6709 10.5002 15.4989C10.5002 16.3269 9.8282 16.9989 9.0002 16.9989C8.1722 16.9989 7.5002 16.3269 7.5002 15.4989ZM15.0002 13.9989C14.1722 13.9989 13.5002 14.6709 13.5002 15.4989C13.5002 16.3269 14.1722 16.9989 15.0002 16.9989C15.8282 16.9989 16.5002 16.3269 16.5002 15.4989C16.5002 14.6709 15.8282 13.9989 15.0002 13.9989ZM21.0002 13.9989C20.1722 13.9989 19.5002 14.6709 19.5002 15.4989C19.5002 16.3269 20.1722 16.9989 21.0002 16.9989C21.8282 16.9989 22.5002 16.3269 22.5002 15.4989C22.5002 14.6709 21.8282 13.9989 21.0002 13.9989ZM26.8478 17.4412C26.0873 22.3222 22.1528 26.3707 17.2793 27.2842C14.9258 27.7282 12.5288 27.4747 10.3538 26.5537C9.73734 26.2927 9.09984 26.1607 8.47434 26.1607C8.18934 26.1607 7.90734 26.1877 7.62984 26.2432L3.41184 27.0862L4.25634 22.8607C4.43334 21.9832 4.32534 21.0442 3.94584 20.1457C3.02484 17.9707 2.77284 15.5752 3.21534 13.2202C4.12884 8.34673 8.17584 4.41223 13.0583 3.65173C16.9433 3.04723 20.7428 4.27123 23.4848 7.01323C26.2283 9.75673 27.4538 13.5577 26.8478 17.4412ZM25.6074 4.89226C22.1799 1.46626 17.4399 -0.0622431 12.5964 0.686257C6.4809 1.64026 1.4109 6.56626 0.2664 12.6668C-0.2856 15.6038 0.0324003 18.5948 1.1829 21.3143C1.3284 21.6608 1.3734 21.9833 1.3164 22.2728L0.0294003 28.7048C-0.0695997 29.1968 0.0849003 29.7053 0.4404 30.0593C0.7239 30.3443 1.1064 30.4988 1.5009 30.4988C1.5984 30.4988 1.6959 30.4898 1.7949 30.4703L8.2194 29.1848C8.5884 29.1143 8.9454 29.2178 9.1839 29.3168C11.9064 30.4673 14.8974 30.7838 17.8314 30.2333C23.9334 29.0888 28.8594 24.0188 29.8134 17.9033C30.5664 13.0628 29.0349 8.31976 25.6074 4.89226Z"
-    />
-  </svg>
-);
-
-export const LoveIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-heart"
-  >
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-  </svg>
-);
-
-export const MenuIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-menu"
-  >
-    <line x1={3} y1={12} x2={21} y2={12} />
-    <line x1={3} y1={6} x2={21} y2={6} />
-    <line x1={3} y1={18} x2={21} y2={18} />
-  </svg>
-);
-
-export const ProfileIcon = () => (
-  <svg
-    width={24}
-    height={24}
-    viewBox="0 0 31 30"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M4.60416 14.4331C6.27816 15.0076 7.61166 16.4086 8.16966 18.1846L8.22966 18.3646C8.86866 20.2486 8.60916 22.2766 7.53816 23.7976C7.34316 24.0736 7.38666 24.4036 7.59216 24.5596L10.7002 26.9206C10.8097 27.0031 10.9162 27.0031 10.9822 26.9956C11.0572 26.9836 11.1667 26.9431 11.2552 26.8171L11.6017 26.3251C12.6352 24.8596 14.3002 23.9551 16.0582 23.9041C18.0322 23.8636 19.8052 24.7681 20.9092 26.3626L21.0862 26.6191C21.1747 26.7451 21.2827 26.7871 21.3592 26.7991C21.4252 26.8126 21.5332 26.8081 21.6412 26.7241L24.7327 24.3916C24.9487 24.2296 24.9967 23.8831 24.8362 23.6506L24.4462 23.0881C23.4412 21.6361 23.1427 19.7521 23.6482 18.0496C24.1972 16.1956 25.5937 14.7286 27.3862 14.1286L27.6877 14.0266C27.9292 13.9471 28.0597 13.6471 27.9742 13.3711L26.7937 9.58962C26.7382 9.41262 26.6242 9.33312 26.5612 9.30012C26.4712 9.25362 26.3737 9.24612 26.2807 9.27762L25.7707 9.44712C24.0262 10.0276 22.1017 9.71262 20.6242 8.60112L20.4622 8.47962C19.0582 7.42362 18.2227 5.72112 18.2287 3.92712L18.2317 3.50712C18.2317 3.30762 18.1372 3.18312 18.0802 3.12612C18.0262 3.07062 17.9347 3.00462 17.8057 3.00462L13.9852 3.00012C13.7512 3.00012 13.5607 3.22362 13.5592 3.49962L13.5577 3.86262C13.5502 5.68512 12.6967 7.41912 11.2747 8.50362L11.0812 8.65062C9.51666 9.84012 7.47666 10.1761 5.62866 9.54612C5.55816 9.52212 5.49216 9.52662 5.42916 9.55962C5.38116 9.58362 5.29416 9.64512 5.25216 9.78162L4.02666 13.6756C3.93816 13.9591 4.08366 14.2546 4.35816 14.3491L4.60416 14.4331ZM10.9207 30.0001C10.1917 30.0001 9.48368 29.7631 8.88668 29.3086L5.77868 26.9491C4.29368 25.8241 3.96518 23.6596 5.04518 22.1251C5.60618 21.3301 5.72168 20.3086 5.39168 19.3396L5.30918 19.0876C5.03468 18.2146 4.40768 17.5366 3.63218 17.2711H3.63068L3.38618 17.1856C1.55918 16.5601 0.58418 14.6236 1.16468 12.7756L2.38868 8.88312C2.66618 8.00262 3.26468 7.29162 4.07468 6.88212C4.86668 6.48312 5.76218 6.42162 6.59918 6.70812C7.49768 7.01412 8.49518 6.84762 9.26468 6.26262L9.45818 6.11562C10.1422 5.59362 10.5547 4.74612 10.5577 3.85062L10.5592 3.48912C10.5667 1.56312 12.1042 0.00012207 13.9837 0.00012207H13.9897L17.8102 0.00462207C18.7132 0.00612207 19.5652 0.363122 20.2072 1.00962C20.8717 1.67712 21.2347 2.56962 21.2317 3.52212L21.2287 3.94062C21.2257 4.78962 21.6142 5.59212 22.2697 6.08412L22.4302 6.20562C23.1187 6.72312 24.0157 6.87162 24.8212 6.60162L25.3297 6.43212C26.1952 6.14412 27.1162 6.21462 27.9277 6.63012C28.7602 7.05612 29.3752 7.78962 29.6572 8.69712L30.8377 12.4786C31.4077 14.3056 30.4207 16.2766 28.6402 16.8721L28.3387 16.9726C27.4747 17.2636 26.7952 17.9836 26.5237 18.9016C26.2747 19.7431 26.4187 20.6686 26.9122 21.3796L27.3022 21.9421C28.3732 23.4901 28.0312 25.6621 26.5402 26.7856L23.4487 29.1196C22.7062 29.6806 21.7957 29.9071 20.8822 29.7616C19.9612 29.6131 19.1572 29.1031 18.6187 28.3261L18.4417 28.0681C17.9167 27.3121 17.0767 26.8531 16.1962 26.9026C15.3142 26.9266 14.5522 27.3451 14.0542 28.0531L13.7077 28.5451C13.1647 29.3146 12.3592 29.8171 11.4427 29.9611C11.2672 29.9881 11.0932 30.0001 10.9207 30.0001ZM16 12.75C14.7595 12.75 13.75 13.7595 13.75 15C13.75 16.2405 14.7595 17.25 16 17.25C17.2405 17.25 18.25 16.2405 18.25 15C18.25 13.7595 17.2405 12.75 16 12.75ZM16 20.25C13.105 20.25 10.75 17.895 10.75 15C10.75 12.105 13.105 9.75 16 9.75C18.895 9.75 21.25 12.105 21.25 15C21.25 17.895 18.895 20.25 16 20.25Z"
-    />
-  </svg>
-);
-
-export const CameraIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-camera"
-  >
-    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-    <circle cx={12} cy={13} r={4} />
-  </svg>
-);
-
-export const CompanyInfoIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-folder"
-  >
-    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-  </svg>
-);
-
-export const BankInfoIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-archive"
-  >
-    <polyline points="21 8 21 21 3 21 3 8" />
-    <rect x={1} y={3} width={22} height={5} />
-    <line x1={10} y1={12} x2={14} y2={12} />
-  </svg>
-);
-
-export const FileIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-file-text"
-  >
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-    <polyline points="14 2 14 8 20 8" />
-    <line x1={16} y1={13} x2={8} y2={13} />
-    <line x1={16} y1={17} x2={8} y2={17} />
-    <polyline points="10 9 9 9 8 9" />
-  </svg>
-);
-
-export const AssignedPropertyIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-server"
-  >
-    <rect x={2} y={2} width={20} height={8} rx={2} ry={2} />
-    <rect x={2} y={14} width={20} height={8} rx={2} ry={2} />
-    <line x1={6} y1={6} x2="6.01" y2={6} />
-    <line x1={6} y1={18} x2="6.01" y2={18} />
-  </svg>
-);
-
-export const ReferIcon = ({ width, height }) => (
-  <svg
-    width={width}
-    height={height}
-    viewBox="0 0 28 28"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M15.5 24.5H22.25V18.5H15.5V24.5ZM5.75 24.5H12.5V18.5H5.75V24.5ZM3.5 9.8C3.5 9.6755 3.5195 9.575 3.539 9.5H8.2145H12.5V15.5H3.539C3.5195 15.425 3.5 15.3245 3.5 15.2V9.8ZM6.5 5C6.5 4.172 7.2695 3.5 8.2145 3.5C10.1 3.5 11.255 5.135 11.891 6.5H8.2145C7.2695 6.5 6.5 5.828 6.5 5ZM19.7857 3.5C20.7307 3.5 21.5002 4.172 21.5002 5C21.5002 5.828 20.7307 6.5 19.7857 6.5H16.1002C16.7302 5.135 17.8822 3.5 19.7857 3.5ZM24.5 9.8V15.2C24.5 15.3245 24.4805 15.425 24.461 15.5H15.5V9.5H19.7855H24.461C24.4805 9.575 24.5 9.6755 24.5 9.8ZM24.8 6.5H24.2105C24.3875 6.029 24.5 5.5295 24.5 5C24.5 2.519 22.385 0.5 19.7855 0.5C16.9025 0.5 15.0935 2.2985 14 4.0955C12.9065 2.2985 11.0975 0.5 8.2145 0.5C5.615 0.5 3.5 2.519 3.5 5C3.5 5.5295 3.614 6.029 3.7895 6.5H3.2C1.6865 6.5 0.5 7.9505 0.5 9.8V15.2C0.5 16.8605 1.46 18.1895 2.75 18.446V24.9995C2.75 26.378 3.9695 27.5 5.468 27.5H22.5305C24.0305 27.5 25.25 26.378 25.25 24.9995V18.446C26.54 18.1895 27.5 16.8605 27.5 15.2V9.8C27.5 7.9505 26.3135 6.5 24.8 6.5Z"
-    />
-  </svg>
-);
-
-ReferIcon.propTypes = {
-  height: PropTypes.number,
-  weight: PropTypes.number,
-};
-
-ReferIcon.defaultProps = {
-  height: 24,
-  width: 24,
-};
-
-export const TransactionIcon = () => (
-  <svg
-    width={24}
-    height={24}
-    viewBox="0 0 32 28"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M30.5244 11.4891C30.5136 11.5129 30.5027 11.5367 30.4925 11.561C30.4822 11.5861 30.4741 11.6123 30.466 11.6385C30.4529 11.681 30.4398 11.7233 30.4175 11.7605C30.3732 11.834 30.3152 11.8958 30.257 11.9577C30.2404 11.9754 30.2238 11.993 30.2075 12.011C30.1894 12.0298 30.1733 12.0504 30.1573 12.071C30.1349 12.0997 30.1125 12.1284 30.0845 12.152C30.0005 12.2206 29.9034 12.2683 29.8067 12.3158C29.7998 12.3192 29.7929 12.3226 29.786 12.326C29.7656 12.3359 29.7461 12.3484 29.7267 12.3609C29.699 12.3786 29.6713 12.3964 29.6405 12.407C29.4785 12.467 29.306 12.5 29.1275 12.5C29.0465 12.5 28.9625 12.494 28.88 12.479L22.505 11.4215C21.6875 11.2865 21.1355 10.514 21.2705 9.6965C21.4055 8.8805 22.1765 8.321 22.9955 8.4635L25.4615 8.8715C23.594 5.5925 20.0285 3.5 16.1045 3.5C11.666 3.5 7.75552 6.077 6.14002 10.0625C5.90452 10.6475 5.34202 11 4.74952 11C4.56202 11 4.37152 10.9655 4.18702 10.8905C3.41902 10.58 3.04852 9.7055 3.36052 8.9375C5.43652 3.812 10.439 0.5 16.1045 0.5C21.2225 0.5 25.874 3.305 28.2215 7.682L28.775 4.7225C28.928 3.9095 29.714 3.371 30.5255 3.527C31.34 3.6785 31.877 4.463 31.724 5.2775L30.6005 11.2775C30.5861 11.354 30.5553 11.4215 30.5244 11.4891ZM25.8603 17.9378C26.1708 17.1683 27.0468 16.7993 27.8133 17.1098C28.5813 17.4203 28.9518 18.2948 28.6398 19.0628C26.5638 24.1883 21.5613 27.5003 15.8958 27.5003C10.7778 27.5003 6.12634 24.6953 3.77884 20.3183L3.22384 23.2763C3.09034 23.9978 2.46034 24.5003 1.75084 24.5003C1.65934 24.5003 1.56634 24.4913 1.47334 24.4733C0.658836 24.3218 0.123336 23.5373 0.276336 22.7228L1.39984 16.7228C1.41124 16.6639 1.43649 16.6116 1.46185 16.5591C1.47653 16.5287 1.49124 16.4982 1.50334 16.4663C1.5152 16.4364 1.52555 16.4055 1.53593 16.3745C1.55837 16.3075 1.58089 16.2403 1.61884 16.1828C1.64097 16.1487 1.66992 16.1214 1.69904 16.0939C1.71728 16.0767 1.73559 16.0594 1.75234 16.0403C1.76555 16.025 1.77861 16.0096 1.79166 15.9942C1.86305 15.9101 1.93379 15.8267 2.02384 15.7658C2.03268 15.7594 2.04324 15.7555 2.05369 15.7517C2.06273 15.7484 2.07168 15.7452 2.07934 15.7403C2.22484 15.6458 2.38084 15.5723 2.55334 15.5348C2.56384 15.5324 2.57478 15.533 2.58569 15.5336C2.59503 15.5342 2.60434 15.5347 2.61334 15.5333C2.77834 15.5063 2.94484 15.4898 3.12034 15.5198L9.49534 16.5788C10.3128 16.7123 10.8648 17.4863 10.7298 18.3038C10.6083 19.0373 9.97234 19.5578 9.25084 19.5578C9.16984 19.5578 9.08734 19.5518 9.00484 19.5368L6.53884 19.1288C8.40634 22.4078 11.9718 24.5003 15.8958 24.5003C20.3343 24.5003 24.2448 21.9233 25.8603 17.9378Z"
-    />
-  </svg>
-);
-
-export const QuestionMarkIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-help-circle"
-  >
-    <circle cx={12} cy={12} r={10} />
-    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-    <line x1={12} y1={17} x2="12.01" y2={17} />
-  </svg>
-);
-
-export const RightChevronIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-chevron-right"
-  >
-    <polyline points="9 18 15 12 9 6" />
-  </svg>
-);
-
-export const ArrowLeftIcon = () => (
-  <svg
-    width={13}
-    height={9}
-    viewBox="0 0 13 9"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M12.9926 3.99273V5.49273H3.37141L5.8033 7.92462L4.74264 8.98528L0.5 4.74264L4.74264 0.5L5.8033 1.56066L3.37123 3.99273L12.9926 3.99273Z"
-      fill="#2DCA73"
-    />
-  </svg>
-);
-
-export const ArrowDownIcon = () => (
-  <svg
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M11.9998 15.5C11.7438 15.5 11.4878 15.402 11.2928 15.207L7.29276 11.207C6.90176 10.816 6.90176 10.184 7.29276 9.79301C7.68376 9.40201 8.31576 9.40201 8.70676 9.79301L12.0118 13.098L15.3048 9.91801C15.7038 9.53501 16.3348 9.54601 16.7188 9.94301C17.1028 10.34 17.0918 10.974 16.6948 11.357L12.6948 15.219C12.4998 15.407 12.2498 15.5 11.9998 15.5Z"
-      fill="#161D3F"
-    />
-  </svg>
-);
-
-export const NotificationIcon = () => (
-  <svg
-    width={18}
-    height={20}
-    viewBox="0 0 18 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M2.51465 13.9998L3.69465 12.8178C4.07265 12.4398 4.28065 11.9378 4.28065 11.4038V6.72683C4.28065 5.36983 4.87065 4.07283 5.90065 3.17083C6.93865 2.26083 8.26065 1.86083 9.63765 2.04183C11.9646 2.35083 13.7196 4.45483 13.7196 6.93683V11.4038C13.7196 11.9378 13.9276 12.4398 14.3046 12.8168L15.4857 13.9998H2.51465ZM10.9995 16.3408C10.9995 17.2398 10.0835 17.9998 8.99951 17.9998C7.91551 17.9998 6.99951 17.2398 6.99951 16.3408V15.9998H10.9995V16.3408ZM17.5206 13.2078L15.7196 11.4038V6.93683C15.7196 3.45583 13.2176 0.498833 9.8996 0.0598333C7.9776 -0.196167 6.0376 0.390833 4.5826 1.66683C3.1186 2.94883 2.2806 4.79283 2.2806 6.72683L2.2796 11.4038L0.478603 13.2078C0.00960291 13.6778 -0.129397 14.3768 0.124603 14.9898C0.379603 15.6038 0.972603 15.9998 1.6366 15.9998H4.9996V16.3408C4.9996 18.3588 6.7936 19.9998 8.9996 19.9998C11.2056 19.9998 12.9996 18.3588 12.9996 16.3408V15.9998H16.3626C17.0266 15.9998 17.6186 15.6038 17.8726 14.9908C18.1276 14.3768 17.9896 13.6768 17.5206 13.2078Z"
-      fill="#161D3F"
-    />
-  </svg>
-);
-
-export const ThreeDotsIcon = () => (
-  <svg
-    width={4}
-    height={18}
-    viewBox="0 0 4 18"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M2 4C3.104 4 4 3.104 4 2C4 0.896 3.104 0 2 0C0.896 0 0 0.896 0 2C0 3.104 0.896 4 2 4ZM2 7C0.896 7 0 7.896 0 9C0 10.104 0.896 11 2 11C3.104 11 4 10.104 4 9C4 7.896 3.104 7 2 7ZM0 16C0 14.896 0.896 14 2 14C3.104 14 4 14.896 4 16C4 17.104 3.104 18 2 18C0.896 18 0 17.104 0 16Z"
-      fill="#161D3F"
-    />
-  </svg>
-);
-
-export const VisitationIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-git-branch"
-  >
-    <line x1={6} y1={3} x2={6} y2={15} />
-    <circle cx={18} cy={6} r={3} />
-    <circle cx={6} cy={18} r={3} />
-    <path d="M18 9a9 9 0 0 1-9 9" />
-  </svg>
-);
-
-export const RightArrowIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-chevron-right"
-  >
-    <polyline points="9 18 15 12 9 6" />
-  </svg>
-);
-
-export const SuccessIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-check-circle"
-  >
-    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-    <polyline points="22 4 12 14.01 9 11.01" />
-  </svg>
-);
-
-export const InfoIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-alert-circle"
-  >
-    <circle cx={12} cy={12} r={10} />
-    <line x1={12} y1={8} x2={12} y2={12} />
-    <line x1={12} y1={16} x2="12.01" y2={16} />
-  </svg>
-);
-
-export const ErrorIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-x-circle"
-  >
-    <circle cx={12} cy={12} r={10} />
-    <line x1={15} y1={9} x2={9} y2={15} />
-    <line x1={9} y1={9} x2={15} y2={15} />
-  </svg>
-);
-
-export const WarningIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-alert-triangle"
-  >
-    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-    <line x1={12} y1={9} x2={12} y2={13} />
-    <line x1={12} y1={17} x2="12.01" y2={17} />
-  </svg>
-);
-
-export const FacebookIcon = () => (
-  <svg
-    width={16}
-    height={16}
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M10.0001 0.0415039C4.47724 0.0415039 0 4.51874 0 10.0416C0 14.9949 3.60522 19.0971 8.33225 19.8914V12.1278H5.91994V9.33405H8.33225V7.27401C8.33225 4.88377 9.79213 3.58123 11.9247 3.58123C12.9461 3.58123 13.8238 3.65734 14.0786 3.69086V6.18929L12.5995 6.19001C11.44 6.19001 11.2165 6.7409 11.2165 7.54957V9.33262H13.9832L13.6223 12.1264H11.2165V19.9582C16.1642 19.3561 20 15.1494 20 10.0387C20 4.51874 15.5228 0.0415039 10.0001 0.0415039Z"
-      fill="#161D3F"
-    />
-  </svg>
-);
-
-export const TwitterIcon = () => (
-  <svg
-    width={16}
-    height={18}
-    viewBox="0 0 20 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M19.6169 0.00896646C18.763 0.611275 17.8176 1.07195 16.8171 1.37324C16.28 0.755757 15.5663 0.318104 14.7725 0.119469C13.9786 -0.0791667 13.1429 -0.0292013 12.3784 0.262607C11.6138 0.554416 10.9573 1.07399 10.4977 1.75105C10.0381 2.42812 9.7975 3.23001 9.80847 4.04827V4.93995C8.24146 4.98058 6.68873 4.63305 5.28855 3.92829C3.88838 3.22354 2.68424 2.18345 1.78336 0.900645C1.78336 0.900645 -1.78336 8.92575 6.24175 12.4925C4.40536 13.739 2.21775 14.364 0 14.2758C8.02511 18.7342 17.8336 14.2758 17.8336 4.02152C17.8328 3.77315 17.8089 3.52539 17.7622 3.28143C18.6723 2.38395 19.3145 1.25082 19.6169 0.00896646Z"
-      fill="#161D3F"
-    />
-  </svg>
-);
-
-export const ArticlesIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-book-open"
-  >
-    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-  </svg>
-);
-
-export const CloseIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-x"
-  >
-    <line x1={18} y1={6} x2={6} y2={18} />
-    <line x1={6} y1={6} x2={18} y2={18} />
-  </svg>
-);
-
-export const CertifyIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="white"
-    stroke="currentColor"
-    strokeWidth={1}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M22.41,10.59,20.36,8.54V5.63a2,2,0,0,0-2-2H15.46l-2.05-2a2,2,0,0,0-2.82,0L8.54,3.64H5.63a2,2,0,0,0-2,2V8.54l-2,2.05A2,2,0,0,0,1,12a2,2,0,0,0,.58,1.41l2.06,2.05v2.91a2,2,0,0,0,2,2H8.54l2.05,2.05A2,2,0,0,0,12,23a2,2,0,0,0,1.41-.58l2.05-2.06h2.91a2,2,0,0,0,2-2V15.46l2.05-2.05a2,2,0,0,0,0-2.82Zm-4.05,4.05v3.72H14.64L12,21,9.36,18.36H5.64V14.64L3,12,5.64,9.36V5.64H9.36L12,3l2.64,2.64h3.72V9.36L21,12Z" />
-    <polygon points="11 12.73 8.71 10.44 7.29 11.85 11 15.56 16.71 9.85 15.29 8.44 11 12.73" />
-  </svg>
-);
-
-export const MapPinIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-map-pin"
-  >
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-    <circle cx={12} cy={10} r={3} />
-  </svg>
-);
-
-export const CheckIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-check"
-  >
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-
-export const DownloadIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-download"
-  >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <polyline points="7 10 12 15 17 10" />
-    <line x1={12} y1={15} x2={12} y2={3} />
-  </svg>
-);
-
-export const CopyToClipBoardIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-clipboard"
-  >
-    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-    <rect x={8} y={2} width={8} height={4} rx={1} ry={1} />
-  </svg>
-);
-
-export const SearchIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-search"
-  >
-    <circle cx={11} cy={11} r={8} />
-    <line x1={21} y1={21} x2="16.65" y2="16.65" />
-  </svg>
-);
-
-export const UsersIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="feather feather-user"
-  >
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-    <circle cx={12} cy={7} r={4} />
-  </svg>
-);
+export const ArrowLeftIcon = () => <FiArrowLeft />;
+export const ArrowDownIcon = () => <FiArrowDown />;
+export const ArticlesIcon = () => <FiBookOpen />;
+export const AssignedPropertyIcon = () => <FiServer />;
+export const BankInfoIcon = () => <FiArchive />;
+export const BathIcon = () => <FaBath />;
+export const BedIcon = () => <BiBed />;
+export const CloseIcon = () => <FiX />;
+export const CameraIcon = () => <FiCamera />;
+export const CertifyIcon = () => <VscVerified />;
+export const CheckIcon = () => <FiCheck />;
+export const CompanyInfoIcon = () => <FiFolder />;
+export const CopyToClipBoardIcon = () => <FiClipboard />;
+export const DownloadIcon = () => <FiDownload />;
+export const ErrorIcon = () => <FaTimesCircle />;
+export const FacebookIcon = () => <FiFacebook />;
+export const FileIcon = () => <FiFileText />;
+export const HomeIcon = () => <FiGrid />;
+export const InfoIcon = () => <FaInfoCircle />;
+export const LoveIcon = () => <FiHeart />;
+export const MapPinIcon = () => <FiMapPin />;
+export const MessageIcon = () => <FiMessageSquare />;
+export const MenuIcon = () => <FiMenu />;
+export const MyPropertyIcon = () => <FiHome />;
+export const NotificationIcon = () => <FiBell />;
+export const OfferIcon = () => <FaFileContract />;
+export const PlusIcon = () => <FiPlus />;
+export const ProfileIcon = () => <FiSettings />;
+export const PropertyIcon = () => <FiHome />;
+export const QuestionMarkIcon = () => <FiHelpCircle />;
+export const ReferIcon = () => <FiGift />;
+export const RightArrowIcon = () => <FiChevronRight />;
+export const RightChevronIcon = () => <FiChevronRight />;
+export const SearchIcon = () => <FiSearch />;
+export const SuccessIcon = () => <FaCheckCircle />;
+export const ThreeDotsIcon = () => <BsThreeDots />;
+export const ToiletIcon = () => <FaToilet />;
+export const TransactionIcon = () => <FiRepeat />;
+export const TwitterIcon = () => <FiTwitter />;
+export const UserIcon = () => <FiUser />;
+export const UploadIcon = () => <FiUploadCloud />;
+export const VisitationIcon = () => <FiGitBranch />;
+export const WarningIcon = () => <FaExclamationTriangle />;
 
 export const HouseIcon = () => (
   <svg

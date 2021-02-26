@@ -178,6 +178,16 @@ export const isValidURL = (str) => {
 
 export const statusIsSuccessful = (status) => status >= 200 && status <= 204;
 
+export const getUserTitle = (title) => {
+  if (MALE_TITLES.includes(title)) {
+    return 'Sir';
+  }
+  if (FEMALE_TITLES.includes(title)) {
+    return 'Ma';
+  }
+  return 'Sir/Ma';
+};
+
 // Manual Waiting
 //  manualWait(() => {
 //   setCommentLoading(null);

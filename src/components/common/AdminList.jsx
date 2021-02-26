@@ -2,7 +2,7 @@ import React from 'react';
 import Toast from 'components/utils/Toast';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
-import { UsersIcon } from 'components/utils/Icons';
+import { UserIcon } from 'components/utils/Icons';
 import TopTitle from 'components/utils/TopTitle';
 import Humanize from 'humanize-plus';
 import { usePagination } from 'hooks/usePagination';
@@ -23,7 +23,7 @@ const AdminList = ({
   endpoint,
 }) => {
   const pluralizePageName = pluralPageName || Humanize.pluralize(2, pageName);
-  const Icon = PageIcon || <UsersIcon />;
+  const Icon = PageIcon || <UserIcon />;
 
   const [filters, setFilters] = React.useState({});
   const [currentPage, setCurrentPage] = React.useState(1);

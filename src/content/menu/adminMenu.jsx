@@ -5,7 +5,7 @@ import {
   TransactionIcon,
   ProfileIcon,
   ReferIcon,
-  UsersIcon,
+  UserIcon,
 } from 'components/utils/Icons';
 import { VisitationIcon } from 'components/utils/Icons';
 import { MessageIcon } from 'components/utils/Icons';
@@ -21,7 +21,7 @@ export default [
   {
     title: 'Users',
     to: '/admin/users',
-    icon: <UsersIcon />,
+    icon: <UserIcon />,
     footer: false,
   },
   {

@@ -66,6 +66,11 @@
   margin-top: 4rem;
   padding-left: 0;
 
+  svg {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
   &__header {
     font-size: 0.75rem;
     font-family: $headings-font-family;

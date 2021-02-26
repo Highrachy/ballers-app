@@ -9,7 +9,7 @@ import {
 import { CompanyInfoIcon } from 'components/utils/Icons';
 import { BankInfoIcon } from 'components/utils/Icons';
 import { FileIcon } from 'components/utils/Icons';
-import { UsersIcon } from 'components/utils/Icons';
+import { UserIcon } from 'components/utils/Icons';
 import { MessageIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
 import { Loading } from 'components/utils/LoadingItems';
@@ -34,7 +34,7 @@ const Welcome = () => {
   const verificationState = getVerificationState(userState);
 
   if (!userState.firstName) {
-    return <Loading Icon={<UsersIcon />} text="Retrieving your Information" />;
+    return <Loading Icon={<UserIcon />} text="Retrieving your Information" />;
   }
 
   return (
@@ -98,7 +98,7 @@ const Welcome = () => {
               saved in our system.
             </DashboardCard>
             <DashboardCard
-              icon={<UsersIcon />}
+              icon={<UserIcon />}
               title="My Users"
               to="vendor/users"
               key={2}
@@ -196,7 +196,7 @@ const Welcome = () => {
             </VerificationCard>
 
             <VerificationCard
-              icon={<UsersIcon />}
+              icon={<UserIcon />}
               title="Signatories"
               index={2}
               key={2}

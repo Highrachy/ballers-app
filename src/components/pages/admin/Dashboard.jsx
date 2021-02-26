@@ -3,7 +3,7 @@ import BackendPage from 'components/layout/BackendPage';
 import { UserContext } from 'context/UserContext';
 import { Link } from '@reach/router';
 import {
-  UsersIcon,
+  UserIcon,
   AssignedPropertyIcon,
   MyPropertyIcon,
   MessageIcon,
@@ -62,7 +62,7 @@ const Welcome = () => {
           to="/admin/transactions"
         />
         <DashboardCardList
-          icon={<UsersIcon />}
+          icon={<UserIcon />}
           name="Interested Users"
           number={3}
           to="/admin/users"

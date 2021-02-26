@@ -9,6 +9,7 @@ import {
   getFormattedAddress,
   getLocationFromAddress,
   isValidURL,
+  getUserTitle,
 } from 'utils/helpers';
 import HighrachyLogo from 'assets/img/logo/highrachy-logo.png';
 import { getDate } from 'utils/date-helpers';
@@ -61,7 +62,7 @@ const OfferLetterTemplate = ({
       </strong>
       {getFormattedAddress(enquiryInfo.address)}
 
-      <p className="">Dear Sir/Ma,</p>
+      <p className="">Dear {getUserTitle(enquiryInfo.title)},</p>
 
       <strong>
         RE: {propertyInfo.name} - LETTER OF OFFER FOR {houseType}
