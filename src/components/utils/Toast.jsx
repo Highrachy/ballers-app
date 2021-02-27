@@ -54,15 +54,17 @@ const Toast = ({
   const toastInterval = showToastOnly ? 10000 : 5000;
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setShow(false);
-      toastIsClosed();
-    }, toastInterval);
+    if (message) {
+      const interval = setInterval(() => {
+        setShow(false);
+        toastIsClosed();
+      }, toastInterval);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [show, toastInterval, toastIsClosed]);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [show, toastInterval, toastIsClosed, message]);
 
   if (!message) {
     if (msg && !showToastOnly) {

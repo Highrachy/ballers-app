@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import { parse } from 'date-fns';
 import { moneyFormatInNaira } from 'utils/helpers';
+import { getDateTime } from 'utils/date-helpers';
 
 export const required = (label) =>
   yup.string().required(`${label} is required`);
@@ -99,10 +100,12 @@ export const validPercentage = (label) =>
 export const requiredDate = (label) =>
   yup
     .object()
-    .transform(
-      (value) =>
-        (value.date && { date: parse(value.date) }) || { date: undefined }
-    )
+    .transform((value, originalValue) => {
+      return (
+        (value?.date && { date: parse(value.date) }) ||
+        (originalValue && { date: parse(originalValue) }) || { date: undefined }
+      );
+    })
     .shape({
       date: yup.date().required(`${label} is required`),
     });
@@ -116,14 +119,17 @@ export const yearValidation = (label) =>
 export const minDateValidation = (label, minDate) =>
   yup
     .object()
-    .transform((value) => {
-      return (value.date && { date: parse(value.date) }) || { date: undefined };
+    .transform((value, originalValue) => {
+      return (
+        (value?.date && { date: parse(value.date) }) ||
+        (originalValue && { date: parse(originalValue) }) || { date: undefined }
+      );
     })
     .shape({
       date: yup
         .date()
         .required(`${label} is required`)
-        .min(minDate, `${label} must be greater than ${minDate}`),
+        .min(minDate, `${label} must be greater than ${getDateTime(minDate)}`),
     });
 export const autocompleteValidation = (label, minSelection = 2) =>
   yup

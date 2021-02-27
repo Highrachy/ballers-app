@@ -14,13 +14,16 @@ import {
 import { getDateTime, getShortDate } from 'utils/date-helpers';
 import { MessageIcon } from 'components/utils/Icons';
 import CreateOfferLetter from '../admin/CreateOfferLetter';
+import { Loading } from 'components/utils/LoadingItems';
 
 const ViewEnquiry = ({ id }) => {
   const [toast, setToast] = useToast();
   const [enquiry, setEnquiry] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
   const [showEnquiry, setShowEnquiry] = React.useState(true);
 
   React.useEffect(() => {
+    setLoading(true);
     Axios.get(`${BASE_API_URL}/enquiry/${id}`, {
       headers: {
         Authorization: getTokenFromStore(),
@@ -32,13 +35,23 @@ const ViewEnquiry = ({ id }) => {
         if (status === 200) {
           setEnquiry(data.enquiry);
         }
+        setLoading(false);
       })
       .catch(function (error) {
         setToast({
           message: getError(error),
         });
+        setLoading(false);
       });
   }, [setToast, id]);
+
+  if (loading) {
+    return (
+      <BackendPage>
+        <Loading Icon={<MessageIcon />} text="Loading Enquiry" />;
+      </BackendPage>
+    );
+  }
 
   return (
     <BackendPage>

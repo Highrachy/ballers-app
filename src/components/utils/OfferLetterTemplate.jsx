@@ -30,13 +30,13 @@ const OfferLetterTemplate = ({
     'Highrachy Investment and Technology Ltd';
   const shownSignature = signature || offerInfo.signature;
 
-  const { totalAmountPayable, initialPayment, monthlyPayment } = offerInfo;
+  const { totalAmountPayable, initialPayment, periodicPayment } = offerInfo;
   const rangePrice = totalAmountPayable - initialPayment;
   const noOfMonths =
-    rangePrice / monthlyPayment > 1
-      ? Math.floor(rangePrice / monthlyPayment)
+    rangePrice / periodicPayment > 1
+      ? Math.floor(rangePrice / periodicPayment)
       : 1;
-  const lastPayment = rangePrice - monthlyPayment * noOfMonths;
+  const lastPayment = rangePrice - periodicPayment * noOfMonths;
   const initialPercentage = moneyFormat(
     (initialPayment / totalAmountPayable) * 100
   );
@@ -149,7 +149,7 @@ const OfferLetterTemplate = ({
                           <tr key={index}>
                             <td>{numToOrdinal(index + 2)} Deposit</td>
                             {/* <td>April 2019</td> */}
-                            <td>{moneyFormat(monthlyPayment)}</td>
+                            <td>{moneyFormat(periodicPayment)}</td>
                           </tr>
                         ))}
                       {lastPayment > 0 && (
@@ -236,7 +236,7 @@ const OfferLetterTemplate = ({
             after which the Vendor shall pay to the Buyer, an amount to be
             determined by 50% of the average annual rental value of similar
             types of units within the area for the unit, this is subject to the
-            Buyer meeting up the monthly payment as at when due and completing
+            Buyer meeting up the periodic payment as at when due and completing
             payment within six (6) Months. The determined amount shall be paid
             by the Vendor at a pro-rated monthly rate for each month of delay
             after the agreed seven (7) months plus the grace period and shall

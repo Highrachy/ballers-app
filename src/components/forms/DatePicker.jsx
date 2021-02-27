@@ -10,7 +10,7 @@ import {
 import Label from './Label';
 import ReactDatePicker from 'react-datepicker';
 import { getIn } from 'formik';
-import { parse } from 'date-fns';
+import { isValid, parse } from 'date-fns';
 
 const DatePicker = ({
   name,
@@ -47,6 +47,19 @@ const DatePicker = ({
       />
       <Field name={name}>
         {({ form }) => {
+          let selectedValue = null;
+          const currentValue = getIn(formik.values, name);
+
+          if (
+            typeof currentValue === 'object' &&
+            currentValue.date &&
+            isValid(parse(currentValue.date))
+          ) {
+            selectedValue = parse(currentValue.date);
+          } else if (currentValue !== '' && isValid(parse(currentValue))) {
+            selectedValue = parse(currentValue);
+          }
+
           return (
             <ReactDatePicker
               {...props}
@@ -61,24 +74,23 @@ const DatePicker = ({
               name={name}
               onChange={(date) => {
                 if (date) {
-                  const dateTime = showTimeSelectOnly
-                    ? date.toLocaleTimeString()
-                    : date.toLocaleDateString();
+                  let dateTime = date.toLocaleDateString();
+
+                  if (showTimeSelectOnly) {
+                    dateTime = date.toLocaleTimeString();
+                  }
+
+                  if (showTimeSelect) {
+                    dateTime = date.toLocaleString();
+                  }
+
                   form.setFieldValue(name, { date, value: dateTime });
                 } else {
                   form.setFieldValue(name, '');
                 }
               }}
               placeholderText={placeholder}
-              selected={
-                getIn(formik.values, name) !== ''
-                  ? parse(
-                      (getIn(formik.values, name) &&
-                        getIn(formik.values, name).date) ||
-                        new Date()
-                    )
-                  : null
-              }
+              selected={selectedValue}
               showTimeSelect={showTimeSelect}
               showTimeSelectOnly={showTimeSelectOnly}
               timeCaption={timeCaption}
@@ -133,7 +145,7 @@ DatePicker.defaultProps = {
   showFeedback: feedback.ALL,
   showTimeSelect: false,
   showTimeSelectOnly: false,
-  timeCaption: null,
+  timeCaption: 'Time',
   timeIntervals: 60,
   tooltipHeader: null,
   tooltipText: null,

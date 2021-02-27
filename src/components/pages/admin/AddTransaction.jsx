@@ -89,7 +89,7 @@ const OffersRow = ({
   totalAmountPayable,
   number,
   initialPayment,
-  monthlyPayment,
+  periodicPayment,
   enquiryInfo,
   propertyInfo,
   userInfo,
@@ -150,7 +150,9 @@ const OffersRow = ({
         <NewTransactionForm
           hideForm={() => setShowAddTransactionModal(false)}
           amount={
-            status === OFFER_STATUS.INTERESTED ? initialPayment : monthlyPayment
+            status === OFFER_STATUS.INTERESTED
+              ? initialPayment
+              : periodicPayment
           }
           offerId={_id}
           propertyId={propertyInfo._id}

@@ -18,6 +18,7 @@ import { UserContext } from 'context/UserContext';
 import { CameraIcon } from 'components/utils/Icons';
 import { BathIcon } from 'components/utils/Icons';
 import { ToiletIcon } from 'components/utils/Icons';
+import { BedIcon } from 'components/utils/Icons';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -167,13 +168,19 @@ export const PropertyDescription = ({ property }) => {
           <small>House Type</small>
           <h5>{property.houseType}</h5>
         </div>
-        <div className="col-6">
+        <div className="col-4">
+          <h5>
+            <BedIcon />
+            {property.bedrooms}
+          </h5>
+        </div>
+        <div className="col-4">
           <h5>
             <BathIcon />
             {property.bathrooms}
           </h5>
         </div>
-        <div className="col-6">
+        <div className="col-4">
           <h5>
             <ToiletIcon /> {property.toilets}
           </h5>

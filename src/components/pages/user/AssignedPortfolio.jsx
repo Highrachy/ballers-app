@@ -188,7 +188,7 @@ const PropertyDescription = ({ property, propertyPrice }) => (
 const AssignedPropertySidebar = ({ offer, totalPaid }) => {
   const property = offer.propertyInfo;
   const amountToPay =
-    totalPaid === 0 ? offer.initialPayment : offer.monthlyPayment;
+    totalPaid === 0 ? offer.initialPayment : offer.periodicPayment;
   const percentage = Math.floor((totalPaid / offer.totalAmountPayable) * 100);
 
   const initiatePayment = () => {

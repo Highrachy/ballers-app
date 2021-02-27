@@ -20,19 +20,23 @@ import Input from 'components/forms/Input';
 import { addDays, addMonths } from 'date-fns';
 import Modal from 'components/common/Modal';
 import OfferLetterTemplate from 'components/utils/OfferLetterTemplate';
+import DatePicker from 'components/forms/DatePicker';
 
 const CreateOfferLetter = ({ enquiry }) => {
+  console.log(
+    '🚀 ~ file: CreateOfferLetter.jsx ~ line 26 ~ CreateOfferLetter ~ enquiry',
+    enquiry
+  );
   const defaultValue = {
     totalAmountPayable: enquiry.propertyInfo.price,
     allocationInPercentage: 100,
     initialPayment: enquiry.initialInvestmentAmount,
-    monthlyPayment: '1000000',
+    initialPaymentDate: enquiry.investmentStartDate,
+    periodicPayment: enquiry.periodicInvestmentAmount,
     paymentFrequency: enquiry.investmentFrequency,
     expires: '7',
-    title:
-      'Deed of Assignment for one unit of 3 bedroom apartment within the buildings sited on land covered by duly registered, Governor Consented deed of assignment dated the 20th day of May, 2016 and registered as No. 87 at page 87 in volume 2547v at the office of the Lagos State Land Registry, Ikeja.',
-    deliveryState:
-      'The subject property will be delivered as a finished unit inclusive of Wall painting, floor tiling, and POP ceilings, joinery, internal and external doors, electrical and mechanical fittings and fixtures as prescribed by the project drawings and specification documents. The externals walls will also be finished in line with standard Blissville specifications.',
+    title: enquiry.propertyInfo.titleDocument,
+    deliveryState: '',
   };
   const [value, setValue] = React.useState(defaultValue);
   const [showOfferLetter, setShowOfferLetter] = React.useState(false);
@@ -83,12 +87,51 @@ const CreateOfferLetterForm = ({
               {({ isSubmitting, handleSubmit, ...props }) => (
                 <Form>
                   <Toast {...toast} />
+                  <InputFormat
+                    label="Total Amount Payable"
+                    name="totalAmountPayable"
+                    placeholder="Total Amount Payable"
+                  />
                   <div className="form-row">
                     <InputFormat
                       formGroupClassName="col-md-6"
-                      label="Total Amount Payable"
-                      name="totalAmountPayable"
-                      placeholder="Total Amount Payable"
+                      label="Initial Payment"
+                      name="initialPayment"
+                      placeholder="Initial Payment"
+                    />
+                    <DatePicker
+                      formGroupClassName="col-md-6"
+                      label="Initial Payment Due Date"
+                      name="initialPaymentDate"
+                      minDate={new Date()}
+                    />
+                  </div>
+                  <div className="form-row">
+                    <InputFormat
+                      formGroupClassName="col-md-6"
+                      label="Periodic Payment"
+                      name="periodicPayment"
+                      placeholder="Periodic Payment"
+                    />
+                    <Select
+                      formGroupClassName="col-md-6"
+                      label="Payment Frequency"
+                      name="paymentFrequency"
+                      placeholder="Payment Frequency"
+                      options={[
+                        { value: '0.5', label: 'Bi-Weekly' },
+                        { value: '1', label: 'Monthly' },
+                        { value: '3', label: 'Quarterly' },
+                      ]}
+                    />
+                  </div>
+                  <div className="form-row">
+                    <Select
+                      formGroupClassName="col-md-6"
+                      label="Offer Expires in"
+                      name="expires"
+                      options={generateNumOptions(11, 'Day', { startFrom: 5 })}
+                      placeholder="Allocation Month"
                     />
                     <Input
                       formGroupClassName="col-md-6"
@@ -101,53 +144,14 @@ const CreateOfferLetterForm = ({
                       tooltipText="The number of deposits to be made before prpoerty is allocated"
                     />
                   </div>
-                  <div className="form-row">
-                    <InputFormat
-                      formGroupClassName="col-md-6"
-                      label="Initial Payment"
-                      name="initialPayment"
-                      placeholder="Initial Payment"
-                    />
-                    <InputFormat
-                      formGroupClassName="col-md-6"
-                      label="Monthly Payment"
-                      name="monthlyPayment"
-                      placeholder="Monthly Payment"
-                    />
-                  </div>
-                  <div className="form-row">
-                    <Select
-                      formGroupClassName="col-md-6"
-                      label="Payment Frequency"
-                      name="paymentFrequency"
-                      placeholder="Payment Frequency"
-                      options={[
-                        { value: '0.5', label: 'Bi-Weekly' },
-                        { value: '1', label: 'Monthly' },
-                        { value: '3', label: 'Quarterly' },
-                      ]}
-                    />
-                    <Select
-                      formGroupClassName="col-md-6"
-                      label="Offer Expires in"
-                      name="expires"
-                      options={generateNumOptions(11, 'Day', { startFrom: 5 })}
-                      placeholder="Allocation Month"
-                    />
-                  </div>
 
-                  <Textarea
-                    label="Title Document"
-                    name="title"
-                    placeholder="A detailed description of the property"
-                    rows="5"
-                  />
+                  <Textarea label="Title Document" name="title" rows="2" />
 
                   <Textarea
                     label="Delivery State"
                     name="deliveryState"
-                    placeholder="A detailed description of the property"
-                    rows="4"
+                    rows="3"
+                    tooltipText="The state the property would be delivered to the user"
                   />
 
                   <Button
@@ -170,11 +174,11 @@ const CreateOfferLetterForm = ({
 
 const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
   const [toast, setToast] = useToast();
-  const { totalAmountPayable, initialPayment, monthlyPayment } = value;
+  const { totalAmountPayable, initialPayment, periodicPayment } = value;
   const rangePrice = totalAmountPayable - initialPayment;
   const noOfMonths =
-    rangePrice / monthlyPayment > 1
-      ? Math.floor(rangePrice / monthlyPayment)
+    rangePrice / periodicPayment > 1
+      ? Math.floor(rangePrice / periodicPayment)
       : 1;
   const [showSubmitOfferModal, setShowSubmitOfferModal] = React.useState(false);
 
