@@ -5,10 +5,14 @@ import Map from 'components/common/Map';
 import { BASE_API_URL, USER_TYPES } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
-import { CheckIcon, DownloadIcon, MapPinIcon } from 'components/utils/Icons';
+import { MapPinIcon } from 'components/utils/Icons';
 import { getTokenFromStore } from 'utils/localStorage';
 import NoContent from 'components/utils/NoContent';
-import { moneyFormatInNaira, getError } from 'utils/helpers';
+import {
+  moneyFormatInNaira,
+  getError,
+  getLocationFromAddress,
+} from 'utils/helpers';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import Image from 'components/utils/Image';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
@@ -19,6 +23,35 @@ import { CameraIcon } from 'components/utils/Icons';
 import { BathIcon } from 'components/utils/Icons';
 import { ToiletIcon } from 'components/utils/Icons';
 import { BedIcon } from 'components/utils/Icons';
+import { VendorIcon } from 'components/utils/Icons';
+import Humanize from 'humanize-plus';
+import { CertifyIcon } from 'components/utils/Icons';
+import { Accordion } from 'react-bootstrap';
+import { ArrowDownIcon } from 'components/utils/Icons';
+import { ContextAwareToggle } from 'components/common/FAQsAccordion';
+import { ArrowUpIcon } from 'components/utils/Icons';
+import { CheckSquareIcon } from 'components/utils/Icons';
+import { SchoolIcon } from 'components/utils/Icons';
+import { CarIcon } from 'components/utils/Icons';
+import { HospitalIcon } from 'components/utils/Icons';
+
+const FLOOR_PLANS = [
+  {
+    name: 'Upper Floor',
+    plan:
+      'https://ballers-staging.s3.amazonaws.com/600e6414650f0000170ba5a0/07cf5fb0-7a52-11eb-b46b-c372b34a5c1f.pdf',
+  },
+  {
+    name: 'Lower Floor',
+    plan:
+      'https://ballers-staging.s3.amazonaws.com/600e6414650f0000170ba5a0/07cf5fb0-7a52-11eb-b46b-c372b34a5c1f.pdf',
+  },
+  {
+    name: 'Middle Floor',
+    plan:
+      'https://ballers-staging.s3.amazonaws.com/600e6414650f0000170ba5a0/07cf5fb0-7a52-11eb-b46b-c372b34a5c1f.pdf',
+  },
+];
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -57,39 +90,36 @@ const OwnedPropertyCard = ({ property, toast }) => (
   <div className="container-fluid">
     <Toast {...toast} />
     <Card className="card-container mt-4 h-100 property-holder__big">
-      <div className="row">
-        <div className="col-sm-10">
-          <h3 className={`property-holder__big-title border-success`}>
-            {property.name}
-          </h3>
-        </div>
-      </div>
       <PropertyImage property={property} />
       <div className="row mt-5">
         <div className="col-sm-12">
           <PropertyDescription property={property} />
         </div>
       </div>
+      <FloorPlans />
       <Neighborhood />
     </Card>
     <PropertyMap mapLocation={property.mapLocation} />
   </div>
 );
 
-export const PropertyImage = ({ property }) => (
-  <div className="row">
-    <div className="col-sm-12">
-      <Image
-        defaultImage={PropertyPlaceholderImage}
-        src={property.mainImage}
-        name="Property Image"
-        className="img-fluid gallery-main-image property-img"
-        watermark
-      />
+export const PropertyImage = ({ property }) => {
+  const hideGallery = false;
+  return (
+    <div className="row">
+      <div className={hideGallery ? 'col-sm-12' : 'col-sm-10'}>
+        <Image
+          defaultImage={PropertyPlaceholderImage}
+          src={property.mainImage}
+          name="Property Image"
+          className="img-fluid gallery-main-image property-img"
+          watermark
+        />
+      </div>
+      {hideGallery || <Gallery />}
     </div>
-    {true || <Gallery />}
-  </div>
-);
+  );
+};
 
 const Gallery = () => (
   <div className="col-sm-2">
@@ -135,7 +165,10 @@ const Gallery = () => (
 export const PropertyDescription = ({ property }) => {
   const [showFloorPlansModal, setShowFloorPlansModal] = React.useState(false);
   const { userState } = React.useContext(UserContext);
-  const [showPhoneNumber, setShowPhoneNumber] = React.useState(false);
+  const [showDescription, setShowDescription] = React.useState(false);
+  const DESCRIPTION_LENGTH = 600;
+  const hideSomePropertyDescription =
+    !showDescription && property.description.length > DESCRIPTION_LENGTH;
   console.log('property', property);
 
   return (
@@ -153,115 +186,203 @@ export const PropertyDescription = ({ property }) => {
           options={{ h: 1000 }}
         />
       </Modal>
-      <h5 className="mb-4">
-        <span className="text-secondary">
-          <MapPinIcon />
-        </span>{' '}
-        {property.address.street1}
-      </h5>
-      <div className="row">
-        <div className="col-6">
-          <small>Property Value</small>
-          <h5>{moneyFormatInNaira(property.price)}</h5>
-        </div>
-        <div className="col-6">
-          <small>House Type</small>
-          <h5>{property.houseType}</h5>
-        </div>
-        <div className="col-4">
-          <h5>
-            <BedIcon />
-            {property.bedrooms}
-          </h5>
-        </div>
-        <div className="col-4">
-          <h5>
-            <BathIcon />
-            {property.bathrooms}
-          </h5>
-        </div>
-        <div className="col-4">
-          <h5>
-            <ToiletIcon /> {property.toilets}
-          </h5>
-        </div>
+
+      <h3 className={`property-holder__big-title`}>{property.name}</h3>
+      <h4 className="text-secondary property-spacing mb-3">
+        {moneyFormatInNaira(property.price)}
+      </h4>
+      <p className="mb-2 text-muted">
+        <MapPinIcon /> {getLocationFromAddress(property.address)}
+      </p>
+
+      <div className="property-info property-spacing">
+        <span className="pr-3">
+          <BedIcon /> {property.bedrooms}{' '}
+          {Humanize.pluralize(property.bedrooms, 'bed')}
+        </span>
+        |{' '}
+        <span className="px-3">
+          <BathIcon /> {property.bathrooms}{' '}
+          {Humanize.pluralize(property.bathrooms, 'bath')}
+        </span>
+        |
+        <span className="pl-3">
+          <ToiletIcon /> {property.toilets}{' '}
+          {Humanize.pluralize(property.toilets, 'toilet')}
+        </span>
       </div>
 
-      <h5 className="mt-5">Vendor</h5>
-      <img
-        alt={property?.vendorInfo?.vendor?.companyName || ''}
-        className="img-fluid img-small"
-        src={property?.vendorInfo?.vendor?.companyLogo}
-        title={property?.vendorInfo?.vendor?.companyName}
-      />
-      {!showPhoneNumber ? (
-        <p onClick={() => setShowPhoneNumber(true)}>
-          Click to reveal Phone Number
-        </p>
-      ) : (
-        <p className="strong">Phone Number: {property?.vendorInfo?.phone}</p>
-      )}
-
       <h5 className="mt-5">About Property</h5>
-      <p className="">{property.description}</p>
+      <div className="position-relative">
+        {hideSomePropertyDescription
+          ? Humanize.truncate(property.description, DESCRIPTION_LENGTH, '...')
+          : property.description}
+        {hideSomePropertyDescription && (
+          <div className="show-more-holder">
+            <button
+              className="btn btn-xs btn-dark btn-wide show-more-button"
+              onClick={() => setShowDescription(true)}
+            >
+              Show All
+            </button>
+          </div>
+        )}
+      </div>
 
-      {userState?.role === USER_TYPES.vendor && (
+      <ul className="list-unstyled row mt-5">
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Air conditioning
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Swiming pool
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Central Heating
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Spa &amp; massage
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Pets allow
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Air conditioning
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Gym
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Alarm
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Window Covering
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Free wiFi
+        </li>
+        <li className="col-sm-6">
+          <CheckSquareIcon /> Car parking{' '}
+        </li>
+      </ul>
+
+      {userState?.role === USER_TYPES.vendor ? (
         <Link
           className="btn btn-secondary"
           to={`/vendor/portfolios/edit/${property._id}`}
         >
           Edit Property
         </Link>
-      )}
-
-      {true || (
-        <div className="my-5">
-          <button
-            onClick={() => setShowFloorPlansModal(true)}
-            className="btn btn-link icon-box"
-          >
-            View floor plans{' '}
-            <span className="d-inline-block ml-2">
-              <DownloadIcon />
-            </span>
-          </button>
+      ) : (
+        <div>
+          <h5 className="text-primary mt-4">
+            <VendorIcon /> Agent: {property?.vendorInfo?.vendor?.companyName}{' '}
+            <CertifyIcon />
+          </h5>
+          <div className="hero">
+            <ol>
+              <li>
+                Do not make any upfront payment as inspection fee when visiting
+                the property.
+              </li>
+              <li>
+                When you find a property of your interest, make sure you ask
+                appropriate questions before accepting your offer.
+              </li>
+              <li>
+                All meetings with agents should be done in open locations.
+              </li>
+              <li>
+                The agent is not a representative from Baller.ng neither does
+                Baller.ng control the affairs of the agent as both parties are
+                different entities.
+              </li>
+            </ol>
+          </div>
         </div>
       )}
     </>
   );
 };
 
+export const FloorPlans = () =>
+  FLOOR_PLANS.length > 0 && (
+    <div>
+      <h5 className="mt-5">Floor Plans</h5>
+      <Accordion>
+        {FLOOR_PLANS.map(({ name, plan }, index) => (
+          <Card key={index + 1}>
+            <Accordion.Toggle
+              as={Card.Header}
+              variant="link"
+              eventKey={index + 1}
+            >
+              <ContextAwareToggle
+                iconOpen={<ArrowUpIcon />}
+                iconClose={<ArrowDownIcon />}
+                eventKey={index + 1}
+              >
+                <h6>{name}</h6>
+              </ContextAwareToggle>
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={index + 1}>
+              <Card.Body>
+                <Image src={plan} alt={name} name={name} />
+                {plan}
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        ))}
+      </Accordion>
+    </div>
+  );
+
 export const Neighborhood = () => (
   <>
     <h5 className="mt-5">The neighbourhood</h5>
-    <div className="row">
-      <div className="col-sm-4">
-        <NeighborhoodCheck name="Schools" color="blue" />
-      </div>
-      <div className="col-sm-4">
-        <NeighborhoodCheck name="Hospitals" color="orange" />
-      </div>
-      <div className="col-sm-4">
-        <NeighborhoodCheck name="Shopping Mall" color="purple" />
-      </div>
-      <div className="col-sm-4">
-        <NeighborhoodCheck name="Entertainment" color="green" />
-      </div>
-      <div className="col-sm-4">
-        <NeighborhoodCheck name="Restaurant & Bars" color="blue" />
-      </div>
-      <div className="col-sm-4">
-        <NeighborhoodCheck name="Parks" color="pink" />
-      </div>
+    <div className="single__detail-features-nearby">
+      <IconBox name="Schools" color="pink" Icon={<SchoolIcon />} />
+
+      <ul className="list-unstyled">
+        <li className="row">
+          <p className="col-sm-4">British International School</p>
+          <p className="col-sm-4 text-right">
+            20 minutes <CarIcon />
+          </p>
+        </li>
+      </ul>
+
+      <IconBox
+        name="Health and Medicals"
+        color="blue"
+        Icon={<HospitalIcon />}
+      />
+      <ul className="list-unstyled">
+        <li className="row">
+          <p className="col-sm-4">Reddington Hospital</p>
+          <p className="col-sm-4 text-right">
+            10 minutes <CarIcon />
+          </p>
+        </li>
+        <li className="row">
+          <p className="col-sm-4">Large Sales Pharmacy</p>
+          <p className="col-sm-4 text-right">
+            15 minutes <CarIcon />
+          </p>
+        </li>
+        <li className="row">
+          <p className="col-sm-4">Crystal Hospital</p>
+          <p className="col-sm-4 text-right">
+            30 minutes <CarIcon />
+          </p>
+        </li>
+      </ul>
     </div>
   </>
 );
 
-const NeighborhoodCheck = ({ name, color }) => (
+const IconBox = ({ name, color, Icon }) => (
   <div className="neighborhood-check icon-box">
-    <span className={color}>
-      <CheckIcon />
-    </span>
+    <span className={color}>{Icon}</span>
     {name}
   </div>
 );

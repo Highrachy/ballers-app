@@ -68,13 +68,6 @@ const NOW = 50;
 const OwnedPropertyCard = ({ assigned, property, setToast }) => (
   <div className="container-fluid">
     <Card className="card-container mt-4 h-100 property-holder__big">
-      <div className="row">
-        <div className="col-sm-10">
-          <h3 className={`property-holder__big-title border-success`}>
-            {property.name}
-          </h3>
-        </div>
-      </div>
       <PropertyImage property={property} />
       <div className="row mt-5">
         <div className="col-sm-7">
@@ -187,6 +180,9 @@ const PropertySidebar = ({
   const userHasPreviousEnquiry = !!enquiryInfo;
   const [showReschedule, setShowReschedule] = React.useState(false);
   const [showCancelModal, setShowCancelModal] = React.useState(false);
+  const alreadyVisitedProperty = visitationInfo?.some(
+    (visit) => visit.status === 'Resolved'
+  );
 
   return (
     <>
@@ -357,10 +353,17 @@ const PropertySidebar = ({
             className="card-container property-holder bg-gray card-link"
             onClick={() => setShowRequestVisitForm(true)}
           >
-            <p className="mr-4">
-              Want to come check the property?
-              <br /> Request a visit.
-            </p>
+            {alreadyVisitedProperty ? (
+              <p className="mr-4">
+                You have already visited this property
+                <br /> Request another visit.
+              </p>
+            ) : (
+              <p className="mr-4">
+                Want to come check the property?
+                <br /> Request a visit.
+              </p>
+            )}
             <div className="circle-icon">
               <RightArrowIcon />
             </div>

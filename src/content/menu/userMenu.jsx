@@ -3,9 +3,9 @@ import {
   MyPropertyIcon,
   HomeIcon,
   TransactionIcon,
-  LoveIcon,
   ProfileIcon,
   ReferIcon,
+  PropertyIcon,
 } from 'components/utils/Icons';
 
 export default [
@@ -30,7 +30,7 @@ export default [
   {
     title: 'Just For You',
     to: '/user/just-for-you',
-    icon: <LoveIcon />,
+    icon: <PropertyIcon />,
     footer: true,
   },
   {

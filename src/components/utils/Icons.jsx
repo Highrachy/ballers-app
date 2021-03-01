@@ -3,7 +3,6 @@ import {
   FiGrid,
   FiHome,
   FiPlus,
-  FiMessageSquare,
   FiUploadCloud,
   FiHeart,
   FiMenu,
@@ -17,15 +16,15 @@ import {
   FiRepeat,
   FiHelpCircle,
   FiChevronRight,
-  FiArrowLeft,
-  FiArrowDown,
+  FiChevronLeft,
+  FiChevronDown,
+  FiChevronUp,
   FiBell,
   FiGitBranch,
   FiFacebook,
   FiTwitter,
   FiBookOpen,
   FiX,
-  FiMapPin,
   FiCheck,
   FiDownload,
   FiClipboard,
@@ -40,13 +39,20 @@ import {
   FaTimesCircle,
   FaBath,
   FaToilet,
+  FaUserCircle,
+  FaMapMarkerAlt,
+  FaBuilding,
+  FaAmbulance,
 } from 'react-icons/fa';
-import { BsThreeDots } from 'react-icons/bs';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 import { VscVerified } from 'react-icons/vsc';
-import { BiBed } from 'react-icons/bi';
+import { BiBed, BiMessageDetail, BiBuildingHouse } from 'react-icons/bi';
+import { AiFillCheckSquare, AiFillCar } from 'react-icons/ai';
 
-export const ArrowLeftIcon = () => <FiArrowLeft />;
-export const ArrowDownIcon = () => <FiArrowDown />;
+export const ArrowLeftIcon = () => <FiChevronLeft />;
+export const ArrowDownIcon = () => <FiChevronDown />;
+export const ArrowUpIcon = () => <FiChevronUp />;
+export const ArrowRightIcon = () => <FiChevronRight />;
 export const ArticlesIcon = () => <FiBookOpen />;
 export const AssignedPropertyIcon = () => <FiServer />;
 export const BankInfoIcon = () => <FiArchive />;
@@ -54,8 +60,10 @@ export const BathIcon = () => <FaBath />;
 export const BedIcon = () => <BiBed />;
 export const CloseIcon = () => <FiX />;
 export const CameraIcon = () => <FiCamera />;
+export const CarIcon = () => <AiFillCar />;
 export const CertifyIcon = () => <VscVerified />;
 export const CheckIcon = () => <FiCheck />;
+export const CheckSquareIcon = () => <AiFillCheckSquare />;
 export const CompanyInfoIcon = () => <FiFolder />;
 export const CopyToClipBoardIcon = () => <FiClipboard />;
 export const DownloadIcon = () => <FiDownload />;
@@ -63,24 +71,26 @@ export const ErrorIcon = () => <FaTimesCircle />;
 export const FacebookIcon = () => <FiFacebook />;
 export const FileIcon = () => <FiFileText />;
 export const HomeIcon = () => <FiGrid />;
+export const HospitalIcon = () => <FaAmbulance />;
 export const InfoIcon = () => <FaInfoCircle />;
 export const LoveIcon = () => <FiHeart />;
-export const MapPinIcon = () => <FiMapPin />;
-export const MessageIcon = () => <FiMessageSquare />;
+export const MapPinIcon = () => <FaMapMarkerAlt />;
+export const MessageIcon = () => <BiMessageDetail />;
 export const MenuIcon = () => <FiMenu />;
 export const MyPropertyIcon = () => <FiHome />;
 export const NotificationIcon = () => <FiBell />;
 export const OfferIcon = () => <FaFileContract />;
 export const PlusIcon = () => <FiPlus />;
 export const ProfileIcon = () => <FiSettings />;
-export const PropertyIcon = () => <FiHome />;
+export const PropertyIcon = () => <BiBuildingHouse />;
 export const QuestionMarkIcon = () => <FiHelpCircle />;
 export const ReferIcon = () => <FiGift />;
 export const RightArrowIcon = () => <FiChevronRight />;
 export const RightChevronIcon = () => <FiChevronRight />;
+export const SchoolIcon = () => <FaBuilding />;
 export const SearchIcon = () => <FiSearch />;
 export const SuccessIcon = () => <FaCheckCircle />;
-export const ThreeDotsIcon = () => <BsThreeDots />;
+export const ThreeDotsIcon = () => <BsThreeDotsVertical />;
 export const ToiletIcon = () => <FaToilet />;
 export const TransactionIcon = () => <FiRepeat />;
 export const TwitterIcon = () => <FiTwitter />;
@@ -88,6 +98,7 @@ export const UserIcon = () => <FiUser />;
 export const UploadIcon = () => <FiUploadCloud />;
 export const VisitationIcon = () => <FiGitBranch />;
 export const WarningIcon = () => <FaExclamationTriangle />;
+export const VendorIcon = () => <FaUserCircle />;
 
 export const HouseIcon = () => (
   <svg

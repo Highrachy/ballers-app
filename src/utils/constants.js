@@ -147,3 +147,40 @@ export const VENDOR_VERIFICATION_STATUS = {
   IN_REVIEW: 'Currently In Review',
   AWAITING_INFO: 'Awaiting Information',
 };
+
+export const DEFAULT_PROPERTY_FEATURES = [
+  'Car Parking',
+  'Guest Toilet',
+  'Guest Room',
+  "Governor's Consent",
+  'Electricity',
+  'Paved Roads',
+  'Perimeter Fence',
+  'Portable Water',
+  'Fully Tiled',
+  'Ensuite Rooms',
+  'Easy Access to Roads',
+];
+
+export const ALL_PROPERTY_FEATURES = [
+  'Cable TV Distibution',
+  'Core Fiber Internet',
+  'Inverter System',
+  'Security Fence',
+  'Parking Lot',
+  'Dedicated Car Port',
+  'Maid Room',
+  'Surveillance System',
+  'Smart Solar System',
+  'Panic Alarm',
+  'Intercom System',
+  'Spacious Kitchen',
+  'Video door phone',
+  'Fire detection',
+  'Swimming Pool',
+  'Rooftop Gym',
+  'Garage',
+  'Free WiFi',
+  'Peaceful Environment',
+  'Fitted Kitchen',
+];

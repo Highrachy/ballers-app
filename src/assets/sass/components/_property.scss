@@ -6,33 +6,6 @@
   z-index: 0;
   transition: all 5s ease-in;
 
-  &__big {
-    padding: 2rem;
-  }
-  &__title,
-  &__big-title {
-    font-size: 1rem;
-    color: $primary;
-    font-weight: 300;
-    margin: 0;
-    margin-bottom: 1rem;
-    border-left: 6px solid $green;
-    padding-left: 0.5rem;
-
-    &.border-success {
-      border-left-color: $green;
-    }
-    &.border-error {
-      border-left-color: $red;
-    }
-    &.border-warning {
-      border-left-color: $warning;
-    }
-    &.border-info {
-      border-left-color: $blue;
-    }
-  }
-
   &__big-title {
     font-size: 1.75rem;
     font-weight: 600;
@@ -147,6 +120,8 @@
 }
 
 .neighborhood-check {
+  font-weight: bold;
+  font-size: 1rem;
   span {
     margin: 1rem 0.5rem 1rem 0;
   }
@@ -218,16 +193,20 @@
   position: absolute;
   right: 0;
   top: 0;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   z-index: 1;
 
-  // svg {
-  //   z-index: 0;
-  // }
+  svg {
+    height: 1.5rem;
+    width: 1.5rem;
+    fill: rgba($primary, 0.1);
+    transition: all 0.3s ease-out;
 
-  &:hover {
-    svg {
+    &:hover {
+      height: 2rem;
+      width: 2rem;
       stroke: red;
+      fill: rgba(white, 0.3);
     }
   }
 
@@ -235,6 +214,14 @@
     svg {
       fill: red;
       stroke: red;
+    }
+    &:hover {
+      svg {
+        fill: red;
+        stroke: red;
+        height: 1.5rem;
+        width: 1.5rem;
+      }
     }
   }
 }
@@ -244,5 +231,62 @@
   &:hover {
     cursor: pointer;
     opacity: 0.6;
+  }
+}
+
+.property-card {
+  padding: 0;
+  margin-bottom: 2rem;
+
+  .content-image {
+    // hover trick
+    position: relative;
+    display: block;
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      content: '';
+      background: rgba(40, 47, 68, 0.4);
+      transform: scaleX(0);
+      transition: all 0.4s ease;
+    }
+    img {
+      height: 20rem;
+      width: 100%;
+      border-radius: 0;
+    }
+  }
+
+  &:hover .content-image:before {
+    transform: scaleX(1);
+  }
+
+  .property-spacing {
+    margin-top: 0.3rem;
+  }
+
+  .property-item {
+    padding: 1rem 1.5rem 1.5rem;
+  }
+
+  .property-name {
+    color: $gray-700;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+  }
+  .property-info {
+    font-size: 0.8rem;
+    color: $gray-500;
+  }
+
+  .property-price {
+    color: $secondary;
+    font-size: 1.25rem;
+    font-weight: bold;
   }
 }

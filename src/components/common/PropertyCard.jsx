@@ -11,8 +11,14 @@ import { BASE_API_URL } from 'utils/constants';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import BallersSpinner from 'components/utils/BallersSpinner';
+import { BedIcon } from 'components/utils/Icons';
+import { BathIcon } from 'components/utils/Icons';
+import { ToiletIcon } from 'components/utils/Icons';
+import Humanize from 'humanize-plus';
+import { PropertyIcon } from 'components/utils/Icons';
+import { MapPinIcon } from 'components/utils/Icons';
 
-const PropertyCard = (property) => {
+export const OldPropertyCard = (property) => {
   const {
     name,
     address,
@@ -105,6 +111,120 @@ const PropertyCard = (property) => {
             </Link>
           </div>
         </div>
+      </Card>
+    </section>
+  );
+};
+
+const PropertyCard = (property) => {
+  const {
+    name,
+    address,
+    favorites,
+    houseType,
+    mainImage,
+    price,
+    _id,
+  } = property;
+  const [loading, setLoading] = React.useState(false);
+  const isFavorite = (favorites || []).includes(_id);
+  let { userDispatch } = React.useContext(UserContext);
+
+  const handleFavorites = (propertyId) => {
+    setLoading(true);
+    const FAVORITE_URL = isFavorite ? 'remove-favorite' : 'add-to-favorites';
+    Axios.post(
+      `${BASE_API_URL}/user/${FAVORITE_URL}`,
+      { propertyId },
+      {
+        headers: {
+          Authorization: getTokenFromStore(),
+        },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (status === 200) {
+          setLoading(false);
+          userDispatch({ type: FAVORITE_URL, property });
+        }
+      })
+      .catch(function () {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <section>
+      <Card className="card-container property-card">
+        {loading ? (
+          <div className="favorites-icon">
+            <BallersSpinner small />
+          </div>
+        ) : (
+          <div
+            className={`favorites-icon ${
+              isFavorite
+                ? 'favorites-icon__is-favorite'
+                : 'favorites-icon__not-favorite'
+            }`}
+            onClick={() => handleFavorites(_id)}
+          >
+            <span>
+              <LoveIcon />
+            </span>
+          </div>
+        )}
+        <Link to={`/user/portfolio/${_id}`}>
+          <article>
+            <div className="content-image">
+              <img
+                src={mainImage || PropertyPlaceholderImage}
+                alt="Property"
+                className="img-fluid property-holder__img"
+              />
+            </div>
+            <div className="property-item">
+              <h5 className="property-name mb-0">{name}</h5>
+              {/* Details */}
+              <div className="property-details property-spacing">
+                <span className="property-holder__house-type">
+                  <strong>
+                    <PropertyIcon /> {houseType}
+                  </strong>
+                </span>{' '}
+                &nbsp; | &nbsp;
+                <span className="property-holder__location">
+                  <strong>
+                    <MapPinIcon /> {address?.city}, {address?.state}
+                  </strong>
+                </span>
+              </div>
+              {/* Price */}
+              <h5 className="property-price property-spacing">
+                {moneyFormatInNaira(price)}
+              </h5>
+              {/* Info with Icons */}
+              <div className="property-holder__separator my-3"></div>
+              <div className="property-info property-spacing">
+                <span className="pr-3">
+                  <BedIcon /> {property.bedrooms}{' '}
+                  {Humanize.pluralize(property.bedrooms, 'bed')}
+                </span>
+                |{' '}
+                <span className="px-3">
+                  <BathIcon /> {property.bathrooms}{' '}
+                  {Humanize.pluralize(property.bathrooms, 'bath')}
+                </span>
+                |
+                <span className="pl-3">
+                  <ToiletIcon /> {property.toilets}{' '}
+                  {Humanize.pluralize(property.toilets, 'toilet')}
+                </span>
+              </div>
+            </div>
+          </article>
+        </Link>
       </Card>
     </section>
   );
