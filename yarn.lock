@@ -10489,6 +10489,11 @@ react-slidedown@^2.4.5:
   dependencies:
     tslib "^1.9.0"
 
+react-tag-autocomplete@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/react-tag-autocomplete/-/react-tag-autocomplete-6.1.0.tgz#9fb70149a69b33379013e5255bcd7ad97d8ec06b"
+  integrity sha512-AMhVqxEEIrOfzH0A9XrpsTaLZCVYgjjxp3DSTuSvx91LBSFI6uYcKe38ltR/H/TQw4aytofVghQ1hR9sKpXRQA==
+
 react-to-print@^2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-2.10.0.tgz#b45c3dd37341848c1b42f3d9a00cecbe83785f61"

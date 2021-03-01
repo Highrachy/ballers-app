@@ -27,12 +27,13 @@ import Toast from 'components/utils/Toast';
 import { useToast } from 'components/utils/Toast';
 import MapPicker from 'components/utils/MapPicker';
 import useMapGeocoder from 'hooks/useMapGeocoder';
-import { generateNumOptions } from 'utils/helpers';
+import { generateNumOptions, setAutoComplete } from 'utils/helpers';
 import ReactSelect from 'react-select';
 import { customStyles } from 'components/forms/Select';
 import PhoneNumber from './PhoneNumber';
 import Pagination from 'components/common/Pagination';
 import Upload from 'components/utils/Upload';
+import AutoComplete from './AutoComplete';
 
 const FormComponents = () => (
   <>
@@ -73,6 +74,7 @@ const registerSchema = {
   message: stringValidation('Message'),
   state: multiSelectValidation('State'),
   country: stringValidation('Country'),
+  autocomplete: stringValidation('AutoComplete'),
   // agreement,
 };
 
@@ -225,6 +227,27 @@ const Forms = () => {
               showTimeSelectOnly
               timeCaption="Start Time"
               timeIntervals={30}
+            />
+          </div>
+
+          <div className="row">
+            <AutoComplete
+              formGroupClassName="col-md-6"
+              name="autocomplete"
+              label="Favorites Fruits (Banana, Mangos, Lemons)"
+              suggestions={setAutoComplete(
+                'Apples, Watermelon, Strawberry, Tangerine'
+              )}
+              value={setAutoComplete('Banana, Mangos, Lemons, Orange')}
+            />
+            <AutoComplete
+              formGroupClassName="col-md-6"
+              name="autocomplete2"
+              label="Favorites Fruits"
+              suggestions={setAutoComplete(
+                'Lemons, Orange, Apples, Watermelon, Strawberry, Tangerine'
+              )}
+              value={setAutoComplete('Banana, Mangos')}
             />
           </div>
 

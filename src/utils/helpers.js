@@ -93,6 +93,10 @@ export const generateBudgetOptions = (options) => {
   return showBlankOption ? [...blankOption, ...budget] : budget;
 };
 
+export const setAutoComplete = (lists) =>
+  lists.split(',').map((list, id) => ({ id, name: list.trim() }));
+export const getAutoComplete = (lists) => Object.values(lists).join(',');
+
 export const valuesToOptions = (values, defaultLabel = null) => {
   const output = values.map((value) => ({
     value: value.toString(),
