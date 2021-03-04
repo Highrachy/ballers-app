@@ -14,7 +14,12 @@ import {
   createSchema,
   addressSchema,
 } from 'components/forms/schemas/schema-helpers';
-import { BASE_API_URL, HOUSE_TYPES } from 'utils/constants';
+import {
+  ALL_PROPERTY_FEATURES,
+  BASE_API_URL,
+  DEFAULT_PROPERTY_FEATURES,
+  HOUSE_TYPES,
+} from 'utils/constants';
 import {
   getTokenFromStore,
   storePropertyImage,
@@ -29,14 +34,16 @@ import {
   valuesToOptions,
   generateNumOptions,
   statusIsSuccessful,
+  setAutoComplete,
+  getAutoComplete,
 } from 'utils/helpers';
 import Address from 'components/utils/Address';
 import Select from 'components/forms/Select';
 import MapLocation from 'components/utils/MapLocation';
 import Upload from 'components/utils/Upload';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
-import FloorPlanPlaceholderImage from 'assets/img/placeholder/floor-plan.png';
 import { navigate } from '@reach/router';
+import AutoComplete from 'components/forms/AutoComplete';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
@@ -83,12 +90,11 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
   const [image, setImage] = React.useState(
     property?.mainImage || getPropertyImage()
   );
-  const [floorPlans, setFloorPlans] = React.useState(null);
+
   const saveImage = (image) => {
     setImage(image);
     storePropertyImage(image);
   };
-  console.log('floorPlans', floorPlans);
 
   return (
     <Formik
@@ -105,8 +111,10 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
         const payloadData = {
           ...values,
           mainImage: image || property?.mainImage,
-          floorPlans: [],
+          features: getAutoComplete(values.features),
         };
+        console.log('values', values);
+        console.log('payloadData', payloadData);
 
         payload = location
           ? {
@@ -165,7 +173,6 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
             setImage={saveImage}
             oldImage={property?.mainImage}
           />
-          <PropertyFloorPlans setFloorPlans={setFloorPlans} />
           <MapLocation
             setLocation={setLocation}
             mapAddress={getLocationFromAddress(props.values.address)}
@@ -189,6 +196,7 @@ const PropertyInfoForm = () => {
   const toggleForm = (value) => {
     setDisplayForm({ [value]: !displayForm[value] });
   };
+
   return (
     <Card className="card-container">
       <section className="row">
@@ -275,6 +283,13 @@ const PropertyInfoForm = () => {
             placeholder="A detailed description of the property"
           />
 
+          <AutoComplete
+            name="features"
+            label="Features"
+            suggestions={setAutoComplete([ALL_PROPERTY_FEATURES])}
+            value={setAutoComplete(DEFAULT_PROPERTY_FEATURES)}
+          />
+
           <Textarea
             label="Title Document"
             name="titleDocument"
@@ -301,30 +316,6 @@ const PropertyImage = ({ setImage, oldImage }) => (
             name="property-image"
             oldImage={oldImage}
             uploadText={`Upload Property Image`}
-          />
-        </div>
-      </div>
-    </section>
-  </Card>
-);
-
-const PropertyFloorPlans = ({ setFloorPlans }) => (
-  <Card className="card-container mt-5">
-    <section className="row">
-      <div className="col-md-10 px-4">
-        <h5 className="mb-4">Property Floor Plan</h5>
-        <div className="my-4">
-          <Upload
-            afterUpload={(image) => setFloorPlans(image)}
-            changeText={`Update Floor Plan`}
-            defaultImage={FloorPlanPlaceholderImage}
-            imgOptions={{
-              className: 'mb-3 img-md',
-              bordered: true,
-            }}
-            allowPdf
-            name="floor-plans"
-            uploadText={`Upload Floor Plan`}
           />
         </div>
       </div>

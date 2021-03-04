@@ -6,6 +6,7 @@ import {
   minDateValidation,
   required,
   optionalValidation,
+  autocompleteValidation,
 } from './schema-helpers';
 
 export const newPropertySchema = {
@@ -18,6 +19,7 @@ export const newPropertySchema = {
   toilets: positiveNumberValidation('Toilets'),
   description: stringValidation('Description'),
   titleDocument: optionalValidation(required('Title Document')),
+  features: optionalValidation(autocompleteValidation('Available for')),
   // floorPlans: optionalValidation(required('Floor Plans')),
   // mapLocation: optionalValidation(required('Map Location')),
   // neighborhood: Joi.array().label('Property neighborhood').optional(),

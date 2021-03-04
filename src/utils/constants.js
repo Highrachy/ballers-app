@@ -163,6 +163,7 @@ export const DEFAULT_PROPERTY_FEATURES = [
 ];
 
 export const ALL_PROPERTY_FEATURES = [
+  ...DEFAULT_PROPERTY_FEATURES,
   'Cable TV Distibution',
   'Core Fiber Internet',
   'Inverter System',

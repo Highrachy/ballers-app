@@ -106,18 +106,23 @@ const OwnedPropertyCard = ({ property, toast }) => (
 export const PropertyImage = ({ property }) => {
   const hideGallery = false;
   return (
-    <div className="row">
-      <div className={hideGallery ? 'col-sm-12' : 'col-sm-10'}>
-        <Image
-          defaultImage={PropertyPlaceholderImage}
-          src={property.mainImage}
-          name="Property Image"
-          className="img-fluid gallery-main-image property-img"
-          watermark
-        />
+    <>
+      <div className="row">
+        <div className={hideGallery ? 'col-sm-12' : 'col-sm-10'}>
+          <Image
+            defaultImage={PropertyPlaceholderImage}
+            src={property.mainImage}
+            name="Property Image"
+            className="img-fluid gallery-main-image property-img"
+            watermark
+          />
+        </div>
+        {hideGallery || <Gallery />}
       </div>
-      {hideGallery || <Gallery />}
-    </div>
+      <div className="text-right mt-4">
+        <button className="btn btn-sm btn-secondary">Add Gallery Image</button>
+      </div>
+    </>
   );
 };
 
@@ -230,39 +235,11 @@ export const PropertyDescription = ({ property }) => {
       </div>
 
       <ul className="list-unstyled row mt-5">
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Air conditioning
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Swiming pool
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Central Heating
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Spa &amp; massage
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Pets allow
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Air conditioning
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Gym
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Alarm
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Window Covering
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Free wiFi
-        </li>
-        <li className="col-sm-6">
-          <CheckSquareIcon /> Car parking{' '}
-        </li>
+        {property.features?.map((feature, index) => (
+          <li className="col-sm-6" key={index}>
+            <CheckSquareIcon /> {feature}
+          </li>
+        ))}
       </ul>
 
       {userState?.role === USER_TYPES.vendor ? (
@@ -321,7 +298,7 @@ export const FloorPlans = () =>
                 iconClose={<ArrowDownIcon />}
                 eventKey={index + 1}
               >
-                <h6>{name}</h6>
+                {name}
               </ContextAwareToggle>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey={index + 1}>
@@ -333,6 +310,7 @@ export const FloorPlans = () =>
           </Card>
         ))}
       </Accordion>
+      <button className="btn btn-secondary btn-sm mt-3">Add Floor Plan</button>
     </div>
   );
 
@@ -346,7 +324,7 @@ export const Neighborhood = () => (
         <li className="row">
           <p className="col-sm-4">British International School</p>
           <p className="col-sm-4 text-right">
-            20 minutes <CarIcon />
+            <MapPinIcon /> 20 km
           </p>
         </li>
       </ul>
@@ -376,6 +354,9 @@ export const Neighborhood = () => (
           </p>
         </li>
       </ul>
+      <button className="btn btn-secondary btn-sm mt-3">
+        Add Neighborhood
+      </button>
     </div>
   </>
 );

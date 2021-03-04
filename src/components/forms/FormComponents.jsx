@@ -27,7 +27,11 @@ import Toast from 'components/utils/Toast';
 import { useToast } from 'components/utils/Toast';
 import MapPicker from 'components/utils/MapPicker';
 import useMapGeocoder from 'hooks/useMapGeocoder';
-import { generateNumOptions, setAutoComplete } from 'utils/helpers';
+import {
+  generateNumOptions,
+  getAutoComplete,
+  setAutoComplete,
+} from 'utils/helpers';
 import ReactSelect from 'react-select';
 import { customStyles } from 'components/forms/Select';
 import PhoneNumber from './PhoneNumber';
@@ -85,6 +89,10 @@ const Forms = () => {
   });
 
   console.log('latLngFromAddress', latLngFromAddress);
+  console.log(
+    'getAutoComplete',
+    getAutoComplete([{ name: '12' }, { name: '123' }, { name: '12334' }])
+  );
   return (
     <Formik
       initialValues={setInitialValues(registerSchema, { state: ['vanilla'] })}
@@ -235,19 +243,27 @@ const Forms = () => {
               formGroupClassName="col-md-6"
               name="autocomplete"
               label="Favorites Fruits (Banana, Mangos, Lemons)"
-              suggestions={setAutoComplete(
-                'Apples, Watermelon, Strawberry, Tangerine'
-              )}
-              value={setAutoComplete('Banana, Mangos, Lemons, Orange')}
+              suggestions={setAutoComplete([
+                'Apples',
+                ' Watermelon',
+                'Strawberry',
+                'Tangerine',
+              ])}
+              value={setAutoComplete(['Banana', 'Mangos', 'Lemons', 'Orange'])}
             />
             <AutoComplete
               formGroupClassName="col-md-6"
               name="autocomplete2"
               label="Favorites Fruits"
-              suggestions={setAutoComplete(
-                'Lemons, Orange, Apples, Watermelon, Strawberry, Tangerine'
-              )}
-              value={setAutoComplete('Banana, Mangos')}
+              suggestions={setAutoComplete([
+                'Lemons',
+                'Orange',
+                'Apples',
+                'Watermelon',
+                'Strawberry',
+                'Tangerine',
+              ])}
+              value={setAutoComplete(['Banana', 'Mangos'])}
             />
           </div>
 

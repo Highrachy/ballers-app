@@ -131,7 +131,7 @@ export const minDateValidation = (label, minDate) =>
         .required(`${label} is required`)
         .min(minDate, `${label} must be greater than ${getDateTime(minDate)}`),
     });
-export const autocompleteValidation = (label, minSelection = 2) =>
+export const autocompleteValidation = (label, minSelection = 1) =>
   yup
     .array()
     .min(minSelection, `Kindly select ${minSelection} or more items`)
