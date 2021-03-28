@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { FeedbackMessage, feedback } from 'components/forms/form-helper';
 import Label from './Label';
 import ReactTags from 'react-tag-autocomplete';
+import { setAutoComplete } from 'utils/helpers';
 
 // https://github.com/i-like-robots/react-tags/tree/6.0#allownew-optional
 
@@ -49,7 +50,10 @@ const AutoComplete = ({
         <div className={inputSizeClassName}>
           <Field name={name}>
             {({ field, form }) => {
-              const fieldValue = field.value || value || [];
+              let fieldValue = field.value || value || [];
+              if (typeof fieldValue[0] === 'string') {
+                fieldValue = setAutoComplete(fieldValue);
+              }
               return (
                 <ReactTags
                   allowBackspace={false}

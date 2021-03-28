@@ -21,7 +21,9 @@ import {
   FiChevronUp,
   FiBell,
   FiGitBranch,
+  FiEdit,
   FiFacebook,
+  FiTrash2,
   FiTwitter,
   FiBookOpen,
   FiX,
@@ -38,6 +40,7 @@ import {
   FaFileContract,
   FaTimesCircle,
   FaBath,
+  FaBed,
   FaToilet,
   FaUserCircle,
   FaMapMarkerAlt,
@@ -46,7 +49,11 @@ import {
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { VscVerified } from 'react-icons/vsc';
-import { BiBed, BiMessageDetail, BiBuildingHouse } from 'react-icons/bi';
+import {
+  BiMessageDetail,
+  BiBuildingHouse,
+  BiCheckCircle,
+} from 'react-icons/bi';
 import { AiFillCheckSquare, AiFillCar } from 'react-icons/ai';
 
 export const ArrowLeftIcon = () => <FiChevronLeft />;
@@ -57,17 +64,20 @@ export const ArticlesIcon = () => <FiBookOpen />;
 export const AssignedPropertyIcon = () => <FiServer />;
 export const BankInfoIcon = () => <FiArchive />;
 export const BathIcon = () => <FaBath />;
-export const BedIcon = () => <BiBed />;
+export const BedIcon = () => <FaBed />;
 export const CloseIcon = () => <FiX />;
 export const CameraIcon = () => <FiCamera />;
 export const CarIcon = () => <AiFillCar />;
 export const CertifyIcon = () => <VscVerified />;
 export const CheckIcon = () => <FiCheck />;
 export const CheckSquareIcon = () => <AiFillCheckSquare />;
+export const CheckCircleIcon = () => <BiCheckCircle />;
 export const CompanyInfoIcon = () => <FiFolder />;
 export const CopyToClipBoardIcon = () => <FiClipboard />;
+export const DeleteIcon = () => <FiTrash2 />;
 export const DownloadIcon = () => <FiDownload />;
 export const ErrorIcon = () => <FaTimesCircle />;
+export const EditIcon = () => <FiEdit />;
 export const FacebookIcon = () => <FiFacebook />;
 export const FileIcon = () => <FiFileText />;
 export const HomeIcon = () => <FiGrid />;

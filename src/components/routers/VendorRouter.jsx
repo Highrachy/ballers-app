@@ -11,6 +11,7 @@ import NewProperty from 'components/pages/vendor/NewProperty';
 import Enquiries from 'components/pages/vendor/Enquiries';
 import ViewEnquiry from 'components/pages/vendor/ViewEnquiry';
 import AssignedProperties from 'components/pages/vendor/AssignedProperties';
+import Gallery from 'components/pages/shared/Gallery';
 
 const VendorRouter = () => (
   <Router>
@@ -26,6 +27,7 @@ const VendorRouter = () => (
     <AssignedProperties path="assigned-properties" />
     <Enquiries path="enquiries" />
     <Transactions path="transactions" />
+    <Gallery path="gallery/:propertyId" />
     <Menu path="menu" />
   </Router>
 );

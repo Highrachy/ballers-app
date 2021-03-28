@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal as BModal, Button } from 'react-bootstrap';
 
-const Modal = ({ showFooter, ...props }) => {
+const Modal = ({ showFooter, dialogClassName, ...props }) => {
   return (
     <BModal
       {...props}
       size={props.size}
       aria-labelledby="contained-modal-title-vcenter"
       centered
+      dialogClassName={dialogClassName}
     >
       {props.title && (
         <BModal.Header closeButton>
@@ -31,6 +32,7 @@ const Modal = ({ showFooter, ...props }) => {
 
 Modal.propTypes = {
   children: PropTypes.any.isRequired,
+  dialogClassName: PropTypes.string,
   title: PropTypes.string.isRequired,
   size: PropTypes.string,
   showFooter: PropTypes.bool,
@@ -38,6 +40,7 @@ Modal.propTypes = {
 
 Modal.defaultProps = {
   size: 'md',
+  dialogClassName: null, //modal-big
   showFooter: true,
 };
 

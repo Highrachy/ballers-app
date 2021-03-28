@@ -66,3 +66,7 @@ export const propertyFilterSchema = {
   toilets: optionalValidation(required('Toilets')),
   role: optionalValidation(required('Role')),
 };
+
+export const addGallerySchema = {
+  title: required('Title'),
+};

@@ -18,22 +18,23 @@ import Image from 'components/utils/Image';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import Modal from 'components/common/Modal';
 import { Link } from '@reach/router';
-import { UserContext } from 'context/UserContext';
-import { CameraIcon } from 'components/utils/Icons';
 import { BathIcon } from 'components/utils/Icons';
 import { ToiletIcon } from 'components/utils/Icons';
 import { BedIcon } from 'components/utils/Icons';
-import { VendorIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
-import { CertifyIcon } from 'components/utils/Icons';
 import { Accordion } from 'react-bootstrap';
 import { ArrowDownIcon } from 'components/utils/Icons';
 import { ContextAwareToggle } from 'components/common/FAQsAccordion';
 import { ArrowUpIcon } from 'components/utils/Icons';
-import { CheckSquareIcon } from 'components/utils/Icons';
+import { CheckCircleIcon } from 'components/utils/Icons';
 import { SchoolIcon } from 'components/utils/Icons';
 import { CarIcon } from 'components/utils/Icons';
 import { HospitalIcon } from 'components/utils/Icons';
+import { GalleryList } from './Gallery';
+import { LinkSeparator } from 'components/common/Helpers';
+import { useCurrentRole } from 'hooks/useUser';
+import { TextSeparator } from 'components/common/Helpers';
+import { Spacing } from 'components/common/Helpers';
 
 const FLOOR_PLANS = [
   {
@@ -91,6 +92,9 @@ const OwnedPropertyCard = ({ property, toast }) => (
     <Toast {...toast} />
     <Card className="card-container mt-4 h-100 property-holder__big">
       <PropertyImage property={property} />
+      {useCurrentRole().role === USER_TYPES.vendor && (
+        <ManagePropertyLink property={property} />
+      )}
       <div className="row mt-5">
         <div className="col-sm-12">
           <PropertyDescription property={property} />
@@ -103,8 +107,26 @@ const OwnedPropertyCard = ({ property, toast }) => (
   </div>
 );
 
+const ManagePropertyLink = ({ property }) => (
+  <section className="mt-3">
+    <Link
+      to={`/vendor/portfolios/edit/${property._id}`}
+      className="text-link text-muted"
+    >
+      Edit Property
+    </Link>
+    <LinkSeparator />
+    <Link
+      to={`/vendor/gallery/${property._id}`}
+      className="text-link  text-muted"
+    >
+      {property?.gallery?.length > 0 ? 'Edit Gallery' : 'Add Gallery'}
+    </Link>
+  </section>
+);
+
 export const PropertyImage = ({ property }) => {
-  const hideGallery = false;
+  const hideGallery = !!property?.gallery?.lengh;
   return (
     <>
       <div className="row">
@@ -117,64 +139,18 @@ export const PropertyImage = ({ property }) => {
             watermark
           />
         </div>
-        {hideGallery || <Gallery />}
-      </div>
-      <div className="text-right mt-4">
-        <button className="btn btn-sm btn-secondary">Add Gallery Image</button>
+        {hideGallery || <GalleryList property={property} />}
       </div>
     </>
   );
 };
 
-const Gallery = () => (
-  <div className="col-sm-2">
-    <aside className="row gallery-row">
-      <div className="gallery-col col-3 col-md-12">
-        <img
-          src={PropertyPlaceholderImage}
-          alt="Property"
-          className="img-fluid gallery-thumbnails property-img"
-        />
-      </div>
-      <div className="gallery-col col-3 col-md-12">
-        <img
-          src={PropertyPlaceholderImage}
-          alt="Property"
-          className="img-fluid gallery-thumbnails property-img"
-        />
-      </div>
-      <div className="gallery-col col-3 col-md-12">
-        <img
-          src={PropertyPlaceholderImage}
-          alt="Property"
-          className="img-fluid gallery-thumbnails property-img"
-        />
-      </div>
-      <div className="gallery-col col-3 col-md-12">
-        <Link to="/user/gallery" className="overlay overlay__secondary">
-          <img
-            src={PropertyPlaceholderImage}
-            alt="Property"
-            className="img-fluid gallery-thumbnails property-img mb-0"
-          />
-          <span>
-            <CameraIcon /> <br />
-            View Gallery
-          </span>
-        </Link>
-      </div>
-    </aside>
-  </div>
-);
-
 export const PropertyDescription = ({ property }) => {
   const [showFloorPlansModal, setShowFloorPlansModal] = React.useState(false);
-  const { userState } = React.useContext(UserContext);
   const [showDescription, setShowDescription] = React.useState(false);
   const DESCRIPTION_LENGTH = 600;
   const hideSomePropertyDescription =
     !showDescription && property.description.length > DESCRIPTION_LENGTH;
-  console.log('property', property);
 
   return (
     <>
@@ -193,31 +169,31 @@ export const PropertyDescription = ({ property }) => {
       </Modal>
 
       <h3 className={`property-holder__big-title`}>{property.name}</h3>
-      <h4 className="text-secondary property-spacing mb-3">
+      <h4 className="text-secondary mb-3">
         {moneyFormatInNaira(property.price)}
       </h4>
       <p className="mb-2 text-muted">
-        <MapPinIcon /> {getLocationFromAddress(property.address)}
+        {getLocationFromAddress(property.address)}
       </p>
 
-      <div className="property-info property-spacing">
+      <div className="property-info-details">
         <span className="pr-3">
-          <BedIcon /> {property.bedrooms}{' '}
+          <BedIcon /> <Spacing /> {property.bedrooms}{' '}
           {Humanize.pluralize(property.bedrooms, 'bed')}
         </span>
-        |{' '}
+        <TextSeparator />
         <span className="px-3">
-          <BathIcon /> {property.bathrooms}{' '}
+          <BathIcon /> <Spacing /> {property.bathrooms}{' '}
           {Humanize.pluralize(property.bathrooms, 'bath')}
         </span>
-        |
+        <TextSeparator />
         <span className="pl-3">
-          <ToiletIcon /> {property.toilets}{' '}
+          <ToiletIcon /> <Spacing /> {property.toilets}{' '}
           {Humanize.pluralize(property.toilets, 'toilet')}
         </span>
       </div>
 
-      <h5 className="mt-5">About Property</h5>
+      <h5 className="mt-5 header-smaller">About Property</h5>
       <div className="position-relative">
         {hideSomePropertyDescription
           ? Humanize.truncate(property.description, DESCRIPTION_LENGTH, '...')
@@ -234,28 +210,21 @@ export const PropertyDescription = ({ property }) => {
         )}
       </div>
 
-      <ul className="list-unstyled row mt-5">
+      <h5 className="mt-5 header-smaller">Features</h5>
+      <ul className="list-unstyled row">
         {property.features?.map((feature, index) => (
           <li className="col-sm-6" key={index}>
-            <CheckSquareIcon /> {feature}
+            <span className="text-secondary">
+              <CheckCircleIcon /> &nbsp;
+            </span>
+            {feature}
           </li>
         ))}
       </ul>
-
-      {userState?.role === USER_TYPES.vendor ? (
-        <Link
-          className="btn btn-secondary"
-          to={`/vendor/portfolios/edit/${property._id}`}
-        >
-          Edit Property
-        </Link>
-      ) : (
-        <div>
-          <h5 className="text-primary mt-4">
-            <VendorIcon /> Agent: {property?.vendorInfo?.vendor?.companyName}{' '}
-            <CertifyIcon />
-          </h5>
-          <div className="hero">
+      {useCurrentRole().role !== USER_TYPES.vendor && (
+        <div className="mt-5">
+          <div className="hero-holder">
+            <h5 className="text-primary header-smaller">Important Notice</h5>
             <ol>
               <li>
                 Do not make any upfront payment as inspection fee when visiting
@@ -283,8 +252,8 @@ export const PropertyDescription = ({ property }) => {
 
 export const FloorPlans = () =>
   FLOOR_PLANS.length > 0 && (
-    <div>
-      <h5 className="mt-5">Floor Plans</h5>
+    <div className="property__floor-plans">
+      <h5 className="mt-5 header-smaller mb-3">Floor Plans</h5>
       <Accordion>
         {FLOOR_PLANS.map(({ name, plan }, index) => (
           <Card key={index + 1}>
@@ -304,7 +273,11 @@ export const FloorPlans = () =>
             <Accordion.Collapse eventKey={index + 1}>
               <Card.Body>
                 <Image src={plan} alt={name} name={name} />
-                {plan}
+                <p className="">
+                  <a href={plan} className="text mt-3">
+                    {plan}
+                  </a>
+                </p>
               </Card.Body>
             </Accordion.Collapse>
           </Card>
@@ -316,18 +289,30 @@ export const FloorPlans = () =>
 
 export const Neighborhood = () => (
   <>
-    <h5 className="mt-5">The neighbourhood</h5>
+    <h5 className="mt-5 header-smaller">The neighbourhood</h5>
     <div className="single__detail-features-nearby">
       <IconBox name="Schools" color="pink" Icon={<SchoolIcon />} />
 
-      <ul className="list-unstyled">
-        <li className="row">
-          <p className="col-sm-4">British International School</p>
-          <p className="col-sm-4 text-right">
-            <MapPinIcon /> 20 km
-          </p>
-        </li>
-      </ul>
+      <div className="row">
+        <div className="col-md-8">
+          <div className="list-neighbourhood">
+            <ul className="list-unstyled">
+              <li className="row">
+                <p className="col-sm-8">British International School</p>
+                <p className="col-sm-4 text-right">
+                  <MapPinIcon /> <Spacing /> 20 km
+                </p>
+              </li>
+              <li className="row">
+                <p className="col-sm-8">British International School</p>
+                <p className="col-sm-4 text-right">
+                  <MapPinIcon /> <Spacing /> 20 km
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
       <IconBox
         name="Health and Medicals"

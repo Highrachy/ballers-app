@@ -21,6 +21,7 @@ const AdminList = ({
   pageName,
   pluralPageName,
   endpoint,
+  ...props
 }) => {
   const pluralizePageName = pluralPageName || Humanize.pluralize(2, pageName);
   const Icon = PageIcon || <UserIcon />;
@@ -64,6 +65,7 @@ const AdminList = ({
         <DataComponent
           results={results || []}
           offset={pagination?.offset || 0}
+          {...props}
         />
         <Pagination
           currentPage={pagination?.currentPage}

@@ -286,7 +286,7 @@ const PropertyInfoForm = () => {
           <AutoComplete
             name="features"
             label="Features"
-            suggestions={setAutoComplete([ALL_PROPERTY_FEATURES])}
+            suggestions={setAutoComplete(ALL_PROPERTY_FEATURES)}
             value={setAutoComplete(DEFAULT_PROPERTY_FEATURES)}
           />
 

@@ -21,6 +21,7 @@ import Image from 'components/utils/Image';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import { UserContext } from 'context/UserContext';
 import { HOUSE_TYPES, USER_TYPES } from 'utils/constants';
+import { useCurrentRole } from 'hooks/useUser';
 
 const Portfolios = () => {
   const { userState } = React.useContext(UserContext);
@@ -69,34 +70,40 @@ const PortfoliosRowList = ({ results, offset }) => (
   </div>
 );
 
-const PortfoliosRow = ({ _id, name, address, price, number, mainImage }) => (
-  <tr>
-    <td>{number}</td>
-    <td>
-      <Link to={`/admin/portfolio/${_id}`}>
-        <Image
-          src={mainImage}
-          name={`portfolio ${_id}`}
-          width="80"
-          alt="property"
-          defaultImage={PropertyPlaceholderImage}
-        />
-      </Link>
-    </td>
-    <td>{name}</td>
-    <td>
-      <strong>
-        {address.city}, {address.state}
-      </strong>
-    </td>
-    <td>{moneyFormatInNaira(price)}</td>
-    <td>
-      <Link className="btn btn-sm btn-secondary" to={`/admin/portfolio/${_id}`}>
-        View property
-      </Link>
-    </td>
-  </tr>
-);
+const PortfoliosRow = ({ _id, name, address, price, number, mainImage }) => {
+  const userType = useCurrentRole().name;
+  return (
+    <tr>
+      <td>{number}</td>
+      <td>
+        <Link to={`/${userType}/portfolio/${_id}`}>
+          <Image
+            src={mainImage}
+            name={`portfolio ${_id}`}
+            width="80"
+            alt="property"
+            defaultImage={PropertyPlaceholderImage}
+          />
+        </Link>
+      </td>
+      <td>{name}</td>
+      <td>
+        <strong>
+          {address.city}, {address.state}
+        </strong>
+      </td>
+      <td>{moneyFormatInNaira(price)}</td>
+      <td>
+        <Link
+          className="btn btn-sm btn-secondary"
+          to={`/${userType}/portfolio/${_id}`}
+        >
+          View property
+        </Link>
+      </td>
+    </tr>
+  );
+};
 
 const FilterForm = ({ setFilterTerms }) => {
   return (

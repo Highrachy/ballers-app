@@ -19,8 +19,20 @@
   color: $primary;
   cursor: pointer;
 
-  &:hover {
+  .text-secondary {
     color: $secondary;
+  }
+
+  &.text-muted {
+    color: $text-muted;
+  }
+
+  &:hover {
+    color: $secondary !important;
+  }
+
+  &.text-danger:hover {
+    color: $danger !important;
   }
 }
 
