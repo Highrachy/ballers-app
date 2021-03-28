@@ -70,3 +70,7 @@ export const propertyFilterSchema = {
 export const addGallerySchema = {
   title: required('Title'),
 };
+
+export const addFloorPlansSchema = {
+  name: required('Title'),
+};

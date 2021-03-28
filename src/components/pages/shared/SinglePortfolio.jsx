@@ -16,16 +16,11 @@ import {
 import { MyPropertyIcon } from 'components/utils/Icons';
 import Image from 'components/utils/Image';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
-import Modal from 'components/common/Modal';
 import { Link } from '@reach/router';
 import { BathIcon } from 'components/utils/Icons';
 import { ToiletIcon } from 'components/utils/Icons';
 import { BedIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
-import { Accordion } from 'react-bootstrap';
-import { ArrowDownIcon } from 'components/utils/Icons';
-import { ContextAwareToggle } from 'components/common/FAQsAccordion';
-import { ArrowUpIcon } from 'components/utils/Icons';
 import { CheckCircleIcon } from 'components/utils/Icons';
 import { SchoolIcon } from 'components/utils/Icons';
 import { CarIcon } from 'components/utils/Icons';
@@ -35,24 +30,8 @@ import { LinkSeparator } from 'components/common/Helpers';
 import { useCurrentRole } from 'hooks/useUser';
 import { TextSeparator } from 'components/common/Helpers';
 import { Spacing } from 'components/common/Helpers';
-
-const FLOOR_PLANS = [
-  {
-    name: 'Upper Floor',
-    plan:
-      'https://ballers-staging.s3.amazonaws.com/600e6414650f0000170ba5a0/07cf5fb0-7a52-11eb-b46b-c372b34a5c1f.pdf',
-  },
-  {
-    name: 'Lower Floor',
-    plan:
-      'https://ballers-staging.s3.amazonaws.com/600e6414650f0000170ba5a0/07cf5fb0-7a52-11eb-b46b-c372b34a5c1f.pdf',
-  },
-  {
-    name: 'Middle Floor',
-    plan:
-      'https://ballers-staging.s3.amazonaws.com/600e6414650f0000170ba5a0/07cf5fb0-7a52-11eb-b46b-c372b34a5c1f.pdf',
-  },
-];
+import { FloorPlansList } from './FloorPlans';
+import { AddFloorPlans } from './FloorPlans';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -79,7 +58,12 @@ const SinglePortfolio = ({ id }) => {
   return (
     <BackendPage>
       {property ? (
-        <OwnedPropertyCard property={property} toast={toast} />
+        <OwnedPropertyCard
+          property={property}
+          toast={toast}
+          setToast={setToast}
+          setProperty={setProperty}
+        />
       ) : (
         <NoContent text="Loading Property" Icon={<MyPropertyIcon />} />
       )}
@@ -87,27 +71,35 @@ const SinglePortfolio = ({ id }) => {
   );
 };
 
-const OwnedPropertyCard = ({ property, toast }) => (
+const OwnedPropertyCard = ({ property, toast, setToast, setProperty }) => (
   <div className="container-fluid">
     <Toast {...toast} />
     <Card className="card-container mt-4 h-100 property-holder__big">
       <PropertyImage property={property} />
       {useCurrentRole().role === USER_TYPES.vendor && (
-        <ManagePropertyLink property={property} />
+        <ManagePropertyLink
+          property={property}
+          setToast={setToast}
+          setProperty={setProperty}
+        />
       )}
       <div className="row mt-5">
         <div className="col-sm-12">
           <PropertyDescription property={property} />
         </div>
       </div>
-      <FloorPlans />
+      <FloorPlansList
+        property={property}
+        setToast={setToast}
+        setProperty={setProperty}
+      />
       <Neighborhood />
     </Card>
     <PropertyMap mapLocation={property.mapLocation} />
   </div>
 );
 
-const ManagePropertyLink = ({ property }) => (
+const ManagePropertyLink = ({ property, setToast, setProperty }) => (
   <section className="mt-3">
     <Link
       to={`/vendor/portfolios/edit/${property._id}`}
@@ -122,6 +114,13 @@ const ManagePropertyLink = ({ property }) => (
     >
       {property?.gallery?.length > 0 ? 'Edit Gallery' : 'Add Gallery'}
     </Link>
+    <LinkSeparator />
+    <AddFloorPlans
+      className="text-link text-muted"
+      property={property}
+      setToast={setToast}
+      setProperty={setProperty}
+    />
   </section>
 );
 
@@ -146,7 +145,6 @@ export const PropertyImage = ({ property }) => {
 };
 
 export const PropertyDescription = ({ property }) => {
-  const [showFloorPlansModal, setShowFloorPlansModal] = React.useState(false);
   const [showDescription, setShowDescription] = React.useState(false);
   const DESCRIPTION_LENGTH = 600;
   const hideSomePropertyDescription =
@@ -154,20 +152,6 @@ export const PropertyDescription = ({ property }) => {
 
   return (
     <>
-      <Modal
-        title="Floor Plans"
-        show={showFloorPlansModal}
-        onHide={() => setShowFloorPlansModal(false)}
-        showFooter={false}
-        size="lg"
-      >
-        <Image
-          src={property.floorPlans}
-          name={property.name}
-          options={{ h: 1000 }}
-        />
-      </Modal>
-
       <h3 className={`property-holder__big-title`}>{property.name}</h3>
       <h4 className="text-secondary mb-3">
         {moneyFormatInNaira(property.price)}
@@ -211,7 +195,7 @@ export const PropertyDescription = ({ property }) => {
       </div>
 
       <h5 className="mt-5 header-smaller">Features</h5>
-      <ul className="list-unstyled row">
+      <ul className="list-unstyled row lh-2">
         {property.features?.map((feature, index) => (
           <li className="col-sm-6" key={index}>
             <span className="text-secondary">
@@ -225,7 +209,7 @@ export const PropertyDescription = ({ property }) => {
         <div className="mt-5">
           <div className="hero-holder">
             <h5 className="text-primary header-smaller">Important Notice</h5>
-            <ol>
+            <ol className="ml-n3">
               <li>
                 Do not make any upfront payment as inspection fee when visiting
                 the property.
@@ -249,43 +233,6 @@ export const PropertyDescription = ({ property }) => {
     </>
   );
 };
-
-export const FloorPlans = () =>
-  FLOOR_PLANS.length > 0 && (
-    <div className="property__floor-plans">
-      <h5 className="mt-5 header-smaller mb-3">Floor Plans</h5>
-      <Accordion>
-        {FLOOR_PLANS.map(({ name, plan }, index) => (
-          <Card key={index + 1}>
-            <Accordion.Toggle
-              as={Card.Header}
-              variant="link"
-              eventKey={index + 1}
-            >
-              <ContextAwareToggle
-                iconOpen={<ArrowUpIcon />}
-                iconClose={<ArrowDownIcon />}
-                eventKey={index + 1}
-              >
-                {name}
-              </ContextAwareToggle>
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey={index + 1}>
-              <Card.Body>
-                <Image src={plan} alt={name} name={name} />
-                <p className="">
-                  <a href={plan} className="text mt-3">
-                    {plan}
-                  </a>
-                </p>
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
-        ))}
-      </Accordion>
-      <button className="btn btn-secondary btn-sm mt-3">Add Floor Plan</button>
-    </div>
-  );
 
 export const Neighborhood = () => (
   <>
