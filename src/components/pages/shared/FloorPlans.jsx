@@ -86,34 +86,31 @@ export const FloorPlansForm = ({
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} showToastOnly />
-
-          <Card className="card-container">
-            <section className="row">
-              <div className="col-md-10 px-4">
-                <h5>Add Floor Plans</h5>
-                <Input label="Title" name="name" placeholder="Title" />
-                <div className="my-4">
-                  <Upload
-                    afterUpload={(image) => setImage(image)}
-                    changeText={`Update Floor Plan`}
-                    defaultImage={PropertyPlaceholderImage}
-                    imgOptions={{ className: 'mb-3', watermark: true }}
-                    name="floorPlan"
-                    oldImage={floorPlan?.plan}
-                    uploadText={`Upload Floor Plan`}
-                  />
-                </div>
-                <Button
-                  className="btn-secondary mt-4"
-                  loading={isSubmitting}
-                  onClick={handleSubmit}
-                >
-                  Add Floor Plan
-                </Button>
-                <DisplayFormikState {...props} showAll />
+          <section className="row">
+            <div className="col-md-10 px-4">
+              <h5>Add Floor Plans</h5>
+              <Input label="Title" name="name" placeholder="Title" />
+              <div className="my-4">
+                <Upload
+                  afterUpload={(image) => setImage(image)}
+                  changeText={`Update Floor Plan`}
+                  defaultImage={PropertyPlaceholderImage}
+                  imgOptions={{ className: 'mb-3', watermark: true }}
+                  name="floorPlan"
+                  oldImage={floorPlan?.plan}
+                  uploadText={`Upload Floor Plan`}
+                />
               </div>
-            </section>
-          </Card>
+              <Button
+                className="btn-secondary mt-4"
+                loading={isSubmitting}
+                onClick={handleSubmit}
+              >
+                Add Floor Plan
+              </Button>
+              <DisplayFormikState {...props} showAll />
+            </div>
+          </section>
         </Form>
       )}
     </Formik>
@@ -296,7 +293,7 @@ export const FloorPlansList = ({ property, setProperty, setToast }) => {
       <div className="row">
         <div className="col-12">
           <AddFloorPlans
-            className="btn btn-secondary btn-sm btn-wide"
+            className="btn btn-secondary btn-xs btn-wide"
             property={property}
             setToast={setToast}
             setProperty={setProperty}

@@ -74,3 +74,11 @@ export const addGallerySchema = {
 export const addFloorPlansSchema = {
   name: required('Title'),
 };
+export const neighborhoodTypeSchema = {
+  type: required('Type'),
+};
+
+export const neighborhoodSchema = {
+  distance: optionalValidation(required('Distance')),
+  name: optionalValidation(required('Name')),
+};

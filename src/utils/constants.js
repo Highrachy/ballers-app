@@ -185,3 +185,12 @@ export const ALL_PROPERTY_FEATURES = [
   'Peaceful Environment',
   'Fitted Kitchen',
 ];
+
+export const NEIGHBORHOOD_STEPS = [
+  'entertainments',
+  'hospitals',
+  'pointsOfInterest',
+  'restaurantsAndBars',
+  'schools',
+  'shoppingMalls',
+];

@@ -5,7 +5,6 @@ import Map from 'components/common/Map';
 import { BASE_API_URL, USER_TYPES } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
-import { MapPinIcon } from 'components/utils/Icons';
 import { getTokenFromStore } from 'utils/localStorage';
 import NoContent from 'components/utils/NoContent';
 import {
@@ -22,9 +21,6 @@ import { ToiletIcon } from 'components/utils/Icons';
 import { BedIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
 import { CheckCircleIcon } from 'components/utils/Icons';
-import { SchoolIcon } from 'components/utils/Icons';
-import { CarIcon } from 'components/utils/Icons';
-import { HospitalIcon } from 'components/utils/Icons';
 import { GalleryList } from './Gallery';
 import { LinkSeparator } from 'components/common/Helpers';
 import { useCurrentRole } from 'hooks/useUser';
@@ -32,6 +28,8 @@ import { TextSeparator } from 'components/common/Helpers';
 import { Spacing } from 'components/common/Helpers';
 import { FloorPlansList } from './FloorPlans';
 import { AddFloorPlans } from './FloorPlans';
+import { AddNeighborhood } from './Neighborhood';
+import { NeighborhoodList } from './Neighborhood';
 
 const SinglePortfolio = ({ id }) => {
   const [toast, setToast] = useToast();
@@ -58,12 +56,14 @@ const SinglePortfolio = ({ id }) => {
   return (
     <BackendPage>
       {property ? (
-        <OwnedPropertyCard
-          property={property}
-          toast={toast}
-          setToast={setToast}
-          setProperty={setProperty}
-        />
+        <>
+          <OwnedPropertyCard
+            property={property}
+            toast={toast}
+            setToast={setToast}
+            setProperty={setProperty}
+          />
+        </>
       ) : (
         <NoContent text="Loading Property" Icon={<MyPropertyIcon />} />
       )}
@@ -93,7 +93,11 @@ const OwnedPropertyCard = ({ property, toast, setToast, setProperty }) => (
         setToast={setToast}
         setProperty={setProperty}
       />
-      <Neighborhood />
+      <NeighborhoodList
+        property={property}
+        setToast={setToast}
+        setProperty={setProperty}
+      />
     </Card>
     <PropertyMap mapLocation={property.mapLocation} />
   </div>
@@ -121,11 +125,18 @@ const ManagePropertyLink = ({ property, setToast, setProperty }) => (
       setToast={setToast}
       setProperty={setProperty}
     />
+    <LinkSeparator />
+    <AddNeighborhood
+      className="text-link text-muted"
+      property={property}
+      setToast={setToast}
+      setProperty={setProperty}
+    />
   </section>
 );
 
 export const PropertyImage = ({ property }) => {
-  const hideGallery = !!property?.gallery?.lengh;
+  const hideGallery = (property?.gallery?.length || 0) === 0;
   return (
     <>
       <div className="row">
@@ -233,72 +244,6 @@ export const PropertyDescription = ({ property }) => {
     </>
   );
 };
-
-export const Neighborhood = () => (
-  <>
-    <h5 className="mt-5 header-smaller">The neighbourhood</h5>
-    <div className="single__detail-features-nearby">
-      <IconBox name="Schools" color="pink" Icon={<SchoolIcon />} />
-
-      <div className="row">
-        <div className="col-md-8">
-          <div className="list-neighbourhood">
-            <ul className="list-unstyled">
-              <li className="row">
-                <p className="col-sm-8">British International School</p>
-                <p className="col-sm-4 text-right">
-                  <MapPinIcon /> <Spacing /> 20 km
-                </p>
-              </li>
-              <li className="row">
-                <p className="col-sm-8">British International School</p>
-                <p className="col-sm-4 text-right">
-                  <MapPinIcon /> <Spacing /> 20 km
-                </p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <IconBox
-        name="Health and Medicals"
-        color="blue"
-        Icon={<HospitalIcon />}
-      />
-      <ul className="list-unstyled">
-        <li className="row">
-          <p className="col-sm-4">Reddington Hospital</p>
-          <p className="col-sm-4 text-right">
-            10 minutes <CarIcon />
-          </p>
-        </li>
-        <li className="row">
-          <p className="col-sm-4">Large Sales Pharmacy</p>
-          <p className="col-sm-4 text-right">
-            15 minutes <CarIcon />
-          </p>
-        </li>
-        <li className="row">
-          <p className="col-sm-4">Crystal Hospital</p>
-          <p className="col-sm-4 text-right">
-            30 minutes <CarIcon />
-          </p>
-        </li>
-      </ul>
-      <button className="btn btn-secondary btn-sm mt-3">
-        Add Neighborhood
-      </button>
-    </div>
-  </>
-);
-
-const IconBox = ({ name, color, Icon }) => (
-  <div className="neighborhood-check icon-box">
-    <span className={color}>{Icon}</span>
-    {name}
-  </div>
-);
 
 export const PropertyMap = ({ mapLocation }) =>
   mapLocation ? (

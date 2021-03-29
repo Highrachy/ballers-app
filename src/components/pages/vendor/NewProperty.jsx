@@ -100,7 +100,12 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
     <Formik
       enableReinitialize={true}
       initialValues={{
-        ...setInitialValues(newPropertySchema, { ...property }),
+        ...setInitialValues(newPropertySchema, {
+          ...property,
+          features: property?.features
+            ? setAutoComplete(property?.features)
+            : setAutoComplete(DEFAULT_PROPERTY_FEATURES),
+        }),
         address: setInitialValues(addressSchema, {
           ...property?.address,
           country: 'Nigeria',
@@ -113,8 +118,6 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
           mainImage: image || property?.mainImage,
           features: getAutoComplete(values.features),
         };
-        console.log('values', values);
-        console.log('payloadData', payloadData);
 
         payload = location
           ? {
@@ -287,7 +290,6 @@ const PropertyInfoForm = () => {
             name="features"
             label="Features"
             suggestions={setAutoComplete(ALL_PROPERTY_FEATURES)}
-            value={setAutoComplete(DEFAULT_PROPERTY_FEATURES)}
           />
 
           <Textarea

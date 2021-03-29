@@ -46,6 +46,7 @@ import {
   FaMapMarkerAlt,
   FaBuilding,
   FaAmbulance,
+  FaGrinStars,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { VscVerified } from 'react-icons/vsc';
@@ -53,8 +54,11 @@ import {
   BiMessageDetail,
   BiBuildingHouse,
   BiCheckCircle,
+  BiFoodMenu,
+  BiCameraMovie,
 } from 'react-icons/bi';
 import { AiFillCheckSquare, AiFillCar } from 'react-icons/ai';
+import { MdLocalMall } from 'react-icons/md';
 
 export const ArrowLeftIcon = () => <FiChevronLeft />;
 export const ArrowDownIcon = () => <FiChevronDown />;
@@ -76,6 +80,7 @@ export const CompanyInfoIcon = () => <FiFolder />;
 export const CopyToClipBoardIcon = () => <FiClipboard />;
 export const DeleteIcon = () => <FiTrash2 />;
 export const DownloadIcon = () => <FiDownload />;
+export const EntertainmentIcon = () => <BiCameraMovie />;
 export const ErrorIcon = () => <FaTimesCircle />;
 export const EditIcon = () => <FiEdit />;
 export const FacebookIcon = () => <FiFacebook />;
@@ -84,6 +89,7 @@ export const HomeIcon = () => <FiGrid />;
 export const HospitalIcon = () => <FaAmbulance />;
 export const InfoIcon = () => <FaInfoCircle />;
 export const LoveIcon = () => <FiHeart />;
+export const MallIcon = () => <MdLocalMall />;
 export const MapPinIcon = () => <FaMapMarkerAlt />;
 export const MessageIcon = () => <BiMessageDetail />;
 export const MenuIcon = () => <FiMenu />;
@@ -91,9 +97,11 @@ export const MyPropertyIcon = () => <FiHome />;
 export const NotificationIcon = () => <FiBell />;
 export const OfferIcon = () => <FaFileContract />;
 export const PlusIcon = () => <FiPlus />;
+export const PointOfInterestIcon = () => <FaGrinStars />;
 export const ProfileIcon = () => <FiSettings />;
 export const PropertyIcon = () => <BiBuildingHouse />;
 export const QuestionMarkIcon = () => <FiHelpCircle />;
+export const FoodMenuIcon = () => <BiFoodMenu />;
 export const ReferIcon = () => <FiGift />;
 export const RightArrowIcon = () => <FiChevronRight />;
 export const RightChevronIcon = () => <FiChevronRight />;

@@ -27,3 +27,4 @@ htaccess
 cypress/videos/*
 cypress/screenshots/*
 todo.md
+.vscode/settings.json

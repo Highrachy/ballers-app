@@ -112,6 +112,10 @@
     &.pink {
       background: #fd749b;
     }
+
+    &.gray {
+      background: $gray-600;
+    }
   }
 
   svg {

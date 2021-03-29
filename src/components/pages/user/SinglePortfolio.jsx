@@ -2,7 +2,7 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, USER_TYPES } from 'utils/constants';
 import Modal from 'components/common/Modal';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
@@ -14,12 +14,15 @@ import { getLongDate } from 'utils/date-helpers';
 import { VisitationIcon } from 'components/utils/Icons';
 import { PropertyImage } from '../shared/SinglePortfolio';
 import { PropertyDescription } from '../shared/SinglePortfolio';
-import { Neighborhood } from '../shared/SinglePortfolio';
 import { PropertyMap } from '../shared/SinglePortfolio';
 import { getError } from 'utils/helpers';
 import { CancelVisitForm } from './ProcessVisitation';
 import { RescheduleVisitForm } from './ProcessVisitation';
 import { ScheduleVisitForm } from './ProcessVisitation';
+import { NeighborhoodList } from '../shared/Neighborhood';
+import Button from 'components/forms/Button';
+import { useCurrentRole } from 'hooks/useUser';
+import { FloorPlansList } from '../shared/FloorPlans';
 
 const SinglePortfolio = ({ id, assigned }) => {
   const [toast, setToast] = useToast();
@@ -55,6 +58,7 @@ const SinglePortfolio = ({ id, assigned }) => {
           property={property}
           setToast={setToast}
           assigned={assigned}
+          setProperty={setProperty}
         />
       ) : (
         <Loading text="Loading Property" Icon={<MyPropertyIcon />} />
@@ -65,7 +69,7 @@ const SinglePortfolio = ({ id, assigned }) => {
 
 const NOW = 50;
 
-const OwnedPropertyCard = ({ assigned, property, setToast }) => (
+const OwnedPropertyCard = ({ assigned, property, setToast, setProperty }) => (
   <div className="container-fluid">
     <Card className="card-container mt-4 h-100 property-holder__big">
       <PropertyImage property={property} />
@@ -81,7 +85,7 @@ const OwnedPropertyCard = ({ assigned, property, setToast }) => (
               <AssignedPropertySidebar />
             ) : (
               <PropertySidebar
-                propertyId={property._id}
+                property={property}
                 visitationInfo={property?.visitationInfo}
                 enquiryInfo={property?.enquiryInfo}
                 setToast={setToast}
@@ -90,9 +94,26 @@ const OwnedPropertyCard = ({ assigned, property, setToast }) => (
           </aside>
         </div>
       </div>
-      <Neighborhood />
+      <FloorPlansList
+        property={property}
+        setToast={setToast}
+        setProperty={setProperty}
+      />
+      <NeighborhoodList
+        property={property}
+        setToast={setToast}
+        setProperty={setProperty}
+      />
     </Card>
     <PropertyMap mapLocation={property.mapLocation} />
+
+    {useCurrentRole().role === USER_TYPES.user && (
+      <div className="text-right mt-5">
+        <Button className="btn btn-xs btn-dark btn-wide">
+          Report this Property
+        </Button>
+      </div>
+    )}
   </div>
 );
 
@@ -167,7 +188,7 @@ const AssignedPropertySidebar = () => {
 };
 
 const PropertySidebar = ({
-  propertyId,
+  property,
   visitationInfo,
   enquiryInfo,
   setToast,
@@ -304,7 +325,7 @@ const PropertySidebar = ({
         ) : (
           <ScheduleVisitForm
             hideForm={() => setShowRequestVisitForm(false)}
-            propertyId={propertyId}
+            propertyId={property._id}
             setToast={setToast}
           />
         )}
@@ -318,7 +339,7 @@ const PropertySidebar = ({
             : 'Kindly proceed with property acquisition'}
         </p>
         <Link
-          to={`/user/property/enquiry/${propertyId}`}
+          to={`/user/property/enquiry/${property._id}`}
           className="btn btn-block btn-secondary my-3"
         >
           {userHasPreviousEnquiry ? 'Make Another Enquiry' : 'Proceed'}
@@ -378,23 +399,13 @@ const PropertySidebar = ({
         onHide={() => setShowTitleDocument(false)}
         showFooter={false}
       >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ac feugiat sed
-        lectus vestibulum mattis ullamcorper. Cras adipiscing enim eu turpis
-        egestas. Egestas diam in arcu cursus euismod quis viverra nibh.
-        Porttitor lacus luctus accumsan tortor posuere ac ut. Eget lorem dolor
-        sed viverra ipsum nunc aliquet. Lectus urna duis convallis convallis.
-        Mattis aliquam faucibus purus in massa tempor. Dolor magna eget est
-        lorem ipsum dolor sit amet. Quisque sagittis purus sit amet volutpat.
-        Neque egestas congue quisque egestas diam in arcu. Magna fermentum
-        iaculis eu non diam. Mauris vitae ultricies leo integer malesuada nunc
-        vel risus. Malesuada fames ac turpis egestas sed tempus urna et.
+        {property.titleDocument}
       </Modal>
       <Card
         className="card-container property-holder bg-gray card-link"
         onClick={() => setShowTitleDocument(true)}
       >
-        <p className="mr-4">Request a copy of the property document.</p>
+        <p className="mr-4">View a copy of the property document.</p>
         <div className="circle-icon bg-green">
           <RightArrowIcon />
         </div>
