@@ -28,37 +28,32 @@ import { CloseIcon } from 'components/utils/Icons';
 import { EditIcon } from 'components/utils/Icons';
 import { DeleteIcon } from 'components/utils/Icons';
 import { LinkSeparator } from 'components/common/Helpers';
+import { useGetQuery } from 'hooks/useQuery';
+import URL from 'utils/URL';
+import { ContentLoader } from 'components/utils/LoadingItems';
 
+const pageOptions = {
+  key: 'property',
+  pageName: 'Gallery',
+};
 export default ({ propertyId }) => {
   const [toast, setToast] = useToast();
-  const [property, setProperty] = React.useState(null);
   const [showGalleryForm, setShowGalleryForm] = React.useState(false);
 
   const hideForm = () => setShowGalleryForm(false);
 
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/property/${propertyId}`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        if (statusIsSuccessful(status)) {
-          setProperty(data.property);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast, propertyId]);
+  const [propertyQuery, property, setProperty] = useGetQuery({
+    key: pageOptions.key,
+    name: [pageOptions.key, propertyId],
+    setToast,
+    endpoint: URL.getOneProperty(propertyId),
+  });
 
   return (
     <BackendPage>
       <div className="container-fluid">
         <Toast {...toast} showToastOnly />
+
         <h4>
           Gallery
           <div className="float-right">
@@ -79,6 +74,8 @@ export default ({ propertyId }) => {
             )}
           </div>
         </h4>
+        <p className="font-weight-bold">{property?.name}</p>
+
         <SlideDown className={''}>
           {showGalleryForm && (
             <GalleryForm
@@ -89,11 +86,30 @@ export default ({ propertyId }) => {
             />
           )}
         </SlideDown>
-        <GalleryImages
-          property={property}
-          setProperty={setProperty}
-          setToast={setToast}
-        />
+
+        <ContentLoader
+          hasContent={!!property?.gallery?.length > 0}
+          Icon={<CameraIcon />}
+          isLoading={propertyQuery.isLoading}
+          name={pageOptions.pageName}
+          noContentText="No images in Gallery"
+          toast={toast}
+        >
+          {property?.gallery.length > 0 && (
+            <GalleryImages
+              property={property}
+              setProperty={setProperty}
+              setToast={setToast}
+            />
+          )}
+        </ContentLoader>
+
+        <Link
+          className="btn btn-secondary btn-wide mt-5"
+          to={`/vendor/portfolio/${property?._id}`}
+        >
+          Back to Property
+        </Link>
       </div>
     </BackendPage>
   );
@@ -286,12 +302,6 @@ export const GalleryImages = ({ property, setProperty, setToast }) => (
         ))}
       </div>
     </Card>
-    <Link
-      className="btn btn-secondary btn-wide"
-      to={`/vendor/portfolio/${property?._id}`}
-    >
-      Back to Property
-    </Link>
   </>
 );
 

@@ -2,17 +2,9 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import Map from 'components/common/Map';
-import { BASE_API_URL, USER_TYPES } from 'utils/constants';
-import Toast, { useToast } from 'components/utils/Toast';
-import Axios from 'axios';
-import { getTokenFromStore } from 'utils/localStorage';
-import NoContent from 'components/utils/NoContent';
-import {
-  moneyFormatInNaira,
-  getError,
-  getLocationFromAddress,
-} from 'utils/helpers';
-import { MyPropertyIcon } from 'components/utils/Icons';
+import { USER_TYPES } from 'utils/constants';
+import { useToast } from 'components/utils/Toast';
+import { moneyFormatInNaira, getLocationFromAddress } from 'utils/helpers';
 import Image from 'components/utils/Image';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import { Link } from '@reach/router';
@@ -30,50 +22,47 @@ import { FloorPlansList } from './FloorPlans';
 import { AddFloorPlans } from './FloorPlans';
 import { AddNeighborhood } from './Neighborhood';
 import { NeighborhoodList } from './Neighborhood';
+import { useGetQuery } from 'hooks/useQuery';
+import { MyPropertyIcon } from 'components/utils/Icons';
+import URL from 'utils/URL';
+import { ContentLoader } from 'components/utils/LoadingItems';
 
 const SinglePortfolio = ({ id }) => {
+  const pageOptions = {
+    key: 'property',
+    pageName: 'Property',
+  };
+
   const [toast, setToast] = useToast();
-  const [property, setProperty] = React.useState(null);
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/property/${id}`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        // handle success
-        if (status === 200) {
-          setProperty(data.property);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast, id]);
+  const [propertyQuery, property, setProperty] = useGetQuery({
+    key: pageOptions.key,
+    name: [pageOptions.key, id],
+    setToast,
+    endpoint: URL.getOneProperty(id),
+    refresh: true,
+  });
+
   return (
     <BackendPage>
-      {property ? (
-        <>
-          <OwnedPropertyCard
-            property={property}
-            toast={toast}
-            setToast={setToast}
-            setProperty={setProperty}
-          />
-        </>
-      ) : (
-        <NoContent text="Loading Property" Icon={<MyPropertyIcon />} />
-      )}
+      <ContentLoader
+        hasContent={!!property}
+        Icon={<MyPropertyIcon />}
+        isLoading={propertyQuery.isLoading}
+        name={pageOptions.pageName}
+        toast={toast}
+      >
+        <OwnedPropertyCard
+          property={property}
+          setToast={setToast}
+          setProperty={setProperty}
+        />
+      </ContentLoader>
     </BackendPage>
   );
 };
 
-const OwnedPropertyCard = ({ property, toast, setToast, setProperty }) => (
+const OwnedPropertyCard = ({ property, setToast, setProperty }) => (
   <div className="container-fluid">
-    <Toast {...toast} />
     <Card className="card-container mt-4 h-100 property-holder__big">
       <PropertyImage property={property} />
       {useCurrentRole().role === USER_TYPES.vendor && (

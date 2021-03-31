@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { HouseIcon } from './Icons';
 import BallersSpinner from 'components/utils/BallersSpinner';
+import NoContent from 'components/utils/NoContent';
+import Toast from 'components/utils/Toast';
 
 const LoadItems = ({ items, children, loadingText, noContent, Icon, size }) => {
   if (items == null) {
@@ -39,4 +41,25 @@ export const Loading = ({ Icon, text, size }) => (
   </div>
 );
 
+export const ContentLoader = ({
+  children,
+  hasContent,
+  isLoading,
+  Icon,
+  loadingText,
+  noContentText,
+  name,
+  toast,
+}) => (
+  <>
+    <Toast {...toast} showToastOnly />
+    {isLoading ? (
+      <Loading text={loadingText || `Loading ${name}`} Icon={Icon} />
+    ) : hasContent ? (
+      children
+    ) : (
+      <NoContent text={noContentText || `${name} not found`} Icon={Icon} />
+    )}
+  </>
+);
 export default LoadItems;
