@@ -75,6 +75,7 @@
   },
   "devDependencies": {
     "cypress": "^6.2.0",
-    "eslint-plugin-cypress": "^2.11.2"
+    "eslint-plugin-cypress": "^2.11.2",
+    "react-query-devtools": "^2.6.3"
   }
 }

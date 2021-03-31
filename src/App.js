@@ -9,6 +9,8 @@ import VendorRouter from 'components/routers/VendorRouter';
 import 'assets/sass/App.scss';
 import { HomeKeeping } from 'components/utils/HomeKeeping';
 import { UserContextProvider } from 'context/UserContext';
+import { ReactQueryDevtools } from 'react-query-devtools';
+import { isDevEnvironment } from 'utils/helpers';
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
           <VendorRouter path="/vendor/*" />
         </HomeKeeping>
       </Router>
+      {isDevEnvironment() && <ReactQueryDevtools />}
     </UserContextProvider>
   );
 }
