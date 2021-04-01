@@ -129,7 +129,8 @@ export const getVerificationStatus = (userState, index) => {
   const verifiedSteps = getVerifiedSteps(userState);
   const status = completedSteps[index] ? verifiedSteps[index] : 'Pending';
   const currentStep = Object.keys(VENDOR_STEPS)[index];
-  const comments = userState.vendor?.verification?.[currentStep].comments || [];
+  const comments =
+    userState.vendor?.verification?.[currentStep]?.comments || [];
   const pendingComments = comments.filter(
     (comment) => comment.status === 'Pending'
   );

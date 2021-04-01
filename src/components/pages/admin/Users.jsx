@@ -17,15 +17,17 @@ import Button from 'components/forms/Button';
 import UserCard from 'components/common/UserCard';
 import BackendPage from 'components/layout/BackendPage';
 import { UserIcon } from 'components/utils/Icons';
+import { BASE_API } from 'utils/URL';
 
 const Users = () => (
   <BackendPage>
     <AdminList
-      endpoint="user/all"
+      endpoint={BASE_API.getAllUsers()}
       pageName="User"
       DataComponent={UsersRowList}
       FilterComponent={FilterForm}
       PageIcon={<UserIcon />}
+      queryName="user"
     />
   </BackendPage>
 );

@@ -29,8 +29,9 @@ import { EditIcon } from 'components/utils/Icons';
 import { DeleteIcon } from 'components/utils/Icons';
 import { LinkSeparator } from 'components/common/Helpers';
 import { useGetQuery } from 'hooks/useQuery';
-import URL from 'utils/URL';
+import { BASE_API } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
+import { setQueryCache } from 'hooks/useQuery';
 
 const pageOptions = {
   key: 'property',
@@ -46,7 +47,7 @@ export default ({ propertyId }) => {
     key: pageOptions.key,
     name: [pageOptions.key, propertyId],
     setToast,
-    endpoint: URL.getOneProperty(propertyId),
+    endpoint: BASE_API.getOneProperty(propertyId),
   });
 
   return (
@@ -90,7 +91,7 @@ export default ({ propertyId }) => {
         <ContentLoader
           hasContent={!!property?.gallery?.length > 0}
           Icon={<CameraIcon />}
-          isLoading={propertyQuery.isLoading}
+          query={propertyQuery}
           name={pageOptions.pageName}
           noContentText="No images in Gallery"
           toast={toast}
@@ -237,6 +238,9 @@ export const GalleryForm = ({
               });
               hideForm();
               setProperty(data.property);
+              setQueryCache([pageOptions.key, property._id], {
+                property: data.property,
+              });
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -333,6 +337,9 @@ const SingleGalleryImage = ({
             message: `Image has been successfully deleted`,
           });
           setProperty(data.property);
+          setQueryCache([pageOptions.key, property._id], {
+            property: data.property,
+          });
           setShowDeleteGalleryModal(false);
           setLoading(false);
         }

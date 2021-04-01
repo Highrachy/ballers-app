@@ -9,13 +9,17 @@ export const refreshQuery = (name, reloadQuery = false) =>
     refetchActive: reloadQuery,
   });
 
+export const getQueryCache = (name) => queryCache.getQueryData(name);
+export const setQueryCache = (name, value) =>
+  queryCache.setQueryData(name, value);
+
 export const useGetQuery = ({
   name,
   endpoint,
   key,
   setToast,
   refresh,
-  hasChildren,
+  childrenKey,
   queryOptions = {},
   axiosOptions = {},
 }) => {
@@ -68,10 +72,16 @@ export const useGetQuery = ({
     }
   );
 
+  console.log(`queryOptions`, queryOptions);
+
   const output = result || queryResult?.data?.[key];
 
-  if (hasChildren) {
-    output.forEach((item) => queryCache.setQueryData([name, item._id], item));
+  console.log(`output`, output);
+
+  if (childrenKey && output?.length > 0) {
+    output.forEach((item) =>
+      setQueryCache([name, item._id], { [childrenKey]: item })
+    );
   }
 
   return [queryResult, output, setResult];

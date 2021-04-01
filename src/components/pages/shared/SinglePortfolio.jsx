@@ -24,22 +24,24 @@ import { AddNeighborhood } from './Neighborhood';
 import { NeighborhoodList } from './Neighborhood';
 import { useGetQuery } from 'hooks/useQuery';
 import { MyPropertyIcon } from 'components/utils/Icons';
-import URL from 'utils/URL';
+import { BASE_API } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 
+const pageOptions = {
+  key: 'property',
+  pageName: 'Property',
+};
 const SinglePortfolio = ({ id }) => {
-  const pageOptions = {
-    key: 'property',
-    pageName: 'Property',
-  };
-
   const [toast, setToast] = useToast();
   const [propertyQuery, property, setProperty] = useGetQuery({
     key: pageOptions.key,
     name: [pageOptions.key, id],
     setToast,
-    endpoint: URL.getOneProperty(id),
+    endpoint: BASE_API.getOneProperty(id),
     refresh: true,
+    // queryOptions: {
+    //   initialData: getQueryCache(name)?.[pageOptions.key],
+    // },
   });
 
   return (
@@ -47,7 +49,7 @@ const SinglePortfolio = ({ id }) => {
       <ContentLoader
         hasContent={!!property}
         Icon={<MyPropertyIcon />}
-        isLoading={propertyQuery.isLoading}
+        query={propertyQuery}
         name={pageOptions.pageName}
         toast={toast}
       >

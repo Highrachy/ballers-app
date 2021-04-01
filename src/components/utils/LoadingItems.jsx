@@ -44,7 +44,7 @@ export const Loading = ({ Icon, text, size }) => (
 export const ContentLoader = ({
   children,
   hasContent,
-  isLoading,
+  query,
   Icon,
   loadingText,
   noContentText,
@@ -53,7 +53,12 @@ export const ContentLoader = ({
 }) => (
   <>
     <Toast {...toast} showToastOnly />
-    {isLoading ? (
+    {/* {query.isFetching && (
+      <p>
+        <BallersSpinner small="small" /> Updating
+      </p>
+    )} */}
+    {query.isLoading ? (
       <Loading text={loadingText || `Loading ${name}`} Icon={Icon} />
     ) : hasContent ? (
       children

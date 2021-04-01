@@ -44,42 +44,45 @@ import Upload from 'components/utils/Upload';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import { navigate } from '@reach/router';
 import AutoComplete from 'components/forms/AutoComplete';
+import { useGetQuery } from 'hooks/useQuery';
+import { BASE_API } from 'utils/URL';
+import { ContentLoader } from 'components/utils/LoadingItems';
+import { MyPropertyIcon } from 'components/utils/Icons';
+import { setQueryCache } from 'hooks/useQuery';
 // import Converter from 'number-to-words';
 // import Humanize from 'humanize-plus';
 
+const pageOptions = {
+  key: 'property',
+  pageName: 'Property',
+};
+
 const NewProperty = ({ id }) => {
   const [toast, setToast] = useToast();
-  const [property, setProperty] = React.useState(null);
+  const [propertyQuery, property] = useGetQuery({
+    key: pageOptions.key,
+    name: [pageOptions.key, id],
+    setToast,
+    endpoint: BASE_API.getOneProperty(id),
+    refresh: true,
+  });
 
-  React.useEffect(() => {
-    id &&
-      Axios.get(`${BASE_API_URL}/property/${id}`, {
-        headers: {
-          Authorization: getTokenFromStore(),
-        },
-      })
-        .then(function (response) {
-          const { status, data } = response;
-          // handle success
-          if (status === 200) {
-            setProperty(data.property);
-            console.log('data.property', data.property);
-          }
-        })
-        .catch(function (error) {
-          setToast({
-            message: getError(error),
-          });
-        });
-  }, [setToast, id]);
   return (
     <BackendPage>
       <div className="container-fluid">
-        <NewPropertyForm
+        <ContentLoader
+          hasContent={!!property}
+          Icon={<MyPropertyIcon />}
+          query={propertyQuery}
+          name={pageOptions.pageName}
           toast={toast}
-          setToast={setToast}
-          property={property}
-        />
+        >
+          <NewPropertyForm
+            toast={toast}
+            setToast={setToast}
+            property={property}
+          />
+        </ContentLoader>
       </div>
     </BackendPage>
   );
@@ -138,12 +141,15 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
           headers: { Authorization: getTokenFromStore() },
         })
           .then(function (response) {
-            const { status } = response;
+            const { status, data } = response;
             if (statusIsSuccessful(status)) {
               if (property?._id) {
                 navigate(`/vendor/portfolio/${property?._id}`);
                 return;
               }
+              setQueryCache([pageOptions.key, property._id], {
+                property: data.property,
+              });
               setToast({
                 type: 'success',
                 message: `Your property has been successfully ${

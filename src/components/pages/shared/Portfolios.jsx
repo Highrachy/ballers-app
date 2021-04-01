@@ -22,6 +22,7 @@ import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import { UserContext } from 'context/UserContext';
 import { HOUSE_TYPES, USER_TYPES } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
+import { BASE_API } from 'utils/URL';
 
 const Portfolios = () => {
   const { userState } = React.useContext(UserContext);
@@ -31,11 +32,12 @@ const Portfolios = () => {
     <BackendPage>
       <AdminList
         addNewUrl={addNewUrl}
-        endpoint="property/all"
+        endpoint={BASE_API.getAllProperties()}
         pageName="Porfolio"
         DataComponent={PortfoliosRowList}
         FilterComponent={FilterForm}
         PageIcon={<MyPropertyIcon />}
+        queryName="property"
       />
     </BackendPage>
   );

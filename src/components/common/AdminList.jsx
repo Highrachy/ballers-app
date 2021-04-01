@@ -5,12 +5,13 @@ import NoContent from 'components/utils/NoContent';
 import { UserIcon } from 'components/utils/Icons';
 import TopTitle from 'components/utils/TopTitle';
 import Humanize from 'humanize-plus';
-import { usePagination } from 'hooks/usePagination';
 import Pagination from 'components/common/Pagination';
 import { SlideDown } from 'react-slidedown';
 import 'react-slidedown/lib/slidedown.css';
 import { MenuIcon } from 'components/utils/Icons';
 import { CloseIcon } from 'components/utils/Icons';
+import { useToast } from 'components/utils/Toast';
+import { useGetQuery } from 'hooks/useQuery';
 
 const AdminList = ({
   addNewUrl,
@@ -21,6 +22,7 @@ const AdminList = ({
   pageName,
   pluralPageName,
   endpoint,
+  queryName,
   ...props
 }) => {
   const pluralizePageName = pluralPageName || Humanize.pluralize(2, pageName);
@@ -28,12 +30,19 @@ const AdminList = ({
 
   const [filters, setFilters] = React.useState({});
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [results, pagination, toast] = usePagination({
-    url: endpoint,
-    page: currentPage,
-    limit,
-    filters,
+
+  const [toast, setToast] = useToast();
+  const [query, results] = useGetQuery({
+    axiosOptions: { params: { limit, page: currentPage, ...filters } },
+    key: 'result',
+    name: queryName || pageName.toLowerCase(),
+    setToast,
+    endpoint,
+    refresh: true,
+    childrenKey: queryName,
   });
+
+  const pagination = query?.data?.pagination;
 
   return (
     <>
@@ -80,8 +89,6 @@ const AdminList = ({
 const TopFilter = ({ FilterComponent, filters, setFilters }) => {
   const [openFilter, setOpenFilter] = React.useState(false);
   const [filterInWords, setFilterInWords] = React.useState({});
-
-  console.log('filters', filters);
 
   const setFilterTerms = (terms, filterInWords) => {
     setFilters(terms);

@@ -4,7 +4,6 @@ import { BASE_API_URL, STATUS, USER_TYPES } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
-import NoContent from 'components/utils/NoContent';
 import {
   getError,
   getFormattedAddress,
@@ -34,36 +33,37 @@ import { QuestionMarkIcon } from 'components/utils/Icons';
 import { getVerificationStatus } from '../vendor/setup/AccountSetup';
 import Timeline from 'components/common/Timeline';
 import { LogTimeline } from 'components/common/Timeline';
+import { useGetQuery } from 'hooks/useQuery';
+import { BASE_API } from 'utils/URL';
+import { ContentLoader } from 'components/utils/LoadingItems';
 // import UserCard from 'components/common/UserCard';
 // import { getVerificationState } from '../vendor/setup/AccountSetup';
 
+const pageOptions = {
+  key: 'user',
+  pageName: 'User',
+};
+
 const SingleUser = ({ id }) => {
   const [toast, setToast] = useToast();
-  const [user, setUser] = React.useState(null);
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/user/${id}`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        // handle success
-        if (status === 200) {
-          setUser(data.user);
-          console.log('data.user', data.user);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast, id]);
+  const [userQuery, user, setUser] = useGetQuery({
+    key: pageOptions.key,
+    name: [pageOptions.key, id],
+    setToast,
+    endpoint: BASE_API.getOneUser(id),
+    refresh: true,
+  });
+
   return (
     <BackendPage>
       <div className="container-fluid">
-        {user ? (
+        <ContentLoader
+          hasContent={!!user}
+          Icon={<UserIcon />}
+          query={userQuery}
+          name={pageOptions.pageName}
+          toast={toast}
+        >
           <UserInfoCard
             vendorId={id}
             user={user}
@@ -71,9 +71,7 @@ const SingleUser = ({ id }) => {
             toast={toast}
             setToast={setToast}
           />
-        ) : (
-          <NoContent text="Loading User" Icon={<UserIcon />} />
-        )}
+        </ContentLoader>
       </div>
     </BackendPage>
   );
@@ -569,7 +567,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
         <h5 className="title">Logs</h5>
 
         <Timeline>
-          {user.vendor?.logs.map((log, index) => (
+          {user.vendor?.logs?.map((log, index) => (
             <LogTimeline log={log} key={index} />
           ))}
         </Timeline>

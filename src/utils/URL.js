@@ -1,7 +1,9 @@
 import { BASE_API_URL } from 'utils/constants';
 
-const URL = {
+export const BASE_API = {
   getOneProperty: (id) => `${BASE_API_URL}/property/${id}`,
-};
+  getAllProperties: () => `${BASE_API_URL}/property/all`,
 
-export default URL;
+  getOneUser: (id) => `${BASE_API_URL}/user/${id}`,
+  getAllUsers: () => `${BASE_API_URL}/user/all`,
+};
