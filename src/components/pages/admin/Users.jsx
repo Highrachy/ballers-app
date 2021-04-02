@@ -33,6 +33,7 @@ const Users = () => (
 );
 
 const UsersRowList = ({ results, offset }) => {
+  console.log(`results, offset`, results, offset);
   return (
     <div className="container-fluid">
       <Card>

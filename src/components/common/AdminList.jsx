@@ -1,7 +1,5 @@
 import React from 'react';
 import Toast from 'components/utils/Toast';
-import LoadItems from 'components/utils/LoadingItems';
-import NoContent from 'components/utils/NoContent';
 import { UserIcon } from 'components/utils/Icons';
 import TopTitle from 'components/utils/TopTitle';
 import Humanize from 'humanize-plus';
@@ -11,7 +9,8 @@ import 'react-slidedown/lib/slidedown.css';
 import { MenuIcon } from 'components/utils/Icons';
 import { CloseIcon } from 'components/utils/Icons';
 import { useToast } from 'components/utils/Toast';
-import { useGetQuery } from 'hooks/useQuery';
+import { usePaginationQuery } from 'hooks/useQuery';
+import { ContentLoader } from 'components/utils/LoadingItems';
 
 const AdminList = ({
   addNewUrl,
@@ -25,24 +24,23 @@ const AdminList = ({
   queryName,
   ...props
 }) => {
+  const [filters, setFilters] = React.useState({});
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [toast, setToast] = useToast();
+
   const pluralizePageName = pluralPageName || Humanize.pluralize(2, pageName);
   const Icon = PageIcon || <UserIcon />;
 
-  const [filters, setFilters] = React.useState({});
-  const [currentPage, setCurrentPage] = React.useState(1);
-
-  const [toast, setToast] = useToast();
-  const [query, results] = useGetQuery({
+  const [query, results] = usePaginationQuery({
     axiosOptions: { params: { limit, page: currentPage, ...filters } },
     key: 'result',
     name: queryName || pageName.toLowerCase(),
     setToast,
     endpoint,
-    refresh: true,
     childrenKey: queryName,
   });
 
-  const pagination = query?.data?.pagination;
+  const pagination = query?.latestData?.pagination;
 
   return (
     <>
@@ -58,30 +56,26 @@ const AdminList = ({
           setFilters={setFilters}
         />
       )}
-
-      <LoadItems
+      <ContentLoader
+        hasContent={!!results}
         Icon={Icon}
-        items={results}
-        loadingText={`Loading  ${pluralizePageName}`}
-        noContent={
-          <NoContent
-            Icon={Icon}
-            isButton
-            text={`No ${pluralizePageName} found.`}
-          />
-        }
+        query={query}
+        name={pageName}
+        toast={toast}
+        noContentText={`No ${pluralizePageName} found`}
       >
         <DataComponent
           results={results || []}
           offset={pagination?.offset || 0}
           {...props}
         />
+
         <Pagination
           currentPage={pagination?.currentPage}
           lastPage={pagination?.totalPage}
           setCurrentPage={setCurrentPage}
         />
-      </LoadItems>
+      </ContentLoader>
     </>
   );
 };

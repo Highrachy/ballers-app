@@ -427,3 +427,10 @@ html {
   background: rgba($black, 0.3);
   bottom: 0;
 }
+
+.updating-spinner {
+  position: absolute;
+  bottom: 2rem;
+  z-index: 100000;
+  right: 4rem;
+}
