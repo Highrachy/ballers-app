@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  MyPropertyIcon,
+  PropertyIcon,
   HomeIcon,
   ProfileIcon,
   ReferIcon,
@@ -19,7 +19,7 @@ export default [
   {
     title: 'Content Properties',
     to: '/editor/content-property',
-    icon: <MyPropertyIcon />,
+    icon: <PropertyIcon />,
     footer: true,
   },
   {

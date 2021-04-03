@@ -107,7 +107,7 @@ export default ({ propertyId }) => {
 
         <Link
           className="btn btn-secondary btn-wide mt-5"
-          to={`/vendor/portfolio/${property?._id}`}
+          to={`/vendor/property/${property?._id}`}
         >
           Back to Property
         </Link>

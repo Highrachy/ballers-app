@@ -11,7 +11,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import { MOBILE_WIDTH, BASE_API_URL } from 'utils/constants';
 import { UserContext } from 'context/UserContext';
 import LoadItems from 'components/utils/LoadingItems';
-import { MyPropertyIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import NoContent from 'components/utils/NoContent';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
@@ -136,7 +136,7 @@ const OffersRow = ({ _id, expires, status, propertyInfo, vendorInfo }) => {
       <h6 className="w-100 font-weight-normal">
         <Link
           className="btn btn-success btn-sm float-right"
-          to={`/user/offer-letter/${_id}`}
+          to={`/user/offer/${_id}`}
         >
           View Offer Letter
         </Link>
@@ -202,7 +202,7 @@ const Others = ({ recommendedProperties }) => (
       <div className="row">
         <div className="col-sm-6">
           <LoadItems
-            Icon={<MyPropertyIcon />}
+            Icon={<PropertyIcon />}
             items={recommendedProperties}
             loadingText="Loading Property Recommendations"
             noContent={<NoContent isButton text="No Properties found" />}

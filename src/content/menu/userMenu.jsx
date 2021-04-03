@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  MyPropertyIcon,
+  PortfolioIcon,
   HomeIcon,
   TransactionIcon,
   ProfileIcon,
@@ -18,7 +18,7 @@ export default [
   {
     title: 'My Portfolio',
     to: '/user/portfolio',
-    icon: <MyPropertyIcon />,
+    icon: <PortfolioIcon />,
     footer: true,
   },
   {

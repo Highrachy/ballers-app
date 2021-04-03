@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
-import { MapPinIcon, MyPropertyIcon } from 'components/utils/Icons';
+import { MapPinIcon, PortfolioIcon } from 'components/utils/Icons';
 import { getError, moneyFormatInNaira } from 'utils/helpers';
 import { BASE_API_URL } from 'utils/constants';
 import Axios from 'axios';
@@ -95,7 +95,7 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
     <NoContent
       className="w-100 text-center"
       size="small"
-      Icon={<MyPropertyIcon />}
+      Icon={<PortfolioIcon />}
       text="You have no active property"
     />
   );
@@ -105,7 +105,7 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
       return (
         <div className="col-sm-6">
           <Card className="card-container d-block text-center h-100">
-            <Loading Icon={<MyPropertyIcon />} text="Loading Your Portfolios" />
+            <Loading Icon={<PortfolioIcon />} text="Loading Your Portfolios" />
           </Card>
         </div>
       );
@@ -125,7 +125,7 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
 
   return (
     <LoadItems
-      Icon={<MyPropertyIcon />}
+      Icon={<PortfolioIcon />}
       items={portfolios}
       size="small"
       loadingText={'Loading your Portfolios'}

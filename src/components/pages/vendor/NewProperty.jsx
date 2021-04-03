@@ -47,10 +47,8 @@ import AutoComplete from 'components/forms/AutoComplete';
 import { useGetQuery } from 'hooks/useQuery';
 import { BASE_API } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
-import { MyPropertyIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import { setQueryCache } from 'hooks/useQuery';
-// import Converter from 'number-to-words';
-// import Humanize from 'humanize-plus';
 
 const pageOptions = {
   key: 'property',
@@ -72,7 +70,7 @@ const NewProperty = ({ id }) => {
       <div className="container-fluid">
         <ContentLoader
           hasContent={!!property}
-          Icon={<MyPropertyIcon />}
+          Icon={<PropertyIcon />}
           query={propertyQuery}
           name={pageOptions.pageName}
           toast={toast}
@@ -144,7 +142,7 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
             const { status, data } = response;
             if (statusIsSuccessful(status)) {
               if (property?._id) {
-                navigate(`/vendor/portfolio/${property?._id}`);
+                navigate(`/vendor/property/${property?._id}`);
                 return;
               }
               setQueryCache([pageOptions.key, property._id], {

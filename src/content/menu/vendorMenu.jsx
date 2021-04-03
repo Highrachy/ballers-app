@@ -3,15 +3,14 @@ import {
   HomeIcon,
   ProfileIcon,
   ReferIcon,
-  MyPropertyIcon,
+  PortfolioIcon,
   TransactionIcon,
 } from 'components/utils/Icons';
 import { MessageIcon } from 'components/utils/Icons';
 import { FileIcon } from 'components/utils/Icons';
 import {} from 'components/utils/Icons';
-import { VisitationIcon } from 'components/utils/Icons';
-import { EnquiryIcon } from 'components/utils/Icons';
 import { OfferIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 
 export default [
   {
@@ -21,28 +20,22 @@ export default [
     footer: true,
   },
   {
-    title: 'Portfolios',
-    to: '/vendor/portfolios',
-    icon: <MyPropertyIcon />,
+    title: 'Properties',
+    to: '/vendor/properties',
+    icon: <PropertyIcon />,
     footer: true,
-  },
-  {
-    title: 'Scheduled Visits',
-    to: '/vendor/scheduled-visits',
-    icon: <VisitationIcon />,
-    footer: false,
-  },
-  {
-    title: 'Enquiries',
-    to: '/vendor/enquiries',
-    icon: <EnquiryIcon />,
-    footer: false,
   },
   {
     title: 'Offers',
     to: '/vendor/offers',
     icon: <OfferIcon />,
     footer: false,
+  },
+  {
+    title: 'Portfolios',
+    to: '/vendor/portfolios',
+    icon: <PortfolioIcon />,
+    footer: true,
   },
   {
     title: 'Transaction',
@@ -74,7 +67,7 @@ export const unVerifiedVendorSideMenu = [
   {
     title: 'Company Info',
     to: '/vendor/setup/1',
-    icon: <MyPropertyIcon />,
+    icon: <PortfolioIcon />,
     footer: true,
   },
   {

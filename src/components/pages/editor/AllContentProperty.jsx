@@ -8,7 +8,7 @@ import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
-import { MyPropertyIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import { getError } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
 import { Link } from '@reach/router';
@@ -44,7 +44,7 @@ const AllContentProperty = () => {
       >
         All Content Property
       </TopTitle>
-      <ContentPRoperty contentProperty={contentProperty} />
+      <ContentProperty contentProperty={contentProperty} />
 
       <div className="container-fluid">
         <Link to="/editor/content-property/new" className="btn btn-dark">
@@ -55,14 +55,14 @@ const AllContentProperty = () => {
   );
 };
 
-const ContentPRoperty = ({ contentProperty, toast }) => (
+const ContentProperty = ({ contentProperty, toast }) => (
   <LoadItems
-    Icon={<MyPropertyIcon />}
+    Icon={<PropertyIcon />}
     items={contentProperty}
     loadingText="Loading your Content Property"
     noContent={
       <NoContent
-        Icon={<MyPropertyIcon />}
+        Icon={<PropertyIcon />}
         isButton
         text="No Content Property found"
       />

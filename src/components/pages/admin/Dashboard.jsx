@@ -5,7 +5,7 @@ import { Link } from '@reach/router';
 import {
   UserIcon,
   AssignedPropertyIcon,
-  MyPropertyIcon,
+  PropertyIcon,
   MessageIcon,
 } from 'components/utils/Icons';
 import { VisitationIcon } from 'components/utils/Icons';
@@ -32,7 +32,7 @@ const Welcome = () => {
 
       <div className="row">
         <DashboardCardList
-          icon={<MyPropertyIcon />}
+          icon={<PropertyIcon />}
           name="Added Properties"
           number={7}
           to="/admin/portfolios"

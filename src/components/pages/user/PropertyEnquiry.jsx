@@ -28,8 +28,8 @@ import { useGetQuery } from 'hooks/useQuery';
 import { BASE_API } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { MessageIcon } from 'components/utils/Icons';
-import { PropertyImage } from '../shared/SinglePortfolio';
-import { PropertyHeader } from '../shared/SinglePortfolio';
+import { PropertyImage } from '../shared/SingleProperty';
+import { PropertyHeader } from '../shared/SingleProperty';
 
 const pageOptions = {
   key: 'property',

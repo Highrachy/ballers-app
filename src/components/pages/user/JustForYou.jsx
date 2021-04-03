@@ -5,7 +5,7 @@ import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
-import { MyPropertyIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import SearchDashboardPropertyForm from 'components/common/SearchDashboardPropertyForm';
@@ -63,7 +63,7 @@ const JustForYou = ({ location }) => {
       </section>
 
       <LoadItems
-        Icon={<MyPropertyIcon />}
+        Icon={<PropertyIcon />}
         items={properties}
         loadingText="Loading Property Recommendations"
         noContent={<NoContent isButton text="No Properties found" />}

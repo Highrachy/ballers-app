@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   FiGrid,
-  FiHome,
   FiPlus,
   FiUploadCloud,
   FiHeart,
@@ -57,6 +56,7 @@ import {
   BiCheckCircle,
   BiFoodMenu,
   BiCameraMovie,
+  BiHomeCircle,
 } from 'react-icons/bi';
 import { AiFillCheckSquare, AiFillCar } from 'react-icons/ai';
 import { MdLocalMall } from 'react-icons/md';
@@ -95,7 +95,7 @@ export const MallIcon = () => <MdLocalMall />;
 export const MapPinIcon = () => <FaMapMarkerAlt />;
 export const MessageIcon = () => <EnquiryIcon />;
 export const MenuIcon = () => <FiMenu />;
-export const MyPropertyIcon = () => <FiHome />;
+export const PortfolioIcon = () => <BiHomeCircle />;
 export const NotificationIcon = () => <FiBell />;
 export const OfferIcon = () => <FaRegFileAlt />;
 export const OfferSignedIcon = () => <FaFileContract />;

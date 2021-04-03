@@ -13,7 +13,7 @@ import { UserIcon } from 'components/utils/Icons';
 import { MessageIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
 import { Loading } from 'components/utils/LoadingItems';
-import { MyPropertyIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import { TransactionIcon } from 'components/utils/Icons';
 import { getVerificationStatus } from './setup/AccountSetup';
 import { CertifyIcon } from 'components/utils/Icons';
@@ -77,10 +77,10 @@ const Welcome = () => {
           </section>
           <div className="row">
             <DashboardCard
-              icon={<MyPropertyIcon />}
+              icon={<PropertyIcon />}
               title="Properties"
               to="vendor/portfolios"
-              key={2}
+              key={1}
               footer="See list of your properties"
             >
               See your profile data and manage your Account to choose what is
@@ -101,7 +101,7 @@ const Welcome = () => {
               icon={<UserIcon />}
               title="My Users"
               to="vendor/users"
-              key={2}
+              key={3}
               footer="See list of your users"
             >
               See your profile data and manage your Account to choose what is
@@ -111,7 +111,7 @@ const Welcome = () => {
               icon={<TransactionIcon />}
               title="Transactions"
               to="vendor/users"
-              key={2}
+              key={4}
               footer="See list of your transactions"
             >
               See your profile data and manage your Account to choose what is

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  MyPropertyIcon,
+  PortfolioIcon,
   HomeIcon,
   TransactionIcon,
   ProfileIcon,
@@ -9,6 +9,7 @@ import {
 } from 'components/utils/Icons';
 import { VisitationIcon } from 'components/utils/Icons';
 import { MessageIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 // import { ArticlesIcon } from 'components/utils/Icons';
 
 export default [
@@ -16,6 +17,12 @@ export default [
     title: 'Home',
     to: '/admin/dashboard',
     icon: <HomeIcon />,
+    footer: true,
+  },
+  {
+    title: 'Properties',
+    to: '/admin/properties',
+    icon: <PropertyIcon />,
     footer: true,
   },
   {
@@ -27,7 +34,7 @@ export default [
   {
     title: 'Portfolios',
     to: '/admin/portfolios',
-    icon: <MyPropertyIcon />,
+    icon: <PortfolioIcon />,
     footer: true,
   },
   {

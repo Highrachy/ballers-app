@@ -8,40 +8,42 @@ import {
   setInitialValues,
 } from 'components/forms/form-helper';
 import { propertyFilterSchema } from 'components/forms/schemas/propertySchema';
-// import { createSchema } from 'components/forms/schemas/schema-helpers';
 import Select from 'components/forms/Select';
 import { generateNumOptions, valuesToOptions } from 'utils/helpers';
 import Input from 'components/forms/Input';
 import Button from 'components/forms/Button';
 import BackendPage from 'components/layout/BackendPage';
-import { PortfolioIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import { moneyFormatInNaira } from 'utils/helpers';
 import Humanize from 'humanize-plus';
 import Image from 'components/utils/Image';
-import PortfolioPlaceholderImage from 'assets/img/placeholder/property.png';
-import { HOUSE_TYPES } from 'utils/constants';
+import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
+import { UserContext } from 'context/UserContext';
+import { HOUSE_TYPES, USER_TYPES } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
 import { BASE_API } from 'utils/URL';
-import { Spacing } from 'components/common/Helpers';
-import { FileIcon } from 'components/utils/Icons';
 
-const Portfolios = () => {
+const Properties = () => {
+  const { userState } = React.useContext(UserContext);
+  const addNewUrl =
+    userState?.role === USER_TYPES.vendor ? '/vendor/properties/new' : '';
   return (
     <BackendPage>
       <AdminList
-        endpoint={BASE_API.getAllPortfolios()}
-        pageName="Portfolio"
-        pluralPageName="Portfolios"
-        DataComponent={PortfoliosRowList}
+        addNewUrl={addNewUrl}
+        endpoint={BASE_API.getAllProperties()}
+        pageName="Property"
+        pluralPageName="Properties"
+        DataComponent={PropertiesRowList}
         FilterComponent={FilterForm}
-        PageIcon={<PortfolioIcon />}
-        queryName="portfolio"
+        PageIcon={<PropertyIcon />}
+        queryName="property"
       />
     </BackendPage>
   );
 };
 
-const PortfoliosRowList = ({ results, offset }) => (
+const PropertiesRowList = ({ results, offset }) => (
   <div className="container-fluid">
     <Card className="mt-2">
       <div className="table-responsive">
@@ -56,11 +58,11 @@ const PortfoliosRowList = ({ results, offset }) => (
             </tr>
           </thead>
           <tbody>
-            {results.map((portfolio, index) => (
-              <PortfoliosRow
+            {results.map((property, index) => (
+              <PropertiesRow
                 key={index}
                 number={offset + index + 1}
-                {...portfolio}
+                {...property}
               />
             ))}
           </tbody>
@@ -70,42 +72,35 @@ const PortfoliosRowList = ({ results, offset }) => (
   </div>
 );
 
-const PortfoliosRow = ({ _id, number, propertyInfo, totalAmountPayable }) => {
+const PropertiesRow = ({ _id, name, address, price, number, mainImage }) => {
   const userType = useCurrentRole().name;
   return (
     <tr>
       <td>{number}</td>
       <td>
-        <Link to={`/${userType}/portfolio/${_id}`}>
+        <Link to={`/${userType}/property/${_id}`}>
           <Image
-            src={propertyInfo.mainImage}
-            name={`portfolio ${_id}`}
+            src={mainImage}
+            name={`property ${_id}`}
             width="80"
-            alt="portfolio"
-            defaultImage={PortfolioPlaceholderImage}
+            alt="property"
+            defaultImage={PropertyPlaceholderImage}
           />
         </Link>
       </td>
-      <td>{propertyInfo.name}</td>
+      <td>{name}</td>
       <td>
         <strong>
-          {propertyInfo.address.city}, {propertyInfo.address.state}
+          {address.city}, {address.state}
         </strong>
       </td>
-      <td>{moneyFormatInNaira(totalAmountPayable)}</td>
+      <td>{moneyFormatInNaira(price)}</td>
       <td>
         <Link
           className="btn btn-sm btn-secondary"
-          to={`/${useCurrentRole().name}/offer/${_id}`}
+          to={`/${userType}/property/${_id}`}
         >
-          <FileIcon /> View Offer
-        </Link>
-        <Spacing />
-        <Link
-          className="btn btn-sm btn-secondary"
-          to={`/${userType}/portfolio/${_id}`}
-        >
-          View portfolio
+          View property
         </Link>
       </td>
     </tr>
@@ -130,11 +125,11 @@ const FilterForm = ({ setFilterTerms }) => {
           <Card className="card-container">
             <section className="row">
               <div className="col-md-10 px-4">
-                <h5 className="mb-4">Filter Portfolios</h5>
+                <h5 className="mb-4">Filter Properties</h5>
                 <div className="form-row">
                   <Input
                     formGroupClassName="col-md-6"
-                    label="Portfolio Name"
+                    label="Property Name"
                     name="name"
                   />
                   <Input
@@ -176,4 +171,4 @@ const FilterForm = ({ setFilterTerms }) => {
   );
 };
 
-export default Portfolios;
+export default Properties;

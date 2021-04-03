@@ -8,7 +8,7 @@ import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
-import { MyPropertyIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import { getError, moneyFormatInNaira } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
 import { Link } from '@reach/router';
@@ -130,12 +130,12 @@ const ContentPropertyMap = ({ latitude, longitude }) =>
 
 const AllContentProperty = ({ contentProperty, toast }) => (
   <LoadItems
-    Icon={<MyPropertyIcon />}
+    Icon={<PropertyIcon />}
     items={contentProperty && contentProperty.linkedProperties}
     loadingText="Loading your Content Property"
     noContent={
       <NoContent
-        Icon={<MyPropertyIcon />}
+        Icon={<PropertyIcon />}
         isButton
         text="No Content Property found"
       />

@@ -10,7 +10,7 @@ import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { Link } from '@reach/router';
 import { moneyFormatInNaira, getError } from 'utils/helpers';
-import { MyPropertyIcon } from 'components/utils/Icons';
+import { TransactionIcon } from 'components/utils/Icons';
 import TopTitle from 'components/utils/TopTitle';
 import { getTinyDate } from 'utils/date-helpers';
 
@@ -50,13 +50,13 @@ const Transactions = () => {
 
 const AllTransactions = ({ transactions, toast }) => (
   <LoadItems
-    Icon={<MyPropertyIcon />}
+    Icon={<TransactionIcon />}
     items={transactions}
     loadingText="Loading your Transactions"
     noContent={
       <NoContent
         isButton
-        Icon={<MyPropertyIcon />}
+        Icon={<TransactionIcon />}
         text="No Transactions found"
       />
     }

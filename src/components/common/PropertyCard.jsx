@@ -102,7 +102,7 @@ export const OldPropertyCard = (property) => {
 
             <Link
               className="text-uppercase small float-right badge badge-dark property-holder__details"
-              to={`/user/portfolio/${_id}`}
+              to={`/user/property/${_id}`}
             >
               Details{' '}
               <div className="small-icon">

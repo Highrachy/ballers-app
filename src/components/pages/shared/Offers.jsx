@@ -77,9 +77,9 @@ const OffersRow = ({
       </td>
       {useCurrentRole().isUser ? (
         <td>
-          <strong>{vendorInfo?.vendor.companyName}</strong>
+          <strong>{vendorInfo?.vendor?.companyName}</strong>
           <br />
-          <small>{vendorInfo.phone}</small>
+          <small>{vendorInfo?.phone}</small>
         </td>
       ) : (
         <td>
@@ -100,7 +100,7 @@ const OffersRow = ({
       <td>
         <Link
           className="btn btn-sm btn-secondary"
-          to={`/${useCurrentRole().name}/offer-letter/${_id}`}
+          to={`/${useCurrentRole().name}/offer/${_id}`}
         >
           <FileIcon /> View Offer
         </Link>
