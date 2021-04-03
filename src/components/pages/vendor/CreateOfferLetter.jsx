@@ -23,10 +23,6 @@ import OfferLetterTemplate from 'components/utils/OfferLetterTemplate';
 import DatePicker from 'components/forms/DatePicker';
 
 const CreateOfferLetter = ({ enquiry }) => {
-  console.log(
-    '🚀 ~ file: CreateOfferLetter.jsx ~ line 26 ~ CreateOfferLetter ~ enquiry',
-    enquiry
-  );
   const defaultValue = {
     totalAmountPayable: enquiry.propertyInfo.price,
     allocationInPercentage: 100,
@@ -78,8 +74,11 @@ const CreateOfferLetterForm = ({
             <Formik
               enableReinitialize={true}
               initialValues={setInitialValues(offerLetterSchema, { ...value })}
-              onSubmit={(values, actions) => {
-                handleValue(values);
+              onSubmit={(values) => {
+                handleValue({
+                  ...values,
+                  initialPaymentDate: values.initialPaymentDate.date,
+                });
                 handleShowOfferLetter();
               }}
               validationSchema={createSchema(offerLetterSchema)}
@@ -218,8 +217,8 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
       <section className="row">
         <div className="col-md-10">
           <p className="mb-5">
-            Are you sure you wish to submit the offer letter. This process is
-            irreversible.
+            Are you sure you wish to submit the offer letter. Ensure you have
+            confirm all the offer information as this process is irreversible.
           </p>
 
           <button className="btn btn-danger mb-3" onClick={submitOfferLetter}>

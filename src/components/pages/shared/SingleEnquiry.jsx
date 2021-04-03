@@ -1,62 +1,42 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import { Card } from 'react-bootstrap';
-import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
-import Axios from 'axios';
-import { getTokenFromStore } from 'utils/localStorage';
-import NoContent from 'components/utils/NoContent';
-import {
-  moneyFormatInNaira,
-  getError,
-  getFormattedAddress,
-} from 'utils/helpers';
+import { moneyFormatInNaira, getFormattedAddress } from 'utils/helpers';
 import { getDateTime, getShortDate } from 'utils/date-helpers';
 import { MessageIcon } from 'components/utils/Icons';
-import CreateOfferLetter from '../admin/CreateOfferLetter';
-import { Loading } from 'components/utils/LoadingItems';
+import CreateOfferLetter from '../vendor/CreateOfferLetter';
+import { useGetQuery } from 'hooks/useQuery';
+import { BASE_API } from 'utils/URL';
+import { ContentLoader } from 'components/utils/LoadingItems';
+import CardTableSection from 'components/common/CardTableSection';
+import { useCurrentRole } from 'hooks/useUser';
 
-const ViewEnquiry = ({ id }) => {
+const pageOptions = {
+  key: 'enquiry',
+  pageName: 'Enquiries',
+};
+
+const SingleEnquiry = ({ id }) => {
   const [toast, setToast] = useToast();
-  const [enquiry, setEnquiry] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
   const [showEnquiry, setShowEnquiry] = React.useState(true);
-
-  React.useEffect(() => {
-    setLoading(true);
-    Axios.get(`${BASE_API_URL}/enquiry/${id}`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        // handle success
-        if (status === 200) {
-          setEnquiry(data.enquiry);
-        }
-        setLoading(false);
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-        setLoading(false);
-      });
-  }, [setToast, id]);
-
-  if (loading) {
-    return (
-      <BackendPage>
-        <Loading Icon={<MessageIcon />} text="Loading Enquiry" />;
-      </BackendPage>
-    );
-  }
+  const [enquiryQuery, enquiry] = useGetQuery({
+    key: pageOptions.key,
+    name: [pageOptions.key, id],
+    setToast,
+    endpoint: BASE_API.getOneEnquiry(id),
+    refresh: true,
+  });
 
   return (
     <BackendPage>
-      {enquiry ? (
-        showEnquiry ? (
+      <ContentLoader
+        hasContent={!!enquiry}
+        Icon={<MessageIcon />}
+        query={enquiryQuery}
+        name={pageOptions.pageName}
+        toast={toast}
+      >
+        {showEnquiry ? (
           <EnquiryDetail
             enquiry={enquiry}
             toast={toast}
@@ -64,10 +44,8 @@ const ViewEnquiry = ({ id }) => {
           />
         ) : (
           <CreateOfferLetter enquiry={enquiry} />
-        )
-      ) : (
-        <NoContent text="No Enquiry Found" Icon={<MessageIcon />} />
-      )}
+        )}
+      </ContentLoader>
     </BackendPage>
   );
 };
@@ -118,7 +96,7 @@ const EnquiryDetail = ({ enquiry, showOfferLetter, toast }) => (
     <CardTableSection name="Name on Title Document">
       <tr>
         <td>
-          <h4>{enquiry.nameOnTitleDocument}</h4>
+          <h5 className="mt-3">{enquiry.nameOnTitleDocument}</h5>
         </td>
       </tr>
     </CardTableSection>
@@ -207,29 +185,15 @@ const EnquiryDetail = ({ enquiry, showOfferLetter, toast }) => (
       </tr>
     </CardTableSection>
 
-    <button
-      className="btn btn-secondary btn-wide mt-5"
-      onClick={() => showOfferLetter()}
-    >
-      Create Offer Letter
-    </button>
+    {useCurrentRole().isVendor && !enquiry.approved && (
+      <button
+        className="btn btn-secondary btn-wide"
+        onClick={() => showOfferLetter()}
+      >
+        Create Offer Letter
+      </button>
+    )}
   </div>
 );
 
-export const CardTableSection = ({ name, className, children }) => (
-  <Card className={`card-container mb-5 ${className}`}>
-    <div className="row mt-3">
-      <div className="col-sm-12">
-        {name && <h5>{name}</h5>}
-
-        <div className="table-responsive">
-          <table className="table table-border">
-            <tbody>{children}</tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </Card>
-);
-
-export default ViewEnquiry;
+export default SingleEnquiry;

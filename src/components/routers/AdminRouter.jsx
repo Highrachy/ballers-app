@@ -9,8 +9,8 @@ import ScheduledVisits from 'components/pages/admin/ScheduledVisits';
 import Transactions from 'components/pages/admin/Transactions';
 import KnowledgeBase from 'components/pages/admin/KnowledgeBase';
 import Menu from 'components/pages/user/Menu';
-import Enquiries from 'components/pages/admin/Enquiries';
-import ViewEnquiry from 'components/pages/admin/ViewEnquiry';
+import Enquiries from 'components/pages/shared/Enquiries';
+import SingleEnquiry from 'components/pages/shared/SingleEnquiry';
 import AssignedProperties from 'components/pages/admin/AssignedProperties';
 import AddTransaction from 'components/pages/admin/AddTransaction';
 import NewTransaction from 'components/pages/admin/NewTransaction';
@@ -23,7 +23,7 @@ const AdminRouter = () => (
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />
     <ScheduledVisits path="scheduled-visits" />
-    <ViewEnquiry path="enquiry/:id" />
+    <SingleEnquiry path="enquiry/:id" />
     <AssignedProperties path="assigned-properties" />
     <Enquiries path="enquiries" />
     <Transactions path="transactions" />

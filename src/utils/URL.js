@@ -6,4 +6,7 @@ export const BASE_API = {
 
   getOneUser: (id) => `${BASE_API_URL}/user/${id}`,
   getAllUsers: () => `${BASE_API_URL}/user/all`,
+
+  getOneEnquiry: (id) => `${BASE_API_URL}/enquiry/${id}`,
+  getAllEnquiries: () => `${BASE_API_URL}/enquiry/all`,
 };

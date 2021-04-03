@@ -1,6 +1,6 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import Toast, { useToast } from 'components/utils/Toast';
+import { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
 import Input from 'components/forms/Input';
 import {
@@ -23,55 +23,54 @@ import { UserContext } from 'context/UserContext';
 import { getError, valuesToOptions } from 'utils/helpers';
 import { getTokenFromStore } from 'utils/localStorage';
 import InputFormat from 'components/forms/InputFormat';
-import PropertyCard from 'components/common/PropertyCard';
 import Select from 'components/forms/Select';
+import { useGetQuery } from 'hooks/useQuery';
+import { BASE_API } from 'utils/URL';
+import { ContentLoader } from 'components/utils/LoadingItems';
+import { MessageIcon } from 'components/utils/Icons';
+import { PropertyImage } from '../shared/SinglePortfolio';
+import { PropertyHeader } from '../shared/SinglePortfolio';
+
+const pageOptions = {
+  key: 'property',
+  pageName: 'Property Enquiries',
+};
 
 const PropertyEnquiry = ({ id }) => {
   const [toast, setToast] = useToast();
-  const [property, setProperty] = React.useState(null);
-
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/property/${id}`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        // handle success
-        if (status === 200) {
-          setProperty(data.property);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast, id]);
+  const [propertyQuery, property] = useGetQuery({
+    key: pageOptions.key,
+    name: [pageOptions.key, id],
+    setToast,
+    endpoint: BASE_API.getOneProperty(id),
+    refresh: true,
+  });
 
   return (
     <BackendPage>
       <section className="container-fluid">
         <h4>Property Enquiry</h4>
-        <Toast {...toast} showToastOnly />
-        {property && <PropertyInfo property={property} />}
-        <EnquiryForm id={id} />
+        <ContentLoader
+          hasContent={!!property}
+          Icon={<MessageIcon />}
+          query={propertyQuery}
+          name={pageOptions.pageName}
+          toast={toast}
+        >
+          <Card className="card-container mb-4 h-100 property-holder__big">
+            <PropertyImage property={property} hideGallery />
+            <div className="my-4">
+              <PropertyHeader property={property} />
+            </div>
+          </Card>
+        </ContentLoader>
+        <EnquiryForm id={id} setToast={setToast} />
       </section>
     </BackendPage>
   );
 };
 
-const PropertyInfo = ({ property }) => (
-  <div className="row my-3">
-    <div className="col-sm-8">
-      <PropertyCard {...property} />
-    </div>
-  </div>
-);
-
-const EnquiryForm = ({ id }) => {
-  const [toast, setToast] = useToast();
+const EnquiryForm = ({ id, setToast }) => {
   const { userState } = React.useContext(UserContext);
 
   return (
@@ -127,7 +126,6 @@ const EnquiryForm = ({ id }) => {
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
-          <Toast {...toast} />
           <ClientDetailsForm />
           <PropertyAddress />
           <PropertyDetailsForm />

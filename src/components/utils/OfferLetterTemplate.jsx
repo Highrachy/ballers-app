@@ -15,6 +15,7 @@ import HighrachyLogo from 'assets/img/logo/highrachy-logo.png';
 import { getDate } from 'utils/date-helpers';
 import Image from './Image';
 import DirectorSignature from 'assets/img/placeholder/signature.png';
+import { ACTIVE_OFFER_STATUS } from 'utils/constants';
 
 const OfferLetterTemplate = ({
   children,
@@ -96,11 +97,7 @@ const OfferLetterTemplate = ({
               <td>
                 <strong>3. PROPERTY DESCRIPTION:</strong>
               </td>
-              <td>
-                1 Unit of a 3 bedroom Apartment in a “condominium style” with
-                adjoining room situate on Elder Nwuba Street, off Dreamworld
-                Africana way, KM 20, Lekki /Epe expressway, Lekki, Lagos.
-              </td>
+              <td>{propertyInfo.description}</td>
             </tr>
             <tr>
               <td>
@@ -148,7 +145,6 @@ const OfferLetterTemplate = ({
                         [...Array(noOfMonths).keys()].map((value, index) => (
                           <tr key={index}>
                             <td>{numToOrdinal(index + 2)} Deposit</td>
-                            {/* <td>April 2019</td> */}
                             <td>{moneyFormat(periodicPayment)}</td>
                           </tr>
                         ))}
@@ -170,12 +166,9 @@ const OfferLetterTemplate = ({
               </td>
               <td>
                 <ul>
-                  <li>Grid Power supply</li>
-                  <li>Borehole and Water treatment plant</li>
-                  <li> Dedicated parking for 2 cars </li>
-                  <li>Intercom system </li>
-                  <li>Alternative power supply</li>
-                  <li> Perimeter fence</li>
+                  {propertyInfo.features.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
                 </ul>
               </td>
             </tr>
@@ -328,19 +321,20 @@ const OfferLetterTemplate = ({
         <br /> For: {companyName}
       </p>
 
-      {vendorInfo?.vendor?.directors?.length > 0 ? (
-        <CompanySignatories vendorInfo={vendorInfo} />
-      ) : (
-        <>
-          <Image
-            className="director-signature"
-            name="Signature"
-            src={DirectorSignature}
-          />
+      {ACTIVE_OFFER_STATUS.includes(offerInfo.status) &&
+        (vendorInfo?.vendor?.directors?.length > 0 ? (
+          <CompanySignatories vendorInfo={vendorInfo} />
+        ) : (
+          <>
+            <Image
+              className="director-signature"
+              name="Signature"
+              src={DirectorSignature}
+            />
 
-          <h6>Director</h6>
-        </>
-      )}
+            <h6>Director</h6>
+          </>
+        ))}
 
       {showSignaturePad && (
         <section className="signature mt-5">
