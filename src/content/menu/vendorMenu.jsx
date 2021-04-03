@@ -10,6 +10,8 @@ import { MessageIcon } from 'components/utils/Icons';
 import { FileIcon } from 'components/utils/Icons';
 import {} from 'components/utils/Icons';
 import { VisitationIcon } from 'components/utils/Icons';
+import { EnquiryIcon } from 'components/utils/Icons';
+import { OfferIcon } from 'components/utils/Icons';
 
 export default [
   {
@@ -33,7 +35,13 @@ export default [
   {
     title: 'Enquiries',
     to: '/vendor/enquiries',
-    icon: <MessageIcon />,
+    icon: <EnquiryIcon />,
+    footer: false,
+  },
+  {
+    title: 'Offers',
+    to: '/vendor/offers',
+    icon: <OfferIcon />,
     footer: false,
   },
   {

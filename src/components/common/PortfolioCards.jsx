@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
-import { RightArrowIcon } from 'components/utils/Icons';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
 import { MapPinIcon, MyPropertyIcon } from 'components/utils/Icons';
 import { getError, moneyFormatInNaira } from 'utils/helpers';
@@ -12,6 +11,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import LoadItems from 'components/utils/LoadingItems';
 import NoContent from 'components/utils/NoContent';
 import { Loading } from 'components/utils/LoadingItems';
+import { PropertyIcon } from 'components/utils/Icons';
 
 export const PortfolioPaymentProgress = ({ amountPaid, percentage }) => (
   <div className="row">
@@ -33,54 +33,48 @@ export const PortfolioPaymentProgress = ({ amountPaid, percentage }) => (
   </div>
 );
 
-export const PortfolioCard = ({ _id, totalAmountPayable, property }) => (
-  <Card className="card-container h-100 portfolio-holder">
-    <img
-      src={property.mainImage || PropertyPlaceholderImage}
-      alt="Property"
-      className="img-fluid portfolio-holder__img"
-    />
-    <div className="row portfolio-holder__content">
-      <div className="col-md-12 portfolio-holder__icon">
-        <h5>
-          {property.name}{' '}
-          <Link to={`/user/portfolio/assigned/${_id}`}>
-            <span
-              className={`badge badge-success property-holder__details float-right`}
-            >
-              Details <RightArrowIcon />
-            </span>
-          </Link>
-        </h5>
-        <h6 className="text-secondary">
-          {moneyFormatInNaira(totalAmountPayable)}
-        </h6>
-        <div className="">
-          <span className="portfolio-holder__location">
-            <MapPinIcon /> {property.address.city}, {property.address.state}
-          </span>{' '}
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <span className="portfolio-holder__house-type">
-            <MyPropertyIcon /> {property.houseType}
-          </span>
+export const PortfolioCard = ({ _id, totalAmountPayable, propertyInfo }) => (
+  <Card className="card-container h-100 portfolio-holder property-card">
+    <Link to={`/user/portfolio/${_id}`}>
+      <article>
+        <div className="content-image">
+          <img
+            src={propertyInfo.mainImage || PropertyPlaceholderImage}
+            alt="Property"
+            className="img-fluid property-holder__img"
+          />
         </div>
-      </div>
-    </div>
-
-    <div className="button-container mt-4 d-block d-md-none">
-      <Link to={`/user/portfolio/assigned/${_id}`}>
-        <span className={`btn btn-success btn-block`}>
-          Details <RightArrowIcon />
-        </span>
-      </Link>
-    </div>
+        <div className="property-item">
+          <h5 className="property-name mb-0">{propertyInfo.name}</h5>
+          {/* Details */}
+          <div className="property-details property-spacing">
+            <span className="property-holder__house-type">
+              <strong>
+                <PropertyIcon /> {propertyInfo.houseType}
+              </strong>
+            </span>{' '}
+            &nbsp; | &nbsp;
+            <span className="property-holder__location">
+              <strong>
+                <MapPinIcon /> {propertyInfo.address?.city},{' '}
+                {propertyInfo.address?.state}
+              </strong>
+            </span>
+          </div>
+          {/* Price */}
+          <h5 className="property-price property-spacing">
+            {moneyFormatInNaira(totalAmountPayable)}
+          </h5>
+        </div>
+      </article>
+    </Link>
   </Card>
 );
 
 const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
   const [portfolios, setPortfolios] = React.useState(null);
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/property/assigned`, {
+    Axios.get(`${BASE_API_URL}/property/portfolio/all`, {
       headers: {
         Authorization: getTokenFromStore(),
       },
@@ -88,7 +82,7 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
       .then(function (response) {
         const { status, data } = response;
         if (status === 200) {
-          setPortfolios(data.properties);
+          setPortfolios(data.result);
         }
       })
       .catch(function (error) {
@@ -116,7 +110,7 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
         </div>
       );
     }
-    if (portfolios.length === 0) {
+    if (portfolios?.length === 0) {
       return (
         <div className="col-sm-6">
           <Card className="card-container d-block text-center py-5 h-100">
@@ -126,6 +120,8 @@ const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
       );
     }
   }
+
+  console.log(`portfolio`, portfolios);
 
   return (
     <LoadItems

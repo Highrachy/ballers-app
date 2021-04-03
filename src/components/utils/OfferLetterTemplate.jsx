@@ -11,11 +11,11 @@ import {
   isValidURL,
   getUserTitle,
 } from 'utils/helpers';
-import HighrachyLogo from 'assets/img/logo/highrachy-logo.png';
 import { getDate } from 'utils/date-helpers';
 import Image from './Image';
 import DirectorSignature from 'assets/img/placeholder/signature.png';
 import { ACTIVE_OFFER_STATUS } from 'utils/constants';
+import { useCurrentRole } from 'hooks/useUser';
 
 const OfferLetterTemplate = ({
   children,
@@ -26,9 +26,7 @@ const OfferLetterTemplate = ({
   showSignaturePad,
   vendorInfo,
 }) => {
-  const companyName =
-    vendorInfo?.vendor?.companyName ||
-    'Highrachy Investment and Technology Ltd';
+  const companyName = vendorInfo?.vendor?.companyName;
   const shownSignature = signature || offerInfo.signature;
 
   const { totalAmountPayable, initialPayment, periodicPayment } = offerInfo;
@@ -44,13 +42,15 @@ const OfferLetterTemplate = ({
   const buyerName = `${enquiryInfo.title} ${enquiryInfo.firstName} ${enquiryInfo.lastName} ${enquiryInfo.otherName}`;
   const houseType = propertyInfo.houseType.toUpperCase();
   const propertyName = propertyInfo.name;
+  const isUser = useCurrentRole().isUser;
+
   return (
     <Card className="mt-4 p-5 offer-letter-template">
       <img
-        src={vendorInfo?.vendor?.companyLogo || HighrachyLogo}
+        src={vendorInfo?.vendor?.companyLogo}
         width="150"
         className="img-fluid"
-        alt="Highrachy Logo"
+        alt={`${companyName} Logo`}
       />
       <p className="mt-4">
         Our Ref: {offerInfo.referenceCode || ''}
@@ -336,7 +336,7 @@ const OfferLetterTemplate = ({
           </>
         ))}
 
-      {showSignaturePad && (
+      {showSignaturePad && isUser && (
         <section className="signature mt-5">
           <h6>MEMORANDUM OF ACCEPTANCE</h6>
           <strong className="text-muted">

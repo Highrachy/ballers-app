@@ -47,6 +47,7 @@ import {
   FaBuilding,
   FaAmbulance,
   FaGrinStars,
+  FaRegFileAlt,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { VscVerified } from 'react-icons/vsc';
@@ -83,6 +84,7 @@ export const DownloadIcon = () => <FiDownload />;
 export const EntertainmentIcon = () => <BiCameraMovie />;
 export const ErrorIcon = () => <FaTimesCircle />;
 export const EditIcon = () => <FiEdit />;
+export const EnquiryIcon = () => <BiMessageDetail />;
 export const FacebookIcon = () => <FiFacebook />;
 export const FileIcon = () => <FiFileText />;
 export const HomeIcon = () => <FiGrid />;
@@ -91,11 +93,12 @@ export const InfoIcon = () => <FaInfoCircle />;
 export const LoveIcon = () => <FiHeart />;
 export const MallIcon = () => <MdLocalMall />;
 export const MapPinIcon = () => <FaMapMarkerAlt />;
-export const MessageIcon = () => <BiMessageDetail />;
+export const MessageIcon = () => <EnquiryIcon />;
 export const MenuIcon = () => <FiMenu />;
 export const MyPropertyIcon = () => <FiHome />;
 export const NotificationIcon = () => <FiBell />;
-export const OfferIcon = () => <FaFileContract />;
+export const OfferIcon = () => <FaRegFileAlt />;
+export const OfferSignedIcon = () => <FaFileContract />;
 export const PlusIcon = () => <FiPlus />;
 export const PointOfInterestIcon = () => <FaGrinStars />;
 export const ProfileIcon = () => <FiSettings />;

@@ -22,6 +22,16 @@ import Button from 'components/forms/Button';
 import { Accordion, Card } from 'react-bootstrap';
 import { ArrowDownIcon } from 'components/utils/Icons';
 import { ContextAwareToggle } from 'components/common/FAQsAccordion';
+import { useCurrentRole } from 'hooks/useUser';
+import { BASE_API } from 'utils/URL';
+import { useGetQuery } from 'hooks/useQuery';
+import { ContentLoader } from 'components/utils/LoadingItems';
+import { OfferIcon } from 'components/utils/Icons';
+
+const pageOptions = {
+  key: 'offer',
+  pageName: 'Offer',
+};
 
 const OfferLetter = ({ id }) => {
   const componentRef = React.useRef();
@@ -112,56 +122,58 @@ const RaiseAConcern = ({ offerId, concerns }) => {
             title="Answered Concerns"
           />
         )}
-        <Formik
-          initialValues={setInitialValues(raiseAConcernSchema)}
-          onSubmit={(values, actions) => {
-            const payload = { offerId, ...values };
-            Axios.put(`${BASE_API_URL}/offer/raise-concern`, payload, {
-              headers: { Authorization: getTokenFromStore() },
-            })
-              .then(function (response) {
-                const { status } = response;
-                if (status === 200) {
+        {useCurrentRole().isUser && (
+          <Formik
+            initialValues={setInitialValues(raiseAConcernSchema)}
+            onSubmit={(values, actions) => {
+              const payload = { offerId, ...values };
+              Axios.put(`${BASE_API_URL}/offer/raise-concern`, payload, {
+                headers: { Authorization: getTokenFromStore() },
+              })
+                .then(function (response) {
+                  const { status } = response;
+                  if (status === 200) {
+                    setToast({
+                      type: 'success',
+                      message: `Your concern has been duly noted.`,
+                    });
+                    actions.setSubmitting(false);
+                    actions.resetForm();
+                  }
+                })
+                .catch(function (error) {
                   setToast({
-                    type: 'success',
-                    message: `Your concern has been duly noted.`,
+                    message: getError(error),
                   });
                   actions.setSubmitting(false);
-                  actions.resetForm();
-                }
-              })
-              .catch(function (error) {
-                setToast({
-                  message: getError(error),
                 });
-                actions.setSubmitting(false);
-              });
-          }}
-          validationSchema={createSchema(raiseAConcernSchema)}
-        >
-          {({ isSubmitting, handleSubmit, ...props }) => (
-            <Form>
-              <Toast {...toast} />
-              <p>
-                <strong>Have any concerns? Ask your Question here:</strong>
-              </p>
-              <Textarea
-                name="question"
-                placeholder="Raise a concern regarding this offer letter"
-                rows="3"
-              />
+            }}
+            validationSchema={createSchema(raiseAConcernSchema)}
+          >
+            {({ isSubmitting, handleSubmit, ...props }) => (
+              <Form>
+                <Toast {...toast} />
+                <p>
+                  <strong>Have any concerns? Ask your Question here:</strong>
+                </p>
+                <Textarea
+                  name="question"
+                  placeholder="Raise a concern regarding this offer letter"
+                  rows="3"
+                />
 
-              <Button
-                className="btn-secondary mt-4"
-                loading={isSubmitting}
-                onClick={handleSubmit}
-              >
-                Submit Question
-              </Button>
-              <DisplayFormikState {...props} hide showAll />
-            </Form>
-          )}
-        </Formik>
+                <Button
+                  className="btn-secondary mt-4"
+                  loading={isSubmitting}
+                  onClick={handleSubmit}
+                >
+                  Submit Question
+                </Button>
+                <DisplayFormikState {...props} hide showAll />
+              </Form>
+            )}
+          </Formik>
+        )}
       </div>
     </section>
   );
@@ -169,9 +181,15 @@ const RaiseAConcern = ({ offerId, concerns }) => {
 
 const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
   const [toast, setToast] = useToast();
-  const [offer, setOffer] = React.useState(null);
   const [image, setImage] = React.useState(null);
   const [signature, setSignature] = React.useState(null);
+  const [offerQuery, offer] = useGetQuery({
+    key: pageOptions.key,
+    name: [pageOptions.key, offerId],
+    setToast,
+    endpoint: BASE_API.getOneOffer(offerId),
+    refresh: true,
+  });
 
   const acceptOffer = () => {
     const payload = { offerId, signature };
@@ -195,65 +213,53 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
       });
   };
 
-  React.useEffect(() => {
-    offerId &&
-      Axios.get(`${BASE_API_URL}/offer/${offerId}`, {
-        headers: {
-          Authorization: getTokenFromStore(),
-        },
-      })
-        .then(function (response) {
-          const { status, data } = response;
-          if (status === 200) {
-            setOffer(data.offer);
-            setConcerns(data.offer.concern);
-          }
-        })
-        .catch(function (error) {
-          setToast({
-            message: getError(error),
-          });
-        });
-  }, [setToast, setConcerns, offerId]);
+  const isUser = useCurrentRole().isUser;
 
   return (
     <>
-      <Toast {...toast} showToastOnly />
-      {offer && (
-        <OfferLetterTemplate
-          enquiryInfo={offer.enquiryInfo}
-          offerInfo={offer}
-          propertyInfo={offer.propertyInfo}
-          signature={signature}
-          showSignaturePad
-          vendorInfo={offer.vendorInfo}
-        >
-          {offer.status === OFFER_STATUS.GENERATED && (
-            <>
-              <div className="mt-5">
-                <DigitalSignaturePad setSignature={setSignature} />
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <UploadSignature
-                  image={image}
-                  setImage={setImage}
-                  setSignature={setSignature}
-                />
-              </div>
-
-              {signature && (
+      <ContentLoader
+        hasContent={offer?.enquiryInfo}
+        Icon={<OfferIcon />}
+        query={offerQuery}
+        name={pageOptions.pageName}
+        toast={toast}
+      >
+        {offer && (
+          <OfferLetterTemplate
+            enquiryInfo={offer.enquiryInfo}
+            offerInfo={offer}
+            propertyInfo={offer.propertyInfo}
+            signature={signature}
+            showSignaturePad
+            vendorInfo={offer.vendorInfo}
+          >
+            {offer.status === OFFER_STATUS.GENERATED && isUser && (
+              <>
                 <div className="mt-5">
-                  <button
-                    className="btn btn-success btn-wide hide-print"
-                    onClick={acceptOffer}
-                  >
-                    Accept Offer Letter
-                  </button>
+                  <DigitalSignaturePad setSignature={setSignature} />
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <UploadSignature
+                    image={image}
+                    setImage={setImage}
+                    setSignature={setSignature}
+                  />
                 </div>
-              )}
-            </>
-          )}
-        </OfferLetterTemplate>
-      )}
+
+                {signature && (
+                  <div className="mt-5">
+                    <button
+                      className="btn btn-success btn-wide hide-print"
+                      onClick={acceptOffer}
+                    >
+                      Accept Offer Letter
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </OfferLetterTemplate>
+        )}
+      </ContentLoader>
     </>
   );
 };

@@ -3,21 +3,18 @@ import BackendPage from 'components/layout/BackendPage';
 import { Link } from '@reach/router';
 import PropertyCard from 'components/common/PropertyCard';
 import Axios from 'axios';
-import { ACTIVE_OFFER_STATUS, BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
-import { getError, moneyFormatInNaira } from 'utils/helpers';
+import { getError } from 'utils/helpers';
 import LoadItems from 'components/utils/LoadingItems';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import NoContent from 'components/utils/NoContent';
-import PropTypes from 'prop-types';
-import { Card } from 'react-bootstrap';
-import { MessageIcon } from 'components/utils/Icons';
-import ProfileAvatar from 'assets/img/avatar/profile.png';
 import PortfolioCards from 'components/common/PortfolioCards';
-import { FileIcon } from 'components/utils/Icons';
-import { SuccessIcon } from 'components/utils/Icons';
-import { InfoIcon } from 'components/utils/Icons';
+import { OffersRowList } from '../shared/Offers';
+import { BASE_API } from 'utils/URL';
+import { OfferIcon } from 'components/utils/Icons';
+import AdminList from 'components/common/AdminList';
 
 const Portfolio = () => {
   const [toast, setToast] = useToast();
@@ -105,126 +102,16 @@ const EnjoyingBallers = () => (
     </div>
   </section>
 );
-const Offers = () => {
-  const [toast, setToast] = useToast();
-  const [offers, setOffers] = React.useState(null);
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/offer/all`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        // handle success
-        if (status === 200) {
-          setOffers(data.result);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast]);
-  return (
-    <>
-      <h5 className="container-fluid mt-5">All Offers</h5>
-      <LoadItems
-        Icon={<MessageIcon />}
-        items={offers}
-        size="small"
-        loadingText="Loading your Offers"
-        noContent={
-          <NoContent
-            size="small"
-            Icon={<MessageIcon />}
-            text="No Offers found"
-          />
-        }
-      >
-        <OffersRowList toast={toast} offers={offers || []} />
-      </LoadItems>
-    </>
-  );
-};
 
-const OffersRowList = ({ offers }) => (
-  <div className="container-fluid mb-5">
-    <Card>
-      <div className="table-responsive">
-        <table className="table table-border table-hover mb-0">
-          <tbody>
-            {offers.map((offer, index) => (
-              <OffersRow key={index} number={index + 1} {...offer} />
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
-  </div>
-);
-
-OffersRowList.propTypes = {
-  offers: PropTypes.array.isRequired,
-};
-
-const OffersRow = ({
-  status,
-  _id,
-  totalAmountPayable,
-  number,
-  expires,
-  enquiryInfo,
-  propertyInfo,
-}) => (
-  <>
-    <tr>
-      <td>{number}</td>{' '}
-      <td>
-        <img
-          alt={propertyInfo.name}
-          className="img-fluid avatar--medium--small rounded"
-          src={propertyInfo.mainImage ? propertyInfo.mainImage : ProfileAvatar}
-          title={propertyInfo.name}
-        />
-      </td>
-      <td>
-        <strong>{propertyInfo.name}</strong>
-        <br />
-        <small>
-          {propertyInfo.address.city}, {propertyInfo.address.state}
-        </small>
-      </td>
-      <td>
-        <strong>{moneyFormatInNaira(totalAmountPayable)}</strong>
-      </td>
-      <td>
-        <strong>Highrachy</strong>
-        <br />
-        <small>09012345678</small>
-      </td>
-      <td>
-        {ACTIVE_OFFER_STATUS.includes(status) ? (
-          <span className="text-green">
-            <SuccessIcon />{' '}
-          </span>
-        ) : (
-          <span className="text-danger">
-            <InfoIcon />
-          </span>
-        )}
-      </td>
-      <td>
-        <Link
-          className="btn btn-sm btn-secondary"
-          to={`/user/property/offer-letter/${_id}`}
-        >
-          <FileIcon /> View Offer
-        </Link>
-      </td>
-    </tr>
-  </>
+const Offers = () => (
+  <AdminList
+    endpoint={BASE_API.getAllOffers()}
+    pageName="Offer"
+    pluralPageName="Offers"
+    DataComponent={OffersRowList}
+    PageIcon={<OfferIcon />}
+    queryName="offer"
+  />
 );
 
 export default Portfolio;

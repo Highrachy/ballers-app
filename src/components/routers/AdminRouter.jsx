@@ -14,6 +14,7 @@ import SingleEnquiry from 'components/pages/shared/SingleEnquiry';
 import AssignedProperties from 'components/pages/admin/AssignedProperties';
 import AddTransaction from 'components/pages/admin/AddTransaction';
 import NewTransaction from 'components/pages/admin/NewTransaction';
+import OfferLetter from 'components/pages/shared/OfferLetter';
 
 const AdminRouter = () => (
   <Router>
@@ -27,6 +28,7 @@ const AdminRouter = () => (
     <AssignedProperties path="assigned-properties" />
     <Enquiries path="enquiries" />
     <Transactions path="transactions" />
+    <OfferLetter path="offer-letter/:id" />
     <AddTransaction path="add-transaction" />
     <NewTransaction path="transactions/new/:offerId" />
     <KnowledgeBase path="knowledgebase" />

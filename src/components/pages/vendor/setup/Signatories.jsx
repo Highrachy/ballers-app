@@ -17,7 +17,7 @@ import { UserContext } from 'context/UserContext';
 import { signatorySchema } from 'components/forms/schemas/vendorSchema';
 import { getError, isValidURL, statusIsSuccessful } from 'utils/helpers';
 import Select from 'components/forms/Select';
-import { UploadSignature } from 'components/pages/user/OfferLetter';
+import { UploadSignature } from 'components/pages/shared/OfferLetter';
 import Image from 'components/utils/Image';
 import { VerificationComments } from './AccountSetup';
 

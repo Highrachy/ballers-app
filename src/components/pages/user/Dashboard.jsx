@@ -136,7 +136,7 @@ const OffersRow = ({ _id, expires, status, propertyInfo, vendorInfo }) => {
       <h6 className="w-100 font-weight-normal">
         <Link
           className="btn btn-success btn-sm float-right"
-          to={`/user/property/offer-letter/${_id}`}
+          to={`/user/offer-letter/${_id}`}
         >
           View Offer Letter
         </Link>

@@ -10,8 +10,10 @@ import Transactions from 'components/pages/vendor/Transactions';
 import NewProperty from 'components/pages/vendor/NewProperty';
 import Enquiries from 'components/pages/shared/Enquiries';
 import SingleEnquiry from 'components/pages/shared/SingleEnquiry';
+import Offers from 'components/pages/shared/Offers';
 import AssignedProperties from 'components/pages/vendor/AssignedProperties';
 import Gallery from 'components/pages/shared/Gallery';
+import OfferLetter from 'components/pages/shared/OfferLetter';
 
 const VendorRouter = () => (
   <Router>
@@ -23,9 +25,11 @@ const VendorRouter = () => (
     <NewProperty path="portfolios/new" />
     <NewProperty path="portfolios/edit/:id" />
     <ScheduledVisits path="scheduled-visits" />
-    <SingleEnquiry path="enquiry/:id" />
-    <AssignedProperties path="assigned-properties" />
     <Enquiries path="enquiries" />
+    <SingleEnquiry path="enquiry/:id" />
+    <Offers path="offers" />
+    <OfferLetter path="offer-letter/:id" />
+    <AssignedProperties path="assigned-properties" />
     <Transactions path="transactions" />
     <Gallery path="gallery/:propertyId" />
     <Menu path="menu" />
