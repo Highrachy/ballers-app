@@ -140,14 +140,17 @@ export const GallerySlideShow = ({ images }) => {
 export const GalleryList = ({ property }) => {
   const [showSlideShowModal, setShowSlideShowModal] = React.useState(false);
   const galleryLength = property.gallery.length || 0;
+  const SIDE_GALLERY_IMAGES = 4;
   const neededGalleryImages =
     property.gallery
       .slice(Math.max(galleryLength - 3, 0), galleryLength)
       .reverse() || [];
   const viewMoreImage =
-    property.gallery
-      .slice(Math.max(galleryLength - 4, 0), Math.max(galleryLength - 3, 1))
-      ?.pop() || [];
+    galleryLength >= SIDE_GALLERY_IMAGES
+      ? property.gallery
+          .slice(Math.max(galleryLength - 4, 0), Math.max(galleryLength - 3, 1))
+          ?.pop() || []
+      : neededGalleryImages.pop();
 
   return (
     <>

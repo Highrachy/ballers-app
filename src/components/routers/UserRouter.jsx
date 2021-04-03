@@ -2,7 +2,7 @@ import React from 'react';
 import { Router } from '@reach/router';
 import Dashboard from 'components/pages/user/Dashboard';
 import Portfolio from 'components/pages/user/Portfolio';
-import SinglePortfolio from 'components/pages/user/SinglePortfolio';
+import MyPortfolio from 'components/pages/user/MyPortfolio';
 import AssignedPortfolio from 'components/pages/user/AssignedPortfolio';
 import Transactions from 'components/pages/user/Transactions';
 import Settings from 'components/pages/user/Settings';
@@ -16,7 +16,7 @@ const UserRouter = () => (
   <Router>
     <Dashboard path="dashboard" />
     <Portfolio path="portfolio" />
-    <SinglePortfolio path="portfolio/:id" />
+    <MyPortfolio path="portfolio/:id" />
     <AssignedPortfolio path="portfolio/assigned/:id" />
     <PropertyEnquiry path="property/enquiry/:id" />
     <Transactions path="transactions" />

@@ -65,10 +65,9 @@ label {
   }
 
   [type='file'] + label {
-    background: $gray-600;
-    border: none;
+    border: 2px solid $gray-600;
     border-radius: 5px;
-    color: #fff;
+    color: $gray-600;
     cursor: pointer;
     display: inline-block;
     font-family: 'Rubik', sans-serif;
@@ -76,13 +75,14 @@ label {
     font-weight: 500;
     margin-bottom: 0.2rem;
     outline: none;
-    padding: 1rem 50px;
+    padding: 0.5rem 2.5rem;
     position: relative;
     transition: all 0.3s;
     vertical-align: middle;
 
     &:hover {
-      background-color: darken($info, 15%);
+      background-color: darken($gray-600, 15%);
+      color: $white;
     }
   }
 }

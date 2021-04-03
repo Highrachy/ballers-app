@@ -15,6 +15,7 @@ import { ContentLoader } from 'components/utils/LoadingItems';
 const AdminList = ({
   addNewUrl,
   DataComponent,
+  initialFilter = {},
   FilterComponent,
   limit,
   PageIcon,
@@ -24,7 +25,7 @@ const AdminList = ({
   queryName,
   ...props
 }) => {
-  const [filters, setFilters] = React.useState({});
+  const [filters, setFilters] = React.useState(initialFilter);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [toast, setToast] = useToast();
 
@@ -45,7 +46,8 @@ const AdminList = ({
   return (
     <>
       <TopTitle buttonText={`New ${pageName}`} to={addNewUrl}>
-        {pagination?.total} {Humanize.pluralize(pagination?.total, pageName)}
+        {pagination?.total}{' '}
+        {Humanize.pluralize(pagination?.total, pageName, pluralizePageName)}
       </TopTitle>
       <Toast {...toast} showToastOnly />
 
@@ -57,7 +59,7 @@ const AdminList = ({
         />
       )}
       <ContentLoader
-        hasContent={!!results}
+        hasContent={results?.length > 0}
         Icon={Icon}
         query={query}
         name={pageName}

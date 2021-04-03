@@ -55,7 +55,7 @@ export const ContentLoader = ({
     <Toast {...toast} showToastOnly />
     {query.isFetching && !query.isLoading && (
       <div className="updating-spinner">
-        <BallersSpinner small="small" />
+        <BallersSpinner small />
       </div>
     )}
     {query.isLoading ? (

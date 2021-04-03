@@ -26,12 +26,14 @@ import { useGetQuery } from 'hooks/useQuery';
 import { MyPropertyIcon } from 'components/utils/Icons';
 import { BASE_API } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
+import Button from 'components/forms/Button';
 
 const pageOptions = {
   key: 'property',
   pageName: 'Property',
 };
-const SinglePortfolio = ({ id }) => {
+
+const SinglePortfolio = ({ id, Sidebar }) => {
   const [toast, setToast] = useToast();
   const [propertyQuery, property, setProperty] = useGetQuery({
     key: pageOptions.key,
@@ -39,9 +41,6 @@ const SinglePortfolio = ({ id }) => {
     setToast,
     endpoint: BASE_API.getOneProperty(id),
     refresh: true,
-    // queryOptions: {
-    //   initialData: getQueryCache(name)?.[pageOptions.key],
-    // },
   });
 
   return (
@@ -57,13 +56,19 @@ const SinglePortfolio = ({ id }) => {
           property={property}
           setToast={setToast}
           setProperty={setProperty}
+          Sidebar={Sidebar}
         />
       </ContentLoader>
     </BackendPage>
   );
 };
 
-const OwnedPropertyCard = ({ property, setToast, setProperty }) => (
+export const OwnedPropertyCard = ({
+  property,
+  setToast,
+  setProperty,
+  Sidebar,
+}) => (
   <div className="container-fluid">
     <Card className="card-container mt-4 h-100 property-holder__big">
       <PropertyImage property={property} />
@@ -75,9 +80,10 @@ const OwnedPropertyCard = ({ property, setToast, setProperty }) => (
         />
       )}
       <div className="row mt-5">
-        <div className="col-sm-12">
+        <div className={Sidebar ? 'col-sm-7' : 'col-sm-12'}>
           <PropertyDescription property={property} />
         </div>
+        {Sidebar && <div className="col-sm-5">{Sidebar}</div>}
       </div>
       <FloorPlansList
         property={property}
@@ -91,6 +97,13 @@ const OwnedPropertyCard = ({ property, setToast, setProperty }) => (
       />
     </Card>
     <PropertyMap mapLocation={property.mapLocation} />
+    {useCurrentRole().role === USER_TYPES.user && (
+      <div className="text-right mt-5">
+        <Button className="btn btn-xs btn-dark btn-wide">
+          Report this Property
+        </Button>
+      </div>
+    )}
   </div>
 );
 
@@ -126,12 +139,12 @@ const ManagePropertyLink = ({ property, setToast, setProperty }) => (
   </section>
 );
 
-export const PropertyImage = ({ property }) => {
-  const hideGallery = (property?.gallery?.length || 0) === 0;
+export const PropertyImage = ({ property, hideGallery }) => {
+  const showGallery = property?.gallery?.length >= 0 && !hideGallery;
   return (
     <>
       <div className="row">
-        <div className={hideGallery ? 'col-sm-12' : 'col-sm-10'}>
+        <div className={!showGallery ? 'col-sm-12' : 'col-sm-10'}>
           <Image
             defaultImage={PropertyPlaceholderImage}
             src={property.mainImage}
@@ -140,7 +153,7 @@ export const PropertyImage = ({ property }) => {
             watermark
           />
         </div>
-        {hideGallery || <GalleryList property={property} />}
+        {showGallery && <GalleryList property={property} />}
       </div>
     </>
   );
@@ -154,30 +167,7 @@ export const PropertyDescription = ({ property }) => {
 
   return (
     <>
-      <h3 className={`property-holder__big-title`}>{property.name}</h3>
-      <h4 className="text-secondary mb-3">
-        {moneyFormatInNaira(property.price)}
-      </h4>
-      <p className="mb-2 text-muted">
-        {getLocationFromAddress(property.address)}
-      </p>
-
-      <div className="property-info-details">
-        <span className="pr-3">
-          <BedIcon /> <Spacing /> {property.bedrooms}{' '}
-          {Humanize.pluralize(property.bedrooms, 'bed')}
-        </span>
-        <TextSeparator />
-        <span className="px-3">
-          <BathIcon /> <Spacing /> {property.bathrooms}{' '}
-          {Humanize.pluralize(property.bathrooms, 'bath')}
-        </span>
-        <TextSeparator />
-        <span className="pl-3">
-          <ToiletIcon /> <Spacing /> {property.toilets}{' '}
-          {Humanize.pluralize(property.toilets, 'toilet')}
-        </span>
-      </div>
+      <PropertyHeader property={property} />
 
       <h5 className="mt-5 header-smaller">About Property</h5>
       <div className="position-relative">
@@ -235,6 +225,35 @@ export const PropertyDescription = ({ property }) => {
     </>
   );
 };
+
+export const PropertyHeader = ({ property }) => (
+  <>
+    {' '}
+    <h3 className={`property-holder__big-title`}>{property.name}</h3>
+    <h4 className="text-secondary mb-3">
+      {moneyFormatInNaira(property.price)}
+    </h4>
+    <p className="mb-2 text-muted">
+      {getLocationFromAddress(property.address)}
+    </p>
+    <div className="property-info-details">
+      <span className="pr-3">
+        <BedIcon /> <Spacing /> {property.bedrooms}{' '}
+        {Humanize.pluralize(property.bedrooms, 'bed')}
+      </span>
+      <TextSeparator />
+      <span className="px-3">
+        <BathIcon /> <Spacing /> {property.bathrooms}{' '}
+        {Humanize.pluralize(property.bathrooms, 'bath')}
+      </span>
+      <TextSeparator />
+      <span className="pl-3">
+        <ToiletIcon /> <Spacing /> {property.toilets}{' '}
+        {Humanize.pluralize(property.toilets, 'toilet')}
+      </span>
+    </div>
+  </>
+);
 
 export const PropertyMap = ({ mapLocation }) =>
   mapLocation ? (

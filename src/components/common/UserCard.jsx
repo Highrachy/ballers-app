@@ -3,8 +3,14 @@ import ProfileAvatar from 'assets/img/placeholder/user.jpg';
 import Image from 'components/utils/Image';
 
 const UserCard = ({ user }) => {
-  const { firstName, lastName, email, profileImage } = user;
-  const userName = `${firstName} ${lastName}`;
+  const {
+    title = '',
+    firstName = '',
+    lastName = '',
+    email = '',
+    profileImage,
+  } = user;
+  const userName = `${title} ${firstName} ${lastName}`;
   return (
     <div className="user-card">
       <div className="user-avatar user-avatar-sm bg-purple">
