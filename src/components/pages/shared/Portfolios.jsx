@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
-import AdminList from 'components/common/AdminList';
+import PaginatedContent from 'components/common/PaginatedContent';
 import { Form, Formik } from 'formik';
 import {
   DisplayFormikState,
@@ -28,7 +28,7 @@ import { FileIcon } from 'components/utils/Icons';
 const Portfolios = () => {
   return (
     <BackendPage>
-      <AdminList
+      <PaginatedContent
         endpoint={API_ENDPOINT.getAllPortfolios()}
         pageName="Portfolio"
         pluralPageName="Portfolios"

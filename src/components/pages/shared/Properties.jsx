@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
-import AdminList from 'components/common/AdminList';
+import PaginatedContent from 'components/common/PaginatedContent';
 import { Form, Formik } from 'formik';
 import {
   DisplayFormikState,
@@ -29,7 +29,7 @@ const Properties = () => {
     userState?.role === USER_TYPES.vendor ? '/vendor/properties/new' : '';
   return (
     <BackendPage>
-      <AdminList
+      <PaginatedContent
         addNewUrl={addNewUrl}
         endpoint={API_ENDPOINT.getAllProperties()}
         pageName="Property"

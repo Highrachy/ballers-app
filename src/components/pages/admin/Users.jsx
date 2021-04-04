@@ -5,7 +5,7 @@ import { DASHBOARD_PAGE, USER_TYPES } from 'utils/constants';
 import { SuccessIcon, InfoIcon } from 'components/utils/Icons';
 import { Link } from '@reach/router';
 import Humanize from 'humanize-plus';
-import AdminList from 'components/common/AdminList';
+import PaginatedContent from 'components/common/PaginatedContent';
 import { Form, Formik } from 'formik';
 import { setInitialValues } from 'components/forms/form-helper';
 import { userFilterSchema } from 'components/forms/schemas/userSchema';
@@ -20,7 +20,7 @@ import { API_ENDPOINT } from 'utils/URL';
 
 const Users = () => (
   <BackendPage>
-    <AdminList
+    <PaginatedContent
       endpoint={API_ENDPOINT.getAllUsers()}
       pageName="User"
       DataComponent={UsersRowList}
@@ -32,7 +32,6 @@ const Users = () => (
 );
 
 const UsersRowList = ({ results, offset }) => {
-  console.log(`results, offset`, results, offset);
   return (
     <div className="container-fluid">
       <Card>

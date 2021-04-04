@@ -1,11 +1,10 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Card } from 'react-bootstrap';
-import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
-import { getTokenFromStore } from 'utils/localStorage';
-import { getError, moneyFormatInNaira } from 'utils/helpers';
+import { moneyFormatInNaira } from 'utils/helpers';
+import { API_ENDPOINT } from 'utils/URL';
+import { useGetQuery } from 'hooks/useQuery';
 
 const PROPERTY_COLOR = '#2dca73';
 const CONTRIBUTION_REWARD_COLOR = '#161d3f';
@@ -13,42 +12,32 @@ const REFERRAL_COLOR = '#F79B18';
 const EMPTY_COLOR = '#c4c4c4';
 
 const ContributionGraph = () => {
+  const pageOptions = {
+    key: 'accountOverview',
+    pageName: 'Contribution Graph',
+  };
+
   const [toast, setToast] = useToast();
   const initialOverview = {
     contributionReward: 0,
     totalAmountPaid: 0,
     referralRewards: 0,
   };
-  const [accountOverview, setaccountOverview] = React.useState({
-    ...initialOverview,
-    loading: true,
-  });
+  const [accountOverviewQuery, accountOverview = initialOverview] = useGetQuery(
+    {
+      key: pageOptions.key,
+      name: pageOptions.key,
+      setToast,
+      endpoint: API_ENDPOINT.getAccountOverview(),
+      refresh: true,
+    }
+  );
 
   const contributionIsEmpty =
-    accountOverview.contributionReward === 0 &&
-    accountOverview.totalAmountPaid === 0 &&
-    accountOverview.referralRewards === 0;
+    accountOverview?.contributionReward === 0 &&
+    accountOverview?.totalAmountPaid === 0 &&
+    accountOverview?.referralRewards === 0;
 
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/user/account-overview`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        // handle success
-        if (status === 200) {
-          setaccountOverview({ ...data.accountOverview, loading: false });
-        }
-      })
-      .catch(function (error) {
-        setaccountOverview({ ...initialOverview, loading: false });
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast, initialOverview]);
   return (
     <Card className="card-container h-100">
       <Toast {...toast} showToastOnly />
@@ -59,7 +48,7 @@ const ContributionGraph = () => {
             title="Property"
             color="green"
             price={
-              accountOverview.loading
+              accountOverviewQuery.isLoading
                 ? '-'
                 : moneyFormatInNaira(accountOverview.totalAmountPaid)
             }
@@ -97,7 +86,7 @@ const ContributionGraph = () => {
             />
           </div>
           <h5 className="text-center mt-3">
-            {accountOverview.loading
+            {accountOverviewQuery.isLoading
               ? '-'
               : moneyFormatInNaira(
                   accountOverview.totalAmountPaid +
@@ -115,7 +104,7 @@ const ContributionGraph = () => {
             title="Contribution Rewards"
             color="purple"
             price={
-              accountOverview.loading
+              accountOverviewQuery.isLoading
                 ? '-'
                 : moneyFormatInNaira(accountOverview.contributionReward)
             }
@@ -124,7 +113,7 @@ const ContributionGraph = () => {
             title="Referral Bonus"
             color="orange"
             price={
-              accountOverview.loading
+              accountOverviewQuery.isLoading
                 ? '-'
                 : moneyFormatInNaira(accountOverview.referralRewards)
             }

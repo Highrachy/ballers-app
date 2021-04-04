@@ -14,7 +14,7 @@ import PortfolioCards from 'components/common/PortfolioCards';
 import { OffersRowList } from '../shared/Offers';
 import { API_ENDPOINT } from 'utils/URL';
 import { OfferIcon } from 'components/utils/Icons';
-import AdminList from 'components/common/AdminList';
+import PaginatedContent from 'components/common/PaginatedContent';
 
 const Portfolio = () => {
   const [toast, setToast] = useToast();
@@ -104,7 +104,7 @@ const EnjoyingBallers = () => (
 );
 
 const Offers = () => (
-  <AdminList
+  <PaginatedContent
     endpoint={API_ENDPOINT.getAllOffers()}
     pageName="Offer"
     pluralPageName="Offers"

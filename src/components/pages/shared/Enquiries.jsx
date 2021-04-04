@@ -4,13 +4,13 @@ import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import { MessageIcon } from 'components/utils/Icons';
 import { Link } from '@reach/router';
-import AdminList from 'components/common/AdminList';
+import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
 import UserCard from 'components/common/UserCard';
 
 const Enquiries = () => (
   <BackendPage>
-    <AdminList
+    <PaginatedContent
       endpoint={API_ENDPOINT.getAllEnquiries()}
       initialFilter={{ approved: false }}
       pageName="Enquiry"

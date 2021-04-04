@@ -17,6 +17,7 @@ import { PropertyIcon } from 'components/utils/Icons';
 import { TransactionIcon } from 'components/utils/Icons';
 import { getVerificationStatus } from './setup/AccountSetup';
 import { CertifyIcon } from 'components/utils/Icons';
+import { VisitationIcon } from 'components/utils/Icons';
 
 const Dashboard = () => (
   <BackendPage>
@@ -53,28 +54,16 @@ const Welcome = () => {
 
       {userState.vendor?.verified ? (
         <>
-          <section>
-            <div className="card card-bordered my-4">
-              <div className="card-inner px-4 py-3">
-                <div className="row">
-                  <div className="col-md-8">
-                    <h6 className="pt-2">
-                      {' '}
-                      <MessageIcon /> You have no unresolved enquiries
-                    </h6>
-                  </div>
-                  <div className="col-md-4 text-right">
-                    <Link
-                      to={`/vendor/setup/${verificationState.page}`}
-                      className="btn btn-sm btn-wide btn-secondary"
-                    >
-                      View Enquiries
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <NoticeCard
+            Icon={<MessageIcon />}
+            link="/vendor/enquiries"
+            name="Enquiries"
+          />
+          <NoticeCard
+            Icon={<VisitationIcon />}
+            link="/vendor/scheduled-visits"
+            name="Schedule Visitations"
+          />
           <div className="row">
             <DashboardCard
               icon={<PropertyIcon />}
@@ -259,6 +248,25 @@ const DashboardCard = ({ title, children, icon, footer, to }) => (
       <div className="verification-card__action">{footer}</div>
     </div>
   </Link>
+);
+
+const NoticeCard = ({ Icon, name, link }) => (
+  <section className="mb-4">
+    <div className="card card-bordered my-4">
+      <div className="card-inner px-4 py-3">
+        <div className="row">
+          <div className="col-md-8">
+            <h6 className="pt-2">{Icon}You have no unresolved enquiries</h6>
+          </div>
+          <div className="col-md-4 text-right">
+            <Link to={link} className="btn btn-sm btn-wide btn-secondary">
+              View {name}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 );
 
 export default Dashboard;

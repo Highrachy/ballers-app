@@ -6,7 +6,8 @@ import { MALE_TITLES, FEMALE_TITLES } from './constants';
 export const commaNumber = (value, prependCurrency = false) => {
   const number = parseInt(value, 10);
   const currency = prependCurrency ? '₦' : '';
-  return currency + Humanize.intComma(number);
+  const sign = number < 0 ? '— ' : '';
+  return sign + currency + Humanize.intComma(Math.abs(number));
 };
 
 export const moneyFormat = (value) => Humanize.formatNumber(value, 2);

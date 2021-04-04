@@ -2,7 +2,7 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
-import AdminList from 'components/common/AdminList';
+import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { moneyFormatInNaira } from 'utils/helpers';
@@ -16,7 +16,7 @@ import UserCard from 'components/common/UserCard';
 
 const Offers = () => (
   <BackendPage>
-    <AdminList
+    <PaginatedContent
       endpoint={API_ENDPOINT.getAllOffers()}
       pageName="Offer"
       pluralPageName="Offers"

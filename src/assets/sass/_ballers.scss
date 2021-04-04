@@ -444,3 +444,12 @@ html {
     width: 30%;
   }
 }
+
+.badge-overdue {
+  padding: 0.4rem 1.15rem;
+  font-size: 10px;
+  background: #ffe5d3;
+  color: $red;
+  border-radius: 1rem;
+  float: right;
+}

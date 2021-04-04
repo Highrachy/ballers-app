@@ -6,7 +6,7 @@ import SingleUser from 'components/pages/admin/SingleUser';
 import Properties from 'components/pages/shared/Properties';
 import SingleProperty from 'components/pages/shared/SingleProperty';
 import ScheduledVisits from 'components/pages/admin/ScheduledVisits';
-import Transactions from 'components/pages/admin/Transactions';
+import Transactions from 'components/pages/shared/Transactions';
 import KnowledgeBase from 'components/pages/admin/KnowledgeBase';
 import Menu from 'components/pages/user/Menu';
 import Enquiries from 'components/pages/shared/Enquiries';
