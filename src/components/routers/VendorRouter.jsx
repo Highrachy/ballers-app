@@ -13,8 +13,9 @@ import SingleEnquiry from 'components/pages/shared/SingleEnquiry';
 import Offers from 'components/pages/shared/Offers';
 import AssignedProperties from 'components/pages/vendor/AssignedProperties';
 import Gallery from 'components/pages/shared/Gallery';
-import OfferLetter from 'components/pages/shared/OfferLetter';
+import SingleOffer from 'components/pages/shared/SingleOffer';
 import Portfolios from 'components/pages/shared/Portfolios';
+import SinglePortfolio from 'components/pages/shared/SinglePortfolio';
 
 const VendorRouter = () => (
   <Router>
@@ -22,15 +23,16 @@ const VendorRouter = () => (
     <AccountSetup path="setup" />
     <AccountSetup path="setup/:id" />
     <Properties path="properties" />
-    <Portfolios path="portfolios" />
     <SingleProperty path="property/:id" />
+    <Portfolios path="portfolios" />
+    <SinglePortfolio path="portfolio/:id" />
     <NewProperty path="property/new" />
     <NewProperty path="property/edit/:id" />
     <ScheduledVisits path="scheduled-visits" />
     <Enquiries path="enquiries" />
     <SingleEnquiry path="enquiry/:id" />
     <Offers path="offers" />
-    <OfferLetter path="offer/:id" />
+    <SingleOffer path="offer/:id" />
     <AssignedProperties path="assigned-properties" />
     <Transactions path="transactions" />
     <Gallery path="gallery/:propertyId" />

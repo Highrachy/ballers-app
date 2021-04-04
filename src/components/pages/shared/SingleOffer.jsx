@@ -23,7 +23,7 @@ import { Accordion, Card } from 'react-bootstrap';
 import { ArrowDownIcon } from 'components/utils/Icons';
 import { ContextAwareToggle } from 'components/common/FAQsAccordion';
 import { useCurrentRole } from 'hooks/useUser';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { useGetQuery } from 'hooks/useQuery';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { OfferIcon } from 'components/utils/Icons';
@@ -33,7 +33,7 @@ const pageOptions = {
   pageName: 'Offer',
 };
 
-const OfferLetter = ({ id }) => {
+const SingleOffer = ({ id }) => {
   const componentRef = React.useRef();
   const [concerns, setConcerns] = React.useState(null);
 
@@ -187,7 +187,7 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
     key: pageOptions.key,
     name: [pageOptions.key, offerId],
     setToast,
-    endpoint: BASE_API.getOneOffer(offerId),
+    endpoint: API_ENDPOINT.getOneOffer(offerId),
     refresh: true,
   });
 
@@ -376,4 +376,4 @@ export const UploadSignature = ({ image, setImage, setSignature }) => {
     </>
   );
 };
-export default OfferLetter;
+export default SingleOffer;

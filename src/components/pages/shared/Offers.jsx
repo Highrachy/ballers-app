@@ -3,7 +3,7 @@ import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import AdminList from 'components/common/AdminList';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { moneyFormatInNaira } from 'utils/helpers';
 import { ACTIVE_OFFER_STATUS } from 'utils/constants';
@@ -17,7 +17,7 @@ import UserCard from 'components/common/UserCard';
 const Offers = () => (
   <BackendPage>
     <AdminList
-      endpoint={BASE_API.getAllOffers()}
+      endpoint={API_ENDPOINT.getAllOffers()}
       pageName="Offer"
       pluralPageName="Offers"
       DataComponent={OffersRowList}

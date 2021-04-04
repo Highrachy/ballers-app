@@ -21,7 +21,7 @@ import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import { UserContext } from 'context/UserContext';
 import { HOUSE_TYPES, USER_TYPES } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 
 const Properties = () => {
   const { userState } = React.useContext(UserContext);
@@ -31,7 +31,7 @@ const Properties = () => {
     <BackendPage>
       <AdminList
         addNewUrl={addNewUrl}
-        endpoint={BASE_API.getAllProperties()}
+        endpoint={API_ENDPOINT.getAllProperties()}
         pageName="Property"
         pluralPageName="Properties"
         DataComponent={PropertiesRowList}

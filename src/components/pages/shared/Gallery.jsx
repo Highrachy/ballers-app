@@ -1,6 +1,6 @@
 import React from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
+import ImagePlaceholder from 'assets/img/placeholder/image.png';
 import { CameraIcon } from 'components/utils/Icons';
 import Modal from 'components/common/Modal';
 import { Card } from 'react-bootstrap';
@@ -29,7 +29,7 @@ import { EditIcon } from 'components/utils/Icons';
 import { DeleteIcon } from 'components/utils/Icons';
 import { LinkSeparator } from 'components/common/Helpers';
 import { useGetQuery } from 'hooks/useQuery';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { setQueryCache } from 'hooks/useQuery';
 
@@ -47,7 +47,7 @@ export default ({ propertyId }) => {
     key: pageOptions.key,
     name: [pageOptions.key, propertyId],
     setToast,
-    endpoint: BASE_API.getOneProperty(propertyId),
+    endpoint: API_ENDPOINT.getOneProperty(propertyId),
   });
 
   return (
@@ -270,7 +270,7 @@ export const GalleryForm = ({
                   <Upload
                     afterUpload={(image) => setImage(image)}
                     changeText={`Update Gallery Image`}
-                    defaultImage={PropertyPlaceholderImage}
+                    defaultImage={ImagePlaceholder}
                     imgOptions={{ className: 'mb-3', watermark: true }}
                     name="gallery-image"
                     oldImage={gallery?.url}

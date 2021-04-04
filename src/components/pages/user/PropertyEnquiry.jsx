@@ -25,7 +25,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import InputFormat from 'components/forms/InputFormat';
 import Select from 'components/forms/Select';
 import { useGetQuery } from 'hooks/useQuery';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { MessageIcon } from 'components/utils/Icons';
 import { PropertyImage } from '../shared/SingleProperty';
@@ -42,7 +42,7 @@ const PropertyEnquiry = ({ id }) => {
     key: pageOptions.key,
     name: [pageOptions.key, id],
     setToast,
-    endpoint: BASE_API.getOneProperty(id),
+    endpoint: API_ENDPOINT.getOneProperty(id),
     refresh: true,
   });
 

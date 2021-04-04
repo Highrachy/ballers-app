@@ -1,6 +1,6 @@
 import { BASE_API_URL } from 'utils/constants';
 
-export const BASE_API = {
+export const API_ENDPOINT = {
   getOneProperty: (id) => `${BASE_API_URL}/property/${id}`,
   getAllProperties: () => `${BASE_API_URL}/property/all`,
 

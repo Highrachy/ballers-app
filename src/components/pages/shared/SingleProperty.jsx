@@ -24,7 +24,7 @@ import { AddNeighborhood } from './Neighborhood';
 import { NeighborhoodList } from './Neighborhood';
 import { useGetQuery } from 'hooks/useQuery';
 import { PortfolioIcon } from 'components/utils/Icons';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import Button from 'components/forms/Button';
 
@@ -39,7 +39,7 @@ const SingleProperty = ({ id, Sidebar }) => {
     key: pageOptions.key,
     name: [pageOptions.key, id],
     setToast,
-    endpoint: BASE_API.getOneProperty(id),
+    endpoint: API_ENDPOINT.getOneProperty(id),
     refresh: true,
   });
 

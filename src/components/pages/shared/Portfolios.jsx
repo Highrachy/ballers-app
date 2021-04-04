@@ -21,7 +21,7 @@ import Image from 'components/utils/Image';
 import PortfolioPlaceholderImage from 'assets/img/placeholder/property.png';
 import { HOUSE_TYPES } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { Spacing } from 'components/common/Helpers';
 import { FileIcon } from 'components/utils/Icons';
 
@@ -29,7 +29,7 @@ const Portfolios = () => {
   return (
     <BackendPage>
       <AdminList
-        endpoint={BASE_API.getAllPortfolios()}
+        endpoint={API_ENDPOINT.getAllPortfolios()}
         pageName="Portfolio"
         pluralPageName="Portfolios"
         DataComponent={PortfoliosRowList}

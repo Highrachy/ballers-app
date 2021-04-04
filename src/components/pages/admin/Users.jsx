@@ -9,7 +9,6 @@ import AdminList from 'components/common/AdminList';
 import { Form, Formik } from 'formik';
 import { setInitialValues } from 'components/forms/form-helper';
 import { userFilterSchema } from 'components/forms/schemas/userSchema';
-// import { createSchema } from 'components/forms/schemas/schema-helpers';
 import Select from 'components/forms/Select';
 import { objectToOptions } from 'utils/helpers';
 import Input from 'components/forms/Input';
@@ -17,12 +16,12 @@ import Button from 'components/forms/Button';
 import UserCard from 'components/common/UserCard';
 import BackendPage from 'components/layout/BackendPage';
 import { UserIcon } from 'components/utils/Icons';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 
 const Users = () => (
   <BackendPage>
     <AdminList
-      endpoint={BASE_API.getAllUsers()}
+      endpoint={API_ENDPOINT.getAllUsers()}
       pageName="User"
       DataComponent={UsersRowList}
       FilterComponent={FilterForm}

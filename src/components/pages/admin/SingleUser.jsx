@@ -29,15 +29,13 @@ import Modal from 'components/common/Modal';
 import { SuccessIcon } from 'components/utils/Icons';
 import BallersSpinner from 'components/utils/BallersSpinner';
 import { QuestionMarkIcon } from 'components/utils/Icons';
-// import { AlertToast } from 'components/utils/Toast';
+
 import { getVerificationStatus } from '../vendor/setup/AccountSetup';
 import Timeline from 'components/common/Timeline';
 import { LogTimeline } from 'components/common/Timeline';
 import { useGetQuery } from 'hooks/useQuery';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
-// import UserCard from 'components/common/UserCard';
-// import { getVerificationState } from '../vendor/setup/AccountSetup';
 
 const pageOptions = {
   key: 'user',
@@ -50,7 +48,7 @@ const SingleUser = ({ id }) => {
     key: pageOptions.key,
     name: [pageOptions.key, id],
     setToast,
-    endpoint: BASE_API.getOneUser(id),
+    endpoint: API_ENDPOINT.getOneUser(id),
     refresh: true,
   });
 

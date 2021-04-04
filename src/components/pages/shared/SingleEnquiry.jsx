@@ -6,7 +6,7 @@ import { getDateTime, getShortDate } from 'utils/date-helpers';
 import { MessageIcon } from 'components/utils/Icons';
 import CreateOfferLetter from '../vendor/CreateOfferLetter';
 import { useGetQuery } from 'hooks/useQuery';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import CardTableSection from 'components/common/CardTableSection';
 import { useCurrentRole } from 'hooks/useUser';
@@ -23,7 +23,7 @@ const SingleEnquiry = ({ id }) => {
     key: pageOptions.key,
     name: [pageOptions.key, id],
     setToast,
-    endpoint: BASE_API.getOneEnquiry(id),
+    endpoint: API_ENDPOINT.getOneEnquiry(id),
     refresh: true,
   });
 

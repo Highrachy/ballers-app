@@ -45,7 +45,7 @@ import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
 import { navigate } from '@reach/router';
 import AutoComplete from 'components/forms/AutoComplete';
 import { useGetQuery } from 'hooks/useQuery';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { PropertyIcon } from 'components/utils/Icons';
 import { setQueryCache } from 'hooks/useQuery';
@@ -61,7 +61,7 @@ const NewProperty = ({ id }) => {
     key: pageOptions.key,
     name: [pageOptions.key, id],
     setToast,
-    endpoint: BASE_API.getOneProperty(id),
+    endpoint: API_ENDPOINT.getOneProperty(id),
     refresh: true,
   });
 

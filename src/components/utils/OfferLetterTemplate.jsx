@@ -46,7 +46,7 @@ const OfferLetterTemplate = ({
 
   return (
     <Card className="mt-4 p-5 offer-letter-template">
-      <img
+      <Image
         src={vendorInfo?.vendor?.companyLogo}
         width="150"
         className="img-fluid"

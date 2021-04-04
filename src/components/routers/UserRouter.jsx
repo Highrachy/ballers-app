@@ -8,7 +8,7 @@ import Transactions from 'components/pages/user/Transactions';
 import Settings from 'components/pages/user/Settings';
 import ReferAndEarn from 'components/pages/user/ReferAndEarn';
 import JustForYou from 'components/pages/user/JustForYou';
-import OfferLetter from 'components/pages/shared/OfferLetter';
+import SingleOffer from 'components/pages/shared/SingleOffer';
 import Menu from 'components/pages/user/Menu';
 import PropertyEnquiry from 'components/pages/user/PropertyEnquiry';
 
@@ -17,13 +17,13 @@ const UserRouter = () => (
     <Dashboard path="dashboard" />
     <MyPortfolio path="portfolio" />
     <SingleUserProperty path="property/:id" />
-    <SinglePortfolio path="portfolio/assigned/:id" />
+    <SinglePortfolio path="portfolio/:id" />
     <PropertyEnquiry path="property/enquiry/:id" />
     <Transactions path="transactions" />
     <Settings path="settings" />
     <ReferAndEarn path="refer-and-earn" />
     <JustForYou path="just-for-you" />
-    <OfferLetter path="offer/:id" />
+    <SingleOffer path="offer/:id" />
     <Menu path="menu" />
   </Router>
 );

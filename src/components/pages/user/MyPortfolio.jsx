@@ -12,7 +12,7 @@ import { PortfolioIcon } from 'components/utils/Icons';
 import NoContent from 'components/utils/NoContent';
 import PortfolioCards from 'components/common/PortfolioCards';
 import { OffersRowList } from '../shared/Offers';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import { OfferIcon } from 'components/utils/Icons';
 import AdminList from 'components/common/AdminList';
 
@@ -105,7 +105,7 @@ const EnjoyingBallers = () => (
 
 const Offers = () => (
   <AdminList
-    endpoint={BASE_API.getAllOffers()}
+    endpoint={API_ENDPOINT.getAllOffers()}
     pageName="Offer"
     pluralPageName="Offers"
     DataComponent={OffersRowList}

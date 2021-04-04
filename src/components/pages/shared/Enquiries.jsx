@@ -5,13 +5,13 @@ import { Card } from 'react-bootstrap';
 import { MessageIcon } from 'components/utils/Icons';
 import { Link } from '@reach/router';
 import AdminList from 'components/common/AdminList';
-import { BASE_API } from 'utils/URL';
+import { API_ENDPOINT } from 'utils/URL';
 import UserCard from 'components/common/UserCard';
 
 const Enquiries = () => (
   <BackendPage>
     <AdminList
-      endpoint={BASE_API.getAllEnquiries()}
+      endpoint={API_ENDPOINT.getAllEnquiries()}
       initialFilter={{ approved: false }}
       pageName="Enquiry"
       pluralPageName="Enquiries"
