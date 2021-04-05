@@ -23,6 +23,8 @@ import { ArrowDownIcon } from 'components/utils/Icons';
 import { ContextAwareToggle } from 'components/common/FAQsAccordion';
 import { ArrowUpIcon } from 'components/utils/Icons';
 import { LinkSeparator } from 'components/common/Helpers';
+import { useCurrentRole } from 'hooks/useUser';
+import { setQueryCache } from 'hooks/useQuery';
 
 export const FloorPlansForm = ({
   hideForm,
@@ -70,6 +72,9 @@ export const FloorPlansForm = ({
               });
               hideForm();
               setProperty(data.property);
+              setQueryCache([pageOptions.key, property._id], {
+                property: data.property,
+              });
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -106,7 +111,7 @@ export const FloorPlansForm = ({
                 loading={isSubmitting}
                 onClick={handleSubmit}
               >
-                Add Floor Plan
+                {floorPlan?._id ? 'Update' : 'Add'} Floor Plan
               </Button>
               <DisplayFormikState {...props} showAll />
             </div>
@@ -153,6 +158,11 @@ export const AddFloorPlans = ({
   );
 };
 
+const pageOptions = {
+  key: 'property',
+  pageName: 'Floor Plans',
+};
+
 export const FloorPlansList = ({ property, setProperty, setToast }) => {
   const [showEditFloorPlansModal, setShowEditFloorPlansModal] = React.useState(
     false
@@ -176,9 +186,12 @@ export const FloorPlansList = ({ property, setProperty, setToast }) => {
         if (statusIsSuccessful(status)) {
           setToast({
             type: 'success',
-            message: `Image has been successfully deleted`,
+            message: `Floor plan has been successfully deleted`,
           });
           setProperty(data.property);
+          setQueryCache([pageOptions.key, property._id], {
+            property: data.property,
+          });
           setShowDeleteFloorPlansModal(false);
           setLoading(false);
         }
@@ -190,11 +203,15 @@ export const FloorPlansList = ({ property, setProperty, setToast }) => {
         setLoading(false);
       });
   };
+  const userIsVendor = useCurrentRole().isVendor;
+  const noFloorPlans = property?.floorPlans?.length === 0;
   return (
     <>
-      {property?.floorPlans?.length > 0 && (
-        <div className="property__floor-plans mt-5">
-          <h5 className="header-smaller mb-3">Floor Plans</h5>
+      <div className="property__floor-plans">
+        {(!noFloorPlans || userIsVendor) && (
+          <h5 className="header-smaller mb-3 mt-5">Floor Plans</h5>
+        )}
+        {!noFloorPlans && (
           <Accordion>
             {property?.floorPlans.map(({ _id, name, plan }, index) => (
               <Card key={_id}>
@@ -287,19 +304,21 @@ export const FloorPlansList = ({ property, setProperty, setToast }) => {
               </section>
             </Modal>
           </Accordion>
+        )}
+      </div>
+
+      {userIsVendor && (
+        <div className="row">
+          <div className="col-12">
+            <AddFloorPlans
+              className="btn btn-secondary btn-xs btn-wide"
+              property={property}
+              setToast={setToast}
+              setProperty={setProperty}
+            />
+          </div>
         </div>
       )}
-
-      <div className="row">
-        <div className="col-12">
-          <AddFloorPlans
-            className="btn btn-secondary btn-xs btn-wide"
-            property={property}
-            setToast={setToast}
-            setProperty={setProperty}
-          />
-        </div>
-      </div>
     </>
   );
 };

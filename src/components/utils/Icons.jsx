@@ -12,14 +12,12 @@ import {
   FiFileText,
   FiServer,
   FiGift,
-  FiRepeat,
   FiHelpCircle,
   FiChevronRight,
   FiChevronLeft,
   FiChevronDown,
   FiChevronUp,
   FiBell,
-  FiGitBranch,
   FiEdit,
   FiFacebook,
   FiTrash2,
@@ -31,6 +29,7 @@ import {
   FiClipboard,
   FiSearch,
   FiUser,
+  FiRepeat,
 } from 'react-icons/fi';
 import {
   FaCheckCircle,
@@ -57,6 +56,7 @@ import {
   BiFoodMenu,
   BiCameraMovie,
   BiHomeCircle,
+  BiFilter,
 } from 'react-icons/bi';
 import { AiFillCheckSquare, AiFillCar } from 'react-icons/ai';
 import { MdLocalMall } from 'react-icons/md';
@@ -87,6 +87,7 @@ export const EditIcon = () => <FiEdit />;
 export const EnquiryIcon = () => <BiMessageDetail />;
 export const FacebookIcon = () => <FiFacebook />;
 export const FileIcon = () => <FiFileText />;
+export const FilterIcon = () => <BiFilter />;
 export const HomeIcon = () => <FiGrid />;
 export const HospitalIcon = () => <FaAmbulance />;
 export const InfoIcon = () => <FaInfoCircle />;
@@ -117,7 +118,21 @@ export const TransactionIcon = () => <FiRepeat />;
 export const TwitterIcon = () => <FiTwitter />;
 export const UserIcon = () => <FiUser />;
 export const UploadIcon = () => <FiUploadCloud />;
-export const VisitationIcon = () => <FiGitBranch />;
+export const VisitationIcon = () => (
+  <svg
+    stroke="currentColor"
+    fill="currentColor"
+    strokeWidth={0}
+    viewBox="0 0 24 24"
+    height="1em"
+    width="1em"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g>
+      <path d="M17.084 15.812a7 7 0 1 0-10.168 0A5.996 5.996 0 0 1 12 13a5.996 5.996 0 0 1 5.084 2.812zM12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0L12 23.728zM12 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+    </g>
+  </svg>
+);
 export const WarningIcon = () => <FaExclamationTriangle />;
 export const VendorIcon = () => <FaUserCircle />;
 

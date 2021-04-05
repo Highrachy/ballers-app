@@ -23,7 +23,7 @@ import { AddFloorPlans } from './FloorPlans';
 import { AddNeighborhood } from './Neighborhood';
 import { NeighborhoodList } from './Neighborhood';
 import { useGetQuery } from 'hooks/useQuery';
-import { PortfolioIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import Button from 'components/forms/Button';
@@ -47,7 +47,7 @@ const SingleProperty = ({ id, Sidebar }) => {
     <BackendPage>
       <ContentLoader
         hasContent={!!property}
-        Icon={<PortfolioIcon />}
+        Icon={<PropertyIcon />}
         query={propertyQuery}
         name={pageOptions.pageName}
         toast={toast}
@@ -140,7 +140,7 @@ const ManagePropertyLink = ({ property, setToast, setProperty }) => (
 );
 
 export const PropertyImage = ({ property, hideGallery }) => {
-  const showGallery = property?.gallery?.length >= 0 && !hideGallery;
+  const showGallery = property?.gallery?.length > 0 && !hideGallery;
   return (
     <>
       <div className="row">
@@ -159,7 +159,7 @@ export const PropertyImage = ({ property, hideGallery }) => {
   );
 };
 
-export const PropertyDescription = ({ property }) => {
+export const PropertyDescription = ({ property, isPortfolioPage }) => {
   const [showDescription, setShowDescription] = React.useState(false);
   const DESCRIPTION_LENGTH = 600;
   const hideSomePropertyDescription =
@@ -197,8 +197,8 @@ export const PropertyDescription = ({ property }) => {
           </li>
         ))}
       </ul>
-      {useCurrentRole().role !== USER_TYPES.vendor && (
-        <div className="mt-5">
+      {useCurrentRole().role !== USER_TYPES.vendor && !isPortfolioPage && (
+        <div className="my-5">
           <div className="hero-holder">
             <h5 className="text-primary header-smaller">Important Notice</h5>
             <ol className="ml-n3">

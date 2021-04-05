@@ -49,14 +49,29 @@ import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { PropertyIcon } from 'components/utils/Icons';
 import { setQueryCache } from 'hooks/useQuery';
+import { refreshQuery } from 'hooks/useQuery';
 
 const pageOptions = {
   key: 'property',
   pageName: 'Property',
 };
 
-const NewProperty = ({ id }) => {
+const PropertyForm = ({ id }) => {
   const [toast, setToast] = useToast();
+  return (
+    <BackendPage>
+      <div className="container-fluid">
+        {id ? (
+          <EditPropertyForm id={id} toast={toast} setToast={setToast} />
+        ) : (
+          <NewPropertyForm toast={toast} setToast={setToast} />
+        )}
+      </div>
+    </BackendPage>
+  );
+};
+
+const EditPropertyForm = ({ id, toast, setToast }) => {
   const [propertyQuery, property] = useGetQuery({
     key: pageOptions.key,
     name: [pageOptions.key, id],
@@ -66,23 +81,15 @@ const NewProperty = ({ id }) => {
   });
 
   return (
-    <BackendPage>
-      <div className="container-fluid">
-        <ContentLoader
-          hasContent={!!property}
-          Icon={<PropertyIcon />}
-          query={propertyQuery}
-          name={pageOptions.pageName}
-          toast={toast}
-        >
-          <NewPropertyForm
-            toast={toast}
-            setToast={setToast}
-            property={property}
-          />
-        </ContentLoader>
-      </div>
-    </BackendPage>
+    <ContentLoader
+      hasContent={!!property}
+      Icon={<PropertyIcon />}
+      query={propertyQuery}
+      name={pageOptions.pageName}
+      toast={toast}
+    >
+      <NewPropertyForm toast={toast} setToast={setToast} property={property} />
+    </ContentLoader>
   );
 };
 
@@ -141,11 +148,7 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
           .then(function (response) {
             const { status, data } = response;
             if (statusIsSuccessful(status)) {
-              if (property?._id) {
-                navigate(`/vendor/property/${property?._id}`);
-                return;
-              }
-              setQueryCache([pageOptions.key, property._id], {
+              setQueryCache([pageOptions.key, data.property._id], {
                 property: data.property,
               });
               setToast({
@@ -154,6 +157,9 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
                   property?._id ? 'updated' : 'added'
                 }`,
               });
+
+              navigate(`/vendor/property/${data.property?._id}`);
+              refreshQuery('property');
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -341,4 +347,4 @@ const PropertyAddress = () => (
   </Card>
 );
 
-export default NewProperty;
+export default PropertyForm;

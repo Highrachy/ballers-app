@@ -11,6 +11,9 @@ import { useGetQuery } from 'hooks/useQuery';
 import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { OwnedPropertyCard } from '../shared/SingleProperty';
+import { moneyFormatInNaira } from 'utils/helpers';
+import { getTinyDate } from 'utils/date-helpers';
+import { LinkSeparator } from 'components/common/Helpers';
 
 const pageOptions = {
   key: 'portfolio',
@@ -27,7 +30,6 @@ const SinglePortfolio = ({ id }) => {
     refresh: true,
   });
 
-  console.log(`portfolio`, portfolio);
   return (
     <BackendPage>
       <ContentLoader
@@ -44,7 +46,8 @@ const SinglePortfolio = ({ id }) => {
           }}
           setToast={setToast}
           setProperty={setPortfolio}
-          Sidebar={<AssignedPropertySidebar />}
+          Sidebar={<AssignedPropertySidebar portfolio={portfolio} />}
+          isPortfolioPage
         />
       </ContentLoader>
     </BackendPage>
@@ -53,7 +56,11 @@ const SinglePortfolio = ({ id }) => {
 
 const NOW = 50;
 
-const AssignedPropertySidebar = () => {
+// create modal for online payment and offline payment
+// online payment should not exceed 900,000
+// offline payment should have bank details and form to fill for offline payments
+
+const AssignedPropertySidebar = ({ portfolio }) => {
   const initiatePayment = () => {
     Axios.post(
       `${BASE_API_URL}/payment/initiate`,
@@ -76,50 +83,107 @@ const AssignedPropertySidebar = () => {
       })
       .catch(function (error) {});
   };
+
+  const nextPayment = portfolio?.nextPaymentInfo[0];
+
   return (
-    <Card className="card-container property-holder">
-      <table className="table table-sm table-borderless">
-        <tbody>
-          <tr>
-            <td>
-              <small className="ml-n1">Amount Contributed</small>{' '}
-            </td>
-            <td>
-              <h5>N35,000,000</h5>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <small className="ml-n1">Equity Contributed</small>{' '}
-            </td>
-            <td>
-              <h5>N35,000,000</h5>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <>
+      <Card className="card-container property-holder">
+        <h5 className="header-smaller">
+          Next Payment <div className="badge badge-overdue">Overdue: 3days</div>
+        </h5>
+        <table className="table table-sm table-borderless">
+          <tbody>
+            <tr>
+              <td>
+                <small className="ml-n1">Expected Payment</small>{' '}
+              </td>
+              <td>
+                <h5>{moneyFormatInNaira(nextPayment.expectedAmount)}</h5>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <small className="ml-n1">Due Date</small>{' '}
+              </td>
+              <td>
+                <h5>{getTinyDate(nextPayment.expiresOn)}</h5>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-      <small className="">Contribution Progress</small>
+        <button
+          className="btn btn-block btn-secondary"
+          onClick={initiatePayment}
+        >
+          Make Payment
+        </button>
 
-      <div className="row">
-        <div className="col-sm-12">
-          <small style={{ paddingLeft: `${NOW - 5}%` }}>{NOW}%</small>
-          <ProgressBar variant="success" now={NOW} label={`${NOW}%`} srOnly />
+        <section className="mt-5 mb-3">
+          <div className="text-small">Contribution Progress</div>
+          <div className="row">
+            <div className="col-sm-12">
+              <small style={{ paddingLeft: `${NOW - 5}%` }}>{NOW}%</small>
+              <ProgressBar
+                variant="success"
+                now={NOW}
+                label={`${NOW}%`}
+                srOnly
+              />
+            </div>
+          </div>
+        </section>
+
+        <table className="table table-sm table-borderless">
+          <tbody>
+            <tr>
+              <td>
+                <small className="ml-n1">Equity Amount</small>{' '}
+              </td>
+              <td>
+                <h5>{moneyFormatInNaira(portfolio.totalAmountPayable)}</h5>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <small className="ml-n1">Amount Contributed</small>{' '}
+              </td>
+              <td>
+                <h5>{moneyFormatInNaira(portfolio.amountContributed)}</h5>
+              </td>
+            </tr>
+            <tr className="border-top border-bottom">
+              <td>
+                <small className="ml-n1">Outstanding Balance</small>{' '}
+              </td>
+              <td>
+                <h5>
+                  {moneyFormatInNaira(
+                    portfolio?.amountContributed - portfolio.totalAmountPayable
+                  )}
+                </h5>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="text-center mt-3">
+          <Link
+            to={`/user/offer/${portfolio._id}`}
+            className="text-link text-secondary text-small"
+          >
+            View Offer Letter
+          </Link>
+          <LinkSeparator />
+          <Link
+            to="/users/transaction"
+            className="text-link text-secondary text-small"
+          >
+            Transaction History
+          </Link>
         </div>
-      </div>
-
-      <hr className="my-4" />
-
-      <small className="">Next Payment</small>
-      <h5 className="text-center my-3">14th October 2020</h5>
-
-      <button className="btn btn-block btn-secondary" onClick={initiatePayment}>
-        Make Payment
-      </button>
-      <Link to="/users/transaction" className="small text-center mt-3">
-        View Transaction History
-      </Link>
-    </Card>
+      </Card>
+    </>
   );
 };
 

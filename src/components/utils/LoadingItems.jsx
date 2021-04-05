@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { HouseIcon } from './Icons';
 import BallersSpinner from 'components/utils/BallersSpinner';
 import NoContent from 'components/utils/NoContent';
 import Toast from 'components/utils/Toast';
@@ -34,9 +33,9 @@ LoadItems.defaultProps = {
 };
 
 export const Loading = ({ Icon, text, size }) => (
-  <div className={`text-center mt-5 w-100 loading-icon ${size}`}>
-    {Icon || <HouseIcon />}
-    <h5 className="my-4">{text} &nbsp;</h5>
+  <div className={`text-center mt-5 w-100 loading-icon ${size ? size : ''}`}>
+    {Icon && Icon}
+    {text && <h5 className="my-4">{text} &nbsp;</h5>}
     <BallersSpinner small={size === 'small'} />{' '}
   </div>
 );
@@ -53,11 +52,11 @@ export const ContentLoader = ({
 }) => (
   <>
     <Toast {...toast} showToastOnly />
-    {query.isFetching && !query.isLoading && (
+    {/* {query.isFetching && !query.isLoading && (
       <div className="updating-spinner">
         <BallersSpinner small />
       </div>
-    )}
+    )} */}
     {query.isLoading ? (
       <Loading text={loadingText || `Loading ${name}`} Icon={Icon} />
     ) : hasContent ? (

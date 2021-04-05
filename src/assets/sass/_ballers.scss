@@ -5,6 +5,7 @@
 @import 'components/dashboard';
 @import 'components/invoice';
 @import 'components/text';
+@import 'components/table';
 @import 'components/forms';
 @import 'components/toast';
 @import 'components/buttons';
@@ -125,16 +126,6 @@ html {
   }
 }
 
-.react-excel {
-  @extend .card;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-
-  table {
-    @extend .table;
-  }
-}
-
 .custom-file-label {
   z-index: 0 !important;
 }
@@ -167,6 +158,7 @@ html {
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: all 0.5s ease-in;
 
   &__block {
     display: flex;
@@ -199,8 +191,8 @@ html {
       height: 5rem;
       width: 5rem;
       stroke-width: 0.4;
-      fill: #e3e8fe;
-      stroke: #6576fe;
+      fill: lighten(#e3e8fe, 3%);
+      stroke: $secondary;
     }
   }
 
@@ -226,6 +218,41 @@ html {
     svg {
       height: 0.9rem;
       margin-top: -0.2rem;
+    }
+
+    &.strong {
+      color: $gray-600;
+      font-weight: bold;
+
+      svg {
+        height: 1rem;
+        width: 1rem;
+        margin-top: -0.2rem;
+        color: $gray-600;
+      }
+    }
+  }
+
+  &:hover {
+    background-color: $gray-100;
+    .verification-card__img svg {
+      fill: lighten($info, 50%);
+      stroke: $info;
+    }
+
+    h5 {
+      color: $info;
+    }
+
+    .verification-card__text {
+      color: darken($info, 20%);
+    }
+    .strong {
+      color: $info;
+
+      svg {
+        color: $info;
+      }
     }
   }
 }
@@ -452,4 +479,19 @@ html {
   color: $red;
   border-radius: 1rem;
   float: right;
+}
+
+.notice-card {
+  overflow: hidden;
+  height: 4rem;
+
+  &__text {
+    line-height: 4rem;
+  }
+  svg {
+    height: 3rem;
+    width: 3rem;
+    margin-right: 0.5rem;
+    opacity: 0.3;
+  }
 }

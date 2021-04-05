@@ -9,7 +9,7 @@ import {
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { BASE_API_URL, NEIGHBORHOOD_STEPS, USER_TYPES } from 'utils/constants';
+import { BASE_API_URL, NEIGHBORHOOD_STEPS } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import {
   neighborhoodSchema,
@@ -17,7 +17,6 @@ import {
 } from 'components/forms/schemas/propertySchema';
 import { getError, statusIsSuccessful, objectToOptions } from 'utils/helpers';
 import Input from 'components/forms/Input';
-import Image from 'components/utils/Image';
 import { LinkSeparator } from 'components/common/Helpers';
 import Select from 'components/forms/Select';
 import { MapPinIcon } from 'components/utils/Icons';
@@ -29,6 +28,13 @@ import { FoodMenuIcon } from 'components/utils/Icons';
 import { MallIcon } from 'components/utils/Icons';
 import { EntertainmentIcon } from 'components/utils/Icons';
 import { useCurrentRole } from 'hooks/useUser';
+import { setQueryCache } from 'hooks/useQuery';
+import InputFormat from 'components/forms/InputFormat';
+
+const pageOptions = {
+  key: 'property',
+  pageName: 'Neighborhood',
+};
 
 export const NeighborhoodForm = ({
   hideForm,
@@ -38,6 +44,8 @@ export const NeighborhoodForm = ({
   neighborhood,
 }) => {
   const [toast] = useToast();
+
+  console.log(`neighborhood`, neighborhood);
 
   return (
     <Formik
@@ -55,7 +63,17 @@ export const NeighborhoodForm = ({
           method: neighborhood?._id ? 'put' : 'post',
           url: `${BASE_API_URL}/property/${property._id}/neighborhood`,
           data: neighborhood?._id
-            ? { ...payload, typeId: neighborhood?._id }
+            ? {
+                ...payload,
+                typeId: neighborhood?._id,
+                neighborhood: {
+                  ...payload.neighborhood,
+                  mapLocation: {
+                    longitude: 0,
+                    latitude: 0,
+                  },
+                },
+              }
             : payload,
           headers: { Authorization: getTokenFromStore() },
         })
@@ -70,6 +88,9 @@ export const NeighborhoodForm = ({
               });
               hideForm();
               setProperty(data.property);
+              setQueryCache([pageOptions.key, property._id], {
+                property: data.property,
+              });
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -100,7 +121,9 @@ export const NeighborhoodForm = ({
                 placeholder="Select Type"
               />
               <Input label="Name" name="neighborhood.name" placeholder="Name" />
-              <Input
+              <InputFormat
+                suffix=" KM"
+                prefix=""
                 label="Distance"
                 name="neighborhood.distance"
                 placeholder="Distance (in Km)"
@@ -111,7 +134,7 @@ export const NeighborhoodForm = ({
                 loading={isSubmitting}
                 onClick={handleSubmit}
               >
-                Add Neighborhood
+                {neighborhood?._id ? 'Update' : 'Add'} Neighborhood
               </Button>
               <DisplayFormikState {...props} showAll />
             </div>
@@ -168,25 +191,26 @@ export const NeighborhoodList = ({ property, setProperty, setToast }) => {
     setShowDeleteNeighborhoodModal,
   ] = React.useState(false);
 
-  const [neighborhood, setFloorPlan] = React.useState(null);
+  const [neighborhood, setNeighborhood] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
-  console.log(`property`, property);
-
-  const deleteFloorPlan = () => {
+  const deleteNeighborhood = () => {
     setLoading(true);
     Axios.delete(`${BASE_API_URL}/property/${property._id}/neighborhood`, {
       headers: { Authorization: getTokenFromStore() },
-      data: { neighborhoodId: neighborhood._id },
+      data: { typeId: neighborhood._id, type: neighborhood.type },
     })
       .then(function (response) {
         const { status, data } = response;
         if (statusIsSuccessful(status)) {
           setToast({
             type: 'success',
-            message: `Image has been successfully deleted`,
+            message: `${neighborhood.name} has been successfully deleted`,
           });
           setProperty(data.property);
+          setQueryCache([pageOptions.key, property._id], {
+            property: data.property,
+          });
           setShowDeleteNeighborhoodModal(false);
           setLoading(false);
         }
@@ -198,11 +222,16 @@ export const NeighborhoodList = ({ property, setProperty, setToast }) => {
         setLoading(false);
       });
   };
-  const userIsVendor = useCurrentRole().role === USER_TYPES.vendor;
+  const userIsVendor = useCurrentRole().isVendor;
+  const noNeighborhood = NEIGHBORHOOD_STEPS.every(
+    (step) => property?.neighborhood?.[step]?.length === 0
+  );
   return (
     <>
-      <div className="property__floor-plans mt-5">
-        <h5 className="header-smaller mb-3">Neighborhood</h5>
+      <div className="property__neighborhood">
+        {(!noNeighborhood || userIsVendor) && (
+          <h5 className="header-smaller mb-3 mt-5">Neighborhood</h5>
+        )}
         {NEIGHBORHOOD_STEPS.map(
           (step, index) =>
             property?.neighborhood?.[step]?.length > 0 && (
@@ -230,7 +259,11 @@ export const NeighborhoodList = ({ property, setProperty, setToast }) => {
                                   <span
                                     className="text-link text-muted"
                                     onClick={() => {
-                                      setFloorPlan({ _id, name, distance });
+                                      setNeighborhood({
+                                        _id,
+                                        type: step,
+                                        neighborhood: { name, distance },
+                                      });
                                       setShowEditNeighborhoodModal(true);
                                     }}
                                   >
@@ -240,7 +273,12 @@ export const NeighborhoodList = ({ property, setProperty, setToast }) => {
                                   <span
                                     className="text-link  text-muted"
                                     onClick={() => {
-                                      setFloorPlan({ _id, name, distance });
+                                      setNeighborhood({
+                                        _id,
+                                        type: step,
+                                        name,
+                                        distance,
+                                      });
                                       setShowDeleteNeighborhoodModal(true);
                                     }}
                                   >
@@ -284,21 +322,19 @@ export const NeighborhoodList = ({ property, setProperty, setToast }) => {
         >
           <section className="row">
             <div className="col-md-12 my-3 text-center">
-              <Image
-                src={neighborhood?.plan}
-                name={neighborhood?.name || 'unknown'}
-                options={{ h: 200 }}
-                responsiveImage={true}
-              />
+              <h5>
+                {neighborhood?.name} ({neighborhood?.distance} km)
+              </h5>
               <p className="my-4 font-weight-bold">
-                Are you sure you want to delete this Floor Plan
+                Are you sure you want to delete this neighborhood from{' '}
+                {NEIGHBORHOOD_KEYS[neighborhood?.type]?.name}
               </p>
               <Button
                 loading={loading}
                 className="btn btn-secondary mb-5"
-                onClick={() => deleteFloorPlan()}
+                onClick={() => deleteNeighborhood()}
               >
-                Delete Floor Plan
+                Delete {neighborhood?.name}
               </Button>
             </div>
           </section>

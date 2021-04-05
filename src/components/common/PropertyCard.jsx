@@ -175,7 +175,7 @@ const PropertyCard = (property) => {
             </span>
           </div>
         )}
-        <Link to={`/user/portfolio/${_id}`}>
+        <Link to={`/user/property/${_id}`}>
           <article>
             <div className="content-image">
               <img

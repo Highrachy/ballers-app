@@ -10,7 +10,6 @@ import { CompanyInfoIcon } from 'components/utils/Icons';
 import { BankInfoIcon } from 'components/utils/Icons';
 import { FileIcon } from 'components/utils/Icons';
 import { UserIcon } from 'components/utils/Icons';
-import { MessageIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
 import { Loading } from 'components/utils/LoadingItems';
 import { PropertyIcon } from 'components/utils/Icons';
@@ -18,6 +17,13 @@ import { TransactionIcon } from 'components/utils/Icons';
 import { getVerificationStatus } from './setup/AccountSetup';
 import { CertifyIcon } from 'components/utils/Icons';
 import { VisitationIcon } from 'components/utils/Icons';
+import { EnquiryIcon } from 'components/utils/Icons';
+import { PortfolioIcon } from 'components/utils/Icons';
+import { ArrowRightIcon } from 'components/utils/Icons';
+import { Alert } from 'react-bootstrap';
+import { useGetQuery } from 'hooks/useQuery';
+import { API_ENDPOINT } from 'utils/URL';
+import { VISITATION_STATUS } from 'utils/constants';
 
 const Dashboard = () => (
   <BackendPage>
@@ -25,14 +31,59 @@ const Dashboard = () => (
   </BackendPage>
 );
 
+const VENDOR_DASHBOARD_CARDS = [
+  {
+    Icon: <PropertyIcon />,
+    title: 'Properties',
+    to: '/vendor/properties',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  },
+  {
+    Icon: <FileIcon />,
+    title: 'Offers',
+    to: '/vendor/offers',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  },
+  {
+    Icon: <PortfolioIcon />,
+    title: 'Portfolios',
+    to: '/vendor/portfolios',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  },
+  {
+    Icon: <TransactionIcon />,
+    title: 'Transactions',
+    to: '/vendor/transactions',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  },
+  {
+    Icon: <EnquiryIcon />,
+    title: 'Enquiries',
+    to: '/vendor/enquiries',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  },
+  {
+    Icon: <VisitationIcon />,
+    title: 'Scheduled Visits',
+    to: '/vendor/scheduled-visits',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  },
+];
+
 const Welcome = () => {
   const { userState } = React.useContext(UserContext);
-  const completedSteps = getCompletedSteps(userState);
-
-  const noOfCompletedSteps = completedSteps.filter(Boolean).length;
-  const currentProgress = noOfCompletedSteps * 25;
-
-  const verificationState = getVerificationState(userState);
 
   if (!userState.firstName) {
     return <Loading Icon={<UserIcon />} text="Retrieving your Information" />;
@@ -53,162 +104,187 @@ const Welcome = () => {
       </div>
 
       {userState.vendor?.verified ? (
-        <>
-          <NoticeCard
-            Icon={<MessageIcon />}
-            link="/vendor/enquiries"
-            name="Enquiries"
-          />
-          <NoticeCard
-            Icon={<VisitationIcon />}
-            link="/vendor/scheduled-visits"
-            name="Schedule Visitations"
-          />
-          <div className="row">
-            <DashboardCard
-              icon={<PropertyIcon />}
-              title="Properties"
-              to="vendor/portfolios"
-              key={1}
-              footer="See list of your properties"
-            >
-              See your profile data and manage your Account to choose what is
-              saved in our system.
-            </DashboardCard>
-
-            <DashboardCard
-              icon={<FileIcon />}
-              title="Offer Letters"
-              to="vendor/users"
-              key={2}
-              footer="See list of past offer letters"
-            >
-              See your profile data and manage your Account to choose what is
-              saved in our system.
-            </DashboardCard>
-            <DashboardCard
-              icon={<UserIcon />}
-              title="My Users"
-              to="vendor/users"
-              key={3}
-              footer="See list of your users"
-            >
-              See your profile data and manage your Account to choose what is
-              saved in our system.
-            </DashboardCard>
-            <DashboardCard
-              icon={<TransactionIcon />}
-              title="Transactions"
-              to="vendor/users"
-              key={4}
-              footer="See list of your transactions"
-            >
-              See your profile data and manage your Account to choose what is
-              saved in our system.
-            </DashboardCard>
-          </div>
-        </>
+        <VerifiedVendorContent />
       ) : (
-        <>
-          <section>
-            <div className="card card-bordered my-4">
-              <div className="card-inner p-4">
-                <div className="row">
-                  <div className="col-md-8">
-                    <h6>You need setup a verified Account to get started</h6>
-                    <p className="text-muted">
-                      <strong>Status: </strong>
-
-                      {verificationState.noOfComments ? (
-                        <>
-                          {verificationState.noOfComments} Pending{' '}
-                          {Humanize.pluralize(
-                            verificationState.noOfComments,
-                            'Comment'
-                          )}
-                        </>
-                      ) : (
-                        verificationState.status
-                      )}
-                    </p>
-                  </div>
-                  <div className="col-md-4 text-right">
-                    <Link
-                      to={`/vendor/setup/${verificationState.page}`}
-                      className="btn btn-sm btn-wide btn-secondary mt-3"
-                    >
-                      {noOfCompletedSteps > 0
-                        ? 'Continue Setup'
-                        : 'Start Setup'}
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="card-progress-bar">
-                <div
-                  className="pl-4 text-right text-smaller text-secondary px-2"
-                  style={{ width: `${currentProgress}%` }}
-                >
-                  {noOfCompletedSteps > 0 && currentProgress !== 100 && (
-                    <>{currentProgress}% information has been submitted</>
-                  )}
-                </div>
-                <div
-                  className="progress-bar"
-                  data-progress={currentProgress}
-                  style={{ width: `${currentProgress}%` }}
-                />
-              </div>
-            </div>
-          </section>
-          <div className="row">
-            <VerificationCard
-              icon={<CompanyInfoIcon />}
-              title="Company Information"
-              index={0}
-              key={0}
-              status={getVerificationStatus(userState, 0)}
-            >
-              See your profile data and manage your Account to choose what is
-              saved in our system.
-            </VerificationCard>
-
-            <VerificationCard
-              icon={<BankInfoIcon />}
-              title="Bank Information"
-              index={1}
-              key={1}
-              status={getVerificationStatus(userState, 1)}
-            >
-              See your profile data and manage your Account to choose what is
-              saved in our system.
-            </VerificationCard>
-
-            <VerificationCard
-              icon={<UserIcon />}
-              title="Signatories"
-              index={2}
-              key={2}
-              status={getVerificationStatus(userState, 2)}
-            >
-              See your profile data and manage your Account to choose what is
-              saved in our system.
-            </VerificationCard>
-
-            <VerificationCard
-              icon={<FileIcon />}
-              title="Certificates"
-              status={getVerificationStatus(userState, 3)}
-              index={3}
-              key={3}
-            >
-              See your profile data and manage your Account to choose what is
-              saved in our system.
-            </VerificationCard>
-          </div>
-        </>
+        <UnVerifiedVendorContent />
       )}
     </section>
+  );
+};
+
+const UnVerifiedVendorContent = () => {
+  const { userState } = React.useContext(UserContext);
+  const completedSteps = getCompletedSteps(userState);
+
+  const noOfCompletedSteps = completedSteps.filter(Boolean).length;
+  const currentProgress = noOfCompletedSteps * 25;
+
+  const verificationState = getVerificationState(userState);
+
+  return (
+    <>
+      <section>
+        <div className="card card-bordered my-4">
+          <div className="card-inner p-4">
+            <div className="row">
+              <div className="col-md-8">
+                <h6>You need setup a verified Account to get started</h6>
+                <p className="text-muted">
+                  <strong>Status: </strong>
+
+                  {verificationState.noOfComments ? (
+                    <>
+                      {verificationState.noOfComments} Pending{' '}
+                      {Humanize.pluralize(
+                        verificationState.noOfComments,
+                        'Comment'
+                      )}
+                    </>
+                  ) : (
+                    verificationState.status
+                  )}
+                </p>
+              </div>
+              <div className="col-md-4 text-right">
+                <Link
+                  to={`/vendor/setup/${verificationState.page}`}
+                  className="btn btn-sm btn-wide btn-secondary mt-3"
+                >
+                  {noOfCompletedSteps > 0 ? 'Continue Setup' : 'Start Setup'}
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="card-progress-bar">
+            <div
+              className="pl-4 text-right text-smaller text-secondary px-2"
+              style={{ width: `${currentProgress}%` }}
+            >
+              {noOfCompletedSteps > 0 && currentProgress !== 100 && (
+                <>{currentProgress}% information has been submitted</>
+              )}
+            </div>
+            <div
+              className="progress-bar"
+              data-progress={currentProgress}
+              style={{ width: `${currentProgress}%` }}
+            />
+          </div>
+        </div>
+      </section>
+      <div className="row">
+        <VerificationCard
+          icon={<CompanyInfoIcon />}
+          title="Company Information"
+          index={0}
+          key={0}
+          status={getVerificationStatus(userState, 0)}
+        >
+          See your profile data and manage your Account to choose what is saved
+          in our system.
+        </VerificationCard>
+
+        <VerificationCard
+          icon={<BankInfoIcon />}
+          title="Bank Information"
+          index={1}
+          key={1}
+          status={getVerificationStatus(userState, 1)}
+        >
+          See your profile data and manage your Account to choose what is saved
+          in our system.
+        </VerificationCard>
+
+        <VerificationCard
+          icon={<UserIcon />}
+          title="Signatories"
+          index={2}
+          key={2}
+          status={getVerificationStatus(userState, 2)}
+        >
+          See your profile data and manage your Account to choose what is saved
+          in our system.
+        </VerificationCard>
+
+        <VerificationCard
+          icon={<FileIcon />}
+          title="Certificates"
+          status={getVerificationStatus(userState, 3)}
+          index={3}
+          key={3}
+        >
+          See your profile data and manage your Account to choose what is saved
+          in our system.
+        </VerificationCard>
+      </div>
+    </>
+  );
+};
+
+const VerifiedVendorContent = () => {
+  const axiosOptionForVisitations = {
+    params: { limit: 100, status: VISITATION_STATUS.PENDING },
+  };
+  const axiosOptionForEnquiries = {
+    params: { limit: 100, approved: false },
+  };
+  const [visitationsQuery] = useGetQuery({
+    axiosOptions: axiosOptionForVisitations,
+    key: 'scheduleVisits',
+    name: ['scheduleVisits', axiosOptionForVisitations],
+    endpoint: API_ENDPOINT.getAllVisitations(),
+    refresh: true,
+  });
+  const [enquiriesQuery] = useGetQuery({
+    axiosOptions: axiosOptionForEnquiries,
+    key: 'enquiries',
+    name: ['enquiries', axiosOptionForEnquiries],
+    endpoint: API_ENDPOINT.getAllEnquiries(),
+    refresh: true,
+  });
+
+  return (
+    <>
+      {visitationsQuery.isLoading || enquiriesQuery.isLoading ? (
+        <Loading size="small" text="Checking for new notifications..." />
+      ) : (
+        <>
+          {enquiriesQuery?.data?.result?.length > 0 && (
+            <NoticeCard
+              Icon={<EnquiryIcon />}
+              link="/vendor/enquiries"
+              name="Enquiries"
+              type="secondary"
+              message={`You have ${enquiriesQuery?.data?.result?.length} unresolved Enquiries`}
+            />
+          )}
+          {visitationsQuery?.data?.result?.length > 0 && (
+            <NoticeCard
+              Icon={<VisitationIcon />}
+              link="/vendor/scheduled-visits"
+              name="Schedule Visitations"
+              type="info"
+              message={`You have ${visitationsQuery?.data?.result?.length} unresolved Scheduled Visitations`}
+            />
+          )}
+        </>
+      )}
+      <div className="row mt-4">
+        {VENDOR_DASHBOARD_CARDS.map(
+          ({ Icon, title, to, content, footer }, index) => (
+            <DashboardCard
+              Icon={Icon}
+              title={title}
+              to={to}
+              key={index}
+              footer={footer}
+            >
+              {content}
+            </DashboardCard>
+          )
+        )}
+      </div>
+    </>
   );
 };
 
@@ -235,38 +311,34 @@ const VerificationCard = ({ title, children, icon, index, status }) => (
   </Link>
 );
 
-const DashboardCard = ({ title, children, icon, footer, to }) => (
+const DashboardCard = ({ title, children, Icon, footer, to }) => (
   <Link to={to} className="col-md-6 mb-4">
     <div className="card verification-card">
       <div className="verification-card__block">
-        <div className="verification-card__img">{icon}</div>
+        <div className="verification-card__img">{Icon}</div>
         <div>
           <h5 className="verification-card__title">{title}</h5>
           <p className="verification-card__text">{children}</p>
         </div>
       </div>
-      <div className="verification-card__action">{footer}</div>
+      <div className="verification-card__action strong">
+        {footer || `Manage ${title}`}
+        <small className="float-right">
+          <ArrowRightIcon />
+        </small>
+      </div>
     </div>
   </Link>
 );
 
-const NoticeCard = ({ Icon, name, link }) => (
-  <section className="mb-4">
-    <div className="card card-bordered my-4">
-      <div className="card-inner px-4 py-3">
-        <div className="row">
-          <div className="col-md-8">
-            <h6 className="pt-2">{Icon}You have no unresolved enquiries</h6>
-          </div>
-          <div className="col-md-4 text-right">
-            <Link to={link} className="btn btn-sm btn-wide btn-secondary">
-              View {name}
-            </Link>
-          </div>
-        </div>
+const NoticeCard = ({ Icon, name, message, type, link }) => (
+  <Link to={link}>
+    <Alert key={name} variant={type} className="notice-card py-0">
+      <div className="notice-card__text">
+        <span className={`text-${type}`}>{Icon}</span>
+        {message}
       </div>
-    </div>
-  </section>
+    </Alert>
+  </Link>
 );
-
 export default Dashboard;

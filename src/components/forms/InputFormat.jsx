@@ -25,8 +25,11 @@ const InputFormat = ({
   labelLink,
   labelClassName,
   name,
+  nairaFormat,
   optional,
   placeholder,
+  prefix,
+  suffix,
   showFeedback,
   tooltipHeader,
   tooltipText,
@@ -62,7 +65,8 @@ const InputFormat = ({
                 onValueChange={(number) =>
                   form.setFieldValue(name, number.value)
                 }
-                prefix="&#8358; "
+                prefix={prefix}
+                suffix={suffix}
                 thousandSeparator={true}
                 placeholder={placeholder || label}
                 value={getIn(formik.values, name)}
@@ -97,6 +101,8 @@ InputFormat.defaultProps = {
   labelLink: null,
   optional: false,
   placeholder: null,
+  prefix: '₦ ',
+  suffix: null,
   showFeedback: feedback.ALL,
   tooltipHeader: null,
   tooltipText: null,
@@ -123,6 +129,8 @@ InputFormat.propTypes = {
   name: PropTypes.string.isRequired,
   optional: PropTypes.bool,
   placeholder: PropTypes.string,
+  prefix: PropTypes.string,
+  suffix: PropTypes.string,
   showFeedback: PropTypes.oneOf(Object.keys(feedback)),
   tooltipHeader: PropTypes.string,
   tooltipPosition: PropTypes.string,

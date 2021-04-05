@@ -53,6 +53,7 @@ const PortfoliosRowList = ({ results, offset }) => (
               <th>Name</th>
               <th>Location</th>
               <th>Price</th>
+              <th>&nbsp;</th>
             </tr>
           </thead>
           <tbody>
@@ -95,14 +96,15 @@ const PortfoliosRow = ({ _id, number, propertyInfo, totalAmountPayable }) => {
       <td>{moneyFormatInNaira(totalAmountPayable)}</td>
       <td>
         <Link
-          className="btn btn-sm btn-secondary"
+          className="btn  btn-xs btn-secondary"
           to={`/${useCurrentRole().name}/offer/${_id}`}
         >
           <FileIcon /> View Offer
         </Link>
         <Spacing />
+        <Spacing />
         <Link
-          className="btn btn-sm btn-secondary"
+          className="btn  btn-xs btn-info"
           to={`/${userType}/portfolio/${_id}`}
         >
           View portfolio

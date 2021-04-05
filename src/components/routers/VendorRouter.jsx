@@ -7,7 +7,7 @@ import Properties from 'components/pages/shared/Properties';
 import SingleProperty from 'components/pages/shared/SingleProperty';
 import ScheduledVisits from 'components/pages/vendor/ScheduledVisits';
 import Transactions from 'components/pages/shared/Transactions';
-import NewProperty from 'components/pages/vendor/NewProperty';
+import PropertyForm from 'components/pages/vendor/PropertyForm';
 import Enquiries from 'components/pages/shared/Enquiries';
 import SingleEnquiry from 'components/pages/shared/SingleEnquiry';
 import Offers from 'components/pages/shared/Offers';
@@ -26,8 +26,8 @@ const VendorRouter = () => (
     <SingleProperty path="property/:id" />
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />
-    <NewProperty path="property/new" />
-    <NewProperty path="property/edit/:id" />
+    <PropertyForm path="property/new" />
+    <PropertyForm path="property/edit/:id" />
     <ScheduledVisits path="scheduled-visits" />
     <Enquiries path="enquiries" />
     <SingleEnquiry path="enquiry/:id" />

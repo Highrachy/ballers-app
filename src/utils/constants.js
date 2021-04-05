@@ -194,3 +194,9 @@ export const NEIGHBORHOOD_STEPS = [
   'schools',
   'shoppingMalls',
 ];
+
+export const VISITATION_STATUS = {
+  CANCELLED: 'Cancelled',
+  PENDING: 'Pending',
+  RESOLVED: 'Resolved',
+};

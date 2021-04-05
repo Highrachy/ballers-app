@@ -172,8 +172,8 @@ export const GalleryList = ({ property }) => {
               className="overlay overlay__secondary"
             >
               <img
-                src={viewMoreImage.url}
-                alt={viewMoreImage.title}
+                src={viewMoreImage?.url}
+                alt={viewMoreImage?.title || 'property'}
                 className="img-fluid gallery-thumbnails property-img mb-0"
               />
               <span>
@@ -282,7 +282,7 @@ export const GalleryForm = ({
                   loading={isSubmitting}
                   onClick={handleSubmit}
                 >
-                  Add Gallery Image
+                  {gallery?._id ? 'Update' : 'Add'} Gallery Image
                 </Button>
                 <DisplayFormikState {...props} showAll />
               </div>

@@ -18,15 +18,13 @@ import { moneyFormatInNaira } from 'utils/helpers';
 import Humanize from 'humanize-plus';
 import Image from 'components/utils/Image';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
-import { UserContext } from 'context/UserContext';
-import { HOUSE_TYPES, USER_TYPES } from 'utils/constants';
+import { HOUSE_TYPES } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
 import { API_ENDPOINT } from 'utils/URL';
+import { Spacing } from 'components/common/Helpers';
 
 const Properties = () => {
-  const { userState } = React.useContext(UserContext);
-  const addNewUrl =
-    userState?.role === USER_TYPES.vendor ? '/vendor/properties/new' : '';
+  const addNewUrl = useCurrentRole().isVendor ? '/vendor/property/new' : '';
   return (
     <BackendPage>
       <PaginatedContent
@@ -45,7 +43,7 @@ const Properties = () => {
 
 const PropertiesRowList = ({ results, offset }) => (
   <div className="container-fluid">
-    <Card className="mt-2">
+    <Card>
       <div className="table-responsive">
         <table className="table table-border table-hover">
           <thead>
@@ -55,6 +53,7 @@ const PropertiesRowList = ({ results, offset }) => (
               <th>Name</th>
               <th>Location</th>
               <th>Price</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -97,11 +96,23 @@ const PropertiesRow = ({ _id, name, address, price, number, mainImage }) => {
       <td>{moneyFormatInNaira(price)}</td>
       <td>
         <Link
-          className="btn btn-sm btn-secondary"
+          className="btn btn-xs btn-secondary"
           to={`/${userType}/property/${_id}`}
         >
-          View property
+          View
         </Link>
+        {useCurrentRole().isVendor && (
+          <>
+            <Spacing />
+            <Spacing />
+            <Link
+              className="btn btn-xs btn-info"
+              to={`/${userType}/property/edit/${_id}`}
+            >
+              Edit
+            </Link>
+          </>
+        )}
       </td>
     </tr>
   );

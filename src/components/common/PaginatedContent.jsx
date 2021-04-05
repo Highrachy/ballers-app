@@ -1,16 +1,15 @@
 import React from 'react';
-import Toast from 'components/utils/Toast';
 import { UserIcon } from 'components/utils/Icons';
 import TopTitle from 'components/utils/TopTitle';
 import Humanize from 'humanize-plus';
 import Pagination from 'components/common/Pagination';
 import { SlideDown } from 'react-slidedown';
 import 'react-slidedown/lib/slidedown.css';
-import { MenuIcon } from 'components/utils/Icons';
 import { CloseIcon } from 'components/utils/Icons';
 import { useToast } from 'components/utils/Toast';
 import { usePaginationQuery } from 'hooks/useQuery';
 import { ContentLoader } from 'components/utils/LoadingItems';
+import { FilterIcon } from 'components/utils/Icons';
 
 const AdminList = ({
   addNewUrl,
@@ -49,15 +48,7 @@ const AdminList = ({
         {pagination?.total}{' '}
         {Humanize.pluralize(pagination?.total, pageName, pluralizePageName)}
       </TopTitle>
-      <Toast {...toast} showToastOnly />
 
-      {FilterComponent && (
-        <TopFilter
-          FilterComponent={FilterComponent}
-          filters={filters}
-          setFilters={setFilters}
-        />
-      )}
       <ContentLoader
         hasContent={results?.length > 0}
         Icon={Icon}
@@ -66,6 +57,13 @@ const AdminList = ({
         toast={toast}
         noContentText={`No ${pluralizePageName} found`}
       >
+        {FilterComponent && (
+          <TopFilter
+            FilterComponent={FilterComponent}
+            filters={filters}
+            setFilters={setFilters}
+          />
+        )}
         <DataComponent
           results={results || []}
           offset={pagination?.offset || 0}
@@ -126,28 +124,25 @@ const TopFilter = ({ FilterComponent, filters, setFilters }) => {
   return (
     <section className="container-fluid">
       <div className="row">
-        <div className="col-sm-12 mt-3">
-          <div>
-            <p
-              className="filter-text text-right font-weight-bold"
-              onClick={() => {
-                setOpenFilter((openFilter) => !openFilter);
-              }}
-            >
-              {openFilter ? (
-                <>
-                  <CloseIcon /> Close Filter
-                </>
-              ) : (
-                <>
-                  {' '}
-                  <MenuIcon /> Set Filter
-                </>
-              )}
-            </p>
+        <div className="col-sm-12 mt-2">
+          <div
+            className="filter-text text-right text-small font-weight-bold"
+            onClick={() => {
+              setOpenFilter((openFilter) => !openFilter);
+            }}
+          >
+            {openFilter ? (
+              <>
+                <CloseIcon /> Close Filter
+              </>
+            ) : (
+              <>
+                <FilterIcon /> Filter Result
+              </>
+            )}
           </div>
 
-          <small className="small--2 mt-3 d-block">{currentFilters()}</small>
+          <small className="small--2 mt-2 d-block">{currentFilters()}</small>
         </div>
       </div>
 
