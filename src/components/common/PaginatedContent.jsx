@@ -22,6 +22,8 @@ const AdminList = ({
   pluralPageName,
   endpoint,
   queryName,
+  hidePagination,
+  hideTitle,
   ...props
 }) => {
   const [filters, setFilters] = React.useState(initialFilter);
@@ -44,10 +46,12 @@ const AdminList = ({
 
   return (
     <>
-      <TopTitle buttonText={`New ${pageName}`} to={addNewUrl}>
-        {pagination?.total}{' '}
-        {Humanize.pluralize(pagination?.total, pageName, pluralizePageName)}
-      </TopTitle>
+      {!hideTitle && (
+        <TopTitle buttonText={`New ${pageName}`} to={addNewUrl}>
+          {pagination?.total}{' '}
+          {Humanize.pluralize(pagination?.total, pageName, pluralizePageName)}
+        </TopTitle>
+      )}
 
       <ContentLoader
         hasContent={results?.length > 0}
@@ -70,11 +74,13 @@ const AdminList = ({
           {...props}
         />
 
-        <Pagination
-          currentPage={pagination?.currentPage}
-          lastPage={pagination?.totalPage}
-          setCurrentPage={setCurrentPage}
-        />
+        {!hidePagination && (
+          <Pagination
+            currentPage={pagination?.currentPage}
+            lastPage={pagination?.totalPage}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
       </ContentLoader>
     </>
   );

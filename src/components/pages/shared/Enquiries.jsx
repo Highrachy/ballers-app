@@ -33,6 +33,7 @@ const EnquiriesRowList = ({ results, offset }) => (
               <th>User</th>
               <th>Phone</th>
               <th>Property</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

@@ -192,7 +192,7 @@ const Others = ({ recommendedProperties }) => (
     <div className="container-fluid">
       <LinkHeader to="/user/portfolio" name="Overview" />
       <div className="row row-eq-height">
-        <PortfolioCards isSinglePortfolio />
+        <PortfolioCards isSinglePortfolio hideTitle hidePagination limit="2" />
         <div className="col-sm-6">
           <EnjoyYourBallingExperience />
         </div>

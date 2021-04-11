@@ -336,7 +336,8 @@ const OfferLetterTemplate = ({
           </>
         ))}
 
-      {showSignaturePad && isUser && (
+      {((showSignaturePad && isUser) ||
+        ACTIVE_OFFER_STATUS.includes(offerInfo.status)) && (
         <section className="signature mt-5">
           <h6>MEMORANDUM OF ACCEPTANCE</h6>
           <strong className="text-muted">

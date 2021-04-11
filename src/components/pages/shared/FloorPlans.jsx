@@ -98,6 +98,7 @@ export const FloorPlansForm = ({
               <div className="my-4">
                 <Upload
                   afterUpload={(image) => setImage(image)}
+                  allowPdf
                   changeText={`Update Floor Plan`}
                   defaultImage={PropertyPlaceholderImage}
                   imgOptions={{ className: 'mb-3', watermark: true }}
@@ -230,31 +231,33 @@ export const FloorPlansList = ({ property, setProperty, setToast }) => {
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey={index + 1}>
                   <Card.Body>
-                    <Image src={plan} alt={name} name={name} bordered />
-                    <p className="mb-4">
-                      <a href={plan} className="text mt-3">
-                        {plan}
-                      </a>{' '}
-                    </p>
-                    <span
-                      className="text-link text-muted"
-                      onClick={() => {
-                        setFloorPlan({ _id, name, plan });
-                        setShowEditFloorPlansModal(true);
-                      }}
-                    >
-                      Edit Floor Plan
-                    </span>
-                    <LinkSeparator />
-                    <span
-                      className="text-link  text-muted"
-                      onClick={() => {
-                        setFloorPlan({ _id, name, plan });
-                        setShowDeleteFloorPlansModal(true);
-                      }}
-                    >
-                      Delete Floor Plan
-                    </span>
+                    <Image src={plan} alt={name} name={name} />
+                    {userIsVendor && (
+                      <>
+                        <hr />
+                        <p className="px-4 my-4">
+                          <span
+                            className="text-link text-muted"
+                            onClick={() => {
+                              setFloorPlan({ _id, name, plan });
+                              setShowEditFloorPlansModal(true);
+                            }}
+                          >
+                            Edit Floor Plan
+                          </span>
+                          <LinkSeparator />
+                          <span
+                            className="text-link  text-muted"
+                            onClick={() => {
+                              setFloorPlan({ _id, name, plan });
+                              setShowDeleteFloorPlansModal(true);
+                            }}
+                          >
+                            Delete Floor Plan
+                          </span>
+                        </p>
+                      </>
+                    )}
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>

@@ -30,6 +30,18 @@
   th:last-child {
     padding-right: 2rem;
   }
+
+  &.table-no-padding {
+    td:first-child,
+    th:first-child {
+      padding-left: 0.5rem;
+    }
+
+    td:last-child,
+    th:last-child {
+      padding-right: 0.5rem;
+    }
+  }
 }
 
 .react-excel {

@@ -4,14 +4,10 @@ import { Card, ProgressBar } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property-holder.jpg';
 import { MapPinIcon, PortfolioIcon } from 'components/utils/Icons';
-import { getError, moneyFormatInNaira } from 'utils/helpers';
-import { BASE_API_URL } from 'utils/constants';
-import Axios from 'axios';
-import { getTokenFromStore } from 'utils/localStorage';
-import LoadItems from 'components/utils/LoadingItems';
-import NoContent from 'components/utils/NoContent';
-import { Loading } from 'components/utils/LoadingItems';
+import { moneyFormatInNaira } from 'utils/helpers';
+import PaginatedContent from 'components/common/PaginatedContent';
 import { PropertyIcon } from 'components/utils/Icons';
+import { API_ENDPOINT } from 'utils/URL';
 
 export const PortfolioPaymentProgress = ({ amountPaid, percentage }) => (
   <div className="row">
@@ -71,83 +67,35 @@ export const PortfolioCard = ({ _id, totalAmountPayable, propertyInfo }) => (
   </Card>
 );
 
-const PortfolioCards = ({ setToast, isSinglePortfolio }) => {
-  const [portfolios, setPortfolios] = React.useState(null);
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/property/portfolio/all`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        if (status === 200) {
-          setPortfolios(data.result);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast]);
-  const NO_CONTENT = (
-    <NoContent
-      className="w-100 text-center"
-      size="small"
-      Icon={<PortfolioIcon />}
-      text="You have no active property"
-    />
-  );
-
-  if (isSinglePortfolio) {
-    if (portfolios === null) {
-      return (
-        <div className="col-sm-6">
-          <Card className="card-container d-block text-center h-100">
-            <Loading Icon={<PortfolioIcon />} text="Loading Your Portfolios" />
-          </Card>
-        </div>
-      );
-    }
-    if (portfolios?.length === 0) {
-      return (
-        <div className="col-sm-6">
-          <Card className="card-container d-block text-center py-5 h-100">
-            <div className="no-content text-muted my-4">{NO_CONTENT}</div>
-          </Card>
-        </div>
-      );
-    }
-  }
-
-  console.log(`portfolio`, portfolios);
-
-  return (
-    <LoadItems
-      Icon={<PortfolioIcon />}
-      items={portfolios}
-      size="small"
-      loadingText={'Loading your Portfolios'}
-      noContent={NO_CONTENT}
-    >
-      {portfolios &&
-        portfolios.map((portfolio, index) => (
-          <div className="col-sm-6" key={index}>
-            <PortfolioCard {...portfolio} />
-          </div>
-        ))}
-    </LoadItems>
-  );
-};
+const PortfolioCards = ({ limit, hideTitle, hidePagination }) => (
+  <PaginatedContent
+    endpoint={API_ENDPOINT.getAllPortfolios()}
+    pageName="Portfolio"
+    pluralPageName="Portfolios"
+    DataComponent={PortfoliosRowList}
+    PageIcon={<PortfolioIcon />}
+    queryName="portfolio"
+    limit={limit}
+    hideTitle={hideTitle}
+    hidePagination={hidePagination}
+  />
+);
 
 PortfolioCards.propTypes = {
   setToast: PropTypes.func,
   isSinglePortfolio: PropTypes.bool,
 };
+
 PortfolioCards.defaultProps = {
   setToast: () => {},
   isSinglePortfolio: false,
 };
+
+const PortfoliosRowList = ({ results }) =>
+  results.map((portfolio, index) => (
+    <div className="col-sm-6" key={index}>
+      <PortfolioCard {...portfolio} />
+    </div>
+  ));
 
 export default PortfolioCards;

@@ -110,7 +110,7 @@ export const OwnedPropertyCard = ({
 const ManagePropertyLink = ({ property, setToast, setProperty }) => (
   <section className="mt-3">
     <Link
-      to={`/vendor/portfolios/edit/${property._id}`}
+      to={`/vendor/property/edit/${property._id}`}
       className="text-link text-muted"
     >
       Edit Property

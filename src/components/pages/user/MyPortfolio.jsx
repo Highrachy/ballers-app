@@ -53,7 +53,6 @@ const Portfolio = () => {
 const Content = ({ setToast, recommendedProperties }) => (
   <>
     <div className="container-fluid">
-      <h5>Portfolio</h5>
       <div className="row">
         <PortfolioCards setToast={setToast} />
       </div>

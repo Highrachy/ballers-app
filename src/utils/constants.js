@@ -200,3 +200,11 @@ export const VISITATION_STATUS = {
   PENDING: 'Pending',
   RESOLVED: 'Resolved',
 };
+
+export const BALLERS_BANK_ACCOUNTS = [
+  {
+    accountName: 'Highrachy Investment and Technology Ltd',
+    accountNo: '2032997125',
+    bankName: 'First Bank Of Nigeria Plc',
+  },
+];

@@ -102,7 +102,7 @@ InputFormat.defaultProps = {
   optional: false,
   placeholder: null,
   prefix: '₦ ',
-  suffix: null,
+  suffix: '',
   showFeedback: feedback.ALL,
   tooltipHeader: null,
   tooltipText: null,

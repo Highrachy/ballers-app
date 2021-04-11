@@ -475,10 +475,18 @@ html {
 .badge-overdue {
   padding: 0.4rem 1.15rem;
   font-size: 10px;
-  background: #ffe5d3;
-  color: $red;
   border-radius: 1rem;
   float: right;
+
+  &__success {
+    background: $green-bg;
+    color: darken($green, 25%);
+  }
+
+  &__danger {
+    background: #ffe5d3;
+    color: $red;
+  }
 }
 
 .notice-card {
@@ -494,4 +502,8 @@ html {
     margin-right: 0.5rem;
     opacity: 0.3;
   }
+}
+
+.container-fluid .container-fluid {
+  padding: 0 1rem;
 }

@@ -4,6 +4,7 @@ import {
   getTime as getElapsedTime,
   subDays,
   getHours,
+  isPast,
 } from 'date-fns';
 
 /**
@@ -29,3 +30,4 @@ export const getTimeOfDay = (date) => {
     'Night'
   );
 };
+export const isPastDate = (date) => isPast(date);
