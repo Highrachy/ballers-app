@@ -22,5 +22,7 @@ export const API_ENDPOINT = {
   getOneVisitation: (id) => `${BASE_API_URL}/visitation/${id}`,
   getAllVisitations: () => `${BASE_API_URL}/visitation/all`,
 
+  getAllOfflinePayments: () => `${BASE_API_URL}/offline-payment/all`,
+
   getAccountOverview: () => `${BASE_API_URL}/user/account-overview`,
 };

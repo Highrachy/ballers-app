@@ -18,7 +18,6 @@ import {
 } from 'components/forms/form-helper';
 import { getError, statusIsSuccessful, valuesToOptions } from 'utils/helpers';
 import DatePicker from 'components/forms/DatePicker';
-import Input from 'components/forms/Input';
 import Select from 'components/forms/Select';
 import Upload from 'components/utils/Upload';
 import ImagePlaceholder from 'assets/img/placeholder/image.png';
@@ -45,7 +44,7 @@ const MakePayment = ({ setToast, portfolio }) => {
         onHide={() => setShowPaymentModal(false)}
         showFooter={false}
       >
-        <h5 className="my-4">How would you like to pay: </h5>
+        <h5 className="my-3">How would you like to pay: </h5>
 
         {Object.entries(PAYMENT_TYPE).map(([key, value]) => (
           <>
@@ -94,22 +93,23 @@ const OnlinePayment = ({ setPaymentType, setToast, portfolio }) => {
       <Formik
         enableReinitialize={true}
         initialValues={setInitialValues(onlinePaymentSchema, {
-          amount: portfolio.nextPaymentInfo[0].expectedAmount,
+          amount: Math.min(
+            1_000_000,
+            portfolio?.nextPaymentInfo[0]?.expectedAmount || 10_000
+          ),
         })}
         onSubmit={({ amount }, actions) => {
-          Axios.post(
-            `${BASE_API_URL}/payment/initiate`,
-            {
-              amount,
-              propertyId: portfolio.propertyInfo._id,
-              offerId: portfolio.offerInfo._id,
+          const payload = {
+            amount: amount.toString(),
+            propertyId: portfolio.propertyInfo._id,
+            offerId: portfolio._id,
+          };
+
+          Axios.post(`${BASE_API_URL}/payment/initiate`, payload, {
+            headers: {
+              Authorization: getTokenFromStore(),
             },
-            {
-              headers: {
-                Authorization: getTokenFromStore(),
-              },
-            }
-          )
+          })
             .then(function (response) {
               const { status, data } = response;
               if (statusIsSuccessful(status)) {
@@ -133,12 +133,13 @@ const OnlinePayment = ({ setPaymentType, setToast, portfolio }) => {
               handleSubmit={handleSubmit}
             />
 
-            <p
+            <div
               className="text-link text-muted text-center text-small my-4"
               onClick={() => setPaymentType(KEY.OFFLINE)}
             >
+              Need to pay into our bank account directly <br />
               Pay via Bank Deposit / Transfer
-            </p>
+            </div>
 
             <DisplayFormikState {...props} showAll />
           </Form>
@@ -149,7 +150,8 @@ const OnlinePayment = ({ setPaymentType, setToast, portfolio }) => {
 };
 
 const OfflinePayment = ({ setPaymentType, setToast, portfolio, hideForm }) => {
-  const [receipt, setReceipt] = React.useState(null);
+  // TODO: Change to null
+  const [receipt, setReceipt] = React.useState('test');
   const [showPaymentForm, setShowPaymentForm] = React.useState(false);
   return (
     <Formik
@@ -160,11 +162,12 @@ const OfflinePayment = ({ setPaymentType, setToast, portfolio, hideForm }) => {
       onSubmit={(values, actions) => {
         const payload = {
           ...values,
-          offerId: portfolio.offerInfo._id,
+          offerId: portfolio._id,
           receipt,
+          dateOfPayment: values.dateOfPayment.date,
         };
 
-        Axios.post(`${BASE_API_URL}/offline-payemnt`, payload, {
+        Axios.post(`${BASE_API_URL}/offline-payment`, payload, {
           headers: { Authorization: getTokenFromStore() },
         })
           .then(function (response) {
@@ -204,7 +207,7 @@ const OfflinePayment = ({ setPaymentType, setToast, portfolio, hideForm }) => {
             </>
           ) : (
             <>
-              <div className="my-5">
+              <div className="my-4">
                 <h5 className="header-small mb-4">Bank Transfer/ Deposit</h5>
                 <p>1. Pay To:</p>
                 <h5 className="header-smaller">
@@ -218,15 +221,23 @@ const OfflinePayment = ({ setPaymentType, setToast, portfolio, hideForm }) => {
               </div>
 
               <p>
-                2. After paying, fill the Payment Verification form to send us
-                your payment details so that we can process your payment.
+                2. After paying, fill the Payment Verification Form to process
+                your payment.
               </p>
               <Button
                 className="btn-wide btn-sm mt-4"
                 onClick={() => setShowPaymentForm(true)}
               >
-                Fill Payment Verification Form
+                Payment Verification Form
               </Button>
+
+              <div
+                className="text-link text-muted text-center text-small my-4"
+                onClick={() => setPaymentType(KEY.ONLINE)}
+              >
+                Love to make your payment online? <br />
+                Pay via our Secured Online Platform
+              </div>
             </>
           )}
         </Form>
@@ -269,18 +280,35 @@ const OfflinePaymentForm = ({
       <section className="row">
         <div className="px-3 col-sm-12">
           <InputFormat
-            label="Amount"
+            label="Amount Paid"
             name="amount"
             placeholder="Transaction Amount"
           />
-          <Input label="Bank" name="bank" placeholder="Bank" />
-          <DatePicker label="Paid on" name="paidOn" placeholder="Paid On" />
+
+          <Select
+            label="Bank"
+            name="bank"
+            options={valuesToOptions(
+              BALLERS_BANK_ACCOUNTS.map(
+                ({ accountNo, bankName }) => `${bankName} - ${accountNo}`
+              )
+            )}
+            placeholder="Select Payment type"
+          />
+
+          <DatePicker
+            label="Paid on"
+            name="dateOfPayment"
+            placeholder="Paid On"
+          />
+
           <Select
             label="Payment Type"
             name="type"
             options={valuesToOptions(['Bank Transfer', 'Bank Deposit'])}
             placeholder="Select Payment type"
           />
+
           <br />
           <Label name="receipt" text="Receipt" optional />
           <Upload

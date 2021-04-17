@@ -3,6 +3,7 @@ import {
   requiredDate,
   positiveNumberValidation,
   optionalValidation,
+  moneyRange,
 } from './schema-helpers';
 
 export const addTransactionSchema = {
@@ -12,14 +13,13 @@ export const addTransactionSchema = {
 };
 
 export const onlinePaymentSchema = {
-  amount: positiveNumberValidation('Amount', 'amount'),
+  amount: moneyRange('Amount', 'amount', 10_000, 1_000_000),
 };
 
 export const offlinePaymentSchema = {
   amount: positiveNumberValidation('Amount', 'amount'),
   bank: required('Bank'),
   dateOfPayment: requiredDate('Payment Date'),
-  offerId: required('Offer id'),
   receipt: optionalValidation(required('Receipt')),
   type: required('Payment Type'),
 };

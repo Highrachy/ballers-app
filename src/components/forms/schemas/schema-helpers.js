@@ -84,8 +84,8 @@ export const moneyRange = (label, type = 'number', min, max = 0) =>
     .required(`${label} must be a valid ${type}`)
     .positive(`${label} must be a positive ${type}`)
     .integer(`${label} must be a ${type}`)
-    .min(min, `${label} must be greater than ${moneyFormatInNaira(min)}`);
-// .max(max, `${label} must be lesser than ${moneyFormatInNaira(max)}`);
+    .min(min, `${label} must be greater than ${moneyFormatInNaira(min)}`)
+    .max(max, `${label} must be lesser than ${moneyFormatInNaira(max)}`);
 
 export const validPercentage = (label) =>
   yup

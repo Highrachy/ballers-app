@@ -25,6 +25,18 @@ export const AllTransactions = () => {
   );
 };
 
+export const AllOfflinePayments = () => {
+  return (
+    <PaginatedContent
+      endpoint={API_ENDPOINT.getAllOfflinePayments()}
+      pageName="Offline Payments"
+      DataComponent={OfflinePaymentsRowList}
+      PageIcon={<TransactionIcon />}
+      queryName="payment"
+    />
+  );
+};
+
 const TransactionsRowList = ({ results, offset }) => (
   <div className="container-fluid">
     <Card className="mt-4">
@@ -69,6 +81,69 @@ const TransactionsRow = ({
       {paymentSource} ({additionalInfo})
     </td>
     <td>{moneyFormatInNaira(amount)}</td>
+    {/* <td>
+      <Link
+        className="btn btn-sm btn-secondary"
+        to={`/admin/transaction/${_id}`}
+      >
+        View Transaction
+      </Link>
+    </td> */}
+  </tr>
+);
+
+const OfflinePaymentsRowList = ({ results, offset }) => (
+  <div className="container-fluid">
+    <Card className="mt-4">
+      <div className="table-responsive">
+        <table className="table table-border table-hover">
+          <thead>
+            <tr>
+              <td>S/N</td>
+              <td>Amount</td>
+              <td>Bank</td>
+              <td>Date</td>
+              <td>&nbsp;</td>
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((offlinePayment, index) => (
+              <OfflinePaymentsRow
+                key={index}
+                number={offset + index + 1}
+                {...offlinePayment}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+  </div>
+);
+
+const OfflinePaymentsRow = ({
+  _id,
+  dateOfPayment,
+  // receipt,
+  bank,
+  type,
+  amount,
+  number,
+  createdAt,
+}) => (
+  <tr>
+    <td>{number}</td>
+    <td>
+      {moneyFormatInNaira(amount)}
+      <div className="block-text-small">
+        Paid on {getShortDate(dateOfPayment)}
+      </div>
+    </td>
+    <td>
+      {type}
+      <br /> <small>{bank}</small>
+    </td>
+    <td>{getShortDate(createdAt)}</td>
     {/* <td>
       <Link
         className="btn btn-sm btn-secondary"

@@ -33,7 +33,7 @@ const Modal = ({ showFooter, dialogClassName, ...props }) => {
 Modal.propTypes = {
   children: PropTypes.any.isRequired,
   dialogClassName: PropTypes.string,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   size: PropTypes.string,
   showFooter: PropTypes.bool,
 };
@@ -42,6 +42,7 @@ Modal.defaultProps = {
   size: 'md',
   dialogClassName: null, //modal-big
   showFooter: true,
+  title: null,
 };
 
 export default Modal;
