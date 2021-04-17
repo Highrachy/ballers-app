@@ -91,7 +91,7 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
                 <small className="ml-n1">Expected Payment</small>{' '}
               </td>
               <td>
-                <h5>{moneyFormatInNaira(nextPayment.expectedAmount)}</h5>
+                <h5>{moneyFormatInNaira(nextPayment?.expectedAmount)}</h5>
               </td>
             </tr>
             <tr>
@@ -99,7 +99,7 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
                 <small className="ml-n1">Due Date</small>{' '}
               </td>
               <td>
-                <h5>{getTinyDate(nextPayment.expiresOn)}</h5>
+                <h5>{getTinyDate(nextPayment?.expiresOn)}</h5>
               </td>
             </tr>
           </tbody>

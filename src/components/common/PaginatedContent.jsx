@@ -23,6 +23,7 @@ const AdminList = ({
   endpoint,
   queryName,
   hidePagination,
+  hideNoContent,
   hideTitle,
   ...props
 }) => {
@@ -44,13 +45,23 @@ const AdminList = ({
 
   const pagination = query?.latestData?.pagination;
 
+  const showTitle = !hideTitle && !(hideNoContent && results?.length === 0);
+
   return (
     <>
-      {!hideTitle && (
+      {showTitle && (
         <TopTitle buttonText={`New ${pageName}`} to={addNewUrl}>
           {pagination?.total}{' '}
           {Humanize.pluralize(pagination?.total, pageName, pluralizePageName)}
         </TopTitle>
+      )}
+
+      {FilterComponent && (
+        <TopFilter
+          FilterComponent={FilterComponent}
+          filters={filters}
+          setFilters={setFilters}
+        />
       )}
 
       <ContentLoader
@@ -60,17 +71,12 @@ const AdminList = ({
         name={pageName}
         toast={toast}
         noContentText={`No ${pluralizePageName} found`}
+        hideNoContent={hideNoContent}
       >
-        {FilterComponent && (
-          <TopFilter
-            FilterComponent={FilterComponent}
-            filters={filters}
-            setFilters={setFilters}
-          />
-        )}
         <DataComponent
           results={results || []}
           offset={pagination?.offset || 0}
+          setToast={setToast}
           {...props}
         />
 

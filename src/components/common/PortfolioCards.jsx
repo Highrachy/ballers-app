@@ -93,7 +93,7 @@ PortfolioCards.defaultProps = {
 
 const PortfoliosRowList = ({ results }) =>
   results.map((portfolio, index) => (
-    <div className="col-sm-6" key={index}>
+    <div className="col-sm-6 mb-4" key={index}>
       <PortfolioCard {...portfolio} />
     </div>
   ));

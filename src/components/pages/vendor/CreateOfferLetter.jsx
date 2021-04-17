@@ -118,9 +118,11 @@ const CreateOfferLetterForm = ({
                       name="paymentFrequency"
                       placeholder="Payment Frequency"
                       options={[
-                        { value: '0.5', label: 'Bi-Weekly' },
-                        { value: '1', label: 'Monthly' },
-                        { value: '3', label: 'Quarterly' },
+                        { value: '7', label: 'Weekly' },
+                        { value: '14', label: 'Bi-Weekly' },
+                        { value: '30', label: 'Monthly' },
+                        { value: '60', label: 'Bi-Monthly' },
+                        { value: '90', label: 'Quarterly' },
                       ]}
                     />
                   </div>

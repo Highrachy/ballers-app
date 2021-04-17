@@ -12,7 +12,6 @@ import { Formik, Form } from 'formik';
 import { addEnquirySchema } from 'components/forms/schemas/enquirySchema';
 import { Card } from 'react-bootstrap';
 import DatePicker from 'components/forms/DatePicker';
-import RadioSelect from 'components/forms/RadioSelect';
 import { BASE_API_URL, TITLES } from 'utils/constants';
 import Address from 'components/utils/Address';
 import {
@@ -239,37 +238,43 @@ const InvestmentDetailsForm = () => (
       <div className="col-md-10">
         <h5>Investment Details</h5>
 
-        <DatePicker
-          label="Start Date"
-          name="investmentStartDate"
-          placeholder="State Date"
-        />
+        <div className="form-row">
+          <DatePicker
+            formGroupClassName="col-md-6"
+            label="Start Date"
+            name="investmentStartDate"
+            placeholder="State Date"
+          />
 
-        <InputFormat
-          label="Initial Investment Amount"
-          name="initialInvestmentAmount"
-          placeholder="Initial Investment"
-        />
+          <InputFormat
+            formGroupClassName="col-md-6"
+            label="Initial Investment Amount"
+            name="initialInvestmentAmount"
+            placeholder="Initial Investment"
+          />
+        </div>
 
-        <RadioSelect
-          label="Investment Frequency"
-          name="investmentFrequency"
-          options={[
-            { label: 'Monthly', value: '1' },
-            { label: 'Quarterly', value: '4' },
-            { label: 'Voluntarily', value: '0' },
-          ]}
-          labelSizeClassName="col-sm-4"
-          radioSizeClassName="col-sm-8"
-          inline
-          custom
-        />
-
-        <InputFormat
-          label="Periodic Investment"
-          name="periodicInvestmentAmount"
-          placeholder="Periodic Investment"
-        />
+        <div className="form-row">
+          <InputFormat
+            formGroupClassName="col-md-6"
+            label="Periodic Investment"
+            name="periodicInvestmentAmount"
+            placeholder="Periodic Investment"
+          />
+          <Select
+            formGroupClassName="col-md-6"
+            label="Investment Frequency"
+            name="investmentFrequency"
+            placeholder="Investment Frequency"
+            options={[
+              { value: '7', label: 'Weekly' },
+              { value: '14', label: 'Bi-Weekly' },
+              { value: '30', label: 'Monthly' },
+              { value: '60', label: 'Bi-Monthly' },
+              { value: '90', label: 'Quarterly' },
+            ]}
+          />
+        </div>
       </div>
     </section>
   </Card>

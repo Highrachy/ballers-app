@@ -47,6 +47,7 @@ export const ContentLoader = ({
   Icon,
   loadingText,
   noContentText,
+  hideNoContent,
   name,
   toast,
 }) => (
@@ -62,7 +63,9 @@ export const ContentLoader = ({
     ) : hasContent ? (
       children
     ) : (
-      <NoContent text={noContentText || `${name} not found`} Icon={Icon} />
+      !hideNoContent && (
+        <NoContent text={noContentText || `${name} not found`} Icon={Icon} />
+      )
     )}
   </>
 );

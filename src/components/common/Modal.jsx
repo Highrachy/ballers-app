@@ -19,7 +19,7 @@ const Modal = ({ showFooter, dialogClassName, ...props }) => {
         </BModal.Header>
       )}
       <BModal.Body>{props.children}</BModal.Body>
-      {props.showFooter && (
+      {showFooter && (
         <BModal.Footer>
           <Button size="sm" onClick={props.onHide}>
             Close

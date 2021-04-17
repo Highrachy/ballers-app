@@ -208,3 +208,11 @@ export const BALLERS_BANK_ACCOUNTS = [
     bankName: 'First Bank Of Nigeria Plc',
   },
 ];
+
+export const PAYMENT_FREQUENCY = {
+  7: 'Weekly',
+  14: 'Bi-Weekly',
+  30: 'Monthly',
+  60: 'Bi-Monthly',
+  90: 'Quarterly',
+};

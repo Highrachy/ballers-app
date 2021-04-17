@@ -33,7 +33,8 @@ const JustForYou = ({ location }) => {
       payload['houseType'] = houseType;
     }
 
-    Axios.post(`${BASE_API_URL}/property/search`, payload, {
+    Axios.get(`${BASE_API_URL}/property/search`, {
+      params: { ...payload },
       headers: {
         Authorization: getTokenFromStore(),
       },
@@ -42,7 +43,7 @@ const JustForYou = ({ location }) => {
         const { status, data } = response;
 
         if (status === 200) {
-          setProperties(data.properties);
+          setProperties(data.result);
         }
       })
       .catch(function (error) {

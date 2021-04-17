@@ -153,12 +153,14 @@ const InvoiceContent = ({ paymentInfo, propertyInfo }) => (
               <tbody>
                 <tr className="tr-content">
                   <td>
-                    <p className="mt-3 mt-sm-5">
+                    <p className="mt-2 mt-sm-3">
                       Payment to <strong>Mr. Haruna Popoola</strong>
                     </p>
                   </td>
                   <td className="text-right text-amount strong">
-                    {paymentInfo.currency} {moneyFormat(paymentInfo.amount)}
+                    <p className="mt-2 mt-sm-3">
+                      {paymentInfo.currency} {moneyFormat(paymentInfo.amount)}
+                    </p>
                   </td>
                 </tr>
                 <tr className="tr-content">
