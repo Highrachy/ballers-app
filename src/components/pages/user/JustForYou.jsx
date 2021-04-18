@@ -1,76 +1,103 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
-import Toast, { useToast } from 'components/utils/Toast';
-import { getTokenFromStore } from 'utils/localStorage';
-import { getError } from 'utils/helpers';
 import { PropertyIcon } from 'components/utils/Icons';
-import LoadItems from 'components/utils/LoadingItems';
-import NoContent from 'components/utils/NoContent';
 import SearchDashboardPropertyForm from 'components/common/SearchDashboardPropertyForm';
 import * as queryString from 'query-string';
 import { UserContext } from 'context/UserContext';
 import { RecommendedPropertyLists } from 'components/common/PropertyCard';
+import { API_ENDPOINT } from 'utils/URL';
+import PaginatedContent from 'components/common/PaginatedContent';
+import Switch from 'components/forms/Switch';
+import { Form, Formik } from 'formik';
+import {
+  DisplayFormikState,
+  setInitialValues,
+} from 'components/forms/form-helper';
 
 const JustForYou = ({ location }) => {
-  const [toast, setToast] = useToast();
-  const [properties, setProperties] = React.useState(null);
   const { userState } = React.useContext(UserContext);
 
   // From search query
   const queryParams = queryString.parse(location.search);
   const { state, houseType } = queryParams;
+  const [filter, setFilter] = React.useState({
+    state,
+    houseType,
+  });
 
-  // if no state or housetype, use preferences
+  // use my preference
+  // Show Favorites
 
-  React.useEffect(() => {
-    const payload = {};
-    if (state) {
-      payload['state'] = state;
-    }
-    if (houseType) {
-      payload['houseType'] = houseType;
-    }
-
-    Axios.get(`${BASE_API_URL}/property/search`, {
-      params: { ...payload },
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-
-        if (status === 200) {
-          setProperties(data.result);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, houseType]);
+  //   <div class="custom-control custom-switch">
+  //   <input type="checkbox" class="custom-control-input" id="customSwitch1">
+  //   <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+  // </div>
 
   return (
     <BackendPage>
-      <Toast {...toast} showToastOnly />
       <SearchForm defaultInputValue={{ state, houseType }} />
-
-      <section className="mt-5">
-        <Properties title="Favorites" properties={userState.favorites} />
-      </section>
-
-      <LoadItems
-        Icon={<PropertyIcon />}
-        items={properties}
-        loadingText="Loading Property Recommendations"
-        noContent={<NoContent isButton text="No Properties found" />}
+      <Formik
+        initialValues={setInitialValues({
+          favorites: false,
+          preferences: false,
+        })}
       >
-        <Properties title="Properties for You" properties={properties || []} />
-      </LoadItems>
+        {({ isSubmitting, handleSubmit, ...props }) => {
+          if (
+            props?.values?.preferences &&
+            filter.state !== userState.preferences.location &&
+            filter.houseType !== userState.preferences.houseType
+          ) {
+            setFilter({
+              ...filter,
+              state: userState.preferences.location,
+              houseType: userState.preferences.houseType,
+            });
+          }
+          return (
+            <>
+              <Form className="container-fluid py-r border-bottom mb-4">
+                <div className="form-row">
+                  <Switch
+                    formGroupClassName="col-md-6"
+                    label="Show my Favorites Properties"
+                    name="favorites"
+                    optional
+                  />
+
+                  <Switch
+                    formGroupClassName="col-md-6"
+                    label="Show Properties Based on my Preference"
+                    name="preferences"
+                    optional
+                  />
+                  <DisplayFormikState {...props} hide />
+                </div>
+              </Form>
+              {props?.values?.favorites && (
+                <section className="mt-5">
+                  <PropertiesRowList
+                    results={userState.favorites}
+                    title="Favorite Properties"
+                  />
+                  <div className="my-5 border-bottom"></div>
+                </section>
+              )}
+              <PaginatedContent
+                endpoint={API_ENDPOINT.searchProperties()}
+                initialFilter={filter}
+                pageName="Property"
+                pluralPageName="Properties"
+                DataComponent={PropertiesRowList}
+                // FilterComponent={SearchForm}
+                PageIcon={<PropertyIcon />}
+                queryName="property"
+                showFetching
+              />
+            </>
+          );
+        }}
+      </Formik>
     </BackendPage>
   );
 };
@@ -91,14 +118,14 @@ const SearchForm = ({ defaultInputValue }) => (
   </div>
 );
 
-const Properties = ({ properties, title }) => {
-  return properties && properties.length > 0 ? (
+const PropertiesRowList = ({ results, title }) => {
+  return results && results.length > 0 ? (
     <div className="container-fluid">
-      <h5 className="mt-4">{title}</h5>
+      {title && <h4 className="mb-5">{title}</h4>}
       <div className="row">
         <RecommendedPropertyLists
           propertyClassName="col-sm-6"
-          properties={properties}
+          properties={results}
         />
       </div>
     </div>

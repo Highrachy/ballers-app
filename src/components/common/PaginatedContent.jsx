@@ -15,6 +15,7 @@ const AdminList = ({
   addNewUrl,
   DataComponent,
   initialFilter = {},
+  filter,
   FilterComponent,
   limit,
   PageIcon,
@@ -25,6 +26,7 @@ const AdminList = ({
   hidePagination,
   hideNoContent,
   hideTitle,
+  showFetching,
   ...props
 }) => {
   const [filters, setFilters] = React.useState(initialFilter);
@@ -34,14 +36,24 @@ const AdminList = ({
   const pluralizePageName = pluralPageName || Humanize.pluralize(2, pageName);
   const Icon = PageIcon || <UserIcon />;
 
+  React.useEffect(() => {
+    setFilters(initialFilter);
+  }, [initialFilter]);
+
   const [query, results] = usePaginationQuery({
-    axiosOptions: { params: { limit, page: currentPage, ...filters } },
+    axiosOptions: {
+      params: { limit, page: currentPage, ...filters },
+    },
     key: 'result',
     name: queryName || pageName.toLowerCase(),
     setToast,
     endpoint,
     childrenKey: queryName,
   });
+
+  console.log(`query.isFetching`, query.isFetching);
+  console.log(`query.isLoading`, query.isLoading);
+  console.log(`showFetching`, showFetching);
 
   const pagination = query?.latestData?.pagination;
 
@@ -72,6 +84,7 @@ const AdminList = ({
         toast={toast}
         noContentText={`No ${pluralizePageName} found`}
         hideNoContent={hideNoContent}
+        showFetching={showFetching}
       >
         <DataComponent
           results={results || []}

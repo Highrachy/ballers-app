@@ -50,15 +50,16 @@ export const ContentLoader = ({
   hideNoContent,
   name,
   toast,
+  showFetching,
 }) => (
   <>
     <Toast {...toast} showToastOnly />
-    {/* {query.isFetching && !query.isLoading && (
+    {query.isFetching && !query.isLoading && showFetching && (
       <div className="updating-spinner">
         <BallersSpinner small />
       </div>
-    )} */}
-    {query.isLoading ? (
+    )}
+    {query.isLoading || (showFetching && query.isFetching) ? (
       <Loading text={loadingText || `Loading ${name}`} Icon={Icon} />
     ) : hasContent ? (
       children

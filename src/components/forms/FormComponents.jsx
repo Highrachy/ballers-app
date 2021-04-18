@@ -38,6 +38,7 @@ import PhoneNumber from './PhoneNumber';
 import Pagination from 'components/common/Pagination';
 import Upload from 'components/utils/Upload';
 import AutoComplete from './AutoComplete';
+import Switch from './Switch';
 
 const FormComponents = () => (
   <>
@@ -217,6 +218,21 @@ const Forms = () => {
                 // options can contain either value or label
               />
             </div>
+          </div>
+
+          <div className="form-row">
+            <Switch
+              formGroupClassName="col-md-6"
+              label="Switch"
+              name="switch1"
+            />
+
+            <Switch
+              formGroupClassName="col-md-6"
+              label="This is the switch class, it is awesome"
+              name="switch2"
+              optional
+            />
           </div>
 
           <div className="form-row">

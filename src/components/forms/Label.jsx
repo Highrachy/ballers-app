@@ -12,6 +12,7 @@ const Label = ({
   tooltipPosition,
   tooltipText,
   labelLink,
+  hideOptionalText,
 }) => {
   const sanitizedLabelLink = { to: null, text: null, ...labelLink };
 
@@ -25,7 +26,7 @@ const Label = ({
 
       {/* Optional / Compulsory Fields */}
       {optional ? (
-        <em className="optional-form-field">(optional)</em>
+        !hideOptionalText && <em className="optional-form-field">(optional)</em>
       ) : (
         <small> * </small>
       )}
@@ -58,6 +59,7 @@ const Label = ({
 
 Label.propTypes = {
   className: PropTypes.string,
+  hideOptionalText: PropTypes.bool,
   labelLink: PropTypes.shape({
     to: PropTypes.string,
     text: PropTypes.string.isRequired,
@@ -72,6 +74,7 @@ Label.propTypes = {
 };
 Label.defaultProps = {
   className: '',
+  hideOptionalText: false,
   labelLink: {
     to: '',
     text: '',
