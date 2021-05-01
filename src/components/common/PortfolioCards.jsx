@@ -8,6 +8,9 @@ import { moneyFormatInNaira } from 'utils/helpers';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { PropertyIcon } from 'components/utils/Icons';
 import { API_ENDPOINT } from 'utils/URL';
+import { isPastDate } from 'utils/date-helpers';
+import TimeAgo from 'timeago-react';
+import { Spacing } from './Helpers';
 
 export const PortfolioPaymentProgress = ({ amountPaid, percentage }) => (
   <div className="row">
@@ -29,7 +32,12 @@ export const PortfolioPaymentProgress = ({ amountPaid, percentage }) => (
   </div>
 );
 
-export const PortfolioCard = ({ _id, totalAmountPayable, propertyInfo }) => (
+export const PortfolioCard = ({
+  _id,
+  totalAmountPayable,
+  propertyInfo,
+  nextPaymentInfo,
+}) => (
   <Card className="card-container h-100 portfolio-holder property-card">
     <Link to={`/user/portfolio/${_id}`}>
       <article>
@@ -61,6 +69,26 @@ export const PortfolioCard = ({ _id, totalAmountPayable, propertyInfo }) => (
           <h5 className="property-price property-spacing">
             {moneyFormatInNaira(totalAmountPayable)}
           </h5>
+        </div>
+
+        {/* Next Payment Info */}
+        <div className="property-holder__separator my-3"></div>
+        <div className="property-info property-spacing px-4">
+          Next Payment:{' '}
+          <strong>
+            {moneyFormatInNaira(nextPaymentInfo?.[0]?.expectedAmount)}
+          </strong>
+          <Spacing />
+          <Spacing />
+          {isPastDate(nextPaymentInfo?.[0]?.expiresOn) ? (
+            <div className="badge badge-overdue badge-overdue__danger">
+              Overdue: <TimeAgo datetime={nextPaymentInfo?.[0]?.expiresOn} />
+            </div>
+          ) : (
+            <div className="badge  badge-overdue badge-overdue__success">
+              Due: <TimeAgo datetime={nextPaymentInfo?.[0]?.expiresOn} />
+            </div>
+          )}
         </div>
       </article>
     </Link>

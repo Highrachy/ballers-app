@@ -7,9 +7,13 @@ import { navigate } from '@reach/router';
 import Toast, { useToast } from 'components/utils/Toast';
 import { BASE_API_URL } from 'utils/constants';
 import { valuesToOptions } from 'utils/helpers';
+import { API_ENDPOINT } from 'utils/URL';
+import { useGetQuery } from 'hooks/useQuery';
 
 const SearchPropertyForm = ({ defaultInputValue }) => {
   const LOADING = 'Loading...';
+
+  const [toast, setToast] = useToast();
 
   const [formValue, setFormValue] = React.useState({
     state: '',
@@ -35,19 +39,14 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   }, [defaultInputValue]);
 
   // State
-  const [state, setState] = React.useState([]);
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/area/states`)
-      .then(function (response) {
-        const { status, data } = response;
-        if (status === 200) {
-          setState(valuesToOptions(data.states));
-        }
-      })
-      .catch(function (error) {
-        // console.log('error', error.response);
-      });
-  }, []);
+  const [stateQuery] = useGetQuery({
+    key: 'states',
+    name: 'States',
+    setToast,
+    endpoint: API_ENDPOINT.getAllStates(),
+  });
+
+  const states = valuesToOptions(stateQuery?.data?.states || []);
 
   // Area
   const [disableArea, setDisableArea] = React.useState(true);
@@ -120,14 +119,12 @@ const SearchPropertyForm = ({ defaultInputValue }) => {
   // Button
   const enableButton = formValue.state && formValue.area && formValue.houseType;
 
-  const [toast, setToast] = useToast();
-
   return (
     <div className="input-group">
       <Toast {...toast} showToastOnly />
       <div className="select-holder">
         <Select
-          options={state}
+          options={states}
           key={JSON.stringify(defaultInputValue.state)}
           styles={customStyles}
           placeholder={placeholder.state}

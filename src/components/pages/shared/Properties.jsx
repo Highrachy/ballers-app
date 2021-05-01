@@ -133,41 +133,22 @@ const FilterForm = ({ setFilterTerms }) => {
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
-          <Card className="card-container">
-            <section className="row">
-              <div className="col-md-10 px-4">
-                <h5 className="mb-4">Filter Properties</h5>
-                <div className="form-row">
-                  <Input
-                    formGroupClassName="col-md-6"
-                    label="Property Name"
-                    name="name"
-                  />
-                  <Input
-                    formGroupClassName="col-md-6"
-                    label="Price"
-                    name="price"
-                  />
-                </div>
-                <div className="form-row">
-                  <Select
-                    formGroupClassName="col-md-6"
-                    label="Toilets"
-                    name="toilets"
-                    options={generateNumOptions(9, 'Toilet')}
-                    placeholder="Select Toilets"
-                  />
-                  <Select
-                    formGroupClassName="col-md-6"
-                    label="House Type"
-                    name="houseType"
-                    options={valuesToOptions(HOUSE_TYPES)}
-                    placeholder="House Type"
-                  />
-                </div>
-              </div>
-            </section>
-          </Card>
+          <section>
+            <Input label="Property Name" name="name" />
+            <Input label="Price" name="price" />
+            <Select
+              label="Toilets"
+              name="toilets"
+              options={generateNumOptions(9, 'Toilet')}
+              placeholder="Select Toilets"
+            />
+            <Select
+              label="House Type"
+              name="houseType"
+              options={valuesToOptions(HOUSE_TYPES)}
+              placeholder="House Type"
+            />
+          </section>
           <DisplayFormikState {...props} showAll />
           <Button
             className="btn-secondary mt-4"

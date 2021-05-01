@@ -26,4 +26,6 @@ export const API_ENDPOINT = {
   getAllOfflinePayments: () => `${BASE_API_URL}/offline-payment/all`,
 
   getAccountOverview: () => `${BASE_API_URL}/user/account-overview`,
+
+  getAllStates: () => `${BASE_API_URL}/area/states`,
 };

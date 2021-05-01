@@ -6,26 +6,25 @@ import { ReferIcon } from 'components/utils/Icons';
 import { RightArrowIcon, SearchIcon } from 'components/utils/Icons';
 import SearchForProperty from 'components/common/SearchDashboardPropertyForm';
 import ContributionGraph from 'components/common/ContributionGraph';
-import { RecommendedPropertyLists } from 'components/common/PropertyCard';
 import useWindowSize from 'hooks/useWindowSize';
 import { MOBILE_WIDTH, BASE_API_URL } from 'utils/constants';
 import { UserContext } from 'context/UserContext';
-import LoadItems from 'components/utils/LoadingItems';
 import { PropertyIcon } from 'components/utils/Icons';
-import NoContent from 'components/utils/NoContent';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
-import { getError, getItems } from 'utils/helpers';
+import { getError } from 'utils/helpers';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getShortDate } from 'utils/date-helpers';
 import TimeAgo from 'timeago-react';
 import { isPast } from 'date-fns';
 import PortfolioCards from 'components/common/PortfolioCards';
 import { FileIcon } from 'components/utils/Icons';
+import { API_ENDPOINT } from 'utils/URL';
+import PaginatedContent from 'components/common/PaginatedContent';
+import { PropertiesRowList } from './JustForYou';
 
 const Dashboard = () => {
   const [toast, setToast] = useToast();
-  const [properties, setProperties] = React.useState(null);
   const [offers, setOffers] = React.useState(null);
 
   React.useEffect(() => {
@@ -47,36 +46,13 @@ const Dashboard = () => {
       });
   }, [setToast]);
 
-  React.useEffect(() => {
-    Axios.post(
-      `${BASE_API_URL}/property/search`,
-      {},
-      {
-        headers: {
-          Authorization: getTokenFromStore(),
-        },
-      }
-    )
-      .then(function (response) {
-        const { status, data } = response;
-        if (status === 200) {
-          setProperties(data.properties);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast]);
-
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
       <Welcome />
       <ShowInfo offers={offers} />
       <Overview />
-      <Others recommendedProperties={properties} />
+      <Others />
     </BackendPage>
   );
 };
@@ -140,13 +116,6 @@ const OffersRow = ({ _id, expires, status, propertyInfo, vendorInfo }) => {
         >
           View Offer Letter
         </Link>
-        <img
-          alt={vendorInfo?.vendor?.companyName || ''}
-          className="img-fluid img-small"
-          src={vendorInfo?.vendor?.companyLogo}
-          title={vendorInfo?.vendor?.companyName}
-        />
-        <br />
         {vendorInfo?.vendor?.companyName} has sent you an offer letter for{' '}
         <strong>{propertyInfo.name}</strong>
         <br />
@@ -187,33 +156,30 @@ const ReferAndEarn = () => (
   </section>
 );
 
-const Others = ({ recommendedProperties }) => (
+const Others = () => (
   <>
     <div className="container-fluid">
       <LinkHeader to="/user/portfolio" name="Overview" />
       <div className="row row-eq-height">
         <PortfolioCards isSinglePortfolio hideTitle hidePagination limit="2" />
-        <div className="col-sm-6">
-          <EnjoyYourBallingExperience />
-        </div>
       </div>
+      <EnjoyYourBallingExperience />
 
       <LinkHeader to="/user/just-for-you" name="Just for you" />
+
       <div className="row">
-        <div className="col-sm-6">
-          <LoadItems
-            Icon={<PropertyIcon />}
-            items={recommendedProperties}
-            loadingText="Loading Property Recommendations"
-            noContent={<NoContent isButton text="No Properties found" />}
-          >
-            {recommendedProperties && (
-              <RecommendedPropertyLists
-                properties={getItems(recommendedProperties, 2) || []}
-              />
-            )}
-          </LoadItems>
-        </div>
+        <PaginatedContent
+          endpoint={API_ENDPOINT.searchProperties()}
+          // initialFilter={filter}
+          pageName="Property"
+          pluralPageName="Properties"
+          DataComponent={PropertiesRowList}
+          PageIcon={<PropertyIcon />}
+          queryName="property"
+          limit={2}
+          hidePagination
+          hideTitle
+        />
       </div>
     </div>
   </>

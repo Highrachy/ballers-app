@@ -20,18 +20,16 @@ const JustForYou = ({ location }) => {
   // From search query
   const queryParams = queryString.parse(location.search);
   const { state, houseType } = queryParams;
-  const [filter, setFilter] = React.useState({
-    state,
-    houseType,
-  });
+
+  const searchFilter = { state, houseType };
+  const userPreferences = {
+    ...searchFilter,
+    state: userState.preferences.location,
+    houseType: userState.preferences.houseType,
+  };
 
   // use my preference
   // Show Favorites
-
-  //   <div class="custom-control custom-switch">
-  //   <input type="checkbox" class="custom-control-input" id="customSwitch1">
-  //   <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
-  // </div>
 
   return (
     <BackendPage>
@@ -43,17 +41,6 @@ const JustForYou = ({ location }) => {
         })}
       >
         {({ isSubmitting, handleSubmit, ...props }) => {
-          if (
-            props?.values?.preferences &&
-            filter.state !== userState.preferences.location &&
-            filter.houseType !== userState.preferences.houseType
-          ) {
-            setFilter({
-              ...filter,
-              state: userState.preferences.location,
-              houseType: userState.preferences.houseType,
-            });
-          }
           return (
             <>
               <Form className="container-fluid py-r border-bottom mb-4">
@@ -85,7 +72,9 @@ const JustForYou = ({ location }) => {
               )}
               <PaginatedContent
                 endpoint={API_ENDPOINT.searchProperties()}
-                initialFilter={filter}
+                initialFilter={
+                  props?.values?.preferences ? userPreferences : searchFilter
+                }
                 pageName="Property"
                 pluralPageName="Properties"
                 DataComponent={PropertiesRowList}
@@ -118,7 +107,7 @@ const SearchForm = ({ defaultInputValue }) => (
   </div>
 );
 
-const PropertiesRowList = ({ results, title }) => {
+export const PropertiesRowList = ({ results, title }) => {
   return results && results.length > 0 ? (
     <div className="container-fluid">
       {title && <h4 className="mb-5">{title}</h4>}

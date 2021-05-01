@@ -5,7 +5,7 @@ import {
   DisplayFormikState,
 } from 'components/forms/form-helper';
 import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, PAYMENT_FREQUENCY } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import Button from 'components/forms/Button';
@@ -13,7 +13,7 @@ import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import Select from 'components/forms/Select';
 import Textarea from 'components/forms/Textarea';
-import { generateNumOptions, getError } from 'utils/helpers';
+import { generateNumOptions, getError, objectToOptions } from 'utils/helpers';
 import { offerLetterSchema } from 'components/forms/schemas/offerSchema';
 import InputFormat from 'components/forms/InputFormat';
 import Input from 'components/forms/Input';
@@ -77,7 +77,8 @@ const CreateOfferLetterForm = ({
               onSubmit={(values) => {
                 handleValue({
                   ...values,
-                  initialPaymentDate: values.initialPaymentDate.date,
+                  initialPaymentDate:
+                    values.initialPaymentDate.date || values.initialPaymentdate,
                 });
                 handleShowOfferLetter();
               }}
@@ -117,13 +118,7 @@ const CreateOfferLetterForm = ({
                       label="Payment Frequency"
                       name="paymentFrequency"
                       placeholder="Payment Frequency"
-                      options={[
-                        { value: '7', label: 'Weekly' },
-                        { value: '14', label: 'Bi-Weekly' },
-                        { value: '30', label: 'Monthly' },
-                        { value: '60', label: 'Bi-Monthly' },
-                        { value: '90', label: 'Quarterly' },
-                      ]}
+                      options={objectToOptions(PAYMENT_FREQUENCY, null, true)}
                     />
                   </div>
                   <div className="form-row">

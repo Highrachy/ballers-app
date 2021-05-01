@@ -12,14 +12,14 @@ import { Formik, Form } from 'formik';
 import { addEnquirySchema } from 'components/forms/schemas/enquirySchema';
 import { Card } from 'react-bootstrap';
 import DatePicker from 'components/forms/DatePicker';
-import { BASE_API_URL, TITLES } from 'utils/constants';
+import { BASE_API_URL, PAYMENT_FREQUENCY, TITLES } from 'utils/constants';
 import Address from 'components/utils/Address';
 import {
   createSchema,
   addressSchema,
 } from 'components/forms/schemas/schema-helpers';
 import { UserContext } from 'context/UserContext';
-import { getError, valuesToOptions } from 'utils/helpers';
+import { getError, objectToOptions, valuesToOptions } from 'utils/helpers';
 import { getTokenFromStore } from 'utils/localStorage';
 import InputFormat from 'components/forms/InputFormat';
 import Select from 'components/forms/Select';
@@ -29,6 +29,7 @@ import { ContentLoader } from 'components/utils/LoadingItems';
 import { MessageIcon } from 'components/utils/Icons';
 import { PropertyImage } from '../shared/SingleProperty';
 import { PropertyHeader } from '../shared/SingleProperty';
+import { navigate } from '@reach/router';
 
 const pageOptions = {
   key: 'property',
@@ -93,6 +94,8 @@ const EnquiryForm = ({ id, setToast }) => {
           investmentStartDate:
             values.investmentStartDate.date || values.investmentStartDate,
           propertyId: id,
+          email: userState.email,
+          phone: userState.phone,
         };
 
         Axios.post(`${BASE_API_URL}/enquiry/add`, payload, {
@@ -107,6 +110,7 @@ const EnquiryForm = ({ id, setToast }) => {
                 type: 'success',
                 message: 'Your enquiry has been successfully submitted',
               });
+              navigate(`/user/property/${id}`);
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -178,22 +182,6 @@ const ClientDetailsForm = () => (
             placeholder="Other Names"
           />
         </div>
-
-        <div className="form-row">
-          <Input
-            formGroupClassName="col-md-6"
-            label="Email"
-            name="email"
-            placeholder="Email Address"
-          />
-          <Input
-            formGroupClassName="col-md-6"
-            label="Phone"
-            name="phone"
-            placeholder="Phone"
-          />
-        </div>
-
         <Input
           label="Occupation/Nature of Business"
           name="occupation"
@@ -266,13 +254,7 @@ const InvestmentDetailsForm = () => (
             label="Investment Frequency"
             name="investmentFrequency"
             placeholder="Investment Frequency"
-            options={[
-              { value: '7', label: 'Weekly' },
-              { value: '14', label: 'Bi-Weekly' },
-              { value: '30', label: 'Monthly' },
-              { value: '60', label: 'Bi-Monthly' },
-              { value: '90', label: 'Quarterly' },
-            ]}
+            options={objectToOptions(PAYMENT_FREQUENCY, null, true)}
           />
         </div>
       </div>

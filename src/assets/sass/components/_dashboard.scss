@@ -1,6 +1,5 @@
 .dashboard-page {
   background: #f9fdff;
-  padding-bottom: 8rem;
 }
 
 .dashboard-top-nav {
@@ -141,16 +140,6 @@
   border-bottom: 1px solid #e8e8e8;
   color: $gray-700;
   font-weight: bold;
-}
-
-.modal-title {
-  font-size: 1.5rem;
-}
-.modal-header {
-  .close {
-    font-size: 2rem;
-    color: $primary;
-  }
 }
 
 .icon-holder {

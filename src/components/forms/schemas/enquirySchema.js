@@ -1,7 +1,5 @@
 import {
   stringValidation,
-  email,
-  phoneNumber,
   optionalValidation,
   // minDateValidation,
   required,
@@ -12,8 +10,6 @@ export const addEnquirySchema = {
   firstName: stringValidation('First Name'),
   lastName: stringValidation('Last Name'),
   otherName: optionalValidation(required('Other Name')),
-  email,
-  phone: phoneNumber,
   occupation: stringValidation('Occupation'),
   nameOnTitleDocument: stringValidation('Name on Title Document'),
   investmentStartDate: required('Investment Start Date', new Date()),

@@ -61,8 +61,6 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
           payload.vendor.companyLogo = logo;
         }
 
-        console.log('payload', payload);
-
         Axios.put(`${BASE_API_URL}/user/vendor/update`, payload, {
           headers: { Authorization: getTokenFromStore() },
         })

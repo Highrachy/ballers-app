@@ -45,8 +45,6 @@ export const NeighborhoodForm = ({
 }) => {
   const [toast] = useToast();
 
-  console.log(`neighborhood`, neighborhood);
-
   return (
     <Formik
       enableReinitialize={true}

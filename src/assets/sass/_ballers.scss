@@ -19,6 +19,7 @@
 @import 'components/user-card';
 @import 'components/upload-image';
 @import 'components/stepper';
+@import 'components/modal';
 @import 'plugins/range';
 @import 'plugins/react-date-picker';
 @import 'plugins/react-phone-number2';
@@ -409,11 +410,6 @@ html {
 .large-icon svg {
   height: 5rem;
   width: 5rem;
-}
-
-.modal-big {
-  max-height: 70vh;
-  max-width: 850px;
 }
 
 .carousel-control-next,

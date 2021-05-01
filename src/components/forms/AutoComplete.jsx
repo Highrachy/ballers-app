@@ -50,7 +50,6 @@ const AutoComplete = ({
           <Field name={name}>
             {({ field, form }) => {
               let fieldValue = field.value || value || [];
-              console.log(`fieldValue`, fieldValue);
               return (
                 <ReactTags
                   allowBackspace={false}

@@ -1,51 +1,21 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Link } from '@reach/router';
-import PropertyCard from 'components/common/PropertyCard';
-import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
-import { getTokenFromStore } from 'utils/localStorage';
-import { getError } from 'utils/helpers';
-import LoadItems from 'components/utils/LoadingItems';
-import { PortfolioIcon } from 'components/utils/Icons';
-import NoContent from 'components/utils/NoContent';
+import { PropertyIcon } from 'components/utils/Icons';
 import PortfolioCards from 'components/common/PortfolioCards';
 import { OffersRowList } from '../shared/Offers';
 import { API_ENDPOINT } from 'utils/URL';
 import { OfferIcon } from 'components/utils/Icons';
 import PaginatedContent from 'components/common/PaginatedContent';
+import { PropertiesRowList } from './JustForYou';
 
 const Portfolio = () => {
   const [toast, setToast] = useToast();
-  const [properties, setProperties] = React.useState(null);
-
-  React.useEffect(() => {
-    Axios.post(
-      `${BASE_API_URL}/property/search`,
-      {},
-      {
-        headers: {
-          Authorization: getTokenFromStore(),
-        },
-      }
-    )
-      .then(function (response) {
-        const { status, data } = response;
-        if (status === 200) {
-          setProperties(data.properties);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast]);
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
-      <Content setToast={setToast} recommendedProperties={properties} />
+      <Content setToast={setToast} />
     </BackendPage>
   );
 };
@@ -61,24 +31,24 @@ const Content = ({ setToast, recommendedProperties }) => (
     <Offers />
     <EnjoyingBallers />
 
-    <LoadItems
-      Icon={<PortfolioIcon />}
-      items={recommendedProperties}
-      loadingText="Loading Property Recommendations"
-      noContent={<NoContent isButton text="No Properties found" />}
-    >
-      <div className="container-fluid">
-        <h5 className="mt-4">Just for you</h5>
-        <div className="row">
-          {recommendedProperties &&
-            recommendedProperties.map((property) => (
-              <div className="col-sm-6" key={property._id}>
-                <PropertyCard {...property} />
-              </div>
-            ))}
-        </div>
+    {/* show this if portfolio is empty */}
+    <div className="container-fluid">
+      <h5 className="mt-4">Just for you</h5>
+      <div className="row">
+        <PaginatedContent
+          endpoint={API_ENDPOINT.searchProperties()}
+          // initialFilter={filter}
+          pageName="Property"
+          pluralPageName="Properties"
+          DataComponent={PropertiesRowList}
+          PageIcon={<PropertyIcon />}
+          queryName="property"
+          limit={2}
+          hidePagination
+          hideTitle
+        />
       </div>
-    </LoadItems>
+    </div>
   </>
 );
 

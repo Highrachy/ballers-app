@@ -3,13 +3,13 @@ import { UserIcon } from 'components/utils/Icons';
 import TopTitle from 'components/utils/TopTitle';
 import Humanize from 'humanize-plus';
 import Pagination from 'components/common/Pagination';
-import { SlideDown } from 'react-slidedown';
 import 'react-slidedown/lib/slidedown.css';
 import { CloseIcon } from 'components/utils/Icons';
 import { useToast } from 'components/utils/Toast';
 import { usePaginationQuery } from 'hooks/useQuery';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { FilterIcon } from 'components/utils/Icons';
+import Modal from './Modal';
 
 const AdminList = ({
   addNewUrl,
@@ -29,20 +29,16 @@ const AdminList = ({
   showFetching,
   ...props
 }) => {
-  const [filters, setFilters] = React.useState(initialFilter);
+  const [filters, setFilters] = React.useState({});
   const [currentPage, setCurrentPage] = React.useState(1);
   const [toast, setToast] = useToast();
 
   const pluralizePageName = pluralPageName || Humanize.pluralize(2, pageName);
   const Icon = PageIcon || <UserIcon />;
 
-  React.useEffect(() => {
-    setFilters(initialFilter);
-  }, [initialFilter]);
-
   const [query, results] = usePaginationQuery({
     axiosOptions: {
-      params: { limit, page: currentPage, ...filters },
+      params: { limit, page: currentPage, ...filters, ...initialFilter },
     },
     key: 'result',
     name: queryName || pageName.toLowerCase(),
@@ -50,10 +46,6 @@ const AdminList = ({
     endpoint,
     childrenKey: queryName,
   });
-
-  console.log(`query.isFetching`, query.isFetching);
-  console.log(`query.isLoading`, query.isLoading);
-  console.log(`showFetching`, showFetching);
 
   const pagination = query?.latestData?.pagination;
 
@@ -147,34 +139,33 @@ const TopFilter = ({ FilterComponent, filters, setFilters }) => {
   };
 
   return (
-    <section className="container-fluid">
-      <div className="row">
-        <div className="col-sm-12 mt-2">
-          <div
-            className="filter-text text-right text-small font-weight-bold"
-            onClick={() => {
-              setOpenFilter((openFilter) => !openFilter);
-            }}
-          >
-            {openFilter ? (
-              <>
-                <CloseIcon /> Close Filter
-              </>
-            ) : (
-              <>
-                <FilterIcon /> Filter Result
-              </>
-            )}
+    <>
+      <section className="container-fluid">
+        <div className="row">
+          <div className="col-sm-12 mt-2">
+            <div
+              className="text-right font-weight-bold"
+              onClick={() => {
+                setOpenFilter(true);
+              }}
+            >
+              <FilterIcon /> Filter Results
+            </div>
+
+            <small className="small--2 mt-2 d-block">{currentFilters()}</small>
           </div>
-
-          <small className="small--2 mt-2 d-block">{currentFilters()}</small>
         </div>
-      </div>
+      </section>
 
-      <SlideDown className={''}>
-        {openFilter && <FilterComponent setFilterTerms={setFilterTerms} />}
-      </SlideDown>
-    </section>
+      <Modal
+        title="Filter Results"
+        show={openFilter}
+        onHide={() => setOpenFilter(false)}
+        className="modal-right"
+      >
+        <FilterComponent setFilterTerms={setFilterTerms} />
+      </Modal>
+    </>
   );
 };
 export default AdminList;

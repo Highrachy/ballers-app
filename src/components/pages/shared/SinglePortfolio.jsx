@@ -65,8 +65,9 @@ const SinglePortfolio = ({ id }) => {
 const AssignedPropertySidebar = ({ portfolio, setToast }) => {
   const nextPayment = portfolio?.nextPaymentInfo?.[0];
 
-  const NOW =
-    (portfolio.amountContributed / portfolio.totalAmountPayable) * 100;
+  const NOW = Math.round(
+    (portfolio.amountContributed / portfolio.totalAmountPayable) * 100
+  );
   const balance = portfolio.amountContributed - portfolio.totalAmountPayable;
 
   return (

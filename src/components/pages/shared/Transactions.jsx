@@ -7,7 +7,7 @@ import {
   moneyFormatInNaira,
   statusIsSuccessful,
 } from 'utils/helpers';
-import { getShortDate } from 'utils/date-helpers';
+import { getDate } from 'utils/date-helpers';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
 import Button from 'components/forms/Button';
@@ -20,6 +20,7 @@ import Axios from 'axios';
 import { BASE_API_URL } from 'utils/constants';
 import { refreshQuery } from 'hooks/useQuery';
 import Image from 'components/utils/Image';
+import TimeAgo from 'timeago-react';
 
 const Transactions = () => (
   <BackendPage>
@@ -92,9 +93,15 @@ const TransactionsRow = ({
 }) => (
   <tr>
     <td>{number}</td>
-    <td>{getShortDate(paidOn)}</td>
     <td>
-      {paymentSource} ({additionalInfo})
+      {getDate(paidOn)}{' '}
+      <span className="block-text-small text-muted">
+        <TimeAgo datetime={paidOn} />
+      </span>{' '}
+    </td>
+    <td>
+      {paymentSource}{' '}
+      <span className="block-text-small text-muted">{additionalInfo}</span>
     </td>
     <td>{moneyFormatInNaira(amount)}</td>
   </tr>
@@ -216,7 +223,7 @@ const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
                 </tr>
                 <tr>
                   <td>Paid On</td>
-                  <td>{getShortDate(offlinePayment?.dateOfPayment)}</td>
+                  <td>{getDate(offlinePayment?.dateOfPayment)}</td>
                 </tr>
                 {offlinePayment?.receipt && (
                   <tr>
@@ -319,14 +326,14 @@ const OfflinePaymentsRow = ({
       <td>
         {moneyFormatInNaira(offlinePayment.amount)}
         <div className="block-text-small">
-          Paid on {getShortDate(offlinePayment.dateOfPayment)}
+          Paid on {getDate(offlinePayment.dateOfPayment)}
         </div>
       </td>
       <td>
         {offlinePayment.type}
         <br /> <small>{offlinePayment.bank}</small>
       </td>
-      <td>{getShortDate(offlinePayment.createdAt)}</td>
+      <td>{getDate(offlinePayment.createdAt)}</td>
       <td>
         <Button
           className="btn btn-sm btn-xs btn-secondary"

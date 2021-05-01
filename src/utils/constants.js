@@ -210,9 +210,9 @@ export const BALLERS_BANK_ACCOUNTS = [
 ];
 
 export const PAYMENT_FREQUENCY = {
-  7: 'Weekly',
-  14: 'Bi-Weekly',
-  30: 'Monthly',
-  60: 'Bi-Monthly',
-  90: 'Quarterly',
+  0: 'Outright Payment',
+  7: '7 days',
+  30: '30 days',
+  90: '90 days',
+  180: '180 days',
 };
