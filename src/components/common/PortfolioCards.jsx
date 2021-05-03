@@ -8,8 +8,8 @@ import { moneyFormatInNaira } from 'utils/helpers';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { PropertyIcon } from 'components/utils/Icons';
 import { API_ENDPOINT } from 'utils/URL';
-import { isPastDate } from 'utils/date-helpers';
-import TimeAgo from 'timeago-react';
+import { differenceInDays, isPastDate } from 'utils/date-helpers';
+import Humanize from 'humanize-plus';
 import { Spacing } from './Helpers';
 
 export const PortfolioPaymentProgress = ({ amountPaid, percentage }) => (
@@ -37,63 +37,71 @@ export const PortfolioCard = ({
   totalAmountPayable,
   propertyInfo,
   nextPaymentInfo,
-}) => (
-  <Card className="card-container h-100 portfolio-holder property-card">
-    <Link to={`/user/portfolio/${_id}`}>
-      <article>
-        <div className="content-image">
-          <img
-            src={propertyInfo.mainImage || PropertyPlaceholderImage}
-            alt="Property"
-            className="img-fluid property-holder__img"
-          />
-        </div>
-        <div className="property-item">
-          <h5 className="property-name mb-0">{propertyInfo.name}</h5>
-          {/* Details */}
-          <div className="property-details property-spacing">
-            <span className="property-holder__house-type">
-              <strong>
-                <PropertyIcon /> {propertyInfo.houseType}
-              </strong>
-            </span>{' '}
-            &nbsp; | &nbsp;
-            <span className="property-holder__location">
-              <strong>
-                <MapPinIcon /> {propertyInfo.address?.city},{' '}
-                {propertyInfo.address?.state}
-              </strong>
-            </span>
+}) => {
+  return (
+    <Card className="card-container h-100 portfolio-holder property-card">
+      <Link to={`/user/portfolio/${_id}`}>
+        <article>
+          <div className="content-image">
+            <img
+              src={propertyInfo.mainImage || PropertyPlaceholderImage}
+              alt="Property"
+              className="img-fluid property-holder__img"
+            />
           </div>
-          {/* Price */}
-          <h5 className="property-price property-spacing">
-            {moneyFormatInNaira(totalAmountPayable)}
-          </h5>
-        </div>
+          <div className="property-item">
+            <h5 className="property-name mb-0">{propertyInfo.name}</h5>
+            {/* Details */}
+            <div className="property-details property-spacing">
+              <span className="property-holder__house-type">
+                <strong>
+                  <PropertyIcon /> {propertyInfo.houseType}
+                </strong>
+              </span>{' '}
+              &nbsp; | &nbsp;
+              <span className="property-holder__location">
+                <strong>
+                  <MapPinIcon /> {propertyInfo.address?.city},{' '}
+                  {propertyInfo.address?.state}
+                </strong>
+              </span>
+            </div>
+            {/* Price */}
+            <h5 className="property-price property-spacing">
+              {moneyFormatInNaira(totalAmountPayable)}
+            </h5>
+          </div>
 
-        {/* Next Payment Info */}
-        <div className="property-holder__separator my-3"></div>
-        <div className="property-info property-spacing px-4">
-          Next Payment:{' '}
-          <strong>
-            {moneyFormatInNaira(nextPaymentInfo?.[0]?.expectedAmount)}
-          </strong>
-          <Spacing />
-          <Spacing />
-          {isPastDate(nextPaymentInfo?.[0]?.expiresOn) ? (
-            <div className="badge badge-overdue badge-overdue__danger">
-              Overdue: <TimeAgo datetime={nextPaymentInfo?.[0]?.expiresOn} />
-            </div>
-          ) : (
-            <div className="badge  badge-overdue badge-overdue__success">
-              Due: <TimeAgo datetime={nextPaymentInfo?.[0]?.expiresOn} />
-            </div>
-          )}
-        </div>
-      </article>
-    </Link>
-  </Card>
-);
+          {/* Next Payment Info */}
+          <div className="property-holder__separator my-3"></div>
+          <div className="property-info property-spacing px-4">
+            Next Payment:{' '}
+            <strong>
+              {moneyFormatInNaira(nextPaymentInfo?.[0]?.expectedAmount)}
+            </strong>
+            <Spacing />
+            <Spacing />
+            <OverdueBadge date={nextPaymentInfo?.[0]?.expiresOn} />
+          </div>
+        </article>
+      </Link>
+    </Card>
+  );
+};
+
+export const OverdueBadge = ({ date }) => {
+  const days = differenceInDays(date) || 0;
+  const daysInWords = `${days} ${Humanize.pluralize(days, 'day')}`;
+  return isPastDate(date) ? (
+    <div className="badge badge-overdue badge-overdue__danger">
+      Overdue: <strong>{daysInWords} ago</strong>
+    </div>
+  ) : (
+    <div className="badge  badge-overdue badge-overdue__success">
+      Due: <strong>{daysInWords}</strong>
+    </div>
+  );
+};
 
 const PortfolioCards = ({ limit, hideTitle, hidePagination }) => (
   <PaginatedContent

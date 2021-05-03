@@ -5,6 +5,9 @@ import { NotificationIcon, ThreeDotsIcon } from 'components/utils/Icons';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { UserContext } from 'context/UserContext';
 import Image from 'components/utils/Image';
+import { useCurrentRole } from 'hooks/useUser';
+import TimeAgo from 'timeago-react';
+import { NOTIFICATION_TYPE } from 'utils/constants';
 
 const Empty = React.forwardRef(({ children, onClick }, ref) => (
   <div className="top-nav-dropdown" onClick={onClick}>
@@ -17,6 +20,7 @@ const Header = () => {
   const userName = `${userState.firstName} ${userState.lastName}`;
   const isCompanyLogo =
     !userState.profileImage && userState.vendor && userState.vendor.companyLogo;
+  const currentRole = useCurrentRole().name;
   return (
     <>
       <Navbar
@@ -27,11 +31,19 @@ const Header = () => {
       >
         <div className="container-fluid">
           <Nav className="ml-auto d-flex flex-row align-items-center">
-            <Nav.Link to="/login" as={Link}>
-              <NotificationIcon />
-            </Nav.Link>
+            {userState?.notifications?.length === 0 ? (
+              <Nav.Link to={`/${currentRole}/notifications`} as={Link}>
+                <NotificationIcon />
+              </Nav.Link>
+            ) : (
+              <NotificationsDropdown
+                notifications={userState?.notifications}
+                currentRole={currentRole}
+              />
+            )}
+
             <Dropdown>
-              <Dropdown.Toggle as={Empty} id="dropdown-basic">
+              <Dropdown.Toggle as={Empty} id="user-dropdown">
                 <Image
                   name={userName}
                   className={
@@ -72,5 +84,46 @@ const Header = () => {
 export const isActive = ({ isCurrent }) => {
   return isCurrent ? { className: 'active font-weight-bold nav-link' } : null;
 };
+
+export const NotificationsDropdown = ({ notifications, currentRole }) => (
+  <Dropdown className="notifications">
+    <Dropdown.Toggle as={Empty} id="notifications-dropdown">
+      <div className="notifications__icon">
+        <NotificationIcon />
+      </div>
+    </Dropdown.Toggle>
+
+    <Dropdown.Menu>
+      <Dropdown.Header>
+        <span>Notifications</span>
+        <Link to={`/${currentRole}/notifications`}>View All</Link>
+      </Dropdown.Header>
+      {notifications?.map(({ createdAt, description, type, url }, index) => (
+        <Dropdown.Item as={Link} to={url} key={index}>
+          <div className="notification-item dropdown-inner">
+            <div className="notification-icon">
+              <span
+                className={`icon-circle icon-circle__${NOTIFICATION_TYPE[type]}`}
+              ></span>
+            </div>
+            <div className="notification-content">
+              <div className="notification-text">{description}</div>
+              <div className="notification-time">
+                <TimeAgo datetime={createdAt} />
+              </div>
+            </div>
+          </div>
+        </Dropdown.Item>
+      ))}
+      <Dropdown.Item
+        as={Link}
+        to={`/${currentRole}/notifications`}
+        eventKey="20"
+      >
+        <div className="notification-text py-2">View All Notifications</div>
+      </Dropdown.Item>
+    </Dropdown.Menu>
+  </Dropdown>
+);
 
 export default Header;

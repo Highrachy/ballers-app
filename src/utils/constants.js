@@ -216,3 +216,10 @@ export const PAYMENT_FREQUENCY = {
   90: '90 days',
   180: '180 days',
 };
+
+export const NOTIFICATION_TYPE = {
+  0: 'danger',
+  1: 'text',
+  2: 'info',
+  3: 'success',
+};

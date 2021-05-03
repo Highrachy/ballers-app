@@ -16,6 +16,7 @@ import Gallery from 'components/pages/shared/Gallery';
 import SingleOffer from 'components/pages/shared/SingleOffer';
 import Portfolios from 'components/pages/shared/Portfolios';
 import SinglePortfolio from 'components/pages/shared/SinglePortfolio';
+import Notifications from 'components/pages/shared/Notifications';
 
 const VendorRouter = () => (
   <Router>
@@ -36,6 +37,7 @@ const VendorRouter = () => (
     <AssignedProperties path="assigned-properties" />
     <Transactions path="transactions" />
     <Gallery path="gallery/:propertyId" />
+    <Notifications path="notifications" />
     <Menu path="menu" />
   </Router>
 );

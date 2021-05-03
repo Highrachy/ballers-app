@@ -27,5 +27,7 @@ export const API_ENDPOINT = {
 
   getAccountOverview: () => `${BASE_API_URL}/user/account-overview`,
 
+  getAllNotifications: () => `${BASE_API_URL}/notification/all`,
+
   getAllStates: () => `${BASE_API_URL}/area/states`,
 };

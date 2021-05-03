@@ -5,6 +5,7 @@ import {
   subDays,
   getHours,
   isPast,
+  differenceInCalendarDays,
 } from 'date-fns';
 
 /**
@@ -31,3 +32,5 @@ export const getTimeOfDay = (date) => {
   );
 };
 export const isPastDate = (date) => isPast(date);
+export const differenceInDays = (date) =>
+  differenceInCalendarDays(Date.now(), date);

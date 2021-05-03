@@ -9,10 +9,10 @@ import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { OwnedPropertyCard } from '../shared/SingleProperty';
 import { moneyFormatInNaira } from 'utils/helpers';
-import { getTinyDate, isPastDate } from 'utils/date-helpers';
+import { getTinyDate } from 'utils/date-helpers';
 import { LinkSeparator } from 'components/common/Helpers';
-import TimeAgo from 'timeago-react';
 import MakePayment from './MakePayment';
+import { OverdueBadge } from 'components/common/PortfolioCards';
 
 const pageOptions = {
   key: 'portfolio',
@@ -74,16 +74,7 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
     <>
       <Card className="card-container property-holder">
         <h5 className="header-smaller">
-          Next Payment{' '}
-          {isPastDate(nextPayment?.expiresOn) ? (
-            <div className="badge badge-overdue badge-overdue__danger">
-              Overdue: <TimeAgo datetime={nextPayment?.expiresOn} />
-            </div>
-          ) : (
-            <div className="badge  badge-overdue badge-overdue__success">
-              Due: <TimeAgo datetime={nextPayment?.expiresOn} />
-            </div>
-          )}
+          Next Payment <OverdueBadge date={nextPayment?.expiresOn} />
         </h5>
         <table className="table table-sm table-borderless table-no-padding">
           <tbody>

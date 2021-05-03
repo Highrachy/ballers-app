@@ -11,6 +11,7 @@ import JustForYou from 'components/pages/user/JustForYou';
 import SingleOffer from 'components/pages/shared/SingleOffer';
 import Menu from 'components/pages/user/Menu';
 import PropertyEnquiry from 'components/pages/user/PropertyEnquiry';
+import Notifications from 'components/pages/shared/Notifications';
 
 const UserRouter = () => (
   <Router>
@@ -24,6 +25,7 @@ const UserRouter = () => (
     <ReferAndEarn path="refer-and-earn" />
     <JustForYou path="just-for-you" />
     <SingleOffer path="offer/:id" />
+    <Notifications path="notifications" />
     <Menu path="menu" />
   </Router>
 );
