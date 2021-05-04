@@ -10,6 +10,8 @@ import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, statusIsSuccessful } from 'utils/helpers';
 import BallersSpinner from 'components/utils/BallersSpinner';
+import { refreshQuery } from 'hooks/useQuery';
+import { UserContext } from 'context/UserContext';
 
 const Notifications = () => (
   <BackendPage>
@@ -20,12 +22,14 @@ const Notifications = () => (
       DataComponent={NotificationsRowList}
       PageIcon={<NotificationIcon />}
       queryName="notification"
+      initialFilter={{ sortBy: 'createdAt', sortDirection: 'desc' }}
     />
   </BackendPage>
 );
 
 export const NotificationsRowList = ({ results, offset, setToast }) => {
   const [loading, setLoading] = React.useState(0);
+  const { userDispatch } = React.useContext(UserContext);
 
   const markAsRead = (id) => {
     setLoading(id);
@@ -37,9 +41,9 @@ export const NotificationsRowList = ({ results, offset, setToast }) => {
       }
     )
       .then(function (response) {
-        const { status, data } = response;
+        const { status } = response;
         if (statusIsSuccessful(status)) {
-          console.log(`data`, data);
+          refreshQuery('notification', true);
           setLoading(0);
         }
       })
@@ -61,13 +65,14 @@ export const NotificationsRowList = ({ results, offset, setToast }) => {
       }
     )
       .then(function (response) {
-        const { status, data } = response;
+        const { status } = response;
         if (statusIsSuccessful(status)) {
           setToast({
             type: 'success',
             message: 'All notifications have been marked as read',
           });
-          console.log(`data`, data);
+          refreshQuery('notification', true);
+          userDispatch({ type: 'read-all-notifcations' });
         }
       })
       .catch(function (error) {

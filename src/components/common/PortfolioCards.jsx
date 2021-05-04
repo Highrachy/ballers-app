@@ -90,7 +90,7 @@ export const PortfolioCard = ({
 };
 
 export const OverdueBadge = ({ date }) => {
-  const days = differenceInDays(date) || 0;
+  const days = Math.abs(differenceInDays(date)) || 0;
   const daysInWords = `${days} ${Humanize.pluralize(days, 'day')}`;
   return isPastDate(date) ? (
     <div className="badge badge-overdue badge-overdue__danger">

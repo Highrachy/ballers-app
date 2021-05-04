@@ -17,6 +17,7 @@ import NewTransaction from 'components/pages/admin/NewTransaction';
 import SingleOffer from 'components/pages/shared/SingleOffer';
 import Portfolios from 'components/pages/shared/Portfolios';
 import SinglePortfolio from 'components/pages/shared/SinglePortfolio';
+import Notifications from 'components/pages/shared/Notifications';
 
 const AdminRouter = () => (
   <Router>
@@ -36,6 +37,7 @@ const AdminRouter = () => (
     <AddTransaction path="add-transaction" />
     <NewTransaction path="transactions/new/:offerId" />
     <KnowledgeBase path="knowledgebase" />
+    <Notifications path="notifications" />
     <Menu path="menu" />
   </Router>
 );

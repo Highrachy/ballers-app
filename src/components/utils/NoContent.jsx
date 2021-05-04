@@ -13,7 +13,11 @@ const NoContent = ({
   size,
 }) => (
   <section
-    className={classNames(className, 'no-content text-center text-muted', size)}
+    className={classNames(
+      className,
+      'no-content text-center text-muted w-100',
+      size
+    )}
   >
     {Icon && Icon}
     <h4 className={classNames('text-muted pt-3', size)}>{text}</h4>

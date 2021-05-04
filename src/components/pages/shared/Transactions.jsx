@@ -7,7 +7,7 @@ import {
   moneyFormatInNaira,
   statusIsSuccessful,
 } from 'utils/helpers';
-import { getDate } from 'utils/date-helpers';
+import { getDate, getTinyDate } from 'utils/date-helpers';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
 import Button from 'components/forms/Button';
@@ -21,6 +21,7 @@ import { BASE_API_URL } from 'utils/constants';
 import { refreshQuery } from 'hooks/useQuery';
 import Image from 'components/utils/Image';
 import TimeAgo from 'timeago-react';
+import { SuccessIcon } from 'components/utils/Icons';
 
 const Transactions = () => (
   <BackendPage>
@@ -36,6 +37,7 @@ export const AllTransactions = () => {
       DataComponent={TransactionsRowList}
       PageIcon={<TransactionIcon />}
       queryName="transaction"
+      initialFilter={{ sortBy: 'createdAt', sortDirection: 'desc' }}
     />
   );
 };
@@ -48,40 +50,146 @@ export const AllOfflinePayments = () => {
       DataComponent={OfflinePaymentsRowList}
       PageIcon={<TransactionIcon />}
       queryName="payment"
-      initialFilter={{ resolved: false }}
+      initialFilter={{
+        resolved: false,
+        sortBy: 'createdAt',
+        sortDirection: 'desc',
+      }}
       hideNoContent
     />
   );
 };
 
-const TransactionsRowList = ({ results, offset }) => (
-  <div className="container-fluid">
-    <Card className="mt-4">
-      <div className="table-responsive">
-        <table className="table table-border table-hover">
-          <thead>
-            <tr>
-              <td>S/N</td>
-              <td>Date</td>
-              <td>Description</td>
-              <td>Amount</td>
-              {/* <td></td> */}
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((transaction, index) => (
-              <TransactionsRow
-                key={index}
-                number={offset + index + 1}
-                {...transaction}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
-  </div>
-);
+const TransactionsRowList = ({ results, offset, setToast }) => {
+  const [offlinePayment, setOfflinePayment] = React.useState(null);
+  const [showRemitModal, setShowRemitModal] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const showRemitPaymentModal = (payment) => {
+    setOfflinePayment(payment);
+    setShowRemitModal(true);
+  };
+
+  const remitPayment = () => {
+    console.log(`remitting`, offlinePayment);
+    setLoading(true);
+    Axios.post(
+      `${BASE_API_URL}/transaction/remittance`,
+      {
+        transactionId: offlinePayment._id,
+        date: Date.now(),
+        percentage: 5,
+      },
+      {
+        headers: { Authorization: getTokenFromStore() },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (statusIsSuccessful(status)) {
+          setToast({
+            type: 'success',
+            message: `Remittance has been successfully approved`,
+          });
+
+          refreshQuery('payment', true);
+          refreshQuery('transaction', true);
+          setLoading(false);
+          setShowRemitModal(false);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(false);
+      });
+  };
+
+  return (
+    <div className="container-fluid">
+      <Card className="mt-4">
+        <div className="table-responsive">
+          <table className="table table-border table-hover">
+            <thead>
+              <tr>
+                <td>S/N</td>
+                <td>Date</td>
+                <td>Description</td>
+                <td>Amount</td>
+                {!useCurrentRole().isUser && <td>Remittance</td>}
+                {useCurrentRole().isAdmin && <td></td>}
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((transaction, index) => (
+                <TransactionsRow
+                  key={index}
+                  number={offset + index + 1}
+                  showRemitPaymentModal={showRemitPaymentModal}
+                  {...transaction}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      {/* Remit Payment Modal */}
+      <Modal
+        title="Remittance"
+        show={showRemitModal}
+        onHide={() => setShowRemitModal(false)}
+        showFooter={false}
+      >
+        <section>
+          <h5 className="header-smaller mb-4">
+            Are you sure you have made this payment
+          </h5>
+          <table className="table table-sm">
+            <thead>
+              <tr className="text-secondary">
+                <th>Amount to Remit</th>
+                <th>
+                  <h5 className="text-secondary">
+                    {moneyFormatInNaira(
+                      Math.round(0.95 * offlinePayment?.amount || 0)
+                    )}
+                  </h5>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Vendor</td>
+                <td>{offlinePayment?.vendorInfo?.vendor.companyName}</td>
+              </tr>
+              <tr>
+                <td>User</td>
+                <td>
+                  {offlinePayment?.userInfo?.firstName}{' '}
+                  {offlinePayment?.userInfo?.lastName}
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="col-md-12 text-center">
+            <Button
+              loading={loading}
+              className="btn btn-secondary mb-5"
+              onClick={() => remitPayment()}
+            >
+              Yes, Remit Payment
+            </Button>
+          </div>
+        </section>
+      </Modal>
+    </div>
+  );
+};
 
 const TransactionsRow = ({
   _id,
@@ -89,23 +197,61 @@ const TransactionsRow = ({
   number,
   additionalInfo,
   paymentSource,
+  showRemitPaymentModal,
   amount,
-}) => (
-  <tr>
-    <td>{number}</td>
-    <td>
-      {getDate(paidOn)}{' '}
-      <span className="block-text-small text-muted">
-        <TimeAgo datetime={paidOn} />
-      </span>{' '}
-    </td>
-    <td>
-      {paymentSource}{' '}
-      <span className="block-text-small text-muted">{additionalInfo}</span>
-    </td>
-    <td>{moneyFormatInNaira(amount)}</td>
-  </tr>
-);
+  vendorInfo,
+  userInfo,
+  remittance,
+}) => {
+  return (
+    <tr>
+      <td>{number}</td>
+      <td>
+        {getDate(paidOn)}{' '}
+        <span className="block-text-small text-muted">
+          <TimeAgo datetime={paidOn} />
+        </span>{' '}
+      </td>
+      <td>
+        {paymentSource}{' '}
+        <span className="block-text-small text-muted">{additionalInfo}</span>
+      </td>
+      <td>{moneyFormatInNaira(amount)}</td>
+      {!useCurrentRole().isUser && (
+        <td>
+          {moneyFormatInNaira(Math.round(0.95 * amount || 0))}{' '}
+          {remittance?.date && (
+            <span className="block-text-small text-muted">
+              {getTinyDate(remittance.date)}
+            </span>
+          )}
+        </td>
+      )}
+      {useCurrentRole().isAdmin && (
+        <td>
+          {remittance ? (
+            <div className="">
+              <span className="text-success">
+                <SuccessIcon />
+              </span>{' '}
+              <Spacing />
+              Resolved
+            </div>
+          ) : (
+            <Button
+              className="btn btn-sm btn-xs btn-danger"
+              onClick={() => {
+                showRemitPaymentModal({ _id, amount, userInfo, vendorInfo });
+              }}
+            >
+              Remit Payment
+            </Button>
+          )}
+        </td>
+      )}
+    </tr>
+  );
+};
 
 const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
   const [offlinePayment, setOfflinePayment] = React.useState(null);
@@ -129,7 +275,6 @@ const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
 
     setShowOfflinePaymentsModal(false);
     setShowApprovalModal(true);
-    console.log(`offlinePayment approve payment`, offlinePayment);
   };
 
   const [loading, setLoading] = React.useState(false);

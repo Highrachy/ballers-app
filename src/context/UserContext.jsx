@@ -21,6 +21,8 @@ let reducer = (state, action) => {
     case 'user-social-media-login':
     case 'user-profile-update':
       return { ...state, ...action.user, isLoggedIn: true };
+    case 'read-all-notifcations':
+      return { ...state, ...action.user, notifications: [] };
     case 'user-profile-image':
       return { ...state, profileImage: action.profileImage };
     case 'available-options':
