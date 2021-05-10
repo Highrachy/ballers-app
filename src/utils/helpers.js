@@ -12,6 +12,14 @@ export const commaNumber = (value, prependCurrency = false) => {
 
 export const moneyFormat = (value) => Humanize.formatNumber(value, 2);
 export const moneyFormatInNaira = (value) => commaNumber(value, true);
+export const moneyFormatElement = (value) => (
+  <>
+    <span className="money__amount-in-naira">{Humanize.intComma(value)}</span>
+    <small className="money__amount-in-kobo">
+      .{(value % 1).toFixed(2) * 100 || '00'}
+    </small>
+  </>
+);
 
 export const listJsonItems = (items, defaultValue = null) => {
   try {

@@ -17,6 +17,9 @@ import { ToiletIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
 import { PropertyIcon } from 'components/utils/Icons';
 import { MapPinIcon } from 'components/utils/Icons';
+import Image from 'components/utils/Image';
+import ProfileAvatar from 'assets/img/placeholder/property-holder.jpg';
+import { useCurrentRole } from 'hooks/useUser';
 
 export const OldPropertyCard = (property) => {
   const {
@@ -55,6 +58,7 @@ export const OldPropertyCard = (property) => {
         setLoading(false);
       });
   };
+  const currentRole = useCurrentRole().name;
 
   return (
     <section className="mb-3">
@@ -102,7 +106,7 @@ export const OldPropertyCard = (property) => {
 
             <Link
               className="text-uppercase small float-right badge badge-dark property-holder__details"
-              to={`/user/property/${_id}`}
+              to={`/${currentRole}/property/${_id}`}
             >
               Details{' '}
               <div className="small-icon">
@@ -153,6 +157,7 @@ const PropertyCard = (property) => {
         setLoading(false);
       });
   };
+  const currentRole = useCurrentRole().name;
 
   return (
     <section>
@@ -175,7 +180,7 @@ const PropertyCard = (property) => {
             </span>
           </div>
         )}
-        <Link to={`/user/property/${_id}`}>
+        <Link to={`/${currentRole}/property/${_id}`}>
           <article>
             <div className="content-image">
               <img
@@ -250,4 +255,62 @@ RecommendedPropertyLists.defaultProps = {
   propertyClassName: '',
 };
 
+export const PropertyAvatar = ({
+  property,
+  nameOnly,
+  portfolioId,
+  linkToPage,
+}) => {
+  const { name = '', houseType = '', mainImage } = property;
+  const currentRole = useCurrentRole().name;
+  const propertyURL = portfolioId
+    ? `/${currentRole}/portfolio/${portfolioId}`
+    : `/${currentRole}/property/${property._id}`;
+
+  const output = nameOnly ? (
+    name
+  ) : (
+    <>
+      <div className="user-avatar user-avatar-sm bg-purple">
+        <Image
+          alt={name}
+          defaultImage={ProfileAvatar}
+          className="img-fluid avatar--medium--small"
+          src={mainImage}
+          title={name}
+          name={name}
+          width={80}
+        />
+      </div>
+
+      <div className="user-info">
+        <span className="user-name">
+          {name}
+          <span className="dot dot-success d-md-none ml-1"></span>
+        </span>
+        <small className="user-email">{houseType}</small>
+      </div>
+    </>
+  );
+  return !linkToPage ? (
+    output
+  ) : (
+    <Link to={propertyURL} className="user-card">
+      {output}
+    </Link>
+  );
+};
+
+PropertyAvatar.propTypes = {
+  property: PropTypes.object.isRequired,
+  nameOnly: PropTypes.bool,
+  portfolioId: PropTypes.string,
+  linkToPage: PropTypes.bool,
+};
+
+PropertyAvatar.defaultProps = {
+  nameOnly: false,
+  portfolioId: null,
+  linkToPage: true,
+};
 export default PropertyCard;

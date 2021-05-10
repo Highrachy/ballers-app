@@ -1,6 +1,7 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import { AllTransactions, AllOfflinePayments } from '../shared/Transactions';
+import { AllTransactions } from '../shared/Transactions';
+import { AllOfflinePayments } from '../shared/OfflinePayments';
 
 const AdminTransactions = () => (
   <BackendPage>
