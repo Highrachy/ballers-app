@@ -22,28 +22,28 @@ import Image from 'components/utils/Image';
 
 export const AllOfflinePayments = () => {
   return (
-    <PaginatedContent
-      endpoint={API_ENDPOINT.getAllOfflinePayments()}
-      pageName="Offline Payment"
-      DataComponent={OfflinePaymentsRowList}
-      PageIcon={<TransactionIcon />}
-      queryName="payment"
-      initialFilter={{
-        resolved: false,
-        sortBy: 'createdAt',
-        sortDirection: 'desc',
-      }}
-      hideNoContent
-    />
+    <section className="my-5">
+      <PaginatedContent
+        endpoint={API_ENDPOINT.getAllOfflinePayments()}
+        pageName="Offline Payment"
+        DataComponent={OfflinePaymentsRowList}
+        PageIcon={<TransactionIcon />}
+        queryName="payment"
+        initialFilter={{
+          resolved: false,
+          sortBy: 'createdAt',
+          sortDirection: 'desc',
+        }}
+        hideNoContent
+      />
+    </section>
   );
 };
 
 const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
   const [offlinePayment, setOfflinePayment] = React.useState(null);
-  const [
-    showOfflinePaymentsModal,
-    setShowOfflinePaymentsModal,
-  ] = React.useState(false);
+  const [showOfflinePaymentsModal, setShowOfflinePaymentsModal] =
+    React.useState(false);
   const [showApprovalModal, setShowApprovalModal] = React.useState(false);
   const [showEditOfflineForm, setShowEditOfflineForm] = React.useState(false);
 
@@ -95,17 +95,22 @@ const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
       });
   };
 
+  const isUser = useCurrentRole().isUser;
+
   return (
     <div className="container-fluid">
-      <Card className="mt-4">
+      <Card>
         <div className="table-responsive">
-          <table className="table table-border table-hover">
+          <table
+            className="table table-border table-hover"
+            id="offline-payment"
+          >
             <thead>
               <tr>
                 <td>S/N</td>
                 <td>Amount</td>
                 <td>Bank</td>
-                <td>Date</td>
+                <td>Registered On</td>
                 <td>&nbsp;</td>
               </tr>
             </thead>
@@ -169,14 +174,16 @@ const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
                 )}
               </tbody>
             </table>
-            <Button
-              className="btn btn-sm btn-secondary"
-              onClick={() => {
-                setShowEditOfflineForm(true);
-              }}
-            >
-              Edit Payment
-            </Button>
+            {isUser && (
+              <Button
+                className="btn btn-sm btn-secondary"
+                onClick={() => {
+                  setShowEditOfflineForm(true);
+                }}
+              >
+                Edit Payment
+              </Button>
+            )}
           </>
         ) : (
           <OfflinePaymentForm
@@ -254,7 +261,9 @@ const OfflinePaymentsRow = ({
     <tr>
       <td>{number}</td>
       <td>
-        {moneyFormatInNaira(offlinePayment.amount)}
+        <h5 className="text-secondary">
+          {moneyFormatInNaira(offlinePayment.amount)}
+        </h5>
         <div className="block-text-small">
           Paid on {getDate(offlinePayment.dateOfPayment)}
         </div>

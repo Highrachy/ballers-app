@@ -34,7 +34,7 @@ const Input = ({
 }) => {
   return (
     <div
-      className={classNames('form-group mb-4', formGroupClassName, {
+      className={classNames(formGroupClassName, {
         row: inline,
       })}
     >
@@ -79,7 +79,7 @@ const Input = ({
 
 Input.defaultProps = {
   autoComplete: 'off',
-  formGroupClassName: null,
+  formGroupClassName: 'form-group mb-4',
   helpText: null,
   inline: false,
   inputClassName: null,

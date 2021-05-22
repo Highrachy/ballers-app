@@ -1,13 +1,18 @@
 import React from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 import { NotificationIcon, ThreeDotsIcon } from 'components/utils/Icons';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { UserContext } from 'context/UserContext';
 import Image from 'components/utils/Image';
 import { useCurrentRole } from 'hooks/useUser';
 import TimeAgo from 'timeago-react';
-import { NOTIFICATION_TYPE } from 'utils/constants';
+import { NOTIFICATION_ACTION, NOTIFICATION_TYPE } from 'utils/constants';
+import Axios from 'axios';
+import { BASE_API_URL } from 'utils/constants';
+import { getTokenFromStore } from 'utils/localStorage';
+import { getError, statusIsSuccessful } from 'utils/helpers';
+import { refreshQuery } from 'hooks/useQuery';
 
 const Empty = React.forwardRef(({ children, onClick }, ref) => (
   <div className="top-nav-dropdown" onClick={onClick}>
@@ -32,7 +37,11 @@ const Header = () => {
         <div className="container-fluid">
           <Nav className="ml-auto d-flex flex-row align-items-center">
             {userState?.notifications?.length === 0 ? (
-              <Nav.Link to={`/${currentRole}/notifications`} as={Link}>
+              <Nav.Link
+                to={`/${currentRole}/notifications`}
+                className="notifications"
+                as={Link}
+              >
                 <NotificationIcon />
               </Nav.Link>
             ) : (
@@ -85,45 +94,85 @@ export const isActive = ({ isCurrent }) => {
   return isCurrent ? { className: 'active font-weight-bold nav-link' } : null;
 };
 
-export const NotificationsDropdown = ({ notifications, currentRole }) => (
-  <Dropdown className="notifications">
-    <Dropdown.Toggle as={Empty} id="notifications-dropdown">
-      <div className="notifications__icon">
-        <NotificationIcon />
-      </div>
-    </Dropdown.Toggle>
+export const NotificationsDropdown = ({ notifications, currentRole }) => {
+  console.log(`notifications`, notifications);
+  const generateURL = (id, action, actionId) => {
+    Axios.put(
+      `${BASE_API_URL}/notification/read/${id}/`,
+      {},
+      {
+        headers: { Authorization: getTokenFromStore() },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (statusIsSuccessful(status)) {
+          refreshQuery('notification', true);
+        }
+      })
+      .catch(function (error) {
+        console.log({
+          message: getError(error),
+        });
+      });
+    if (
+      action === NOTIFICATION_ACTION.OFFLINE_PAYMENT ||
+      action === NOTIFICATION_ACTION.TRANSACTION
+    ) {
+      navigate(`/${currentRole}/transactions`);
+    } else {
+      navigate(`/${currentRole}/notifications`);
+    }
+    console.log(`actionId`, actionId);
+  };
 
-    <Dropdown.Menu>
-      <Dropdown.Header>
-        <span>Notifications</span>
-        <Link to={`/${currentRole}/notifications`}>View All</Link>
-      </Dropdown.Header>
-      {notifications?.map(({ createdAt, description, type, url }, index) => (
-        <Dropdown.Item as={Link} to={url} key={index}>
-          <div className="notification-item dropdown-inner">
-            <div className="notification-icon">
-              <span
-                className={`icon-circle icon-circle__${NOTIFICATION_TYPE[type]}`}
-              ></span>
-            </div>
-            <div className="notification-content">
-              <div className="notification-text">{description}</div>
-              <div className="notification-time">
-                <TimeAgo datetime={createdAt} />
+  return (
+    <Dropdown className="notifications">
+      <Dropdown.Toggle as={Empty} id="notifications-dropdown">
+        <div className="notifications__icon">
+          <NotificationIcon />
+        </div>
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu>
+        <Dropdown.Header>
+          <span>Notifications</span>
+          <Link to={`/${currentRole}/notifications`}>View All</Link>
+        </Dropdown.Header>
+        {notifications?.map(
+          ({ _id, createdAt, description, type, action, actionId }, index) => (
+            <Dropdown.Item
+              onClick={() => generateURL(_id, action, actionId)}
+              key={index}
+            >
+              <div className="notification-item dropdown-inner">
+                <div className="notification-icon">
+                  <span
+                    className={`icon-circle icon-circle__${NOTIFICATION_TYPE[type]}`}
+                  ></span>
+                </div>
+                <div className="notification-content overflow-hidden">
+                  <div className="notification-text text-truncate">
+                    {description}
+                  </div>
+                  <div className="notification-time">
+                    <TimeAgo datetime={createdAt} />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </Dropdown.Item>
+          )
+        )}
+        <Dropdown.Item
+          as={Link}
+          to={`/${currentRole}/notifications`}
+          eventKey="20"
+        >
+          <div className="notification-text py-2">View All Notifications</div>
         </Dropdown.Item>
-      ))}
-      <Dropdown.Item
-        as={Link}
-        to={`/${currentRole}/notifications`}
-        eventKey="20"
-      >
-        <div className="notification-text py-2">View All Notifications</div>
-      </Dropdown.Item>
-    </Dropdown.Menu>
-  </Dropdown>
-);
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+};
 
 export default Header;

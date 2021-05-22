@@ -10,6 +10,7 @@ import {
   optionalValidation,
   numberValidation,
   required,
+  validPercentage,
   // OptionalPhoneNumber,
 } from './schema-helpers';
 
@@ -96,3 +97,7 @@ export const userFilterSchema = {
 };
 
 export const forgotPasswordSchema = { email };
+
+export const updateRemittanceSchema = {
+  percentage: validPercentage('Remittance'),
+};

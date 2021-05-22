@@ -38,7 +38,11 @@ const InputFormat = ({
   ...props
 }) => {
   return (
-    <div className={classNames('form-group', formGroupClassName)}>
+    <div
+      className={classNames(formGroupClassName, {
+        row: inline,
+      })}
+    >
       <Label
         className={labelClassName}
         labelLink={labelLink}
@@ -90,7 +94,7 @@ const InputFormat = ({
 
 InputFormat.defaultProps = {
   autoComplete: 'off',
-  formGroupClassName: null,
+  formGroupClassName: 'form-group mb-4',
   helpText: null,
   inline: false,
   inputClassName: null,

@@ -36,6 +36,9 @@ import { LogTimeline } from 'components/common/Timeline';
 import { useGetQuery } from 'hooks/useQuery';
 import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
+import { updateRemittanceSchema } from 'components/forms/schemas/userSchema';
+import InputFormat from 'components/forms/InputFormat';
+import { setQueryCache } from 'hooks/useQuery';
 
 const pageOptions = {
   key: 'user',
@@ -381,7 +384,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
             <td colSpan="4">
               {user.vendor?.companyLogo && (
                 <Image
-                  alt={user.firstName}
+                  name={user.firstName}
                   className="img-fluid dashboard-top-nav__company-logo mb-3"
                   src={user.vendor.companyLogo}
                   title={user.firstName}
@@ -444,6 +447,17 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
         </td>
         <td colSpan="4">{user.address && getFormattedAddress(user.address)}</td>
       </tr>
+
+      {isVendor && (
+        <tr>
+          <td>
+            <strong>Remittance</strong>
+          </td>
+          <td colSpan="4">
+            <RemittanceForm user={user} setUser={setUser} setToast={setToast} />
+          </td>
+        </tr>
+      )}
 
       {isVendor && (
         <tr>
@@ -707,6 +721,118 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
         </>
       )}
     </Timeline>
+  );
+};
+
+const RemittanceForm = ({ user, setUser, setToast }) => {
+  const [showRemitModal, setShowRemitModal] = React.useState(false);
+  const defaultPercentage = user?.vendor?.remittancePercentage || 5;
+
+  return (
+    <Formik
+      enableReinitialize={true}
+      initialValues={setInitialValues(updateRemittanceSchema, {
+        percentage: defaultPercentage,
+      })}
+      onSubmit={({ percentage }, actions) => {
+        const payload = { percentage, vendorId: user._id };
+        Axios.put(`${BASE_API_URL}/user/remittance`, payload, {
+          headers: { Authorization: getTokenFromStore() },
+        })
+          .then(function (response) {
+            const { status, data } = response;
+            if (statusIsSuccessful(status)) {
+              console.log(`data`, data);
+              setToast({
+                type: 'success',
+                message: `Remittance has been successfully updated`,
+              });
+              setUser(data.user);
+              setQueryCache([pageOptions.key, user._id], {
+                user: data.user,
+              });
+              // actions.setSubmitting(false);
+              // actions.resetForm();
+              // setShowRemitModal(false);
+            }
+          })
+          .catch(function (error) {
+            setToast({
+              message: getError(error),
+            });
+            actions.setSubmitting(false);
+          });
+      }}
+      validationSchema={createSchema(updateRemittanceSchema)}
+    >
+      {({ isSubmitting, handleSubmit, ...props }) => {
+        return (
+          <Form>
+            <div className="input-group">
+              <InputFormat
+                formGroupClassName=""
+                suffix="%"
+                prefix=""
+                name="percentage"
+              />
+              <div className="input-group-append">
+                <Button
+                  onClick={() => setShowRemitModal(true)}
+                  disabled={
+                    defaultPercentage?.toString() ===
+                    props.values?.percentage?.toString()
+                  }
+                >
+                  Update
+                </Button>
+              </div>
+            </div>
+
+            <DisplayFormikState {...props} hide />
+
+            <Modal
+              title="Remittance"
+              show={showRemitModal}
+              onHide={() => setShowRemitModal(false)}
+              showFooter={false}
+            >
+              <section>
+                <h5 className="header-smaller mb-4">
+                  Are you sure you want to update this Remittance
+                </h5>
+                <table className="table table-sm">
+                  <thead>
+                    <tr className="text-secondary">
+                      <th>New Percentage</th>
+                      <th>
+                        <h5 className="text-secondary ml-n2">
+                          {props.values.percentage}%
+                        </h5>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Old Percentage</td>
+                      <td>{defaultPercentage}%</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="col-md-12 text-center">
+                  <Button
+                    className="btn-secondary mt-4"
+                    loading={isSubmitting}
+                    onClick={handleSubmit}
+                  >
+                    Yes, Update Remittance
+                  </Button>
+                </div>
+              </section>
+            </Modal>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

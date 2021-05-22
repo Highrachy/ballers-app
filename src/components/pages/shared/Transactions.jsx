@@ -16,12 +16,13 @@ import { Spacing } from 'components/common/Helpers';
 import { useCurrentRole } from 'hooks/useUser';
 import { getTokenFromStore } from 'utils/localStorage';
 import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, DEFAULT_VENDOR_PERCENTAGE } from 'utils/constants';
 import { refreshQuery } from 'hooks/useQuery';
 import TimeAgo from 'timeago-react';
 import { PropertyAvatar } from 'components/common/PropertyCard';
 import { SuccessIcon } from 'components/utils/Icons';
 import { WarningIcon } from 'components/utils/Icons';
+import { UserContext } from 'context/UserContext';
 
 const Transactions = () => (
   <BackendPage>
@@ -67,7 +68,9 @@ const TransactionsRowList = ({ results, offset, setToast }) => {
       {
         transactionId: payment._id,
         date: Date.now(),
-        percentage: 5,
+        percentage:
+          payment?.vendorInfo?.vendor?.remittancePercentage ||
+          DEFAULT_VENDOR_PERCENTAGE,
       },
       {
         headers: { Authorization: getTokenFromStore() },
@@ -97,7 +100,7 @@ const TransactionsRowList = ({ results, offset, setToast }) => {
 
   return (
     <div className="container-fluid">
-      <Card className="mt-4">
+      <Card>
         <div className="table-responsive">
           <table className="table table-border table-hover">
             <thead>
@@ -151,41 +154,50 @@ const ModalToRemitPayment = ({
   payment,
   loading,
   remitPayment,
-}) => (
-  <Modal
-    title="Remittance"
-    show={showRemitModal}
-    onHide={() => setShowRemitModal(false)}
-    showFooter={false}
-  >
-    <section>
-      <h5 className="header-smaller mb-4">
-        Are you sure you have made this payment
-      </h5>
-      <table className="table table-sm">
-        <thead>
-          <tr className="text-secondary">
-            <th>Amount to Remit</th>
-            <th>
-              <h5 className="text-secondary">
-                {moneyFormatInNaira(Math.round(0.95 * payment?.amount || 0))}
-              </h5>
-            </th>
-          </tr>
-        </thead>
-      </table>
-      <div className="col-md-12 text-center">
-        <Button
-          loading={loading}
-          className="btn btn-secondary mb-5"
-          onClick={remitPayment}
-        >
-          Yes, Remit Payment
-        </Button>
-      </div>
-    </section>
-  </Modal>
-);
+}) => {
+  const remittancePercentage =
+    payment?.vendorInfo?.vendor?.remittancePercentage ||
+    DEFAULT_VENDOR_PERCENTAGE;
+  const amountPaid = Math.round(
+    ((100 - remittancePercentage) / 100) * payment?.amount
+  );
+
+  return (
+    <Modal
+      title="Remittance"
+      show={showRemitModal}
+      onHide={() => setShowRemitModal(false)}
+      showFooter={false}
+    >
+      <section>
+        <h5 className="header-smaller mb-4">
+          Are you sure you have made this payment
+        </h5>
+        <table className="table table-sm">
+          <thead>
+            <tr className="text-secondary">
+              <th>Amount to Remit</th>
+              <th>
+                <h5 className="text-secondary">
+                  {moneyFormatInNaira(amountPaid)}
+                </h5>
+              </th>
+            </tr>
+          </thead>
+        </table>
+        <div className="col-md-12 text-center">
+          <Button
+            loading={loading}
+            className="btn btn-secondary mb-5"
+            onClick={remitPayment}
+          >
+            Yes, Remit Payment
+          </Button>
+        </div>
+      </section>
+    </Modal>
+  );
+};
 
 const ModalForTransactionDetails = ({
   payment,
@@ -193,6 +205,7 @@ const ModalForTransactionDetails = ({
   setShowDetailsModal,
   showRemitPaymentModal,
 }) => {
+  const { userState } = React.useContext(UserContext);
   const isAdmin = useCurrentRole().isAdmin;
   const isVendor = useCurrentRole().isVendor;
   const isUser = useCurrentRole().isUser;
@@ -201,8 +214,17 @@ const ModalForTransactionDetails = ({
     return null;
   }
 
+  const vendorPercentage = isVendor
+    ? userState?.vendor?.remittancePercentage
+    : payment?.vendorInfo?.vendor?.remittancePercentage;
+  const remittancePercentage =
+    payment?.remittance?.percentage ||
+    vendorPercentage ||
+    DEFAULT_VENDOR_PERCENTAGE;
+
   const remittance =
-    payment?.remittance?.amount || Math.round(0.95 * payment?.amount);
+    payment?.remittance?.amount ||
+    Math.round(((100 - remittancePercentage) / 100) * payment?.amount);
   const amountPaid = isVendor ? remittance : payment?.amount;
 
   return (
@@ -220,28 +242,44 @@ const ModalForTransactionDetails = ({
         <table className="table table-sm">
           <thead>
             <tr className="text-secondary">
-              <th>
-                <strong>Amount {isVendor ? 'Received' : 'Paid'}</strong>
-              </th>
-              <th>
-                <h5 className="text-secondary">
-                  {moneyFormatInNaira(amountPaid)}
-                  {isVendor &&
-                    (payment?.remittance ? (
-                      <small className="text-success">
-                        <Spacing />
-                        <SuccessIcon />
-                      </small>
-                    ) : (
-                      <small className="text-warning">
-                        <Spacing />
-                        <WarningIcon />
-                      </small>
-                    ))}
-                </h5>
-              </th>
+              {isAdmin && !payment?.remittance ? (
+                <>
+                  <th>
+                    <strong>Vendor</strong>
+                  </th>
+                  <th>
+                    <h5 className="text-secondary">
+                      {payment?.vendorInfo?.vendor.companyName}
+                    </h5>
+                  </th>
+                </>
+              ) : (
+                <>
+                  <th>
+                    <strong>Amount {isVendor ? 'Received' : 'Paid'}</strong>
+                  </th>
+                  <th>
+                    <h5 className="text-secondary">
+                      {moneyFormatInNaira(amountPaid)}
+                      {isVendor &&
+                        (payment?.remittance ? (
+                          <small className="text-success">
+                            <Spacing />
+                            <SuccessIcon />
+                          </small>
+                        ) : (
+                          <small className="text-warning">
+                            <Spacing />
+                            <WarningIcon />
+                          </small>
+                        ))}
+                    </h5>
+                  </th>
+                </>
+              )}
             </tr>
           </thead>
+
           <tbody>
             {isVendor && (
               <tr>
@@ -297,9 +335,7 @@ const ModalForTransactionDetails = ({
 
         {isAdmin && (
           <>
-            <h4 className="header-smaller">
-              Remittance ({payment?.remittance?.percentage}%)
-            </h4>
+            <h4 className="header-smaller">Fee ({remittancePercentage} %)</h4>
             <table className="table table-sm">
               <thead>
                 <tr className="text-secondary">
@@ -399,12 +435,23 @@ const TransactionsRow = (transaction) => {
     propertyInfo,
     remittance,
     offerId,
+    vendorInfo,
   } = transaction;
   const isAdmin = useCurrentRole().isAdmin;
   const isVendor = useCurrentRole().isVendor;
   const isAdminOrVendor = isAdmin || isVendor;
 
-  const amountPaid = isVendor ? Math.round(0.95 * amount) : amount;
+  const { userState } = React.useContext(UserContext);
+
+  const vendorPercentage = isVendor
+    ? userState?.vendor?.remittancePercentage
+    : vendorInfo?.vendor?.remittancePercentage;
+  const remittancePercentage =
+    remittance?.percentage || vendorPercentage || DEFAULT_VENDOR_PERCENTAGE;
+  const amountPaid = isVendor
+    ? Math.round(((100 - remittancePercentage) / 100) * amount)
+    : amount;
+
   return (
     <tr
       className="cursor-pointer"

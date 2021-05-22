@@ -13,11 +13,13 @@ const Button = ({
   children,
   onClick,
   color,
+  ...props
 }) => (
   <button
     className={classNames('btn', `btn-${color}`, className)}
     onClick={onClick}
     type="button"
+    {...props}
   >
     {loading ? (
       <>
