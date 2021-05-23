@@ -7,8 +7,8 @@ import {
   ReferIcon,
   UserIcon,
 } from 'components/utils/Icons';
-import { VisitationIcon } from 'components/utils/Icons';
-import { MessageIcon } from 'components/utils/Icons';
+// import { VisitationIcon } from 'components/utils/Icons';
+// import { MessageIcon } from 'components/utils/Icons';
 import { PropertyIcon } from 'components/utils/Icons';
 // import { ArticlesIcon } from 'components/utils/Icons';
 
@@ -36,18 +36,6 @@ export default [
     to: '/admin/portfolios',
     icon: <PortfolioIcon />,
     footer: true,
-  },
-  {
-    title: 'Scheduled Visits',
-    to: '/admin/scheduled-visits',
-    icon: <VisitationIcon />,
-    footer: false,
-  },
-  {
-    title: 'Enquiries',
-    to: '/admin/enquiries',
-    icon: <MessageIcon />,
-    footer: false,
   },
   {
     title: 'Transaction',

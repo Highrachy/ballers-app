@@ -11,7 +11,7 @@ import { NOTIFICATION_ACTION, NOTIFICATION_TYPE } from 'utils/constants';
 import Axios from 'axios';
 import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
-import { getError, statusIsSuccessful } from 'utils/helpers';
+import { statusIsSuccessful } from 'utils/helpers';
 import { refreshQuery } from 'hooks/useQuery';
 
 const Empty = React.forwardRef(({ children, onClick }, ref) => (
@@ -46,7 +46,7 @@ const Header = () => {
               </Nav.Link>
             ) : (
               <NotificationsDropdown
-                notifications={userState?.notifications}
+                notifications={userState?.notifications.slice(0, 3)}
                 currentRole={currentRole}
               />
             )}
@@ -95,7 +95,6 @@ export const isActive = ({ isCurrent }) => {
 };
 
 export const NotificationsDropdown = ({ notifications, currentRole }) => {
-  console.log(`notifications`, notifications);
   const generateURL = (id, action, actionId) => {
     Axios.put(
       `${BASE_API_URL}/notification/read/${id}/`,
@@ -110,11 +109,7 @@ export const NotificationsDropdown = ({ notifications, currentRole }) => {
           refreshQuery('notification', true);
         }
       })
-      .catch(function (error) {
-        console.log({
-          message: getError(error),
-        });
-      });
+      .catch();
     if (
       action === NOTIFICATION_ACTION.OFFLINE_PAYMENT ||
       action === NOTIFICATION_ACTION.TRANSACTION

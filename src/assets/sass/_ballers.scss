@@ -193,7 +193,7 @@ html {
       height: 5rem;
       width: 5rem;
       stroke-width: 0.4;
-      fill: lighten(#e3e8fe, 3%);
+      fill: lighten($secondary, 30%);
       stroke: $secondary;
     }
   }
@@ -238,22 +238,22 @@ html {
   &:hover {
     background-color: $gray-100;
     .verification-card__img svg {
-      fill: lighten($info, 50%);
-      stroke: $info;
+      fill: lighten($secondary, 25%);
+      stroke: $secondary;
     }
 
     h5 {
-      color: $info;
+      color: $secondary;
     }
 
     .verification-card__text {
-      color: darken($info, 20%);
+      color: darken($secondary, 20%);
     }
     .strong {
-      color: $info;
+      color: $secondary;
 
       svg {
-        color: $info;
+        color: $secondary;
       }
     }
   }

@@ -12,75 +12,21 @@ import { FileIcon } from 'components/utils/Icons';
 import { UserIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
 import { Loading } from 'components/utils/LoadingItems';
-import { PropertyIcon } from 'components/utils/Icons';
-import { TransactionIcon } from 'components/utils/Icons';
 import { getVerificationStatus } from './setup/AccountSetup';
 import { CertifyIcon } from 'components/utils/Icons';
 import { VisitationIcon } from 'components/utils/Icons';
 import { EnquiryIcon } from 'components/utils/Icons';
-import { PortfolioIcon } from 'components/utils/Icons';
-import { ArrowRightIcon } from 'components/utils/Icons';
 import { Alert } from 'react-bootstrap';
 import { useGetQuery } from 'hooks/useQuery';
 import { API_ENDPOINT } from 'utils/URL';
 import { VISITATION_STATUS } from 'utils/constants';
+import DashboardCards from 'components/common/DashboardCards';
 
 const Dashboard = () => (
   <BackendPage>
     <Welcome />
   </BackendPage>
 );
-
-const VENDOR_DASHBOARD_CARDS = [
-  {
-    Icon: <PropertyIcon />,
-    title: 'Properties',
-    to: '/vendor/properties',
-    content:
-      'See your profile data and manage your Account to choose what is saved in our system.',
-    footer: null,
-  },
-  {
-    Icon: <FileIcon />,
-    title: 'Offers',
-    to: '/vendor/offers',
-    content:
-      'See your profile data and manage your Account to choose what is saved in our system.',
-    footer: null,
-  },
-  {
-    Icon: <PortfolioIcon />,
-    title: 'Portfolios',
-    to: '/vendor/portfolios',
-    content:
-      'See your profile data and manage your Account to choose what is saved in our system.',
-    footer: null,
-  },
-  {
-    Icon: <TransactionIcon />,
-    title: 'Transactions',
-    to: '/vendor/transactions',
-    content:
-      'See your profile data and manage your Account to choose what is saved in our system.',
-    footer: null,
-  },
-  {
-    Icon: <EnquiryIcon />,
-    title: 'Enquiries',
-    to: '/vendor/enquiries',
-    content:
-      'See your profile data and manage your Account to choose what is saved in our system.',
-    footer: null,
-  },
-  {
-    Icon: <VisitationIcon />,
-    title: 'Scheduled Visits',
-    to: '/vendor/scheduled-visits',
-    content:
-      'See your profile data and manage your Account to choose what is saved in our system.',
-    footer: null,
-  },
-];
 
 const Welcome = () => {
   const { userState } = React.useContext(UserContext);
@@ -269,21 +215,7 @@ const VerifiedVendorContent = () => {
           )}
         </>
       )}
-      <div className="row mt-4">
-        {VENDOR_DASHBOARD_CARDS.map(
-          ({ Icon, title, to, content, footer }, index) => (
-            <DashboardCard
-              Icon={Icon}
-              title={title}
-              to={to}
-              key={index}
-              footer={footer}
-            >
-              {content}
-            </DashboardCard>
-          )
-        )}
-      </div>
+      <DashboardCards />
     </>
   );
 };
@@ -306,26 +238,6 @@ const VerificationCard = ({ title, children, icon, index, status }) => (
       <div className="verification-card__action">
         {status.icon}
         {status.status}
-      </div>
-    </div>
-  </Link>
-);
-
-const DashboardCard = ({ title, children, Icon, footer, to }) => (
-  <Link to={to} className="col-md-6 mb-4">
-    <div className="card verification-card">
-      <div className="verification-card__block">
-        <div className="verification-card__img">{Icon}</div>
-        <div>
-          <h5 className="verification-card__title">{title}</h5>
-          <p className="verification-card__text">{children}</p>
-        </div>
-      </div>
-      <div className="verification-card__action strong">
-        {footer || `Manage ${title}`}
-        <small className="float-right">
-          <ArrowRightIcon />
-        </small>
       </div>
     </div>
   </Link>
