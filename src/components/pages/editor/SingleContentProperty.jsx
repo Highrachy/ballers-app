@@ -94,7 +94,6 @@ const ContentPropertyGraph = ({ properties }) => {
     });
   }
 
-  console.log('output', output);
   const data = {
     labels: ['Minimum Price', 'Average Price', 'Maximum Price'],
     datasets,

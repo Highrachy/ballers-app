@@ -2,80 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
-import Axios from 'axios';
-import { BASE_API_URL } from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
-import { getTokenFromStore } from 'utils/localStorage';
-import LoadItems from 'components/utils/LoadingItems';
-import NoContent from 'components/utils/NoContent';
 import { PropertyIcon } from 'components/utils/Icons';
-import { getError } from 'utils/helpers';
-import TopTitle from 'components/utils/TopTitle';
 import { Link } from '@reach/router';
+import { API_ENDPOINT } from 'utils/URL';
+import PaginatedContent from 'components/common/PaginatedContent';
 
 const AllContentProperty = () => {
-  const [toast, setToast] = useToast();
-  const [contentProperty, setContentProperty] = React.useState(null);
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/area/all`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-    })
-      .then(function (response) {
-        const { status, data } = response;
-        // handle success
-        if (status === 200) {
-          setContentProperty(data.areas);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  }, [setToast]);
   return (
     <BackendPage>
-      <Toast {...toast} showToastOnly />
-      <TopTitle
-        buttonText="Upload From Excel"
-        to="/editor/content-property/upload"
-      >
-        All Content Property
-      </TopTitle>
-      <ContentProperty contentProperty={contentProperty} />
-
+      <PaginatedContent
+        addNewUrl={'/editor/content-property/new'}
+        endpoint={API_ENDPOINT.getAllContentProperty()}
+        pageName="Content Property"
+        pluralPageName="Content Properties"
+        DataComponent={ContentPropertyRowList}
+        // FilterComponent={FilterForm}
+        PageIcon={<PropertyIcon />}
+        queryName="portfolio"
+        limit={2}
+      />
       <div className="container-fluid">
-        <Link to="/editor/content-property/new" className="btn btn-dark">
-          Add New Content Property
+        <Link to="/editor/content-property/upload" className="btn btn-dark">
+          Upload From Excel
         </Link>
       </div>
     </BackendPage>
   );
 };
 
-const ContentProperty = ({ contentProperty, toast }) => (
-  <LoadItems
-    Icon={<PropertyIcon />}
-    items={contentProperty}
-    loadingText="Loading your Content Property"
-    noContent={
-      <NoContent
-        Icon={<PropertyIcon />}
-        isButton
-        text="No Content Property found"
-      />
-    }
-  >
-    <ContentPropertyRowList
-      toast={toast}
-      contentProperty={contentProperty || []}
-    />
-  </LoadItems>
-);
-
-const ContentPropertyRowList = ({ contentProperty }) => {
+const ContentPropertyRowList = ({ results, offset }) => {
   const [toast, setToast] = useToast();
   return (
     <div className="container-fluid">
@@ -93,12 +49,12 @@ const ContentPropertyRowList = ({ contentProperty }) => {
               </tr>
             </thead>
             <tbody>
-              {contentProperty.map((user, index) => (
+              {results.map((contentProperty, index) => (
                 <ContentPropertyRow
                   key={index}
                   setToast={setToast}
-                  number={index + 1}
-                  {...user}
+                  number={offset + index + 1}
+                  {...contentProperty}
                 />
               ))}
             </tbody>

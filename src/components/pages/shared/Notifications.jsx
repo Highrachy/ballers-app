@@ -9,7 +9,7 @@ import Timeago from 'timeago-react';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, statusIsSuccessful } from 'utils/helpers';
-import BallersSpinner from 'components/utils/BallersSpinner';
+// import BallersSpinner from 'components/utils/BallersSpinner';
 import { refreshQuery } from 'hooks/useQuery';
 import { UserContext } from 'context/UserContext';
 
@@ -55,8 +55,8 @@ export const NotificationsRowList = ({ results, offset, setToast }) => {
       });
   };
 
-  const markAllAsRead = (id) => {
-    setLoading(id);
+  React.useEffect(() => {
+    userDispatch({ type: 'read-all-notifcations' });
     Axios.put(
       `${BASE_API_URL}/notification/read/all`,
       {},
@@ -67,10 +67,6 @@ export const NotificationsRowList = ({ results, offset, setToast }) => {
       .then(function (response) {
         const { status } = response;
         if (statusIsSuccessful(status)) {
-          setToast({
-            type: 'success',
-            message: 'All notifications have been marked as read',
-          });
           refreshQuery('notification', true);
           userDispatch({ type: 'read-all-notifcations' });
         }
@@ -79,18 +75,12 @@ export const NotificationsRowList = ({ results, offset, setToast }) => {
         setToast({
           message: getError(error),
         });
-        setLoading(0);
       });
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="container-fluid mb-5">
-      <p
-        className="text-right text-link text-secondary text-small"
-        onClick={markAllAsRead}
-      >
-        Mark All As Read
-      </p>
       <Card>
         <div className="table-responsive">
           <table className="table table-border table-sm mb-0 notifications">
@@ -134,14 +124,14 @@ const NotificationsRow = ({
         <Timeago datetime={createdAt} />
       </small>
     </td>
-    <td className="text-right">
+    {/* <td className="text-right">
       <small
         className="text-link text-secondary"
         onClick={() => markAsRead(_id)}
       >
         {loading ? <BallersSpinner small /> : !read && 'Mark as Read'}
       </small>
-    </td>
+    </td> */}
   </tr>
 );
 

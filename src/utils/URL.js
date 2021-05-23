@@ -30,4 +30,5 @@ export const API_ENDPOINT = {
   getAllNotifications: () => `${BASE_API_URL}/notification/all`,
 
   getAllStates: () => `${BASE_API_URL}/area/states`,
+  getAllContentProperty: () => `${BASE_API_URL}/area/all`,
 };
