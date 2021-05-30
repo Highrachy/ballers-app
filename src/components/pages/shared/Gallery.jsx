@@ -176,7 +176,7 @@ export const GalleryList = ({ property }) => {
                 alt={viewMoreImage?.title || 'property'}
                 className="img-fluid gallery-thumbnails property-img mb-0"
               />
-              <span>
+              <span className="overlay__content">
                 <CameraIcon /> <br />
                 View Gallery
               </span>
@@ -321,9 +321,8 @@ const SingleGalleryImage = ({
   setToast,
 }) => {
   const [showEditGalleryModal, setShowEditGalleryModal] = React.useState(false);
-  const [showDeleteGalleryModal, setShowDeleteGalleryModal] = React.useState(
-    false
-  );
+  const [showDeleteGalleryModal, setShowDeleteGalleryModal] =
+    React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   const deleteGalleryImage = (id) => {

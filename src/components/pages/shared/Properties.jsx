@@ -22,6 +22,8 @@ import { HOUSE_TYPES } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
 import { API_ENDPOINT } from 'utils/URL';
 import { Spacing } from 'components/common/Helpers';
+import { SuccessIcon } from 'components/utils/Icons';
+import { WarningIcon } from 'components/utils/Icons';
 
 const Properties = () => {
   const addNewUrl = useCurrentRole().isVendor ? '/vendor/property/new' : '';
@@ -30,6 +32,7 @@ const Properties = () => {
       <PaginatedContent
         addNewUrl={addNewUrl}
         endpoint={API_ENDPOINT.getAllProperties()}
+        initialFilter={{ sortBy: 'createdAt', sortDirection: 'desc' }}
         pageName="Property"
         pluralPageName="Properties"
         DataComponent={PropertiesRowList}
@@ -68,29 +71,69 @@ const PropertiesRowList = ({ results, offset }) => (
         </table>
       </div>
     </Card>
+    {useCurrentRole().isAdmin && (
+      <div className="my-5 text-right">
+        <Link className="btn btn-wide btn-dark" to="/admin/reported-properties">
+          View Reported Properties
+        </Link>
+      </div>
+    )}
   </div>
 );
 
-const PropertiesRow = ({ _id, name, address, price, number, mainImage }) => {
+const PropertiesRow = ({
+  _id,
+  name,
+  address,
+  price,
+  number,
+  mainImage,
+  approved,
+  flagged,
+}) => {
   const userType = useCurrentRole().name;
   return (
-    <tr>
+    <tr className={flagged?.status ? 'text-danger' : ''}>
       <td>{number}</td>
       <td>
-        <Link to={`/${userType}/property/${_id}`}>
-          <Image
-            src={mainImage}
-            name={`property ${_id}`}
-            width="80"
-            alt="property"
-            defaultImage={PropertyPlaceholderImage}
-          />
-        </Link>
+        <div
+          className={`${
+            flagged?.status ? 'overlay overlay__danger' : ''
+          } d-inline-block`}
+        >
+          <Link to={`/${userType}/property/${_id}`}>
+            <Image
+              src={mainImage}
+              name={`property ${_id}`}
+              width="80"
+              alt="property"
+              defaultImage={PropertyPlaceholderImage}
+            />
+
+            {flagged?.status && (
+              <span className="overlay__content">Reported</span>
+            )}
+          </Link>
+        </div>
       </td>
-      <td>{name}</td>
+      <td>
+        {name}{' '}
+        {!useCurrentRole().isUser &&
+          (approved?.status ? (
+            <small className="text-success">
+              <Spacing />
+              <SuccessIcon />
+            </small>
+          ) : (
+            <small className="text-warning">
+              <Spacing />
+              <WarningIcon />
+            </small>
+          ))}
+      </td>
       <td>
         <strong>
-          {address.city}, {address.state}
+          {address?.city}, {address?.state}
         </strong>
       </td>
       <td>{moneyFormatInNaira(price)}</td>

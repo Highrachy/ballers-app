@@ -82,3 +82,16 @@ export const neighborhoodSchema = {
   distance: optionalValidation(required('Distance')),
   name: optionalValidation(required('Name')),
 };
+
+export const reportPropertySchema = {
+  reason: required('Reason'),
+};
+
+export const flagPropertySchema = {
+  reason: required('Reason'),
+  notes: optionalValidation(required('Notes')),
+};
+
+export const unflagPropertySchema = {
+  reason: required('Reason'),
+};

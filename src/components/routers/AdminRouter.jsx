@@ -19,6 +19,7 @@ import SingleOffer from 'components/pages/shared/SingleOffer';
 import Portfolios from 'components/pages/shared/Portfolios';
 import SinglePortfolio from 'components/pages/shared/SinglePortfolio';
 import Notifications from 'components/pages/shared/Notifications';
+import ReportedProperties from 'components/pages/admin/ReportedProperties';
 
 const AdminRouter = () => (
   <Router>
@@ -26,6 +27,7 @@ const AdminRouter = () => (
     <Users path="users" />
     <SingleUser path="user/:id" />
     <Properties path="properties" />
+    <ReportedProperties path="reported-properties" />
     <SingleProperty path="property/:id" />
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />

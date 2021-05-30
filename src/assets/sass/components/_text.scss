@@ -96,7 +96,10 @@
   &__secondary:before {
     background: rgba($secondary, 0.5);
   }
-  span {
+  &__danger:before {
+    background: rgba($danger, 0.5);
+  }
+  &__content {
     position: absolute;
     top: 50%;
     left: 50%;

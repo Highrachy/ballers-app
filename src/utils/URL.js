@@ -33,4 +33,6 @@ export const API_ENDPOINT = {
   getAllContentProperty: () => `${BASE_API_URL}/area/all`,
 
   getDashboardCount: () => `${BASE_API_URL}/total-count`,
+
+  getAllReportedProperties: () => `${BASE_API_URL}/report-property/all`,
 };

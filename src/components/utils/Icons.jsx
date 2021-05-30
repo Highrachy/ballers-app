@@ -46,6 +46,7 @@ import {
   FaAmbulance,
   FaGrinStars,
   FaRegFileAlt,
+  FaFlag,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { VscVerified } from 'react-icons/vsc';
@@ -88,6 +89,7 @@ export const EnquiryIcon = () => <BiMessageDetail />;
 export const FacebookIcon = () => <FiFacebook />;
 export const FileIcon = () => <FiFileText />;
 export const FilterIcon = () => <BiFilter />;
+export const FlagIcon = () => <FaFlag />;
 export const HomeIcon = () => <FiGrid />;
 export const HospitalIcon = () => <FaAmbulance />;
 export const InfoIcon = () => <FaInfoCircle />;

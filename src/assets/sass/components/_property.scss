@@ -186,6 +186,12 @@
   }
 }
 
+.invert-danger {
+  border: 1px solid $danger;
+  color: $danger;
+  background: transparent;
+}
+
 .svg-1 {
   svg {
     height: 1rem;
