@@ -56,6 +56,11 @@ const InputFormat = ({
       <div className={inputSizeClassName}>
         <Field name={name}>
           {({ field, form }) => {
+            // we are using array for range,
+            // we want to ensure that the array value is not used
+            const value = Array.isArray(getIn(formik.values, name))
+              ? 0
+              : getIn(formik.values, name);
             return (
               <NumberFormat
                 {...props}
@@ -74,7 +79,7 @@ const InputFormat = ({
                 suffix={suffix}
                 thousandSeparator={true}
                 placeholder={placeholder || label}
-                value={getIn(formik.values, name)}
+                value={value}
               />
             );
           }}

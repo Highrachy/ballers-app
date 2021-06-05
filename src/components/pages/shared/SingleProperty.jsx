@@ -102,7 +102,9 @@ export const OwnedPropertyCard = ({
         )}
         <div className="mt-3">
           {property?.flagged?.status && (
-            <span class="badge invert-danger">Reported Property</span>
+            <Link to="#reported-property" class="badge invert-danger">
+              Reported Property
+            </Link>
           )}
         </div>
         <div className="row mt-5">

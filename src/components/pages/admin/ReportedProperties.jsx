@@ -2,7 +2,6 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import PaginatedContent from 'components/common/PaginatedContent';
-import { propertyFilterSchema } from 'components/forms/schemas/propertySchema';
 import Select from 'components/forms/Select';
 import { generateNumOptions, valuesToOptions } from 'utils/helpers';
 import Input from 'components/forms/Input';
@@ -219,7 +218,7 @@ export const FlagProperty = ({ property, setToast, reportId, bigButton }) => {
 const FilterForm = ({ setFilterTerms }) => {
   return (
     <Formik
-      initialValues={setInitialValues(propertyFilterSchema)}
+      initialValues={setInitialValues({})}
       onSubmit={(values, actions) => {
         setFilterTerms(
           { ...values },

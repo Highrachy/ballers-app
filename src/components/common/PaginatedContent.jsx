@@ -11,7 +11,7 @@ import { ContentLoader } from 'components/utils/LoadingItems';
 import { FilterIcon } from 'components/utils/Icons';
 import Modal from './Modal';
 
-const AdminList = ({
+const PaginatedContent = ({
   addNewUrl,
   DataComponent,
   initialFilter = {},
@@ -76,7 +76,7 @@ const AdminList = ({
         toast={toast}
         noContentText={`No ${pluralizePageName} found`}
         hideNoContent={hideNoContent}
-        showFetching={showFetching}
+        showFetching={showFetching || Object.keys(filters)?.length > 0}
       >
         <DataComponent
           results={results || []}
@@ -168,4 +168,4 @@ const TopFilter = ({ FilterComponent, filters, setFilters }) => {
     </>
   );
 };
-export default AdminList;
+export default PaginatedContent;

@@ -60,13 +60,6 @@ export const uploadContentPropertySchema = {
   state: required('State'),
 };
 
-export const propertyFilterSchema = {
-  name: optionalValidation(required('Property Name')),
-  price: optionalValidation(required('Price')),
-  toilets: optionalValidation(required('Toilets')),
-  role: optionalValidation(required('Role')),
-};
-
 export const addGallerySchema = {
   title: required('Title'),
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getIn } from 'formik';
-import { isDevEnvironment } from 'utils/helpers';
+import { getRange, isDevEnvironment } from 'utils/helpers';
 
 const validityOptions = {
   valid: 'is-valid',
@@ -133,6 +133,16 @@ export const setInitialValues = (schema, initialValues = {}) => {
       values[key] = initialValues[key];
     } else {
       values[key] = '';
+    }
+  });
+  return values;
+};
+
+export const processFilterValues = (initialValues, exclude = ['range']) => {
+  const values = {};
+  Object.keys(initialValues).forEach((key) => {
+    if (initialValues[key] && !exclude.includes(key)) {
+      values[key] = getRange(initialValues[key]);
     }
   });
   return values;

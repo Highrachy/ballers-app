@@ -22,6 +22,7 @@ const Users = () => (
   <BackendPage>
     <PaginatedContent
       endpoint={API_ENDPOINT.getAllUsers()}
+      initialFilter={{ sortBy: 'createdAt', sortDirection: 'desc' }}
       pageName="User"
       DataComponent={UsersRowList}
       FilterComponent={FilterForm}
@@ -124,6 +125,7 @@ const UsersRow = ({
           </span>
         )}
       </td>
+      <td>{Humanize.titleCase(DASHBOARD_PAGE[role])}</td>
       {/* <td>
         {userRole === 1 && (
           <button

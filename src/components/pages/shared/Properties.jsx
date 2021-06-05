@@ -5,25 +5,35 @@ import PaginatedContent from 'components/common/PaginatedContent';
 import { Form, Formik } from 'formik';
 import {
   DisplayFormikState,
-  setInitialValues,
+  processFilterValues,
 } from 'components/forms/form-helper';
-import { propertyFilterSchema } from 'components/forms/schemas/propertySchema';
+// import { propertyFilterSchema } from 'components/forms/schemas/propertySchema';
 import Select from 'components/forms/Select';
-import { generateNumOptions, valuesToOptions } from 'utils/helpers';
+import {
+  booleanOptions,
+  generateNumOptions,
+  getRange,
+  getTitleCase,
+  valuesToOptions,
+} from 'utils/helpers';
 import Input from 'components/forms/Input';
 import Button from 'components/forms/Button';
 import BackendPage from 'components/layout/BackendPage';
 import { PropertyIcon } from 'components/utils/Icons';
 import { moneyFormatInNaira } from 'utils/helpers';
-import Humanize from 'humanize-plus';
 import Image from 'components/utils/Image';
 import PropertyPlaceholderImage from 'assets/img/placeholder/property.png';
-import { HOUSE_TYPES } from 'utils/constants';
+import { HOUSE_TYPES, STATES } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
 import { API_ENDPOINT } from 'utils/URL';
 import { Spacing } from 'components/common/Helpers';
 import { SuccessIcon } from 'components/utils/Icons';
 import { WarningIcon } from 'components/utils/Icons';
+import InputFormat from 'components/forms/InputFormat';
+import { BedIcon } from 'components/utils/Icons';
+import { BathIcon } from 'components/utils/Icons';
+import { ToiletIcon } from 'components/utils/Icons';
+import FilterRange from 'components/forms/FilterRange';
 
 const Properties = () => {
   const addNewUrl = useCurrentRole().isVendor ? '/vendor/property/new' : '';
@@ -90,15 +100,21 @@ const PropertiesRow = ({
   mainImage,
   approved,
   flagged,
+  bedrooms,
+  bathrooms,
+  toilets,
+  houseType,
 }) => {
   const userType = useCurrentRole().name;
+  const propertyIsFlagged = !useCurrentRole().isUser && flagged?.status;
+
   return (
-    <tr className={flagged?.status ? 'text-danger' : ''}>
+    <tr>
       <td>{number}</td>
       <td>
         <div
           className={`${
-            flagged?.status ? 'overlay overlay__danger' : ''
+            propertyIsFlagged ? 'overlay overlay__danger' : ''
           } d-inline-block`}
         >
           <Link to={`/${userType}/property/${_id}`}>
@@ -110,7 +126,7 @@ const PropertiesRow = ({
               defaultImage={PropertyPlaceholderImage}
             />
 
-            {flagged?.status && (
+            {propertyIsFlagged && (
               <span className="overlay__content">Reported</span>
             )}
           </Link>
@@ -130,13 +146,29 @@ const PropertiesRow = ({
               <WarningIcon />
             </small>
           ))}
+        <span className="block-text-small text-muted">
+          {address?.city}, {address?.state}
+        </span>
       </td>
       <td>
-        <strong>
-          {address?.city}, {address?.state}
-        </strong>
+        {houseType}
+        <div className="text-smaller text-muted">
+          <span className="pr-2">
+            {bedrooms} <BedIcon />
+          </span>
+          |{' '}
+          <span className="px-2">
+            {bathrooms} <BathIcon />
+          </span>
+          |
+          <span className="pl-2">
+            {toilets} <ToiletIcon />
+          </span>
+        </div>
       </td>
-      <td>{moneyFormatInNaira(price)}</td>
+      <td>
+        <h5 className="text-dark">{moneyFormatInNaira(price)}</h5>
+      </td>
       <td>
         <Link
           className="btn btn-xs btn-secondary"
@@ -164,41 +196,105 @@ const PropertiesRow = ({
 const FilterForm = ({ setFilterTerms }) => {
   return (
     <Formik
-      initialValues={setInitialValues(propertyFilterSchema)}
+      initialValues={{}}
       onSubmit={(values, actions) => {
-        setFilterTerms(
-          { ...values },
-          {
-            houseType: `House Type : ${Humanize.titleCase(values.houseType)}`,
-          }
-        );
+        const payload = processFilterValues(values);
+        setFilterTerms(payload, {
+          name: `Property Name : ${getTitleCase(values.name)}`,
+          price: `Price : ${getRange(values?.price, { suffix: 'Naira' })}`,
+          houseType: `House Type : ${getTitleCase(values?.houseType)}`,
+          toilets: `Toilet : ${values.toilets}`,
+          state: `State: ${values.state}`,
+          city: `City: ${values.city}`,
+          approved: `Approved: ${values.approved ? 'Yes' : 'No'}`,
+          flagged: `Flagged: ${values.flagged ? 'Yes' : 'No'}`,
+          bedrooms: `Bathrooms: ${values.bedrooms}`,
+          bathrooms: `Bathrooms: ${values.bathrooms}`,
+        });
       }}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <section>
             <Input label="Property Name" name="name" />
-            <Input label="Price" name="price" />
-            <Select
-              label="Toilets"
-              name="toilets"
-              options={generateNumOptions(9, 'Toilet')}
-              placeholder="Select Toilets"
+
+            <FilterRange
+              Field={InputFormat}
+              name="price"
+              label="Price"
+              values={props?.values}
             />
+
+            <FilterRange
+              Field={Select}
+              name="toilets"
+              label="Toilets"
+              options={{
+                options: generateNumOptions(9, 'Toilet'),
+                placeholder: 'Select Toilets',
+              }}
+              values={props?.values}
+            />
+
+            <FilterRange
+              Field={Select}
+              name="bathrooms"
+              label="Bathrooms"
+              options={{
+                options: generateNumOptions(9, 'Bathroom'),
+                placeholder: 'Select Bathrooms',
+              }}
+              values={props?.values}
+            />
+
+            <FilterRange
+              Field={Select}
+              name="bedrooms"
+              label="Bedrooms"
+              options={{
+                options: generateNumOptions(9, 'Bedroom'),
+                placeholder: 'Select Bedrooms',
+              }}
+              values={props?.values}
+            />
+
             <Select
               label="House Type"
               name="houseType"
               options={valuesToOptions(HOUSE_TYPES)}
               placeholder="House Type"
             />
+
+            <Input label="City" name="city" />
+
+            <Select
+              label="State"
+              name="state"
+              options={valuesToOptions(STATES)}
+              placeholder="Select State"
+            />
+
+            <Select
+              label="Flagged"
+              name="flagged"
+              options={booleanOptions()}
+              placeholder="Flagged Property"
+            />
+
+            <Select
+              label="Approved"
+              name="approved"
+              options={booleanOptions()}
+              placeholder="Approved Property"
+            />
           </section>
-          <DisplayFormikState {...props} showAll />
+          <DisplayFormikState {...props} showAll hide />
           <Button
             className="btn-secondary mt-4"
             loading={isSubmitting}
             onClick={handleSubmit}
           >
-            Filter Users
+            Filter Properties
           </Button>
         </Form>
       )}

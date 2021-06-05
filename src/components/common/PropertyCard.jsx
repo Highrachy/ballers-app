@@ -22,15 +22,8 @@ import ProfileAvatar from 'assets/img/placeholder/property-holder.jpg';
 import { useCurrentRole } from 'hooks/useUser';
 
 export const OldPropertyCard = (property) => {
-  const {
-    name,
-    address,
-    favorites,
-    houseType,
-    mainImage,
-    price,
-    _id,
-  } = property;
+  const { name, address, favorites, houseType, mainImage, price, _id } =
+    property;
   const [loading, setLoading] = React.useState(false);
   const isFavorite = (favorites || []).includes(_id);
   let { userDispatch } = React.useContext(UserContext);
@@ -121,15 +114,8 @@ export const OldPropertyCard = (property) => {
 };
 
 const PropertyCard = (property) => {
-  const {
-    name,
-    address,
-    favorites,
-    houseType,
-    mainImage,
-    price,
-    _id,
-  } = property;
+  const { name, address, favorites, houseType, mainImage, price, _id } =
+    property;
   const [loading, setLoading] = React.useState(false);
   const isFavorite = (favorites || []).includes(_id);
   let { userDispatch } = React.useContext(UserContext);

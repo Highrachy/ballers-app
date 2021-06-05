@@ -7,8 +7,6 @@ import {
   DisplayFormikState,
   setInitialValues,
 } from 'components/forms/form-helper';
-import { propertyFilterSchema } from 'components/forms/schemas/propertySchema';
-// import { createSchema } from 'components/forms/schemas/schema-helpers';
 import Select from 'components/forms/Select';
 import { generateNumOptions, valuesToOptions } from 'utils/helpers';
 import Input from 'components/forms/Input';
@@ -117,7 +115,7 @@ const PortfoliosRow = ({ _id, number, propertyInfo, totalAmountPayable }) => {
 const FilterForm = ({ setFilterTerms }) => {
   return (
     <Formik
-      initialValues={setInitialValues(propertyFilterSchema)}
+      initialValues={setInitialValues({})}
       onSubmit={(values, actions) => {
         setFilterTerms(
           { ...values },

@@ -130,6 +130,11 @@ export const objectToOptions = (obj, defaultLabel = null, inverse = false) => {
     : output;
 };
 
+export const booleanOptions = (trueLabel = 'Yes', falseLabel = 'No') => [
+  { label: trueLabel, value: 'true' },
+  { label: falseLabel, value: 'false' },
+];
+
 export const getGenderFromTitle = (title) => {
   if (MALE_TITLES.includes(title)) return 'Sir';
   if (FEMALE_TITLES.includes(title)) return 'Ma';
@@ -213,3 +218,20 @@ export const manualWait = async (func, delay = 1000) =>
       resolve();
     }, delay)
   );
+
+// Helpers for Filters
+
+export const getTitleCase = (name) => (name ? Humanize.titleCase(name) : '');
+
+export const getPrice = (price) =>
+  price && Number(price) ? moneyFormatInNaira(price) : '';
+
+export const getRange = (value, format) => {
+  const prefix = format?.prefix ? `${format?.prefix} ` : '';
+  const suffix = format?.suffix ? ` ${format?.suffix}` : '';
+  return Array.isArray(value)
+    ? `${prefix}${value?.[0] || 0}${suffix}:${prefix}${
+        value?.[1] || 0
+      }${suffix}`
+    : `${prefix}${value}${suffix}`;
+};
