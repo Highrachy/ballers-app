@@ -102,7 +102,7 @@ const PortfoliosRow = ({ _id, number, propertyInfo, totalAmountPayable }) => {
         <Spacing />
         <Spacing />
         <Link
-          className="btn  btn-xs btn-info"
+          className="btn btn-wide btn-info"
           to={`/${userType}/portfolio/${_id}`}
         >
           View portfolio

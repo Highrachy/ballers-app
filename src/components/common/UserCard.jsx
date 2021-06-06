@@ -1,41 +1,55 @@
 import React from 'react';
 import ProfileAvatar from 'assets/img/placeholder/user.jpg';
 import Image from 'components/utils/Image';
+import { USER_TYPES } from 'utils/constants';
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, hideImage, nameOnly }) => {
   const {
     title = '',
     firstName = '',
     lastName = '',
     email = '',
+    role = '',
     profileImage,
+    banned = { status: false },
+    vendor = {},
   } = user;
-  const userName = `${title} ${firstName} ${lastName}`;
+
+  const isVendor = role === USER_TYPES.vendor;
+
+  const userInitialName = `${title} ${firstName} ${lastName}`;
+  const vendorName = vendor?.companyName || userInitialName;
+  const userName = isVendor ? vendorName : userInitialName;
+
+  const image = role === USER_TYPES.user ? profileImage : vendor?.companyLogo;
+
   return (
     <div className="user-card">
-      <div className="user-avatar user-avatar-sm bg-purple">
-        <Image
-          alt={firstName}
-          defaultImage={ProfileAvatar}
-          className="img-fluid avatar--medium--small"
-          src={profileImage}
-          title={firstName}
-          name={firstName}
-          width={80}
-        />
-      </div>
+      {!hideImage && (
+        <div className="user-avatar">
+          <Image
+            alt={firstName}
+            defaultImage={ProfileAvatar}
+            src={image}
+            title={firstName}
+            name={firstName}
+            width="80"
+          />
+        </div>
+      )}
 
-      {email ? (
+      {!nameOnly ? (
         <div className="user-info">
-          <span className="user-name">
+          <span className={`user-name ${banned.status ? 'text-danger' : ''}`}>
             {userName}
-            <span className="dot dot-success d-md-none ml-1"></span>
           </span>
           <small className="user-email">{email}</small>
         </div>
       ) : (
         <div className="user-name">
-          <span className="tb-lead">{userName}</span>
+          <span className={`tb-lead ${banned.status ? 'text-danger' : ''}`}>
+            {userName}
+          </span>
         </div>
       )}
     </div>

@@ -348,127 +348,193 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   // to remove all
   // const verificationState = getVerificationState(user);
 
-  const UserInformation = () => (
-    <CardTableSection
-      name={
-        <span className="title">
-          User Information{' '}
-          {isVendor && (
-            <span className={verificationState.userInfo.className}>
-              {verificationState.userInfo.icon}
+  const UserInformation = () => {
+    const [userRole, setUserRole] = React.useState(user.role);
+    const [loading, setLoading] = React.useState(false);
+
+    const processRoleChange = () => {
+      setLoading(true);
+      const action = userRole === USER_TYPES.user ? 'upgrade' : 'downgrade';
+
+      Axios.put(
+        `${BASE_API_URL}/user/editor/${action}`,
+        { userId: user._id },
+        {
+          headers: { Authorization: getTokenFromStore() },
+        }
+      )
+        .then(function (response) {
+          const { status, data } = response;
+          if (status === 200) {
+            setToast({
+              message: data.message,
+              type: 'success',
+            });
+            setUserRole(
+              userRole === USER_TYPES.user ? USER_TYPES.editor : USER_TYPES.user
+            );
+            setLoading(false);
+          }
+        })
+        .catch(function (error) {
+          setToast({
+            message: getError(error),
+          });
+          setLoading(false);
+        });
+    };
+    return (
+      <>
+        <CardTableSection
+          name={
+            <span className="title">
+              User Information{' '}
+              {isVendor && (
+                <span className={verificationState.userInfo.className}>
+                  {verificationState.userInfo.icon}
+                </span>
+              )}
             </span>
+          }
+          className="border-0"
+        >
+          <tr>
+            <td colSpan="5" className="text-center">
+              <Image
+                bordered
+                circle
+                alt={user.firstName}
+                className={'img-fluid avatar--large'}
+                src={user.profileImage}
+                defaultImage={ProfileAvatar}
+                name={user.firstName}
+              />
+            </td>
+          </tr>
+          {isVendor ? (
+            <>
+              <tr>
+                <td>
+                  <strong>Company Logo</strong>
+                </td>
+                <td colSpan="4">
+                  {user.vendor?.companyLogo && (
+                    <Image
+                      name={user.firstName}
+                      className="img-fluid dashboard-top-nav__company-logo mb-3"
+                      src={user.vendor.companyLogo}
+                      title={user.firstName}
+                    />
+                  )}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <strong>Company Name</strong>
+                </td>
+                <td colSpan="4">{user.vendor?.companyName}</td>
+              </tr>
+            </>
+          ) : (
+            <tr>
+              <td>
+                <strong>First Name</strong>
+              </td>
+              <td>{user.firstName}</td>
+              <td>&nbsp;</td>
+              <td>
+                <strong>Last Name</strong>
+              </td>
+              <td>{user.lastName}</td>
+            </tr>
           )}
-        </span>
-      }
-      className="border-0"
-    >
-      <tr>
-        <td colSpan="5" className="text-center">
-          <Image
-            bordered
-            circle
-            alt={user.firstName}
-            className={'img-fluid avatar--large'}
-            src={user.profileImage}
-            defaultImage={ProfileAvatar}
-            name={user.firstName}
-          />
-        </td>
-      </tr>
-      {isVendor ? (
-        <>
           <tr>
             <td>
-              <strong>Company Logo</strong>
+              <strong>Email</strong>
+            </td>
+            <td>{user.email}</td>
+            <td></td>
+            <td>
+              <strong>Phone</strong>
+            </td>
+            <td>
+              {user.phone} <br /> {user.phone2}
+            </td>
+          </tr>
+
+          {isVendor && (
+            <tr>
+              <td>
+                <strong>Entity Type</strong>
+              </td>
+              <td>{user.vendor?.entity}</td>
+              <td></td>
+              <td>
+                <strong>Redan Number</strong>
+              </td>
+              <td>{user.vendor?.redanNumber}</td>
+            </tr>
+          )}
+
+          <tr>
+            <td>
+              <strong>Address</strong>
             </td>
             <td colSpan="4">
-              {user.vendor?.companyLogo && (
-                <Image
-                  name={user.firstName}
-                  className="img-fluid dashboard-top-nav__company-logo mb-3"
-                  src={user.vendor.companyLogo}
-                  title={user.firstName}
+              {user.address && getFormattedAddress(user.address)}
+            </td>
+          </tr>
+
+          {isVendor && (
+            <tr>
+              <td>
+                <strong>Remittance</strong>
+              </td>
+              <td colSpan="4">
+                <RemittanceForm
+                  user={user}
+                  setUser={setUser}
+                  setToast={setToast}
                 />
+              </td>
+            </tr>
+          )}
+
+          {isVendor && (
+            <tr>
+              <td colSpan="5">
+                <StepAction step={VENDOR_STEPS_KEY[0]} />
+              </td>
+            </tr>
+          )}
+
+          <tr>
+            <td colSpan="5">
+              {user.role === USER_TYPES.user && (
+                <Button
+                  loading={loading}
+                  className="btn btn-sm btn-secondary mt-3"
+                  onClick={processRoleChange}
+                >
+                  Upgrade to an Editor
+                </Button>
+              )}
+              {user.role === USER_TYPES.editor && (
+                <Button
+                  loading={loading}
+                  className="btn btn-sm btn-danger mt-3"
+                  onClick={processRoleChange}
+                >
+                  Downgrade to a User
+                </Button>
               )}
             </td>
           </tr>
-
-          <tr>
-            <td>
-              <strong>Company Name</strong>
-            </td>
-            <td colSpan="4">{user.vendor?.companyName}</td>
-          </tr>
-        </>
-      ) : (
-        <tr>
-          <td>
-            <strong>First Name</strong>
-          </td>
-          <td>{user.firstName}</td>
-          <td>&nbsp;</td>
-          <td>
-            <strong>Last Name</strong>
-          </td>
-          <td>{user.lastName}</td>
-        </tr>
-      )}
-      <tr>
-        <td>
-          <strong>Email</strong>
-        </td>
-        <td>{user.email}</td>
-        <td></td>
-        <td>
-          <strong>Phone</strong>
-        </td>
-        <td>
-          {user.phone} <br /> {user.phone2}
-        </td>
-      </tr>
-
-      {isVendor && (
-        <tr>
-          <td>
-            <strong>Entity Type</strong>
-          </td>
-          <td>{user.vendor?.entity}</td>
-          <td></td>
-          <td>
-            <strong>Redan Number</strong>
-          </td>
-          <td>{user.vendor?.redanNumber}</td>
-        </tr>
-      )}
-
-      <tr>
-        <td>
-          <strong>Address</strong>
-        </td>
-        <td colSpan="4">{user.address && getFormattedAddress(user.address)}</td>
-      </tr>
-
-      {isVendor && (
-        <tr>
-          <td>
-            <strong>Remittance</strong>
-          </td>
-          <td colSpan="4">
-            <RemittanceForm user={user} setUser={setUser} setToast={setToast} />
-          </td>
-        </tr>
-      )}
-
-      {isVendor && (
-        <tr>
-          <td colSpan="5">
-            <StepAction step={VENDOR_STEPS_KEY[0]} />
-          </td>
-        </tr>
-      )}
-    </CardTableSection>
-  );
-
+        </CardTableSection>
+      </>
+    );
+  };
   const BankInformation = () => (
     <CardTableSection
       name={

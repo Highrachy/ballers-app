@@ -47,9 +47,10 @@ import {
   FaGrinStars,
   FaRegFileAlt,
   FaFlag,
+  FaBan,
+  FaThumbsUp,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { VscVerified } from 'react-icons/vsc';
 import {
   BiMessageDetail,
   BiBuildingHouse,
@@ -59,22 +60,29 @@ import {
   BiHomeCircle,
   BiFilter,
 } from 'react-icons/bi';
-import { AiFillCheckSquare, AiFillCar } from 'react-icons/ai';
+import {
+  AiFillCheckSquare,
+  AiFillCar,
+  AiFillSafetyCertificate,
+} from 'react-icons/ai';
 import { MdLocalMall } from 'react-icons/md';
+import { GoVerified } from 'react-icons/go';
 
 export const ArrowLeftIcon = () => <FiChevronLeft />;
 export const ArrowDownIcon = () => <FiChevronDown />;
 export const ArrowUpIcon = () => <FiChevronUp />;
 export const ArrowRightIcon = () => <FiChevronRight />;
 export const ArticlesIcon = () => <FiBookOpen />;
+export const ApprovedIcon = () => <AiFillSafetyCertificate />;
 export const AssignedPropertyIcon = () => <FiServer />;
+export const BanIcon = () => <FaBan />;
 export const BankInfoIcon = () => <FiArchive />;
 export const BathIcon = () => <FaBath />;
 export const BedIcon = () => <FaBed />;
 export const CloseIcon = () => <FiX />;
 export const CameraIcon = () => <FiCamera />;
 export const CarIcon = () => <AiFillCar />;
-export const CertifyIcon = () => <VscVerified />;
+export const CertifyIcon = () => <GoVerified />;
 export const CheckIcon = () => <FiCheck />;
 export const CheckSquareIcon = () => <AiFillCheckSquare />;
 export const CheckCircleIcon = () => <BiCheckCircle />;
@@ -115,6 +123,7 @@ export const SchoolIcon = () => <FaBuilding />;
 export const SearchIcon = () => <FiSearch />;
 export const SuccessIcon = () => <FaCheckCircle />;
 export const ThreeDotsIcon = () => <BsThreeDotsVertical />;
+export const ThumbsUpIcon = () => <FaThumbsUp />;
 export const ToiletIcon = () => <FaToilet />;
 export const TransactionIcon = () => <FiRepeat />;
 export const TwitterIcon = () => <FiTwitter />;

@@ -123,6 +123,13 @@ export const VENDOR_IDENTIFICATION_TYPE = {
   Individual: 'Valid Identification',
 };
 
+export const ENTITY_SHORTCODE = {
+  None: 'Pending',
+  'Limited Liability Company': 'LLC',
+  'Registered Company Name': 'RCN',
+  Individual: 'Individual',
+};
+
 export const INDIVIDUAL_IDENTIFICATION_TYPE = [
   'Drivers License',
   'International Passport',
@@ -147,6 +154,8 @@ export const VENDOR_VERIFICATION_STATUS = {
   IN_REVIEW: 'Currently In Review',
   AWAITING_INFO: 'Awaiting Information',
 };
+
+export const VENDOR_INFO_STATUS = ['Pending', 'Verified', 'In Review'];
 
 export const DEFAULT_PROPERTY_FEATURES = [
   'Car Parking',

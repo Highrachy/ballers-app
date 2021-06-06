@@ -220,10 +220,17 @@ export const manualWait = async (func, delay = 1000) =>
   );
 
 // Helpers for Filters
-
 export const getTitleCase = (name) => (name ? Humanize.titleCase(name) : '');
+export const formatFilterString = (name, value) =>
+  `${name}: ${getTitleCase(value)}`;
+export const formatFilterBoolean = (
+  name,
+  value,
+  trueValue = 'Yes',
+  falseValue = 'No'
+) => `${name}: ${value ? trueValue : falseValue}`;
 
-export const getPrice = (price) =>
+export const formatFilterPrice = (price) =>
   price && Number(price) ? moneyFormatInNaira(price) : '';
 
 export const getRange = (value, format) => {

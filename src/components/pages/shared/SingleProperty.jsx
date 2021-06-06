@@ -89,10 +89,44 @@ export const OwnedPropertyCard = ({
   setProperty,
   Sidebar,
 }) => {
+  const isVendor = useCurrentRole().role === USER_TYPES.vendor;
+  const isAdmin = useCurrentRole().role === USER_TYPES.admin;
+  const isAdminOrVendor = isVendor || isAdmin;
   return (
     <div className="container-fluid">
       <Card className="card-container mt-4 h-100 property-holder__big">
         <PropertyImage property={property} />
+        {isAdminOrVendor && property?.flagged?.status && (
+          <div className="mt-3">
+            <p className="speech-bubble">
+              <small className="text-small">
+                {getTinyDate(
+                  property?.flagged?.case[property?.flagged?.case?.length - 1]
+                    ?.flaggedDate
+                )}
+              </small>
+              <br />
+              <strong>
+                {
+                  property?.flagged?.case[property?.flagged?.case?.length - 1]
+                    ?.flaggedReason
+                }
+                <div className="text-right">
+                  <UnflagProperty
+                    caseId={
+                      property?.flagged?.case[
+                        property?.flagged?.case?.length - 1
+                      ]?._id
+                    }
+                    property={property}
+                    setToast={setToast}
+                    setProperty={setProperty}
+                  />
+                </div>
+              </strong>
+            </p>
+          </div>
+        )}
         {useCurrentRole().role === USER_TYPES.vendor && (
           <ManagePropertyLink
             property={property}
@@ -100,13 +134,7 @@ export const OwnedPropertyCard = ({
             setProperty={setProperty}
           />
         )}
-        <div className="mt-3">
-          {property?.flagged?.status && (
-            <Link to="#reported-property" class="badge invert-danger">
-              Reported Property
-            </Link>
-          )}
-        </div>
+
         <div className="row mt-5">
           <div className={Sidebar ? 'col-sm-7' : 'col-sm-12'}>
             <PropertyDescription property={property} />
@@ -465,7 +493,6 @@ const ManagePropertyLink = ({ property, setToast, setProperty }) => (
       setToast={setToast}
       setProperty={setProperty}
     />
-    <LinkSeparator />
   </section>
 );
 
@@ -489,10 +516,6 @@ export const PropertyImage = ({ property, hideGallery }) => {
               className="img-fluid gallery-main-image property-img"
               watermark
             />
-
-            {/* {property?.flagged?.status && (
-              <h2 className="overlay__content">Reported </h2>
-            )} */}
           </div>
         </div>
         {showGallery && <GalleryList property={property} />}

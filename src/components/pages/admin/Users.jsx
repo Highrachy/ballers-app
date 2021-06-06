@@ -1,22 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
-import { DASHBOARD_PAGE, USER_TYPES } from 'utils/constants';
-import { SuccessIcon, InfoIcon } from 'components/utils/Icons';
+import {
+  DASHBOARD_PAGE,
+  USER_TYPES,
+  ENTITY_SHORTCODE,
+  VENDOR_IDENTIFICATION_TYPE,
+  VENDOR_INFO_STATUS,
+} from 'utils/constants';
 import { Link } from '@reach/router';
 import Humanize from 'humanize-plus';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { Form, Formik } from 'formik';
-import { setInitialValues } from 'components/forms/form-helper';
-import { userFilterSchema } from 'components/forms/schemas/userSchema';
 import Select from 'components/forms/Select';
-import { objectToOptions } from 'utils/helpers';
-import Input from 'components/forms/Input';
-import Button from 'components/forms/Button';
 import UserCard from 'components/common/UserCard';
 import BackendPage from 'components/layout/BackendPage';
 import { UserIcon } from 'components/utils/Icons';
 import { API_ENDPOINT } from 'utils/URL';
+import {
+  booleanOptions,
+  formatFilterBoolean,
+  formatFilterString,
+  objectToOptions,
+  valuesToOptions,
+} from 'utils/helpers';
+import Input from 'components/forms/Input';
+import Button from 'components/forms/Button';
+import {
+  DisplayFormikState,
+  processFilterValues,
+} from 'components/forms/form-helper';
+import { CertifyIcon } from 'components/utils/Icons';
+import { SuccessIcon } from 'components/utils/Icons';
+import { InfoIcon } from 'components/utils/Icons';
+import { BanIcon } from 'components/utils/Icons';
+import { getVerifiedProgress } from '../vendor/setup/AccountSetup';
+import { ApprovedIcon } from 'components/utils/Icons';
 
 const Users = () => (
   <BackendPage>
@@ -40,12 +59,13 @@ const UsersRowList = ({ results, offset }) => {
           <table className="table table-border table-hover">
             <thead>
               <tr>
-                <td>S/N</td>
-                <td>Name</td>
-                <td>Phone</td>
-                <td>Role</td>
-                <td>Status</td>
-                <td></td>
+                <th>S/N</th>
+                <th>User Info</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th className="text-center">Onboarding</th>
+                <th className="text-center">Status</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -64,155 +84,196 @@ UsersRowList.propTypes = {
   results: PropTypes.array.isRequired,
 };
 
-const UsersRow = ({
-  activated,
-  _id,
-  email,
-  number,
-  firstName,
-  lastName,
-  phone,
-  phone2,
-  profileImage,
-  role,
-}) => {
-  // const userId = _id;
-  // const [userRole, setUserRole] = React.useState(role);
-  // const processRoleChange = () => {
-  //   const action = userRole === 1 ? 'upgrade' : 'downgrade';
+const UsersRow = ({ number, ...user }) => {
+  const isVendor = user?.role === USER_TYPES.vendor;
+  const status = getUserStatus(user);
 
-  //   Axios.put(
-  //     `${BASE_API_URL}/user/editor/${action}`,
-  //     { userId },
-  //     {
-  //       headers: { Authorization: getTokenFromStore() },
-  //     }
-  //   )
-  //     .then(function (response) {
-  //       const { status, data } = response;
-  //       if (status === 200) {
-  //         setToast({
-  //           message: data.message,
-  //           type: 'success',
-  //         });
-  //         setUserRole(userRole === 1 ? 3 : 1);
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       setToast({
-  //         message: getError(error),
-  //       });
-  //     });
-  // };
   return (
     <tr>
       <td>{number}</td>
       <td>
-        <UserCard user={{ firstName, lastName, email, profileImage }} />
+        <UserCard user={user} />
       </td>
       <td>
-        {phone} <br />
-        {phone2 || '-'}
+        <span className="block-text-small">{user?.phone}</span>
+        <span className="block-text-small">{user?.phone2 || '-'}</span>
       </td>
       <td>
-        {activated ? (
-          <span className="text-green">
-            <SuccessIcon />{' '}
-          </span>
-        ) : (
-          <span className="text-muted">
-            <InfoIcon />
-          </span>
-        )}
+        <strong className="block-text-small font-bold">
+          {Humanize.titleCase(DASHBOARD_PAGE[user?.role])}
+        </strong>
+        <span className="block-text-smaller">
+          {isVendor ? ENTITY_SHORTCODE[user?.vendor?.entity || 'None'] : '-'}
+        </span>
       </td>
-      <td>{Humanize.titleCase(DASHBOARD_PAGE[role])}</td>
-      {/* <td>
-        {userRole === 1 && (
-          <button
-            className="btn btn-sm btn-secondary"
-            onClick={processRoleChange}
-          >
-            Upgrade to an Editor
-          </button>
-        )}
-        {userRole === 3 && (
-          <button
-            className="btn btn-sm btn-danger"
-            // to={`/admin/user/${_id}`}
-            onClick={processRoleChange}
-          >
-            Downgrade to a User
-          </button>
-        )}
-      </td> */}
+      <td className="text-center">
+        {isVendor ? `${getVerifiedProgress(user)}%` : '-'}
+      </td>
+      <td className="text-center">
+        <span className={`${status.className} icon-md`}>{status.Icon}</span>
+      </td>
       <td>
-        <Link className="btn btn-sm btn-secondary" to={`/admin/user/${_id}`}>
-          View {Humanize.capitalize(DASHBOARD_PAGE[role])}
+        <Link
+          className="btn btn-xs btn-wide btn-secondary"
+          to={`/admin/user/${user?._id}`}
+        >
+          View
         </Link>
       </td>
     </tr>
   );
 };
 
+const getUserStatus = (user) => {
+  const userStatus = {
+    activated: { className: 'text-success', Icon: <SuccessIcon /> },
+    banned: { className: 'text-danger', Icon: <BanIcon /> },
+    pending: { className: 'text-muted', Icon: <InfoIcon /> },
+    certified: { className: 'text-warning', Icon: <CertifyIcon /> },
+    verified: { className: 'text-info', Icon: <ApprovedIcon /> },
+  };
+
+  if (user?.banned?.status) {
+    return userStatus.banned;
+  }
+
+  if (!user?.vendor?.certified && user?.vendor?.verified) {
+    return userStatus.verified;
+  }
+  if (user?.vendor?.certified) {
+    return userStatus.certified;
+  }
+  if (user?.activated) {
+    return userStatus.activated;
+  } else {
+    return userStatus.pending;
+  }
+};
+
 const FilterForm = ({ setFilterTerms }) => {
   return (
     <Formik
-      initialValues={setInitialValues(userFilterSchema)}
+      initialValues={{}}
       onSubmit={(values, actions) => {
-        setFilterTerms(
-          { ...values },
-          {
-            role: `User Type : ${
-              values.role &&
-              Humanize.titleCase(Object.keys(USER_TYPES)[values.role])
-            }`,
-          }
-        );
+        console.log(`values`, values);
+        const payload = processFilterValues(values);
+        setFilterTerms(payload, {
+          firstName: formatFilterString('First Name', values.firstName),
+          lastName: formatFilterString('Last Name', values.lastName),
+          email: formatFilterString('Email', values.email),
+          phone: formatFilterString('Phone', values.phone),
+          phone2: formatFilterString('Phone 2', values.phone2),
+          role: formatFilterString(
+            'Role',
+            Object.keys(USER_TYPES)[values.role]
+          ),
+          activated: formatFilterBoolean('Activated', values.activated),
+          banned: formatFilterBoolean('Banned', values.banned),
+
+          redanNumber: formatFilterString('Redan Number', values.redanNumber),
+          companyName: formatFilterString('Company Name', values.companyName),
+          entity: formatFilterString('Last Name', values.entity),
+          verified: formatFilterBoolean('Verified', values.verified),
+          certified: formatFilterBoolean('Certified', values.certified),
+          bankDetailsStatus: formatFilterString(
+            'Bank Details Status',
+            values.bankDetailsStatus
+          ),
+          companyInfoStatus: formatFilterString(
+            'Company Info Status',
+            values.companyInfoStatus
+          ),
+          directorInfoStatus: formatFilterString(
+            'Director Info Status',
+            values.directorInfoStatus
+          ),
+          documentUploadStatus: formatFilterString(
+            'Document Upload Status',
+            values.documentUploadStatus
+          ),
+        });
       }}
-      // validationSchema={{}}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
-          <Card className="card-container">
-            <section className="row">
-              <div className="col-md-10 px-4">
-                <h5 className="mb-4">Filter Users</h5>
-                <div className="form-row">
-                  <Input
-                    formGroupClassName="col-md-6"
-                    label="First Name"
-                    name="firstName"
-                  />
-                  <Input
-                    formGroupClassName="col-md-6"
-                    label="Last Name"
-                    name="lastName"
-                  />
-                </div>
-                <div className="form-row">
-                  <Input
-                    formGroupClassName="col-md-6"
-                    label="Phone Number"
-                    name="phone"
-                  />
-                  <Select
-                    formGroupClassName="col-md-6"
-                    label="Role"
-                    name="role"
-                    options={objectToOptions(USER_TYPES)}
-                    placeholder="Select Role"
-                  />
-                </div>
-              </div>
-            </section>
-          </Card>
+          <section>
+            <Input label="First Name" name="firstName" />
+            <Input label="Last Name" name="lastName" />
+            <Input type="email" label="Email" name="email" />
+            <Input label="Phone Number" name="phone" />
+            <Input label="Phone Number 2" name="phone2" />
 
+            <Select
+              label="User Type"
+              name="role"
+              options={objectToOptions(USER_TYPES)}
+            />
+
+            <Select
+              label="Activated User Account"
+              name="activated"
+              options={booleanOptions()}
+            />
+
+            <Select label="Banned" name="banned" options={booleanOptions()} />
+
+            <h6 className="my-5">Vendor Filters</h6>
+
+            <Input label="Company Name" name="companyName" />
+            <Input label="Redan Number" name="redanNumber" />
+
+            <Select
+              label="Entity"
+              name="entity"
+              options={valuesToOptions(Object.keys(VENDOR_IDENTIFICATION_TYPE))}
+            />
+
+            <Select
+              label="Verified Vendor"
+              name="verified"
+              options={booleanOptions()}
+            />
+
+            <Select
+              label="Certified Vendor"
+              name="certified"
+              options={booleanOptions()}
+            />
+
+            <Select
+              label="Bank Details Status"
+              name="bankDetailsStatus"
+              options={valuesToOptions(VENDOR_INFO_STATUS)}
+              placeholder="Bank Status"
+            />
+
+            <Select
+              label="Company Info Status"
+              name="companyInfoStatus"
+              options={valuesToOptions(VENDOR_INFO_STATUS)}
+              placeholder="Company Info Status"
+            />
+
+            <Select
+              label="Director Info Status"
+              name="directorInfoStatus"
+              options={valuesToOptions(VENDOR_INFO_STATUS)}
+              placeholder="Director Info Status"
+            />
+
+            <Select
+              label="Document Upload Status"
+              name="documentUploadStatus"
+              options={valuesToOptions(VENDOR_INFO_STATUS)}
+            />
+          </section>
+          <DisplayFormikState {...props} showAll />
           <Button
             className="btn-secondary mt-4"
             loading={isSubmitting}
             onClick={handleSubmit}
           >
-            Filter Users
+            Filter Properties
           </Button>
         </Form>
       )}

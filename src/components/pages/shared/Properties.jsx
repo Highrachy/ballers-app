@@ -7,7 +7,6 @@ import {
   DisplayFormikState,
   processFilterValues,
 } from 'components/forms/form-helper';
-// import { propertyFilterSchema } from 'components/forms/schemas/propertySchema';
 import Select from 'components/forms/Select';
 import {
   booleanOptions,
@@ -29,9 +28,9 @@ import { API_ENDPOINT } from 'utils/URL';
 import { Spacing } from 'components/common/Helpers';
 import { SuccessIcon } from 'components/utils/Icons';
 import { WarningIcon } from 'components/utils/Icons';
-import InputFormat from 'components/forms/InputFormat';
 import { BedIcon } from 'components/utils/Icons';
 import { BathIcon } from 'components/utils/Icons';
+import InputFormat from 'components/forms/InputFormat';
 import { ToiletIcon } from 'components/utils/Icons';
 import FilterRange from 'components/forms/FilterRange';
 
@@ -171,7 +170,7 @@ const PropertiesRow = ({
       </td>
       <td>
         <Link
-          className="btn btn-xs btn-secondary"
+          className="btn btn-xs btn-wide btn-secondary"
           to={`/${userType}/property/${_id}`}
         >
           View
