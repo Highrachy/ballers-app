@@ -99,31 +99,43 @@ export const OwnedPropertyCard = ({
         {isAdminOrVendor && property?.flagged?.status && (
           <div className="mt-3">
             <p className="speech-bubble">
-              <small className="text-small">
-                {getTinyDate(
-                  property?.flagged?.case[property?.flagged?.case?.length - 1]
-                    ?.flaggedDate
-                )}
-              </small>
-              <br />
-              <strong>
-                {
-                  property?.flagged?.case[property?.flagged?.case?.length - 1]
-                    ?.flaggedReason
-                }
-                <div className="text-right">
-                  <UnflagProperty
-                    caseId={
+              <div className="d-flex align-items-center">
+                <article>
+                  <h6>
+                    {
                       property?.flagged?.case[
                         property?.flagged?.case?.length - 1
-                      ]?._id
+                      ]?.flaggedReason
                     }
-                    property={property}
-                    setToast={setToast}
-                    setProperty={setProperty}
-                  />
+                  </h6>
+                  <small className="block-text-small">
+                    {getTinyDate(
+                      property?.flagged?.case[
+                        property?.flagged?.case?.length - 1
+                      ]?.flaggedDate
+                    )}
+                  </small>
+                </article>
+                <div className="ml-auto">
+                  {isAdmin && (
+                    <UnflagProperty
+                      caseId={
+                        property?.flagged?.case[
+                          property?.flagged?.case?.length - 1
+                        ]?._id
+                      }
+                      property={property}
+                      setToast={setToast}
+                      setProperty={setProperty}
+                    />
+                  )}
+                  {isVendor && (
+                    <button className="btn btn-wide btn-xs btn-info">
+                      Resolve Property
+                    </button>
+                  )}
                 </div>
-              </strong>
+              </div>
             </p>
           </div>
         )}

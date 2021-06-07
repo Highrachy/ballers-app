@@ -21,7 +21,6 @@ import { HOUSE_TYPES } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
 import { API_ENDPOINT } from 'utils/URL';
 import { Spacing } from 'components/common/Helpers';
-import { FileIcon } from 'components/utils/Icons';
 
 const Portfolios = () => {
   return (
@@ -49,7 +48,7 @@ const PortfoliosRowList = ({ results, offset }) => (
               <th>S/N</th>
               <th>Image</th>
               <th>Name</th>
-              <th>Location</th>
+              <th>User</th>
               <th>Price</th>
               <th>&nbsp;</th>
             </tr>
@@ -69,7 +68,14 @@ const PortfoliosRowList = ({ results, offset }) => (
   </div>
 );
 
-const PortfoliosRow = ({ _id, number, propertyInfo, totalAmountPayable }) => {
+const PortfoliosRow = ({
+  _id,
+  number,
+  propertyInfo,
+  totalAmountPayable,
+  userInfo,
+  vendorInfo,
+}) => {
   const userType = useCurrentRole().name;
   return (
     <tr>
@@ -85,24 +91,29 @@ const PortfoliosRow = ({ _id, number, propertyInfo, totalAmountPayable }) => {
           />
         </Link>
       </td>
-      <td>{propertyInfo.name}</td>
       <td>
-        <strong>
-          {propertyInfo.address.city}, {propertyInfo.address.state}
-        </strong>
+        <span className="font-weight-bold block-text-small">
+          {propertyInfo.name}
+        </span>
+        <span className="block-text-smaller">
+          {vendorInfo?.vendor?.companyName}
+        </span>
       </td>
-      <td>{moneyFormatInNaira(totalAmountPayable)}</td>
       <td>
-        <Link
-          className="btn  btn-xs btn-secondary"
-          to={`/${useCurrentRole().name}/offer/${_id}`}
-        >
-          <FileIcon /> View Offer
-        </Link>
+        {userInfo?.firstName} {userInfo?.lastName}
+        <div className="block-text-smaller text-link">
+          <Link to={`/${useCurrentRole().name}/offer/${_id}`}>View Offer</Link>
+        </div>
+      </td>
+      <td>
+        <h5 className="text-dark">{moneyFormatInNaira(totalAmountPayable)}</h5>
+      </td>
+
+      <td>
         <Spacing />
         <Spacing />
         <Link
-          className="btn btn-wide btn-info"
+          className="btn btn-xs btn-wide btn-secondary"
           to={`/${userType}/portfolio/${_id}`}
         >
           View portfolio

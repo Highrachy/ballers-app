@@ -34,3 +34,5 @@ export const getTimeOfDay = (date) => {
 export const isPastDate = (date) => isPast(date);
 export const differenceInDays = (date) =>
   differenceInCalendarDays(Date.now(), date);
+
+export const formatFilterDate = (date) => format(parse(date), 'YYYY-MM-DD');

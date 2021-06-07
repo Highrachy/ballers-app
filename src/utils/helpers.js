@@ -228,7 +228,7 @@ export const formatFilterBoolean = (
   value,
   trueValue = 'Yes',
   falseValue = 'No'
-) => `${name}: ${value ? trueValue : falseValue}`;
+) => `${name}: ${value && value === 'true' ? trueValue : falseValue}`;
 
 export const formatFilterPrice = (price) =>
   price && Number(price) ? moneyFormatInNaira(price) : '';

@@ -23,6 +23,16 @@ import { PropertyAvatar } from 'components/common/PropertyCard';
 import { SuccessIcon } from 'components/utils/Icons';
 import { WarningIcon } from 'components/utils/Icons';
 import { UserContext } from 'context/UserContext';
+import { Form, Formik } from 'formik';
+import {
+  DisplayFormikState,
+  processFilterValues,
+} from 'components/forms/form-helper';
+import Select from 'components/forms/Select';
+import { formatFilterString, getRange, valuesToOptions } from 'utils/helpers';
+import InputFormat from 'components/forms/InputFormat';
+import FilterRange from 'components/forms/FilterRange';
+import DatePicker from 'components/forms/DatePicker';
 
 const Transactions = () => (
   <BackendPage>
@@ -39,6 +49,7 @@ export const AllTransactions = () => {
       PageIcon={<TransactionIcon />}
       queryName="transaction"
       initialFilter={{ sortBy: 'createdAt', sortDirection: 'desc' }}
+      FilterComponent={FilterForm}
     />
   );
 };
@@ -501,6 +512,118 @@ const TransactionsRow = (transaction) => {
         </td>
       )}
     </tr>
+  );
+};
+
+// createdAt: { type: FILTER_TYPE.DATE },
+// offerId: { type: FILTER_TYPE.OBJECT_ID }, - get all offers in the database
+// paidOn: { type: FILTER_TYPE.DATE },
+// propertyId: { type: FILTER_TYPE.OBJECT_ID }, - get all properties
+// userId: { type: FILTER_TYPE.OBJECT_ID }, - get all user Id
+// vendorId: { type: FILTER_TYPE.OBJECT_ID }, - get all vendor Ids
+
+// remittedAmount: { key: 'remittance.amount', type: FILTER_TYPE.INTEGER },
+// remittedBy: { key: 'remittance.by', type: FILTER_TYPE.OBJECT_ID },
+// remittedDate: { key: 'remittance.date', type: FILTER_TYPE.DATE },
+// remittedPercentage: { key: 'remittance.percentage', type: FILTER_TYPE.INTEGER },
+
+const FilterForm = ({ setFilterTerms }) => {
+  return (
+    <Formik
+      initialValues={{}}
+      onSubmit={(values, actions) => {
+        // console.log(`initial values`, values);
+        // var now = new Date(values?.paidOn?.date);
+        // var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+        // console.log(`utc.toISOString()`, utc.toISOString());
+        const payload = processFilterValues({
+          ...values,
+          // paidOn: '2021-04-19T23:00:00.000Z',
+        });
+        setFilterTerms(payload, {
+          amount: `Amount : ${getRange(values?.amount, { suffix: 'Naira' })}`,
+          paymentSource: formatFilterString(
+            'Payment Source',
+            values?.paymentSource
+          ),
+          remittedAmount: `Remitted Amount : ${getRange(
+            values?.remittedAmount,
+            {
+              suffix: 'Naira',
+            }
+          )}`,
+          remittedPercentage: `Remitted Percentage : ${getRange(
+            values?.remittedPercentage,
+            {
+              suffix: '%',
+            }
+          )}`,
+          // houseType: formatFilterString(
+          //   'House Type',
+          //   getTitleCase(values?.houseType)
+          // ),
+          // paidOn: formatFilterString(
+          //   'Paid On',
+          //   getTinyDate(values?.paidOn?.date)
+          // ),
+          // state: formatFilterString('State', values.state),
+          // city: formatFilterString('City', values.city),
+          // approved: formatFilterBoolean('Approved', values.approved),
+          // flagged: formatFilterBoolean('Flagged', values.flagged),
+          // bedrooms: formatFilterString('Bathrooms', values.bedrooms),
+          // bathrooms: formatFilterString('Bathrooms', values.bathrooms),
+        });
+      }}
+    >
+      {({ isSubmitting, handleSubmit, ...props }) => (
+        <Form>
+          <section>
+            <Select
+              label="Payment Source"
+              name="paymentSource"
+              options={valuesToOptions([
+                'Paystack',
+                'Bank Transfer',
+                'Bank Deposit',
+              ])}
+            />
+
+            <FilterRange
+              Field={InputFormat}
+              name="amount"
+              label="Amount"
+              values={props?.values}
+            />
+            <FilterRange
+              Field={InputFormat}
+              name="remittedAmount"
+              label="Remitted Amount"
+              values={props?.values}
+            />
+            <FilterRange
+              Field={InputFormat}
+              name="remittedPercentage"
+              label="Remitted Percentage"
+              values={props?.values}
+            />
+
+            {false && (
+              <DatePicker label="Paid on" name="paidOn" placeholder="Paid On" />
+            )}
+
+            {/* <Input label="City" name="city" /> */}
+          </section>
+          <DisplayFormikState {...props} showAll hide />
+          <Button
+            className="btn-secondary mt-4"
+            loading={isSubmitting}
+            onClick={handleSubmit}
+          >
+            Filter Transaction
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

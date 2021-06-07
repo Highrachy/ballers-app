@@ -217,7 +217,7 @@ const FilterForm = ({ setFilterTerms }) => {
 
             <Select label="Banned" name="banned" options={booleanOptions()} />
 
-            <h6 className="my-5">Vendor Filters</h6>
+            <h6 className="mt-5">Vendor Filters</h6>
 
             <Input label="Company Name" name="companyName" />
             <Input label="Redan Number" name="redanNumber" />
@@ -273,7 +273,7 @@ const FilterForm = ({ setFilterTerms }) => {
             loading={isSubmitting}
             onClick={handleSubmit}
           >
-            Filter Properties
+            Filter Users
           </Button>
         </Form>
       )}

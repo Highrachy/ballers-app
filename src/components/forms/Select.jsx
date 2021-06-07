@@ -34,7 +34,9 @@ const Select = ({
 }) => {
   return (
     <div
-      className={classNames('form-group', formGroupClassName, { row: inline })}
+      className={classNames('form-group mb-4', formGroupClassName, {
+        row: inline,
+      })}
     >
       <Label
         className={labelClassName}
@@ -194,7 +196,7 @@ export const customStylesJustForYou = {
 
 Select.defaultProps = {
   autoComplete: '',
-  formGroupClassName: null,
+  formGroupClassName: 'form-group mb-4',
   helpText: null,
   inline: false,
   inputClassName: null,

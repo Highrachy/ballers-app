@@ -10,6 +10,8 @@ import {
 import Select from 'components/forms/Select';
 import {
   booleanOptions,
+  formatFilterBoolean,
+  formatFilterString,
   generateNumOptions,
   getRange,
   getTitleCase,
@@ -63,7 +65,7 @@ const PropertiesRowList = ({ results, offset }) => (
               <th>S/N</th>
               <th>Image</th>
               <th>Name</th>
-              <th>Location</th>
+              <th>Type</th>
               <th>Price</th>
               <th></th>
             </tr>
@@ -180,7 +182,7 @@ const PropertiesRow = ({
             <Spacing />
             <Spacing />
             <Link
-              className="btn btn-xs btn-info"
+              className="btn btn-xs btn-wide btn-info"
               to={`/${userType}/property/edit/${_id}`}
             >
               Edit
@@ -199,16 +201,19 @@ const FilterForm = ({ setFilterTerms }) => {
       onSubmit={(values, actions) => {
         const payload = processFilterValues(values);
         setFilterTerms(payload, {
-          name: `Property Name : ${getTitleCase(values.name)}`,
+          name: formatFilterString('Property Name', values.name),
           price: `Price : ${getRange(values?.price, { suffix: 'Naira' })}`,
-          houseType: `House Type : ${getTitleCase(values?.houseType)}`,
-          toilets: `Toilet : ${values.toilets}`,
-          state: `State: ${values.state}`,
-          city: `City: ${values.city}`,
-          approved: `Approved: ${values.approved ? 'Yes' : 'No'}`,
-          flagged: `Flagged: ${values.flagged ? 'Yes' : 'No'}`,
-          bedrooms: `Bathrooms: ${values.bedrooms}`,
-          bathrooms: `Bathrooms: ${values.bathrooms}`,
+          houseType: formatFilterString(
+            'House Type',
+            getTitleCase(values?.houseType)
+          ),
+          toilets: formatFilterString('Toilet', values.toilets),
+          state: formatFilterString('State', values.state),
+          city: formatFilterString('City', values.city),
+          approved: formatFilterBoolean('Approved', values.approved),
+          flagged: formatFilterBoolean('Flagged', values.flagged),
+          bedrooms: formatFilterString('Bathrooms', values.bedrooms),
+          bathrooms: formatFilterString('Bathrooms', values.bathrooms),
         });
       }}
     >
