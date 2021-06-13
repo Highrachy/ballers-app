@@ -11,6 +11,7 @@ import Label from './Label';
 import ReactDatePicker from 'react-datepicker';
 import { getIn } from 'formik';
 import { isValid, parse } from 'date-fns';
+import { convertToUTC } from 'utils/date-helpers';
 
 const DatePicker = ({
   name,
@@ -72,16 +73,19 @@ const DatePicker = ({
               dateFormat={dateFormat}
               id={name}
               name={name}
-              onChange={(date) => {
-                if (date) {
-                  let dateTime = date.toLocaleDateString();
+              onChange={(dateValue) => {
+                if (dateValue) {
+                  let dateTime = dateValue.toLocaleDateString();
+                  let date = convertToUTC(dateValue);
 
                   if (showTimeSelectOnly) {
-                    dateTime = date.toLocaleTimeString();
+                    dateTime = dateValue.toLocaleTimeString();
+                    date = dateValue;
                   }
 
                   if (showTimeSelect) {
-                    dateTime = date.toLocaleString();
+                    dateTime = dateValue.toLocaleString();
+                    date = dateValue;
                   }
 
                   form.setFieldValue(name, { date, value: dateTime });

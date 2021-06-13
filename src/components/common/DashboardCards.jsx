@@ -11,6 +11,7 @@ import { ArrowRightIcon } from 'components/utils/Icons';
 import { Link } from '@reach/router';
 import { useCurrentRole } from 'hooks/useUser';
 import Humanize from 'humanize-plus';
+import { ReportedPropertyIcon } from 'components/utils/Icons';
 
 const DashboardCards = () => {
   const propertyCard = {
@@ -73,6 +74,16 @@ const DashboardCards = () => {
     footer: null,
   };
 
+  const reportedPropertiesCard = {
+    name: 'reportedProperties',
+    Icon: <ReportedPropertyIcon />,
+    title: 'Reported Properties',
+    to: 'reported-properties',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  };
+
   const [dashboardCountQuery] = useGetQuery({
     key: 'dashboardCount',
     name: 'dashboardCount',
@@ -88,9 +99,23 @@ const DashboardCards = () => {
     enquiryCard,
     scheduledVisitationCard,
   ];
+  const ADMIN_DASHBOARD_CARDS = [
+    propertyCard,
+    offersCard,
+    portfolioCard,
+    transactionCard,
+    enquiryCard,
+    scheduledVisitationCard,
+    reportedPropertiesCard,
+  ];
+
+  const dashboardCards = useCurrentRole().isAdmin
+    ? ADMIN_DASHBOARD_CARDS
+    : VENDOR_DASHBOARD_CARDS;
+
   return (
     <div className="row mt-4">
-      {VENDOR_DASHBOARD_CARDS.map(
+      {dashboardCards.map(
         ({ Icon, title, to, content, footer, name }, index) => (
           <DashboardCard
             Icon={Icon}

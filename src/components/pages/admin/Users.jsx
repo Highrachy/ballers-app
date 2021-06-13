@@ -36,12 +36,17 @@ import { InfoIcon } from 'components/utils/Icons';
 import { BanIcon } from 'components/utils/Icons';
 import { getVerifiedProgress } from '../vendor/setup/AccountSetup';
 import { ApprovedIcon } from 'components/utils/Icons';
+import DatePicker from 'components/forms/DatePicker';
+import { formatFilterDate } from 'utils/date-helpers';
 
 const Users = () => (
   <BackendPage>
     <PaginatedContent
       endpoint={API_ENDPOINT.getAllUsers()}
-      initialFilter={{ sortBy: 'createdAt', sortDirection: 'desc' }}
+      initialFilter={{
+        sortBy: 'createdAt',
+        sortDirection: 'desc',
+      }}
       pageName="User"
       DataComponent={UsersRowList}
       FilterComponent={FilterForm}
@@ -130,7 +135,7 @@ const getUserStatus = (user) => {
     banned: { className: 'text-danger', Icon: <BanIcon /> },
     pending: { className: 'text-muted', Icon: <InfoIcon /> },
     certified: { className: 'text-warning', Icon: <CertifyIcon /> },
-    verified: { className: 'text-info', Icon: <ApprovedIcon /> },
+    verified: { className: 'text-info icon-md2', Icon: <ApprovedIcon /> },
   };
 
   if (user?.banned?.status) {
@@ -156,7 +161,11 @@ const FilterForm = ({ setFilterTerms }) => {
       initialValues={{}}
       onSubmit={(values, actions) => {
         console.log(`values`, values);
-        const payload = processFilterValues(values);
+        const payload = processFilterValues({
+          ...values,
+          createdAt: formatFilterDate(values?.createdAt?.value),
+        });
+        console.log(`payload`, payload);
         setFilterTerms(payload, {
           firstName: formatFilterString('First Name', values.firstName),
           lastName: formatFilterString('Last Name', values.lastName),
@@ -208,64 +217,79 @@ const FilterForm = ({ setFilterTerms }) => {
               name="role"
               options={objectToOptions(USER_TYPES)}
             />
-
-            <Select
-              label="Activated User Account"
-              name="activated"
-              options={booleanOptions()}
+            <DatePicker
+              label="Created at"
+              name="createdAt"
+              placeholder="Created At"
             />
 
-            <Select label="Banned" name="banned" options={booleanOptions()} />
+            {false && (
+              <>
+                <Select
+                  label="Activated User Account"
+                  name="activated"
+                  options={booleanOptions()}
+                />
 
-            <h6 className="mt-5">Vendor Filters</h6>
+                <Select
+                  label="Banned"
+                  name="banned"
+                  options={booleanOptions()}
+                />
 
-            <Input label="Company Name" name="companyName" />
-            <Input label="Redan Number" name="redanNumber" />
+                <h6 className="mt-5">Vendor Filters</h6>
 
-            <Select
-              label="Entity"
-              name="entity"
-              options={valuesToOptions(Object.keys(VENDOR_IDENTIFICATION_TYPE))}
-            />
+                <Input label="Company Name" name="companyName" />
+                <Input label="Redan Number" name="redanNumber" />
 
-            <Select
-              label="Verified Vendor"
-              name="verified"
-              options={booleanOptions()}
-            />
+                <Select
+                  label="Entity"
+                  name="entity"
+                  options={valuesToOptions(
+                    Object.keys(VENDOR_IDENTIFICATION_TYPE)
+                  )}
+                />
 
-            <Select
-              label="Certified Vendor"
-              name="certified"
-              options={booleanOptions()}
-            />
+                <Select
+                  label="Verified Vendor"
+                  name="verified"
+                  options={booleanOptions()}
+                />
 
-            <Select
-              label="Bank Details Status"
-              name="bankDetailsStatus"
-              options={valuesToOptions(VENDOR_INFO_STATUS)}
-              placeholder="Bank Status"
-            />
+                <Select
+                  label="Certified Vendor"
+                  name="certified"
+                  options={booleanOptions()}
+                />
 
-            <Select
-              label="Company Info Status"
-              name="companyInfoStatus"
-              options={valuesToOptions(VENDOR_INFO_STATUS)}
-              placeholder="Company Info Status"
-            />
+                <Select
+                  label="Bank Details Status"
+                  name="bankDetailsStatus"
+                  options={valuesToOptions(VENDOR_INFO_STATUS)}
+                  placeholder="Bank Status"
+                />
 
-            <Select
-              label="Director Info Status"
-              name="directorInfoStatus"
-              options={valuesToOptions(VENDOR_INFO_STATUS)}
-              placeholder="Director Info Status"
-            />
+                <Select
+                  label="Company Info Status"
+                  name="companyInfoStatus"
+                  options={valuesToOptions(VENDOR_INFO_STATUS)}
+                  placeholder="Company Info Status"
+                />
 
-            <Select
-              label="Document Upload Status"
-              name="documentUploadStatus"
-              options={valuesToOptions(VENDOR_INFO_STATUS)}
-            />
+                <Select
+                  label="Director Info Status"
+                  name="directorInfoStatus"
+                  options={valuesToOptions(VENDOR_INFO_STATUS)}
+                  placeholder="Director Info Status"
+                />
+
+                <Select
+                  label="Document Upload Status"
+                  name="documentUploadStatus"
+                  options={valuesToOptions(VENDOR_INFO_STATUS)}
+                />
+              </>
+            )}
           </section>
           <DisplayFormikState {...props} showAll />
           <Button

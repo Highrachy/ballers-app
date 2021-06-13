@@ -49,6 +49,7 @@ import {
   FaFlag,
   FaBan,
   FaThumbsUp,
+  FaHouseDamage,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
@@ -64,6 +65,7 @@ import {
   AiFillCheckSquare,
   AiFillCar,
   AiFillSafetyCertificate,
+  AiOutlineUserSwitch,
 } from 'react-icons/ai';
 import { MdLocalMall } from 'react-icons/md';
 import { GoVerified } from 'react-icons/go';
@@ -117,6 +119,8 @@ export const PropertyIcon = () => <BiBuildingHouse />;
 export const QuestionMarkIcon = () => <FiHelpCircle />;
 export const FoodMenuIcon = () => <BiFoodMenu />;
 export const ReferIcon = () => <FiGift />;
+export const ReferralsIcon = () => <AiOutlineUserSwitch />;
+export const ReportedPropertyIcon = () => <FaHouseDamage />;
 export const RightArrowIcon = () => <FiChevronRight />;
 export const RightChevronIcon = () => <FiChevronRight />;
 export const SchoolIcon = () => <FaBuilding />;

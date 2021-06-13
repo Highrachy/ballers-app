@@ -516,9 +516,9 @@ export const PropertyImage = ({ property, hideGallery }) => {
         <div className={!showGallery ? 'col-sm-12' : 'col-sm-10'}>
           <div
             className={
-              !useCurrentRole().isUser &&
-              property?.flagged?.status &&
-              'overlay overlay__danger'
+              !useCurrentRole().isUser && property?.flagged?.status
+                ? 'overlay overlay__danger'
+                : undefined
             }
           >
             <Image

@@ -36,3 +36,5 @@ export const differenceInDays = (date) =>
   differenceInCalendarDays(Date.now(), date);
 
 export const formatFilterDate = (date) => format(parse(date), 'YYYY-MM-DD');
+export const convertToUTC = (date) =>
+  new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString();

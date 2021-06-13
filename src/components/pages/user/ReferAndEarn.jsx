@@ -25,13 +25,23 @@ import NoContent from 'components/utils/NoContent';
 import LoadItems from 'components/utils/LoadingItems';
 import { ReferIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
+import PaginatedContent from 'components/common/PaginatedContent';
+import { API_ENDPOINT } from 'utils/URL';
 
 const ReferAndEarn = () => {
   const [referrals, setReferrals] = React.useState(null);
+  const { userState } = React.useContext(UserContext);
+
+  const id = userState._id;
+  console.log(`userState`, userState);
+
   React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/referral`, {
+    Axios.get(`${BASE_API_URL}/referral/all`, {
       headers: {
         Authorization: getTokenFromStore(),
+      },
+      params: {
+        referrerId: id,
       },
     })
       .then((response) => {
@@ -43,14 +53,22 @@ const ReferAndEarn = () => {
       .catch((error) => {
         setReferrals([]);
       });
-  }, []);
+  }, [id]);
   const addNewReferral = (referral) => setReferrals([...referrals, referral]);
   return (
     <BackendPage>
       <div className="col-sm-10 mx-auto">
         <EmailReferral />
         <InviteFriendByEmailCard addNewReferral={addNewReferral} />
-        <InviteFriendsTable referrals={referrals} />
+        {/* <InviteFriendsTable referrals={referrals || []} /> */}
+        <PaginatedContent
+          endpoint={API_ENDPOINT.getAllReferrals()}
+          initialFilter={{ referrerId: id }}
+          pageName="Referrals"
+          DataComponent={InviteFriendsTable}
+          PageIcon={<ReferIcon />}
+          queryName="referral"
+        />
       </div>
     </BackendPage>
   );
@@ -207,7 +225,8 @@ const ReferralCodeClipBoard = ({ referralCode }) => {
   );
 };
 
-const InviteFriendsTable = ({ referrals }) => {
+const InviteFriendsTable = ({ results, offset }) => {
+  const referrals = results;
   return (
     <div className="container-fluid mt-5">
       <h6>
@@ -231,7 +250,7 @@ const InviteFriendsTable = ({ referrals }) => {
               {referrals &&
                 referrals.map((referral, index) => (
                   <tr key={referral.email}>
-                    <td>{index + 1}</td>
+                    <td>{index + 1 + offset}</td>
                     <td>{referral.firstName || '-'}</td>
                     <td>
                       <strong>{referral.email}</strong>

@@ -228,6 +228,7 @@ export const OfflinePaymentForm = ({
 }) => {
   const [receipt, setReceipt] = React.useState('');
   const isUpdating = !!offlinePayment?._id;
+
   return (
     <Formik
       enableReinitialize={true}

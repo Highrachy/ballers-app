@@ -10,6 +10,7 @@ import {
 // import { VisitationIcon } from 'components/utils/Icons';
 // import { MessageIcon } from 'components/utils/Icons';
 import { PropertyIcon } from 'components/utils/Icons';
+import { ReferralsIcon } from 'components/utils/Icons';
 // import { ArticlesIcon } from 'components/utils/Icons';
 
 export default [
@@ -43,12 +44,12 @@ export default [
     icon: <TransactionIcon />,
     footer: true,
   },
-  // {
-  //   title: 'Knowledgebase',
-  //   to: '/admin/knowledgebase',
-  //   icon: <ArticlesIcon />,
-  //   footer: true,
-  // },
+  {
+    title: 'Referrals',
+    to: '/admin/referrals',
+    icon: <ReferralsIcon />,
+    footer: true,
+  },
   {
     title: 'Settings',
     to: '/user/settings',

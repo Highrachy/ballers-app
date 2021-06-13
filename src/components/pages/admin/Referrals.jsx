@@ -1,0 +1,229 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Card } from 'react-bootstrap';
+import {
+  USER_TYPES,
+  VENDOR_IDENTIFICATION_TYPE,
+  VENDOR_INFO_STATUS,
+  REFERRAL_STATUS,
+} from 'utils/constants';
+import PaginatedContent from 'components/common/PaginatedContent';
+import { Form, Formik } from 'formik';
+import Select from 'components/forms/Select';
+import BackendPage from 'components/layout/BackendPage';
+import { API_ENDPOINT } from 'utils/URL';
+import {
+  booleanOptions,
+  formatFilterBoolean,
+  formatFilterString,
+  objectToOptions,
+  valuesToOptions,
+} from 'utils/helpers';
+import Input from 'components/forms/Input';
+import Button from 'components/forms/Button';
+import {
+  DisplayFormikState,
+  processFilterValues,
+} from 'components/forms/form-helper';
+import { ReferralsIcon } from 'components/utils/Icons';
+
+const Referrals = () => (
+  <BackendPage>
+    <PaginatedContent
+      endpoint={API_ENDPOINT.getAllReferrals()}
+      initialFilter={{ sortBy: 'createdAt', sortDirection: 'desc' }}
+      pageName="Referral"
+      DataComponent={ReferralsRowList}
+      FilterComponent={FilterForm}
+      PageIcon={<ReferralsIcon />}
+      queryName="referral"
+    />
+  </BackendPage>
+);
+
+const ReferralsRowList = ({ results, offset }) => {
+  return (
+    <div className="container-fluid">
+      <Card>
+        <div className="table-responsive">
+          <table className="table table-border table-hover">
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Referral Info</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th className="text-center">Onboarding</th>
+                <th className="text-center">Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((referral, index) => (
+                <UsersRow
+                  key={index}
+                  number={offset + index + 1}
+                  {...referral}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+ReferralsRowList.propTypes = {
+  results: PropTypes.array.isRequired,
+};
+
+const UsersRow = ({ number, ...referral }) => {
+  return (
+    <tr key={referral.email}>
+      <td>{number}</td>
+      <td>{referral.firstName || '-'}</td>
+      <td>
+        <strong>{referral.email}</strong>
+      </td>
+      <td
+        className={`text-right ${REFERRAL_STATUS[referral.status].className}`}
+      >
+        {REFERRAL_STATUS[referral.status].text}
+      </td>
+    </tr>
+  );
+};
+
+const FilterForm = ({ setFilterTerms }) => {
+  return (
+    <Formik
+      initialValues={{}}
+      onSubmit={(values, actions) => {
+        console.log(`values`, values);
+        const payload = processFilterValues(values);
+        setFilterTerms(payload, {
+          firstName: formatFilterString('First Name', values.firstName),
+          lastName: formatFilterString('Last Name', values.lastName),
+          email: formatFilterString('Email', values.email),
+          phone: formatFilterString('Phone', values.phone),
+          phone2: formatFilterString('Phone 2', values.phone2),
+          role: formatFilterString(
+            'Role',
+            Object.keys(USER_TYPES)[values.role]
+          ),
+          activated: formatFilterBoolean('Activated', values.activated),
+          banned: formatFilterBoolean('Banned', values.banned),
+
+          redanNumber: formatFilterString('Redan Number', values.redanNumber),
+          companyName: formatFilterString('Company Name', values.companyName),
+          entity: formatFilterString('Last Name', values.entity),
+          verified: formatFilterBoolean('Verified', values.verified),
+          certified: formatFilterBoolean('Certified', values.certified),
+          bankDetailsStatus: formatFilterString(
+            'Bank Details Status',
+            values.bankDetailsStatus
+          ),
+          companyInfoStatus: formatFilterString(
+            'Company Info Status',
+            values.companyInfoStatus
+          ),
+          directorInfoStatus: formatFilterString(
+            'Director Info Status',
+            values.directorInfoStatus
+          ),
+          documentUploadStatus: formatFilterString(
+            'Document Upload Status',
+            values.documentUploadStatus
+          ),
+        });
+      }}
+    >
+      {({ isSubmitting, handleSubmit, ...props }) => (
+        <Form>
+          <section>
+            <Input label="First Name" name="firstName" />
+            <Input label="Last Name" name="lastName" />
+            <Input type="email" label="Email" name="email" />
+            <Input label="Phone Number" name="phone" />
+            <Input label="Phone Number 2" name="phone2" />
+
+            <Select
+              label="Referral Type"
+              name="role"
+              options={objectToOptions(USER_TYPES)}
+            />
+
+            <Select
+              label="Activated Referral Account"
+              name="activated"
+              options={booleanOptions()}
+            />
+
+            <Select label="Banned" name="banned" options={booleanOptions()} />
+
+            <h6 className="my-5">Vendor Filters</h6>
+
+            <Input label="Company Name" name="companyName" />
+            <Input label="Redan Number" name="redanNumber" />
+
+            <Select
+              label="Entity"
+              name="entity"
+              options={valuesToOptions(Object.keys(VENDOR_IDENTIFICATION_TYPE))}
+            />
+
+            <Select
+              label="Verified Vendor"
+              name="verified"
+              options={booleanOptions()}
+            />
+
+            <Select
+              label="Certified Vendor"
+              name="certified"
+              options={booleanOptions()}
+            />
+
+            <Select
+              label="Bank Details Status"
+              name="bankDetailsStatus"
+              options={valuesToOptions(VENDOR_INFO_STATUS)}
+              placeholder="Bank Status"
+            />
+
+            <Select
+              label="Company Info Status"
+              name="companyInfoStatus"
+              options={valuesToOptions(VENDOR_INFO_STATUS)}
+              placeholder="Company Info Status"
+            />
+
+            <Select
+              label="Director Info Status"
+              name="directorInfoStatus"
+              options={valuesToOptions(VENDOR_INFO_STATUS)}
+              placeholder="Director Info Status"
+            />
+
+            <Select
+              label="Document Upload Status"
+              name="documentUploadStatus"
+              options={valuesToOptions(VENDOR_INFO_STATUS)}
+            />
+          </section>
+          <DisplayFormikState {...props} showAll />
+          <Button
+            className="btn-secondary mt-4"
+            loading={isSubmitting}
+            onClick={handleSubmit}
+          >
+            Filter Referrals
+          </Button>
+        </Form>
+      )}
+    </Formik>
+  );
+};
+
+export default Referrals;

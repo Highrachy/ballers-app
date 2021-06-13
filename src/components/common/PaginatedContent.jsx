@@ -102,7 +102,7 @@ const TopFilter = ({ FilterComponent, filters, setFilters }) => {
   const [filterInWords, setFilterInWords] = React.useState({});
 
   const setFilterTerms = (terms, filterInWords) => {
-    setFilters(terms);
+    setFilters({ ...terms, tz: new Date().getTimezoneOffset() / 60 });
     setFilterInWords(filterInWords);
     setOpenFilter(false);
   };
@@ -118,9 +118,10 @@ const TopFilter = ({ FilterComponent, filters, setFilters }) => {
     let output = [];
     for (let item in filters) {
       if (
-        filters?.[item] &&
-        Object.prototype.hasOwnProperty.call(filters, item) &&
-        filters[item] !== JSON.stringify('')
+        filters?.[item] && // filter is not empty
+        Object.prototype.hasOwnProperty.call(filters, item) && // property is present in filter terms
+        filters[item] !== JSON.stringify('') && // not an empty string
+        item !== 'tz' // not timezone filter
       ) {
         output.push(
           <button className="btn badge badge-filters" key={item}>

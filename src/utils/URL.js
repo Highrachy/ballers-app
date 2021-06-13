@@ -35,4 +35,5 @@ export const API_ENDPOINT = {
   getDashboardCount: () => `${BASE_API_URL}/total-count`,
 
   getAllReportedProperties: () => `${BASE_API_URL}/report-property/all`,
+  getAllReferrals: () => `${BASE_API_URL}/referral/all`,
 };

@@ -20,6 +20,7 @@ import Portfolios from 'components/pages/shared/Portfolios';
 import SinglePortfolio from 'components/pages/shared/SinglePortfolio';
 import Notifications from 'components/pages/shared/Notifications';
 import ReportedProperties from 'components/pages/admin/ReportedProperties';
+import Referrals from 'components/pages/admin/Referrals';
 
 const AdminRouter = () => (
   <Router>
@@ -42,6 +43,7 @@ const AdminRouter = () => (
     <NewTransaction path="transactions/new/:offerId" />
     <KnowledgeBase path="knowledgebase" />
     <Notifications path="notifications" />
+    <Referrals path="referrals" />
     <Menu path="menu" />
   </Router>
 );

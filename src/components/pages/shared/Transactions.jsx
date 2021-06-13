@@ -7,7 +7,7 @@ import {
   moneyFormatInNaira,
   statusIsSuccessful,
 } from 'utils/helpers';
-import { getDate, getTinyDate } from 'utils/date-helpers';
+import { formatFilterDate, getDate, getTinyDate } from 'utils/date-helpers';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
 import Button from 'components/forms/Button';
@@ -48,7 +48,10 @@ export const AllTransactions = () => {
       DataComponent={TransactionsRowList}
       PageIcon={<TransactionIcon />}
       queryName="transaction"
-      initialFilter={{ sortBy: 'createdAt', sortDirection: 'desc' }}
+      initialFilter={{
+        sortBy: 'paidOn',
+        sortDirection: 'desc',
+      }}
       FilterComponent={FilterForm}
     />
   );
@@ -538,7 +541,7 @@ const FilterForm = ({ setFilterTerms }) => {
         // console.log(`utc.toISOString()`, utc.toISOString());
         const payload = processFilterValues({
           ...values,
-          // paidOn: '2021-04-19T23:00:00.000Z',
+          paidOn: formatFilterDate(values?.paidOn?.date),
         });
         setFilterTerms(payload, {
           amount: `Amount : ${getRange(values?.amount, { suffix: 'Naira' })}`,
@@ -562,10 +565,10 @@ const FilterForm = ({ setFilterTerms }) => {
           //   'House Type',
           //   getTitleCase(values?.houseType)
           // ),
-          // paidOn: formatFilterString(
-          //   'Paid On',
-          //   getTinyDate(values?.paidOn?.date)
-          // ),
+          paidOn: formatFilterString(
+            'Paid On',
+            getTinyDate(values?.paidOn?.date)
+          ),
           // state: formatFilterString('State', values.state),
           // city: formatFilterString('City', values.city),
           // approved: formatFilterBoolean('Approved', values.approved),
@@ -607,9 +610,7 @@ const FilterForm = ({ setFilterTerms }) => {
               values={props?.values}
             />
 
-            {false && (
-              <DatePicker label="Paid on" name="paidOn" placeholder="Paid On" />
-            )}
+            <DatePicker label="Paid on" name="paidOn" placeholder="Paid On" />
 
             {/* <Input label="City" name="city" /> */}
           </section>
