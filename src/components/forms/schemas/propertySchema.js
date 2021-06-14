@@ -88,3 +88,6 @@ export const flagPropertySchema = {
 export const unflagPropertySchema = {
   reason: required('Reason'),
 };
+export const resolveFlagPropertySchema = {
+  comment: required('Comment'),
+};

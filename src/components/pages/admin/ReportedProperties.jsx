@@ -128,13 +128,21 @@ const ReportedPropertiesRow = ({
   );
 };
 
-export const FlagProperty = ({ property, setToast, reportId, bigButton }) => {
+export const FlagProperty = ({
+  property,
+  setToast,
+  reportId,
+  bigButton,
+  className,
+}) => {
   const [showFlagModal, setShowFlagModal] = React.useState(false);
 
   return (
     <>
       <Button
-        className={`btn ${bigButton ? 'btn-wide' : 'btn-xs'} btn-danger`}
+        className={`btn ${
+          className ? className : bigButton ? 'btn-wide' : 'btn-xs'
+        } btn-danger`}
         onClick={() => setShowFlagModal(true)}
       >
         Flag {bigButton && ' Property'}

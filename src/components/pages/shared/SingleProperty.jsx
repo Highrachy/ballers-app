@@ -37,6 +37,7 @@ import {
 import {
   reportPropertySchema,
   unflagPropertySchema,
+  resolveFlagPropertySchema,
 } from 'components/forms/schemas/propertySchema';
 import Modal from 'components/common/Modal';
 import { BASE_API_URL } from 'utils/constants';
@@ -91,55 +92,24 @@ export const OwnedPropertyCard = ({
 }) => {
   const isVendor = useCurrentRole().role === USER_TYPES.vendor;
   const isAdmin = useCurrentRole().role === USER_TYPES.admin;
+  const isUser = useCurrentRole().role === USER_TYPES.user;
   const isAdminOrVendor = isVendor || isAdmin;
   return (
     <div className="container-fluid">
       <Card className="card-container mt-4 h-100 property-holder__big">
         <PropertyImage property={property} />
+
         {isAdminOrVendor && property?.flagged?.status && (
-          <div className="mt-3">
-            <p className="speech-bubble">
-              <div className="d-flex align-items-center">
-                <article>
-                  <h6>
-                    {
-                      property?.flagged?.case[
-                        property?.flagged?.case?.length - 1
-                      ]?.flaggedReason
-                    }
-                  </h6>
-                  <small className="block-text-small">
-                    {getTinyDate(
-                      property?.flagged?.case[
-                        property?.flagged?.case?.length - 1
-                      ]?.flaggedDate
-                    )}
-                  </small>
-                </article>
-                <div className="ml-auto">
-                  {isAdmin && (
-                    <UnflagProperty
-                      caseId={
-                        property?.flagged?.case[
-                          property?.flagged?.case?.length - 1
-                        ]?._id
-                      }
-                      property={property}
-                      setToast={setToast}
-                      setProperty={setProperty}
-                    />
-                  )}
-                  {isVendor && (
-                    <button className="btn btn-wide btn-xs btn-info">
-                      Resolve Property
-                    </button>
-                  )}
-                </div>
-              </div>
-            </p>
-          </div>
+          <CaseComment
+            flaggedCase={property?.flagged?.case[0]}
+            isActive
+            property={property}
+            setToast={setToast}
+            setProperty={setProperty}
+          />
         )}
-        {useCurrentRole().role === USER_TYPES.vendor && (
+
+        {isVendor && (
           <ManagePropertyLink
             property={property}
             setToast={setToast}
@@ -153,19 +123,23 @@ export const OwnedPropertyCard = ({
           </div>
           {Sidebar && <div className="col-sm-5">{Sidebar}</div>}
         </div>
+
         <FloorPlansList
           property={property}
           setToast={setToast}
           setProperty={setProperty}
         />
+
         <NeighborhoodList
           property={property}
           setToast={setToast}
           setProperty={setProperty}
         />
       </Card>
+
       <PropertyMap mapLocation={property.mapLocation} />
-      {useCurrentRole().role === USER_TYPES.user && (
+
+      {isUser && (
         <ReportProperty
           property={property}
           setToast={setToast}
@@ -173,16 +147,15 @@ export const OwnedPropertyCard = ({
         />
       )}
 
-      {useCurrentRole().role === USER_TYPES.admin &&
-        !property?.approved?.status && (
-          <ApproveProperty
-            property={property}
-            setToast={setToast}
-            setProperty={setProperty}
-          />
-        )}
+      {isAdmin && !property?.approved?.status && (
+        <ApproveProperty
+          property={property}
+          setToast={setToast}
+          setProperty={setProperty}
+        />
+      )}
 
-      {useCurrentRole().role === USER_TYPES.admin && (
+      {isAdmin && (
         <CaseHistory
           property={property}
           setToast={setToast}
@@ -193,43 +166,87 @@ export const OwnedPropertyCard = ({
   );
 };
 
+const CaseComment = ({
+  flaggedCase,
+  isActive,
+  property,
+  setToast,
+  setProperty,
+}) => {
+  const isVendor = useCurrentRole().role === USER_TYPES.vendor;
+  const isAdmin = useCurrentRole().role === USER_TYPES.admin;
+  return (
+    <div className="mt-3">
+      <div className="speech-bubble">
+        <div className="d-flex align-items-center">
+          <article className={isActive ? undefined : 'text-strike'}>
+            {isActive ? (
+              <h6 className="text-primary">{flaggedCase?.flaggedReason}</h6>
+            ) : (
+              <div>{flaggedCase?.flaggedReason}</div>
+            )}
+
+            {flaggedCase?.unflagRequestComment && (
+              <div>{flaggedCase?.unflagRequestComment} </div>
+            )}
+            <small className="block-text-small">
+              {getTinyDate(flaggedCase.flaggedDate)}
+            </small>
+          </article>
+
+          {isActive && (
+            <div className="ml-auto">
+              {isAdmin && (
+                <>
+                  {flaggedCase?.unflagRequestComment && (
+                    <>
+                      <FlagProperty
+                        property={property}
+                        setToast={setToast}
+                        repordId={null}
+                        className={'btn btn-wide btn-xs btn-danger'}
+                      />
+                      <Spacing />
+                    </>
+                  )}
+                  <UnflagProperty
+                    caseId={flaggedCase._id}
+                    property={property}
+                    setToast={setToast}
+                    setProperty={setProperty}
+                  />
+                </>
+              )}
+              {isVendor && (
+                <ResolveFlaggedProperty
+                  property={property}
+                  setToast={setToast}
+                  setProperty={setProperty}
+                />
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CaseHistory = ({ property, setToast, setProperty }) => {
   return (
     <section className="mt-4">
       {property?.flagged?.status ? (
         <>
           <h5 className="header-small my-5">Case History</h5>
-          {property?.flagged?.case.map(
-            ({ flaggedReason, _id, flaggedDate }, index) => (
-              <p key={index} className="speech-bubble">
-                {property.flagged.case.length !== index + 1 ? (
-                  <strike>
-                    <small className="text-small">
-                      {getTinyDate(flaggedDate)}
-                    </small>
-                    <br />
-                    <strong>{flaggedReason}</strong>
-                  </strike>
-                ) : (
-                  <>
-                    <small className="text-small">
-                      {getTinyDate(flaggedDate)}
-                    </small>
-                    <br />
-                    <strong className="h6">{flaggedReason}</strong>
-                    <div className="text-right">
-                      <UnflagProperty
-                        caseId={_id}
-                        property={property}
-                        setToast={setToast}
-                        setProperty={setProperty}
-                      />
-                    </div>
-                  </>
-                )}
-              </p>
-            )
-          )}
+          {property?.flagged?.case.map((flaggedCase, index) => (
+            <CaseComment
+              flaggedCase={flaggedCase}
+              isActive={index === 0}
+              property={property}
+              setToast={setToast}
+              setProperty={setProperty}
+            />
+          ))}
         </>
       ) : (
         <FlagProperty
@@ -310,16 +327,99 @@ const ApproveProperty = ({ property, setToast, setProperty }) => {
   );
 };
 
+const ResolveFlaggedProperty = ({ property, setToast, setProperty }) => {
+  const [showUnflagModal, setShowUnflagModal] = React.useState(false);
+
+  return (
+    <>
+      <Button
+        className="btn btn-wide btn-xs btn-danger"
+        onClick={() => setShowUnflagModal(true)}
+      >
+        Resolve Property
+      </Button>
+
+      <Modal
+        title="Resolve Flag Property"
+        show={showUnflagModal}
+        onHide={() => setShowUnflagModal(false)}
+        showFooter={false}
+      >
+        <section className="row">
+          <div className="col-md-12 my-3">
+            <Formik
+              initialValues={setInitialValues(resolveFlagPropertySchema)}
+              onSubmit={({ comment }, actions) => {
+                const payload = {
+                  propertyId: property._id,
+                  comment,
+                };
+                Axios.post(
+                  `${BASE_API_URL}/property/request-unflag`,
+                  { ...payload },
+                  {
+                    headers: { Authorization: getTokenFromStore() },
+                  }
+                )
+                  .then(function (response) {
+                    const { status, data } = response;
+                    if (statusIsSuccessful(status)) {
+                      setToast({
+                        type: 'success',
+                        message: `Your request to unflag your property is successful`,
+                      });
+                      actions.setSubmitting(false);
+                      actions.resetForm();
+                      setShowUnflagModal(false);
+                      setProperty(data.property);
+                    }
+                  })
+                  .catch(function (error) {
+                    setToast({
+                      message: getError(error),
+                    });
+                    actions.setSubmitting(false);
+                  });
+              }}
+              validationSchema={createSchema(resolveFlagPropertySchema)}
+            >
+              {({ isSubmitting, handleSubmit, ...props }) => (
+                <Form>
+                  <Textarea
+                    name="comment"
+                    label="Actions took to resolve issue"
+                    placeholder="Request to Unflag Property"
+                    rows="3"
+                  />
+
+                  <Button
+                    className="btn-secondary mt-4"
+                    loading={isSubmitting}
+                    onClick={handleSubmit}
+                  >
+                    Resolve Property
+                  </Button>
+                  <DisplayFormikState {...props} hide showAll />
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </section>
+      </Modal>
+    </>
+  );
+};
+
 const UnflagProperty = ({ property, setToast, setProperty, caseId }) => {
   const [showUnflagModal, setShowUnflagModal] = React.useState(false);
 
   return (
     <>
       <Button
-        className="btn btn-xs btn-danger"
+        className="btn btn-wide btn-xs btn-secondary"
         onClick={() => setShowUnflagModal(true)}
       >
-        UnFlag
+        UnFlag Property
       </Button>
 
       {/* UnFlag Property Modals */}
