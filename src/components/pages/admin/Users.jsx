@@ -38,6 +38,7 @@ import { getVerifiedProgress } from '../vendor/setup/AccountSetup';
 import { ApprovedIcon } from 'components/utils/Icons';
 import DatePicker from 'components/forms/DatePicker';
 import { formatFilterDate } from 'utils/date-helpers';
+import Tooltip from 'components/common/Tooltip';
 
 const Users = () => (
   <BackendPage>
@@ -115,7 +116,9 @@ const UsersRow = ({ number, ...user }) => {
         {isVendor ? `${getVerifiedProgress(user)}%` : '-'}
       </td>
       <td className="text-center">
-        <span className={`${status.className} icon-md`}>{status.Icon}</span>
+        <Tooltip text={status.tooltip}>
+          <span className={`${status.className} icon-md`}>{status.Icon}</span>
+        </Tooltip>
       </td>
       <td>
         <Link
@@ -131,11 +134,31 @@ const UsersRow = ({ number, ...user }) => {
 
 const getUserStatus = (user) => {
   const userStatus = {
-    activated: { className: 'text-success', Icon: <SuccessIcon /> },
-    banned: { className: 'text-danger', Icon: <BanIcon /> },
-    pending: { className: 'text-muted', Icon: <InfoIcon /> },
-    certified: { className: 'text-warning', Icon: <CertifyIcon /> },
-    verified: { className: 'text-info icon-md2', Icon: <ApprovedIcon /> },
+    activated: {
+      className: 'text-success',
+      Icon: <SuccessIcon />,
+      tooltip: 'Activated Account',
+    },
+    banned: {
+      className: 'text-danger',
+      Icon: <BanIcon />,
+      tooltip: 'Banned User',
+    },
+    pending: {
+      className: 'text-muted',
+      Icon: <InfoIcon />,
+      tooltip: 'Awaiting Account Activation',
+    },
+    certified: {
+      className: 'text-warning',
+      Icon: <CertifyIcon />,
+      tooltip: 'Certified Vendor',
+    },
+    verified: {
+      className: 'text-info icon-md2',
+      Icon: <ApprovedIcon />,
+      tooltip: 'Verified Vendor',
+    },
   };
 
   if (user?.banned?.status) {
@@ -150,9 +173,8 @@ const getUserStatus = (user) => {
   }
   if (user?.activated) {
     return userStatus.activated;
-  } else {
-    return userStatus.pending;
   }
+  return userStatus.pending;
 };
 
 const FilterForm = ({ setFilterTerms }) => {

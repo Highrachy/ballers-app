@@ -106,10 +106,10 @@ const OffersRow = ({ _id, expires, status, propertyInfo, vendorInfo }) => {
   }
   return (
     <div className="card d-flex flex-row toast-alert info">
-      <div className="span toast-icon-holder">
+      <div className="span toast-icon-holder icon-xl">
         <FileIcon />
       </div>
-      <h6 className="w-100 font-weight-normal">
+      <div className="w-100 font-weight-normal">
         <Link
           className="btn btn-success btn-sm float-right"
           to={`/user/offer/${_id}`}
@@ -122,7 +122,7 @@ const OffersRow = ({ _id, expires, status, propertyInfo, vendorInfo }) => {
         <small className="text-muted">
           Expires on {getShortDate(expires)} (<TimeAgo datetime={expires} />)
         </small>
-      </h6>
+      </div>
     </div>
   );
 };

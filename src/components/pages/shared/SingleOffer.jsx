@@ -183,7 +183,7 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
   const [toast, setToast] = useToast();
   const [image, setImage] = React.useState(null);
   const [signature, setSignature] = React.useState(null);
-  const [offerQuery, offer] = useGetQuery({
+  const [offerQuery, offer, setOffer] = useGetQuery({
     key: pageOptions.key,
     name: [pageOptions.key, offerId],
     setToast,
@@ -204,6 +204,7 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
             message: 'Your offer letter has been accepted',
             type: 'success',
           });
+          setOffer({ ...offer, status: OFFER_STATUS.INTERESTED });
         }
       })
       .catch(function (error) {

@@ -6,6 +6,7 @@ import {
   getHours,
   isPast,
   differenceInCalendarDays,
+  isValid,
 } from 'date-fns';
 
 /**
@@ -16,7 +17,8 @@ export const getDate = (date) => format(parse(date), 'MMMM DD, YYYY');
 export const getDateTime = (date) =>
   format(parse(date), 'ddd, MMM D, YYYY h:mm A');
 export const getShortDate = (date) => format(parse(date), 'ddd, MMM D, YYYY');
-export const getTinyDate = (date) => format(parse(date), 'MMM D, YYYY');
+export const getTinyDate = (date) =>
+  isValidDate(date) && format(parse(date), 'MMM D, YYYY');
 export const getLongDate = (date) => format(parse(date), 'dddd, Do MMMM YYYY');
 export const getYear = (date) => format(parse(date), 'YYYY');
 export const getTime = (date) => format(parse(date), 'h:mm A');
@@ -38,3 +40,4 @@ export const differenceInDays = (date) =>
 export const formatFilterDate = (date) => format(parse(date), 'YYYY-MM-DD');
 export const convertToUTC = (date) =>
   new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString();
+export const isValidDate = (date) => isValid(parse(date));

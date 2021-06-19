@@ -276,7 +276,7 @@ const ModalForTransactionDetails = ({
                     <h5 className="text-secondary">
                       {moneyFormatInNaira(amountPaid)}
                       {isVendor &&
-                        (payment?.remittance ? (
+                        (payment?.remittance?.status ? (
                           <small className="text-success">
                             <Spacing />
                             <SuccessIcon />
@@ -370,7 +370,7 @@ const ModalForTransactionDetails = ({
                   </td>
                   <td>{payment?.vendorInfo?.vendor.companyName}</td>
                 </tr>
-                {payment?.remittance && (
+                {payment?.remittance?.status && (
                   <>
                     <tr>
                       <td>
@@ -392,7 +392,7 @@ const ModalForTransactionDetails = ({
           </>
         )}
 
-        {isAdmin && !payment?.remittance && (
+        {isAdmin && !payment?.remittance?.status && (
           <>
             <h4 className="header-smaller">Bank Details</h4>
             <table className="table table-sm">
@@ -424,7 +424,7 @@ const ModalForTransactionDetails = ({
           </>
         )}
 
-        {!payment?.remittance && isAdmin && (
+        {!payment?.remittance?.status && isAdmin && (
           <div className="col-md-12 text-center">
             <Button
               className="btn btn-secondary mb-5"
@@ -495,7 +495,7 @@ const TransactionsRow = (transaction) => {
       </td>
       {isAdminOrVendor && (
         <td>
-          {remittance ? (
+          {remittance?.status ? (
             <div className="">
               <span className="text-success">
                 <SuccessIcon />

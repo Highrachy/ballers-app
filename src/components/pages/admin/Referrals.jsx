@@ -26,6 +26,7 @@ import {
   processFilterValues,
 } from 'components/forms/form-helper';
 import { ReferralsIcon } from 'components/utils/Icons';
+import UserCard from 'components/common/UserCard';
 
 const Referrals = () => (
   <BackendPage>
@@ -50,12 +51,13 @@ const ReferralsRowList = ({ results, offset }) => {
             <thead>
               <tr>
                 <th>S/N</th>
-                <th>Referral Info</th>
-                <th>Phone</th>
-                <th>Role</th>
-                <th className="text-center">Onboarding</th>
-                <th className="text-center">Status</th>
-                <th></th>
+                <th>Referred User</th>
+                <th>Referred By</th>
+                <th>Status</th>
+                <th>Reward</th>
+                {/* <th className="text-center">Onboarding</th> */}
+                {/* <th className="text-center">Status</th> */}
+                {/* <th></th> */}
               </tr>
             </thead>
             <tbody>
@@ -82,15 +84,22 @@ const UsersRow = ({ number, ...referral }) => {
   return (
     <tr key={referral.email}>
       <td>{number}</td>
-      <td>{referral.firstName || '-'}</td>
       <td>
-        <strong>{referral.email}</strong>
+        <strong>
+          <UserCard
+            user={{ ...referral, _id: referral?.userId } || {}}
+            hideImage
+            nameOnly
+          />
+        </strong>
       </td>
-      <td
-        className={`text-right ${REFERRAL_STATUS[referral.status].className}`}
-      >
+      <td>
+        <UserCard user={referral?.referrer || {}} />
+      </td>
+      <td className={`${REFERRAL_STATUS[referral.status].className}`}>
         {REFERRAL_STATUS[referral.status].text}
       </td>
+      <td>{referral?.reward?.status}</td>
     </tr>
   );
 };

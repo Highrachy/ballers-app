@@ -27,44 +27,22 @@ import { ReferIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
+import { refreshQuery } from 'hooks/useQuery';
 
 const ReferAndEarn = () => {
-  const [referrals, setReferrals] = React.useState(null);
   const { userState } = React.useContext(UserContext);
 
   const id = userState._id;
-  console.log(`userState`, userState);
 
-  React.useEffect(() => {
-    Axios.get(`${BASE_API_URL}/referral/all`, {
-      headers: {
-        Authorization: getTokenFromStore(),
-      },
-      params: {
-        referrerId: id,
-      },
-    })
-      .then((response) => {
-        const { status, data } = response;
-        if (status === 200) {
-          setReferrals(data.referrals);
-        }
-      })
-      .catch((error) => {
-        setReferrals([]);
-      });
-  }, [id]);
-  const addNewReferral = (referral) => setReferrals([...referrals, referral]);
   return (
     <BackendPage>
       <div className="col-sm-10 mx-auto">
         <EmailReferral />
-        <InviteFriendByEmailCard addNewReferral={addNewReferral} />
-        {/* <InviteFriendsTable referrals={referrals || []} /> */}
+        <InviteFriendByEmailCard />
         <PaginatedContent
           endpoint={API_ENDPOINT.getAllReferrals()}
           initialFilter={{ referrerId: id }}
-          pageName="Referrals"
+          pageName="Referral"
           DataComponent={InviteFriendsTable}
           PageIcon={<ReferIcon />}
           queryName="referral"
@@ -102,7 +80,7 @@ const EmailReferral = () => {
   );
 };
 
-const InviteFriendByEmailForm = ({ addNewReferral }) => {
+const InviteFriendByEmailForm = () => {
   const [toast, setToast] = useToast();
   return (
     <Formik
@@ -118,9 +96,11 @@ const InviteFriendByEmailForm = ({ addNewReferral }) => {
             if (status === 200) {
               setToast({
                 type: 'success',
-                message: `Invite sent to ${values.firstName || values.email}.`,
+                message: `Invite sent to ${
+                  values?.firstName || values?.email
+                }.`,
               });
-              addNewReferral({ ...values, status: 'Sent' });
+              refreshQuery('referral', true);
               actions.setSubmitting(false);
               actions.resetForm();
             }

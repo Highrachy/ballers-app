@@ -137,6 +137,8 @@ const RegisterForm = ({ setShowUserForm, showUserForm }) => {
 
   const [toast, setToast] = useToast();
 
+  const referrer = (getReferralInfo() && getReferralInfo().referrer) || null;
+
   return (
     <Formik
       initialValues={setInitialValues(registerSchema(showUserForm), {
@@ -147,10 +149,7 @@ const RegisterForm = ({ setShowUserForm, showUserForm }) => {
 
         let payload;
 
-        const referrer =
-          (getReferralInfo() && getReferralInfo.referrer) || null;
-
-        payload = referrer
+        payload = referrer?.referralCode
           ? { ...values, referralCode: referrer.referralCode }
           : values;
 
@@ -258,6 +257,12 @@ const RegisterForm = ({ setShowUserForm, showUserForm }) => {
             />
             <label className="form-check-label" htmlFor="agreement"></label>
           </div>
+          {referrer?.referralCode && (
+            <div className="text-primary mt-5 mb-3 text-small text-muted text-center">
+              Referred By {referrer?.firstName} (Referral Code:{' '}
+              {referrer?.referralCode})
+            </div>
+          )}
           <Button
             className="btn-secondary mt-4"
             loading={isSubmitting}
@@ -265,6 +270,7 @@ const RegisterForm = ({ setShowUserForm, showUserForm }) => {
           >
             Register
           </Button>
+
           <DisplayFormikState {...props} hide showAll />
 
           {showUserForm ? (

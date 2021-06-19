@@ -2,9 +2,12 @@ import React from 'react';
 import ProfileAvatar from 'assets/img/placeholder/user.jpg';
 import Image from 'components/utils/Image';
 import { USER_TYPES } from 'utils/constants';
+import { Link } from '@reach/router';
+import { useCurrentRole } from 'hooks/useUser';
 
 const UserCard = ({ user, hideImage, nameOnly }) => {
   const {
+    _id = '',
     title = '',
     firstName = '',
     lastName = '',
@@ -16,6 +19,7 @@ const UserCard = ({ user, hideImage, nameOnly }) => {
   } = user;
 
   const isVendor = role === USER_TYPES.vendor;
+  const roleIsAdmin = useCurrentRole().isAdmin;
 
   const userInitialName = `${title} ${firstName} ${lastName}`;
   const vendorName = vendor?.companyName || userInitialName;
@@ -23,8 +27,8 @@ const UserCard = ({ user, hideImage, nameOnly }) => {
 
   const image = role === USER_TYPES.user ? profileImage : vendor?.companyLogo;
 
-  return (
-    <div className="user-card">
+  const UserInfo = (
+    <>
       {!hideImage && (
         <div className="user-avatar">
           <Image
@@ -46,13 +50,25 @@ const UserCard = ({ user, hideImage, nameOnly }) => {
           <small className="user-email">{email}</small>
         </div>
       ) : (
-        <div className="user-name">
+        <div className="user-name ml-0">
           <span className={`tb-lead ${banned.status ? 'text-danger' : ''}`}>
-            {userName}
+            {firstName ? userName : email}
           </span>
         </div>
       )}
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {roleIsAdmin ? (
+        <Link className="user-card" to={`/admin/user/${_id}`}>
+          {UserInfo}
+        </Link>
+      ) : (
+        <div className="user-card">{UserInfo}</div>
+      )}
+    </>
   );
 };
 

@@ -155,7 +155,7 @@ export const OwnedPropertyCard = ({
         />
       )}
 
-      {isAdmin && (
+      {isAdminOrVendor && (
         <CaseHistory
           property={property}
           setToast={setToast}
@@ -235,27 +235,25 @@ const CaseComment = ({
 const CaseHistory = ({ property, setToast, setProperty }) => {
   return (
     <section className="mt-4">
-      {property?.flagged?.status ? (
-        <>
-          <h5 className="header-small my-5">Case History</h5>
-          {property?.flagged?.case.map((flaggedCase, index) => (
-            <CaseComment
-              flaggedCase={flaggedCase}
-              isActive={index === 0}
-              property={property}
-              setToast={setToast}
-              setProperty={setProperty}
-            />
-          ))}
-        </>
+      <>
+        <h5 className="header-small my-5">Case History</h5>
+        {property?.flagged?.case.map((flaggedCase, index) => (
+          <CaseComment
+            flaggedCase={flaggedCase}
+            isActive={index === 0}
+            property={property}
+            setToast={setToast}
+            setProperty={setProperty}
+          />
+        ))}
+      </>
       ) : (
-        <FlagProperty
-          property={property}
-          setToast={setToast}
-          repordId={null}
-          bigButton
-        />
-      )}
+      <FlagProperty
+        property={property}
+        setToast={setToast}
+        repordId={null}
+        bigButton
+      />
     </section>
   );
 };
