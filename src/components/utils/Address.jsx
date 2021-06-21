@@ -4,6 +4,7 @@ import Input from 'components/forms/Input';
 import { valuesToOptions } from 'utils/helpers';
 import Select from 'components/forms/Select';
 import { STATES } from 'utils/constants';
+import { countryList } from 'utils/countryList';
 
 const Address = ({ showCountry }) => {
   return (
@@ -45,11 +46,12 @@ const Address = ({ showCountry }) => {
       </div>
       {showCountry && (
         <div className="form-row">
-          <Input
+          <Select
             formGroupClassName="col-md-6 ml-n2"
             label="Country"
             name="address.country"
             placeholder="Country"
+            options={valuesToOptions(countryList)}
           />
         </div>
       )}

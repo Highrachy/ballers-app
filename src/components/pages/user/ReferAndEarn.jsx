@@ -13,13 +13,13 @@ import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { referralInviteSchema } from 'components/forms/schemas/userSchema';
 import ReferralImage from 'assets/img/refer-n-earn.png';
-import { BASE_API_URL, REFERRAL_STATUS } from 'utils/constants';
+import { BASE_API_URL } from 'utils/constants';
 import { CopyToClipBoardIcon } from 'components/utils/Icons';
 import { UserContext } from 'context/UserContext';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Sharer from 'components/utils/Sharer';
 import { CheckIcon } from 'components/utils/Icons';
-import { getError } from 'utils/helpers';
+import { getError, getReferralStatus, moneyFormatInNaira } from 'utils/helpers';
 import { getTokenFromStore } from 'utils/localStorage';
 import NoContent from 'components/utils/NoContent';
 import LoadItems from 'components/utils/LoadingItems';
@@ -28,6 +28,7 @@ import Humanize from 'humanize-plus';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
 import { refreshQuery } from 'hooks/useQuery';
+import UserCard from 'components/common/UserCard';
 
 const ReferAndEarn = () => {
   const { userState } = React.useContext(UserContext);
@@ -46,6 +47,7 @@ const ReferAndEarn = () => {
           DataComponent={InviteFriendsTable}
           PageIcon={<ReferIcon />}
           queryName="referral"
+          hideTitle
         />
       </div>
     </BackendPage>
@@ -226,24 +228,54 @@ const InviteFriendsTable = ({ results, offset }) => {
       >
         <div className="table-responsive">
           <table className="table">
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Referred User</th>
+                <th>Status</th>
+                <th>Reward</th>
+              </tr>
+            </thead>
             <tbody>
               {referrals &&
-                referrals.map((referral, index) => (
-                  <tr key={referral.email}>
-                    <td>{index + 1 + offset}</td>
-                    <td>{referral.firstName || '-'}</td>
-                    <td>
-                      <strong>{referral.email}</strong>
-                    </td>
-                    <td
-                      className={`text-right ${
-                        REFERRAL_STATUS[referral.status].className
-                      }`}
-                    >
-                      {REFERRAL_STATUS[referral.status].text}
-                    </td>
-                  </tr>
-                ))}
+                referrals.map((referral, index) => {
+                  const referralStatus = getReferralStatus(
+                    referral.status,
+                    referral?.reward?.status
+                  );
+                  return (
+                    <tr key={referral.email}>
+                      <td>{index + 1 + offset}</td>
+                      <td>
+                        <strong>
+                          <UserCard
+                            user={
+                              {
+                                email: referral.email,
+                                firstName: referral?.firstName,
+                                ...referral?.referee,
+                              } || {}
+                            }
+                            hideImage
+                            nameOnly
+                          />
+                        </strong>
+                      </td>
+                      <td className={`${referralStatus.className}`}>
+                        {referralStatus.text}
+                      </td>
+                      <td>
+                        {referral?.reward?.amount ? (
+                          <h5 className="text-dark">
+                            {moneyFormatInNaira(referral?.reward?.amount)}
+                          </h5>
+                        ) : (
+                          'None Yet'
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               <tr>
                 <td></td>
                 <td></td>

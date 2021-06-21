@@ -51,7 +51,11 @@ const UserCard = ({ user, hideImage, nameOnly }) => {
         </div>
       ) : (
         <div className="user-name ml-0">
-          <span className={`tb-lead ${banned.status ? 'text-danger' : ''}`}>
+          <span
+            className={`${banned.status ? 'text-danger ' : ''}${
+              hideImage ? 'user-name-normal' : undefined
+            }`}
+          >
             {firstName ? userName : email}
           </span>
         </div>

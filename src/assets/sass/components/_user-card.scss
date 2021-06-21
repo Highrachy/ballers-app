@@ -19,6 +19,12 @@
   display: block;
   line-height: 1.4;
   color: #526484;
+
+  &-normal {
+    font-size: 0.9rem;
+    color: $text-color;
+    font-weight: normal;
+  }
 }
 
 .user-email {

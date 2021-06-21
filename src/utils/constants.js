@@ -62,6 +62,33 @@ export const REFERRAL_STATUS = {
   },
 };
 
+export const REWARD_STATUS = {
+  Pending: {
+    text: 'Pending',
+    className: 'text-danger',
+  },
+  Started: {
+    text: 'Offer Signed',
+    className: 'text-success',
+  },
+  'Payment Started': {
+    text: 'Property Payment Started',
+    className: 'text-success',
+  },
+  'Payment In Progress': {
+    text: 'Property Payment In Progress',
+    className: 'text-success',
+  },
+  'Payment Completed': {
+    text: 'Processing Reward',
+    className: 'text-success',
+  },
+  'Referral Paid': {
+    text: 'Referral Reward Paid',
+    className: 'text-success',
+  },
+};
+
 export const OFFER_STATUS = {
   GENERATED: 'Generated',
   INTERESTED: 'Interested',

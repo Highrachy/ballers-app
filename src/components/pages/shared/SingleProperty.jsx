@@ -247,13 +247,15 @@ const CaseHistory = ({ property, setToast, setProperty }) => {
           />
         ))}
       </>
-      ) : (
-      <FlagProperty
-        property={property}
-        setToast={setToast}
-        repordId={null}
-        bigButton
-      />
+
+      {useCurrentRole().isAdmin && (
+        <FlagProperty
+          property={property}
+          setToast={setToast}
+          repordId={null}
+          bigButton
+        />
+      )}
     </section>
   );
 };

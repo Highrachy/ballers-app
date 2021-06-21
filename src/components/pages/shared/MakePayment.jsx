@@ -308,6 +308,7 @@ export const OfflinePaymentForm = ({
                   label="Paid on"
                   name="dateOfPayment"
                   placeholder="Paid On"
+                  maxDate={new Date()}
                 />
 
                 <Select

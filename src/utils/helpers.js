@@ -1,7 +1,12 @@
 import React from 'react';
 import Humanize from 'humanize-plus';
 import Converter from 'number-to-words';
-import { MALE_TITLES, FEMALE_TITLES } from './constants';
+import {
+  MALE_TITLES,
+  FEMALE_TITLES,
+  REFERRAL_STATUS,
+  REWARD_STATUS,
+} from './constants';
 
 export const commaNumber = (value, prependCurrency = false) => {
   const number = parseInt(value, 10);
@@ -241,4 +246,22 @@ export const getRange = (value, format) => {
         value?.[1] || 0
       }${suffix}`
     : `${prefix}${value}${suffix}`;
+};
+
+export const getReferralStatus = (referralStatus, rewardStatus) => {
+  if (
+    referralStatus === REFERRAL_STATUS.Registered.text &&
+    rewardStatus === REWARD_STATUS.Pending.text
+  ) {
+    return REFERRAL_STATUS.Registered;
+  }
+
+  if (
+    rewardStatus !== REWARD_STATUS.Pending.text &&
+    REWARD_STATUS[rewardStatus]
+  ) {
+    return REWARD_STATUS[rewardStatus];
+  }
+
+  return REFERRAL_STATUS.Sent;
 };

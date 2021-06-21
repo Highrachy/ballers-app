@@ -50,7 +50,7 @@ const OfferLetterTemplate = ({
         src={vendorInfo?.vendor?.companyLogo}
         width="150"
         className="img-fluid"
-        alt={`${companyName} Logo`}
+        name={`${companyName} Logo`}
       />
       <p className="mt-4">
         Our Ref: {offerInfo.referenceCode || ''}
