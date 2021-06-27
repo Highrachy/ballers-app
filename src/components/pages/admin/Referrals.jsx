@@ -103,6 +103,34 @@ const ReferralsRowList = ({ results, offset, setToast }) => {
       });
   };
 
+  const requestForBankDetails = () => {
+    setLoading(true);
+    Axios.post(
+      `${BASE_API_URL}/user/request-bank/${referral?.referrer?._id}`,
+      {},
+      {
+        headers: { Authorization: getTokenFromStore() },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (statusIsSuccessful(status)) {
+          setToast({
+            type: 'success',
+            message: `Bank Account Has been Requested`,
+          });
+          setLoading(false);
+          setShowDetailsModal(false);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(false);
+      });
+  };
+
   return (
     <div className="container-fluid">
       <Card>
@@ -147,6 +175,8 @@ const ReferralsRowList = ({ results, offset, setToast }) => {
         showDetailsModal={showDetailsModal}
         setShowDetailsModal={setShowDetailsModal}
         showRemitPaymentModal={showRemitPaymentModal}
+        requestForBankDetails={requestForBankDetails}
+        loading={loading}
       />
     </div>
   );
@@ -210,10 +240,12 @@ const ModalForReferralDetails = ({
   showDetailsModal,
   setShowDetailsModal,
   showRemitPaymentModal,
+  requestForBankDetails,
+  loading,
 }) => {
   const isAdmin = useCurrentRole().isAdmin;
   // const isUser = useCurrentRole().isUser;
-  const referralHasBeenPaid = referral?.status === 'Paid';
+  const referralHasBeenPaid = referral?.status === 'Rewarded';
 
   const referralStatus = getReferralStatus(
     referral?.status,
@@ -282,7 +314,7 @@ const ModalForReferralDetails = ({
             </tr>
             <tr>
               <td>
-                <strong>Refered</strong>
+                <strong>Referred</strong>
               </td>
               <td>
                 {referral?.referee ? (
@@ -369,12 +401,25 @@ const ModalForReferralDetails = ({
 
         {!referralHasBeenPaid && !!referral?.reward?.amount && isAdmin && (
           <div className="col-md-12 text-center">
-            <Button
-              className="btn btn-secondary mb-5"
-              onClick={showRemitPaymentModal}
-            >
-              Request For Bank Details
-            </Button>
+            {!referral?.referrer?.additionalInfo?.bankInfo?.accountNumber ? (
+              <Button
+                className="btn btn-secondary mb-5"
+                onClick={requestForBankDetails}
+                loading={loading}
+              >
+                Request For Bank Details
+              </Button>
+            ) : (
+              referral?.reward?.status === 'Payment Completed' && (
+                <Button
+                  className="btn btn-secondary mb-5"
+                  onClick={showRemitPaymentModal}
+                >
+                  Pay User ({referral?.referrer?.firstName}{' '}
+                  {referral?.referrer?.lastName})
+                </Button>
+              )
+            )}
           </div>
         )}
       </section>

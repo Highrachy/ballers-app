@@ -88,7 +88,7 @@ export const BankInformationForm = ({ moveToNextStep, setStepToast }) => {
   );
 };
 
-const BankInfoForm = ({ isSubmitting, handleSubmit, ...props }) => {
+const BankInfoForm = ({ isSubmitting, handleSubmit }) => {
   return (
     <Card className="card-container">
       <section className="row">

@@ -29,6 +29,7 @@ import Select from 'components/forms/Select';
 import { useAvailableOptions } from 'hooks/useAvailableOptions';
 import ProfileAvatar from 'assets/img/avatar/profile.png';
 import Upload from 'components/utils/Upload';
+import { bankSchema } from 'components/forms/schemas/vendorSchema';
 
 const Settings = () => (
   <BackendPage>
@@ -48,6 +49,11 @@ const Settings = () => (
           <Tab eventKey="2" title="Change Password">
             <div className="card-tab-content py-5">
               <ChangePasswordForm />
+            </div>
+          </Tab>
+          <Tab eventKey="4" title="Bank Information">
+            <div className="card-tab-content py-5">
+              <BankInformationForm />
             </div>
           </Tab>
         </Tabs>
@@ -360,4 +366,85 @@ const ChangePasswordForm = () => {
     </section>
   );
 };
+
+const BankInformationForm = () => {
+  const [toast, setToast] = useToast();
+  const { userState, userDispatch } = React.useContext(UserContext);
+
+  return (
+    <section className="row">
+      <div className="col-md-10">
+        <Formik
+          enableReinitialize={true}
+          initialValues={{
+            ...setInitialValues(bankSchema),
+            ...userState?.additionalInfo?.bankInfo,
+          }}
+          onSubmit={(values, actions) => {
+            const payload = { additionalInfo: { bankInfo: { ...values } } };
+
+            Axios.put(`${BASE_API_URL}/user/update`, payload, {
+              headers: { Authorization: getTokenFromStore() },
+            })
+              .then(function (response) {
+                const { status, data } = response;
+                if (status === 200) {
+                  userDispatch({
+                    type: 'user-profile-update',
+                    user: data.user,
+                  });
+                  setToast({
+                    type: 'success',
+                    message: `Your profile has been successfully updated`,
+                  });
+                  actions.setSubmitting(false);
+                }
+              })
+              .catch(function (error) {
+                setToast({
+                  message: getError(error),
+                });
+                actions.setSubmitting(false);
+              });
+          }}
+          validationSchema={createSchema(bankSchema)}
+        >
+          {({ isSubmitting, handleSubmit, ...props }) => (
+            <Form>
+              <Toast {...toast} />
+              <Input
+                label="Account Name"
+                name="accountName"
+                placeholder="Account Name"
+              />
+
+              <div className="form-row">
+                <Input
+                  formGroupClassName="col-md-6"
+                  label="Bank Name"
+                  name="bankName"
+                />
+                <Input
+                  formGroupClassName="col-md-6"
+                  label="Account Number (NUBAN)"
+                  name="accountNumber"
+                />
+              </div>
+
+              <Button
+                className="btn-secondary mt-4"
+                loading={isSubmitting}
+                onClick={handleSubmit}
+              >
+                Save Changes
+              </Button>
+              <DisplayFormikState {...props} hide showAll />
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </section>
+  );
+};
+
 export default Settings;
