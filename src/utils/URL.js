@@ -36,4 +36,7 @@ export const API_ENDPOINT = {
 
   getAllReportedProperties: () => `${BASE_API_URL}/report-property/all`,
   getAllReferrals: () => `${BASE_API_URL}/referral/all`,
+
+  getAllBadges: () => `${BASE_API_URL}/badge/all`,
+  getOneBadge: (id) => `${BASE_API_URL}/badge/${id}`,
 };

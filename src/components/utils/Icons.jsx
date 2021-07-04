@@ -50,6 +50,7 @@ import {
   FaBan,
   FaThumbsUp,
   FaHouseDamage,
+  FaCertificate,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
@@ -77,6 +78,7 @@ export const ArrowRightIcon = () => <FiChevronRight />;
 export const ArticlesIcon = () => <FiBookOpen />;
 export const ApprovedIcon = () => <AiFillSafetyCertificate />;
 export const AssignedPropertyIcon = () => <FiServer />;
+export const BadgesIcon = () => <FaCertificate />;
 export const BanIcon = () => <FaBan />;
 export const BankInfoIcon = () => <FiArchive />;
 export const BathIcon = () => <FaBath />;

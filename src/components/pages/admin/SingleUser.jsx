@@ -8,6 +8,7 @@ import {
   getError,
   getFormattedAddress,
   statusIsSuccessful,
+  valuesToOptions,
 } from 'utils/helpers';
 import { Card, Tabs, Tab } from 'react-bootstrap';
 import { UserIcon } from 'components/utils/Icons';
@@ -39,6 +40,8 @@ import { ContentLoader } from 'components/utils/LoadingItems';
 import { updateRemittanceSchema } from 'components/forms/schemas/userSchema';
 import InputFormat from 'components/forms/InputFormat';
 import { setQueryCache } from 'hooks/useQuery';
+import Select from 'components/forms/Select';
+import { Spacing } from 'components/common/Helpers';
 
 const pageOptions = {
   key: 'user',
@@ -486,6 +489,19 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
             </td>
           </tr>
 
+          <tr>
+            <td>
+              <strong>Referral Bonus</strong>
+            </td>
+            <td colSpan="4">
+              <ReferralBonusForm
+                user={user}
+                setUser={setUser}
+                setToast={setToast}
+              />
+            </td>
+          </tr>
+
           {isVendor && (
             <tr>
               <td>
@@ -529,6 +545,9 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                   Downgrade to a User
                 </Button>
               )}
+              <Spacing />
+              <Spacing />
+              <AssignBadge />
             </td>
           </tr>
         </CardTableSection>
@@ -899,6 +918,207 @@ const RemittanceForm = ({ user, setUser, setToast }) => {
         );
       }}
     </Formik>
+  );
+};
+
+const ReferralBonusForm = ({ user, setUser, setToast }) => {
+  const [showRemitModal, setShowRemitModal] = React.useState(false);
+  const defaultPercentage = user?.referralBonus || 1.5;
+
+  return (
+    <Formik
+      enableReinitialize={true}
+      initialValues={setInitialValues(updateRemittanceSchema, {
+        percentage: defaultPercentage,
+      })}
+      onSubmit={({ percentage }, actions) => {
+        const payload = { percentage, vendorId: user._id };
+        Axios.put(`${BASE_API_URL}/user/referral-bonus`, payload, {
+          headers: { Authorization: getTokenFromStore() },
+        })
+          .then(function (response) {
+            const { status, data } = response;
+            if (statusIsSuccessful(status)) {
+              console.log(`data`, data);
+              setToast({
+                type: 'success',
+                message: `Referral Percentage has been successfully updated`,
+              });
+              setUser(data.user);
+              setQueryCache([pageOptions.key, user._id], {
+                user: data.user,
+              });
+              // actions.setSubmitting(false);
+              // actions.resetForm();
+              // setShowRemitModal(false);
+            }
+          })
+          .catch(function (error) {
+            setToast({
+              message: getError(error),
+            });
+            actions.setSubmitting(false);
+          });
+      }}
+      validationSchema={createSchema(updateRemittanceSchema)}
+    >
+      {({ isSubmitting, handleSubmit, ...props }) => {
+        return (
+          <Form>
+            <div className="input-group">
+              <InputFormat
+                formGroupClassName=""
+                suffix="%"
+                prefix=""
+                name="percentage"
+              />
+              <div className="input-group-append">
+                <Button
+                  onClick={() => setShowRemitModal(true)}
+                  disabled={
+                    defaultPercentage?.toString() ===
+                    props.values?.percentage?.toString()
+                  }
+                >
+                  Update
+                </Button>
+              </div>
+            </div>
+
+            <DisplayFormikState {...props} hide />
+
+            <Modal
+              title="Referral Bonus"
+              show={showRemitModal}
+              onHide={() => setShowRemitModal(false)}
+              showFooter={false}
+            >
+              <section>
+                <h5 className="header-smaller mb-4">
+                  Are you sure you want to update this Referral Bonus
+                </h5>
+                <table className="table table-sm">
+                  <thead>
+                    <tr className="text-secondary">
+                      <th>New Percentage</th>
+                      <th>
+                        <h5 className="text-secondary ml-n2">
+                          {props.values.percentage}%
+                        </h5>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Old Percentage</td>
+                      <td>{defaultPercentage}%</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="col-md-12 text-center">
+                  <Button
+                    className="btn-secondary mt-4"
+                    loading={isSubmitting}
+                    onClick={handleSubmit}
+                  >
+                    Yes, Update Referral Bonus
+                  </Button>
+                </div>
+              </section>
+            </Modal>
+          </Form>
+        );
+      }}
+    </Formik>
+  );
+};
+
+const AssignBadge = ({
+  property,
+  setToast,
+  reportId,
+  bigButton,
+  className,
+}) => {
+  const [showFlagModal, setShowFlagModal] = React.useState(false);
+
+  return (
+    <>
+      <Button
+        className="btn btn-sm btn-info mt-3"
+        onClick={() => setShowFlagModal(true)}
+      >
+        Assign Badge
+      </Button>
+
+      {/* Flag Property Modals */}
+      <Modal
+        title="Assign Badge"
+        show={showFlagModal}
+        onHide={() => setShowFlagModal(false)}
+        showFooter={false}
+      >
+        <section className="row">
+          <div className="col-md-12 my-3">
+            <Formik
+              initialValues={setInitialValues({})}
+              onSubmit={({ reason, notes }, actions) => {
+                const payload = {
+                  propertyId: property._id,
+                  reason,
+                  reportId,
+                  notes,
+                };
+                Axios.put(
+                  `${BASE_API_URL}/property/flag`,
+                  { ...payload },
+                  {
+                    headers: { Authorization: getTokenFromStore() },
+                  }
+                )
+                  .then(function (response) {
+                    const { status } = response;
+                    if (statusIsSuccessful(status)) {
+                      setToast({
+                        type: 'success',
+                        message: `The property has been successfully flagged`,
+                      });
+                      actions.setSubmitting(false);
+                      actions.resetForm();
+                      setShowFlagModal(false);
+                    }
+                  })
+                  .catch(function (error) {
+                    setToast({
+                      message: getError(error),
+                    });
+                    actions.setSubmitting(false);
+                  });
+              }}
+              validationSchema={createSchema({})}
+            >
+              {({ isSubmitting, handleSubmit, ...props }) => (
+                <Form>
+                  <Select
+                    label="Badge"
+                    name="badge"
+                    options={valuesToOptions(['Sample Badge'])}
+                  />
+                  <Button
+                    className="btn-secondary mt-4"
+                    loading={isSubmitting}
+                    onClick={() => {}}
+                  >
+                    Assign Badge
+                  </Button>
+                  <DisplayFormikState {...props} hide showAll />
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </section>
+      </Modal>
+    </>
   );
 };
 

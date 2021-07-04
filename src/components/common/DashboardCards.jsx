@@ -12,6 +12,7 @@ import { Link } from '@reach/router';
 import { useCurrentRole } from 'hooks/useUser';
 import Humanize from 'humanize-plus';
 import { ReportedPropertyIcon } from 'components/utils/Icons';
+import { BadgesIcon } from 'components/utils/Icons';
 
 const DashboardCards = () => {
   const propertyCard = {
@@ -84,6 +85,16 @@ const DashboardCards = () => {
     footer: null,
   };
 
+  const badgesCard = {
+    name: 'badges',
+    Icon: <BadgesIcon />,
+    title: 'Badges',
+    to: 'badges',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  };
+
   const [dashboardCountQuery] = useGetQuery({
     key: 'dashboardCount',
     name: 'dashboardCount',
@@ -107,6 +118,7 @@ const DashboardCards = () => {
     enquiryCard,
     scheduledVisitationCard,
     reportedPropertiesCard,
+    badgesCard,
   ];
 
   const dashboardCards = useCurrentRole().isAdmin

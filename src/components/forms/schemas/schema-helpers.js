@@ -93,7 +93,6 @@ export const validPercentage = (label) =>
     .transform((value) => (isNaN(value) ? undefined : value))
     .required(`${label} must be a valid percentage`)
     .positive(`${label} must be a positive percentage`)
-    .integer(`${label} must be a percentage`)
     .min(0, `${label} must be greater than 0%`)
     .max(100, `${label} must be lesser than 100%`);
 
