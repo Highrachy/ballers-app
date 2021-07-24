@@ -114,7 +114,7 @@ export const getAutoComplete = (lists) => lists.map(({ name }) => name);
 export const valuesToOptions = (values, defaultLabel = null) => {
   const output = values.map((value) => ({
     value: value.toString(),
-    label: value,
+    label: Humanize.titleCase(value.toString()),
   }));
 
   return defaultLabel
@@ -133,6 +133,16 @@ export const objectToOptions = (obj, defaultLabel = null, inverse = false) => {
   return defaultLabel
     ? [{ value: '', label: defaultLabel }, ...output]
     : output;
+};
+
+export const dataToOptions = (data, label, value = '_id') => {
+  if (!data) return null;
+  const output = Object.values(data).map((item) => ({
+    value: item[value],
+    label: item[label],
+  }));
+
+  return output;
 };
 
 export const booleanOptions = (trueLabel = 'Yes', falseLabel = 'No') => [

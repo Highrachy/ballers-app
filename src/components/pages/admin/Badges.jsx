@@ -48,7 +48,8 @@ const BadgesRowList = ({ results, offset }) => (
               <th>S/N</th>
               <th>Image</th>
               <th>Name</th>
-              <th>Assigned To</th>
+              <th>Role</th>
+              <th>NO of users</th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -63,24 +64,40 @@ const BadgesRowList = ({ results, offset }) => (
   </div>
 );
 
-const BadgesRow = ({ _id, number, name, image, assignedRole }) => {
+const BadgesRow = ({
+  _id,
+  number,
+  name,
+  image,
+  assignedRole,
+  noOfAssignedUsers,
+}) => {
   const userType = useCurrentRole().name;
   return (
     <tr>
       <td>{number}</td>
       <td>
-        <Link to={`/${userType}/badge/${_id}`}>
-          <Image
-            src={image}
-            name={`badge ${_id}`}
-            width="80"
-            alt="badge"
-            defaultImage={BadgePlaceholderImage}
-          />
-        </Link>
+        {image ? (
+          <Link to={`/${userType}/badge/${_id}`}>
+            <Image
+              src={image}
+              name={`badge ${_id}`}
+              width="80"
+              alt="badge"
+              defaultImage={BadgePlaceholderImage}
+            />
+          </Link>
+        ) : (
+          <div className="icon-xl">
+            <BadgesIcon />
+          </div>
+        )}
       </td>
       <td>{name}</td>
       <td>{Humanize.titleCase(DASHBOARD_PAGE[assignedRole] || 'All')}</td>
+      <td>
+        {noOfAssignedUsers} {Humanize.pluralize(noOfAssignedUsers, 'user')}
+      </td>
       <td>
         <Spacing />
         <Spacing />

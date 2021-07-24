@@ -12,7 +12,7 @@ const UserCard = ({ user, hideImage, nameOnly }) => {
     firstName = '',
     lastName = '',
     email = '',
-    role = '',
+    role = 1,
     profileImage,
     banned = { status: false },
     vendor = {},

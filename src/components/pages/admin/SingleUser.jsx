@@ -1,14 +1,19 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import { BASE_API_URL, STATUS, USER_TYPES } from 'utils/constants';
+import {
+  BADGE_ACCESS_LEVEL,
+  BASE_API_URL,
+  STATUS,
+  USER_TYPES,
+} from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import {
+  dataToOptions,
   getError,
   getFormattedAddress,
   statusIsSuccessful,
-  valuesToOptions,
 } from 'utils/helpers';
 import { Card, Tabs, Tab } from 'react-bootstrap';
 import { UserIcon } from 'components/utils/Icons';
@@ -89,6 +94,17 @@ const SingleUser = ({ id }) => {
 
 const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   const [loadingVerification, setLoadingVerification] = React.useState(false);
+  const [badgeQuery] = useGetQuery({
+    key: 'badge',
+    name: 'badge',
+    setToast,
+    endpoint: API_ENDPOINT.getAllBadges(),
+    axiosOptions: {
+      params: { assignedRole: `${BADGE_ACCESS_LEVEL.ALL}:${user?._id}` },
+    },
+  });
+
+  const badges = badgeQuery?.data?.result;
   const verifyVendor = () => {
     setLoadingVerification(true);
     setVerifyVendorModal(false);
@@ -547,7 +563,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
               )}
               <Spacing />
               <Spacing />
-              <AssignBadge />
+              <AssignBadge badges={badges} user={user} setToast={setToast} />
             </td>
           </tr>
         </CardTableSection>
@@ -923,7 +939,7 @@ const RemittanceForm = ({ user, setUser, setToast }) => {
 
 const ReferralBonusForm = ({ user, setUser, setToast }) => {
   const [showRemitModal, setShowRemitModal] = React.useState(false);
-  const defaultPercentage = user?.referralBonus || 1.5;
+  const defaultPercentage = user?.additionalInfo?.referralPercentage || 1.5;
 
   return (
     <Formik
@@ -932,8 +948,8 @@ const ReferralBonusForm = ({ user, setUser, setToast }) => {
         percentage: defaultPercentage,
       })}
       onSubmit={({ percentage }, actions) => {
-        const payload = { percentage, vendorId: user._id };
-        Axios.put(`${BASE_API_URL}/user/referral-bonus`, payload, {
+        const payload = { percentage, userId: user._id };
+        Axios.put(`${BASE_API_URL}/user/referral-percentage`, payload, {
           headers: { Authorization: getTokenFromStore() },
         })
           .then(function (response) {
@@ -948,9 +964,9 @@ const ReferralBonusForm = ({ user, setUser, setToast }) => {
               setQueryCache([pageOptions.key, user._id], {
                 user: data.user,
               });
-              // actions.setSubmitting(false);
-              // actions.resetForm();
-              // setShowRemitModal(false);
+              actions.setSubmitting(false);
+              actions.resetForm();
+              setShowRemitModal(false);
             }
           })
           .catch(function (error) {
@@ -1033,13 +1049,7 @@ const ReferralBonusForm = ({ user, setUser, setToast }) => {
   );
 };
 
-const AssignBadge = ({
-  property,
-  setToast,
-  reportId,
-  bigButton,
-  className,
-}) => {
+const AssignBadge = ({ user, setToast, badges }) => {
   const [showFlagModal, setShowFlagModal] = React.useState(false);
 
   return (
@@ -1062,15 +1072,14 @@ const AssignBadge = ({
           <div className="col-md-12 my-3">
             <Formik
               initialValues={setInitialValues({})}
-              onSubmit={({ reason, notes }, actions) => {
+              onSubmit={({ badge }, actions) => {
                 const payload = {
-                  propertyId: property._id,
-                  reason,
-                  reportId,
-                  notes,
+                  userId: user._id,
+                  badgeId: badge,
                 };
-                Axios.put(
-                  `${BASE_API_URL}/property/flag`,
+                console.log(`payload`, payload);
+                Axios.post(
+                  `${BASE_API_URL}/assign-badge`,
                   { ...payload },
                   {
                     headers: { Authorization: getTokenFromStore() },
@@ -1081,7 +1090,7 @@ const AssignBadge = ({
                     if (statusIsSuccessful(status)) {
                       setToast({
                         type: 'success',
-                        message: `The property has been successfully flagged`,
+                        message: `The badge has been successfully to user`,
                       });
                       actions.setSubmitting(false);
                       actions.resetForm();
@@ -1102,12 +1111,12 @@ const AssignBadge = ({
                   <Select
                     label="Badge"
                     name="badge"
-                    options={valuesToOptions(['Sample Badge'])}
+                    options={dataToOptions(badges, 'name')}
                   />
                   <Button
                     className="btn-secondary mt-4"
                     loading={isSubmitting}
-                    onClick={() => {}}
+                    onClick={handleSubmit}
                   >
                     Assign Badge
                   </Button>

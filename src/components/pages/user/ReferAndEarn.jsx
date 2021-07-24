@@ -233,7 +233,8 @@ const InviteFriendsTable = ({ results, offset }) => {
                 <th>S/N</th>
                 <th>Referred User</th>
                 <th>Status</th>
-                <th>Reward</th>
+                <th>Available Reward</th>
+                <th>Total Reward</th>
               </tr>
             </thead>
             <tbody>
@@ -265,6 +266,17 @@ const InviteFriendsTable = ({ results, offset }) => {
                         {referralStatus.text}
                       </td>
                       <td>
+                        {referral?.accumulatedReward?.total ? (
+                          <h5 className="text-dark">
+                            {moneyFormatInNaira(
+                              referral?.accumulatedReward?.total
+                            )}
+                          </h5>
+                        ) : (
+                          'None Yet'
+                        )}
+                      </td>
+                      <td>
                         {referral?.reward?.amount ? (
                           <h5 className="text-dark">
                             {moneyFormatInNaira(referral?.reward?.amount)}
@@ -277,6 +289,7 @@ const InviteFriendsTable = ({ results, offset }) => {
                   );
                 })}
               <tr>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

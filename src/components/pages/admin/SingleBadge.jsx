@@ -10,6 +10,8 @@ import BadgePlaceholderImage from 'assets/img/placeholder/property.png';
 import Image from 'components/utils/Image';
 import Humanize from 'humanize-plus';
 import { DASHBOARD_PAGE } from 'utils/constants';
+import UserCard from 'components/common/UserCard';
+import { BadgesIcon } from 'components/utils/Icons';
 const pageOptions = {
   key: 'badge',
   pageName: 'Enquiries',
@@ -66,16 +68,37 @@ const BadgeDetail = ({ badge, toast }) => (
           <strong>Image</strong>
         </td>
         <td>
-          <Image
-            src={badge?.image}
-            name={`badge ${badge?._id}`}
-            width="80"
-            alt="badge"
-            defaultImage={BadgePlaceholderImage}
-          />
+          {badge?.image ? (
+            <Image
+              src={badge?.image}
+              name={`badge ${badge?._id}`}
+              width="80"
+              alt="badge"
+              defaultImage={BadgePlaceholderImage}
+            />
+          ) : (
+            <div className="icon-xl">
+              <BadgesIcon />
+            </div>
+          )}
         </td>
       </tr>
     </CardTableSection>
+    {badge?.assignedUsers?.length > 0 && (
+      <CardTableSection name="Assigned Users">
+        <tr>
+          <td>
+            <div className="row">
+              {badge?.assignedUsers?.map((user) => (
+                <div className="col py-4 border-bottom">
+                  <UserCard user={user} />
+                </div>
+              ))}{' '}
+            </div>
+          </td>
+        </tr>
+      </CardTableSection>
+    )}
   </div>
 );
 

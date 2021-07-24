@@ -14,7 +14,12 @@ import { createSchema } from 'components/forms/schemas/schema-helpers';
 import { BASE_API_URL, USER_TYPES } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { addBadgesSchema } from 'components/forms/schemas/badgesSchema';
-import { getError, objectToOptions, statusIsSuccessful } from 'utils/helpers';
+import {
+  getError,
+  objectToOptions,
+  statusIsSuccessful,
+  // valuesToOptions,
+} from 'utils/helpers';
 import { navigate } from '@reach/router';
 import Upload from 'components/utils/Upload';
 import { setQueryCache } from 'hooks/useQuery';
@@ -32,7 +37,7 @@ const AddBadges = ({ id }) => (
 );
 const BadgesForm = ({ badge }) => {
   const [toast, setToast] = useToast();
-  const [image, setImage] = React.useState('test');
+  const [image, setImage] = React.useState('');
 
   return (
     <Formik
@@ -46,10 +51,7 @@ const BadgesForm = ({ badge }) => {
           image: image || badge?.image,
         };
 
-        if (!payload.image) {
-          setToast({ message: 'Kindly upload a Badges Image' });
-          return;
-        }
+        console.log(`payload`, payload);
 
         Axios({
           method: badge?._id ? 'put' : 'post',
@@ -96,6 +98,11 @@ const BadgesForm = ({ badge }) => {
                   name="assignedRole"
                   options={objectToOptions({ all: -1, ...USER_TYPES })}
                 />
+                {/* <Select
+                  label="Badge Colour"
+                  name="icon.color"
+                  options={valuesToOptions(['green', 'yellow', 'red', 'blue'])}
+                /> */}
                 <div className="my-4">
                   <Label text="Badge Image" name="badges-image" />
                   <Upload

@@ -272,3 +272,9 @@ export const NOTIFICATION_ACTION = {
   USER: 'USER',
   VISITATION: 'VISITATION',
 };
+
+export const BADGE_ACCESS_LEVEL = {
+  ALL: -1,
+  USER: USER_TYPES.user,
+  VENDOR: USER_TYPES.vendor,
+};
