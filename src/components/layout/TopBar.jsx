@@ -73,6 +73,9 @@ const Header = () => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="dropdown-menu-children">
+                <Dropdown.Item as={Link} to={`/${currentRole}/mybadges`}>
+                  Badges
+                </Dropdown.Item>
                 <Dropdown.Item as={Link} to="/user/settings">
                   Settings
                 </Dropdown.Item>

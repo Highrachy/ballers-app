@@ -3,6 +3,7 @@ import BackendPage from 'components/layout/BackendPage';
 import {
   BADGE_ACCESS_LEVEL,
   BASE_API_URL,
+  DASHBOARD_PAGE,
   STATUS,
   USER_TYPES,
 } from 'utils/constants';
@@ -47,6 +48,9 @@ import InputFormat from 'components/forms/InputFormat';
 import { setQueryCache } from 'hooks/useQuery';
 import Select from 'components/forms/Select';
 import { Spacing } from 'components/common/Helpers';
+import { Link } from '@reach/router';
+import BadgePlaceholderImage from 'assets/img/placeholder/property.png';
+import { BadgesIcon } from 'components/utils/Icons';
 
 const pageOptions = {
   key: 'user',
@@ -95,16 +99,16 @@ const SingleUser = ({ id }) => {
 const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   const [loadingVerification, setLoadingVerification] = React.useState(false);
   const [badgeQuery] = useGetQuery({
-    key: 'badge',
-    name: 'badge',
+    key: 'available-badge',
+    name: 'available-badge',
     setToast,
-    endpoint: API_ENDPOINT.getAllBadges(),
+    endpoint: API_ENDPOINT.getAllBadgesByRole(user?.role || 1),
     axiosOptions: {
       params: { assignedRole: `${BADGE_ACCESS_LEVEL.ALL}:${user?._id}` },
     },
   });
 
-  const badges = badgeQuery?.data?.result;
+  const badges = badgeQuery?.data?.badges;
   const verifyVendor = () => {
     setLoadingVerification(true);
     setVerifyVendorModal(false);
@@ -504,6 +508,17 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
               {user.address && getFormattedAddress(user.address)}
             </td>
           </tr>
+
+          {user?.badges && (
+            <tr>
+              <td>
+                <strong>Badges</strong>
+              </td>
+              <td colSpan="4">
+                <LoadCurrentUserBadges user={user} badges={user?.badges} />
+              </td>
+            </tr>
+          )}
 
           <tr>
             <td>
@@ -1131,4 +1146,34 @@ const AssignBadge = ({ user, setToast, badges }) => {
   );
 };
 
+export const LoadCurrentUserBadges = ({ badges, user }) => (
+  <section className="row py-4">
+    {badges.map((badge, index) => (
+      <SingleUserBadge key={index} {...badge} />
+    ))}
+  </section>
+);
+
+export const SingleUserBadge = ({ image, user, _id, name }) => {
+  return (
+    <div className="col-md-4 col-6 text-center mb-4">
+      <div className="icon-xl mb-2 badge-gray">
+        {image ? (
+          <Link to={`/${DASHBOARD_PAGE[user?.role]}/badge/${_id}`}>
+            <Image
+              src={image}
+              name={`badge ${_id}`}
+              width="80"
+              alt="badge"
+              defaultImage={BadgePlaceholderImage}
+            />
+          </Link>
+        ) : (
+          <BadgesIcon />
+        )}
+      </div>
+      <strong className="small">{name}</strong>
+    </div>
+  );
+};
 export default SingleUser;

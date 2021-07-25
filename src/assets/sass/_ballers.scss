@@ -525,7 +525,22 @@ html {
   width: 1.75rem;
 }
 
-.icon-xl svg {
-  height: 3rem;
-  width: 3rem;
+.icon-xl {
+  img,
+  svg {
+    height: 3rem;
+    width: 3rem;
+  }
+}
+
+.icon-xl img {
+  object-fit: contain;
+}
+
+.badge-gold {
+  color: $gold;
+}
+
+.badge-gray {
+  color: $gray-600;
 }

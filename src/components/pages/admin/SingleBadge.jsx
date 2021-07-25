@@ -46,7 +46,7 @@ const BadgeDetail = ({ badge, toast }) => (
   <div className="container-fluid">
     <Toast {...toast} />
     <div className="mt-5 mb-3">
-      <h3>{badge.name} Badge</h3>
+      <h3>{badge.name}</h3>
     </div>
     <CardTableSection name="Badge Details">
       <tr>

@@ -12,6 +12,7 @@ import SingleOffer from 'components/pages/shared/SingleOffer';
 import Menu from 'components/pages/user/Menu';
 import PropertyEnquiry from 'components/pages/user/PropertyEnquiry';
 import Notifications from 'components/pages/shared/Notifications';
+import MyBadges from 'components/pages/shared/MyBadges';
 
 const UserRouter = () => (
   <Router>
@@ -26,6 +27,7 @@ const UserRouter = () => (
     <JustForYou path="just-for-you" />
     <SingleOffer path="offer/:id" />
     <Notifications path="notifications" />
+    <MyBadges path="mybadges" />
     <Menu path="menu" />
   </Router>
 );
