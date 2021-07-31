@@ -36,26 +36,43 @@ const OfferLetterTemplate = ({
       ? Math.floor(rangePrice / periodicPayment)
       : 1;
   const lastPayment = rangePrice - periodicPayment * noOfMonths;
-  const initialPercentage = moneyFormat(
-    (initialPayment / totalAmountPayable) * 100
-  );
+  // const initialPercentage = moneyFormat(
+  //   (initialPayment / totalAmountPayable) * 100
+  // );
   const buyerName = `${enquiryInfo.title} ${enquiryInfo.firstName} ${enquiryInfo.lastName} ${enquiryInfo.otherName}`;
   const houseType = propertyInfo.houseType.toUpperCase();
   const propertyName = propertyInfo.name;
   const isUser = useCurrentRole().isUser;
+  const legalFee = offerInfo?.otherPayments?.legalFee || 0;
+  const agencyFee = offerInfo?.otherPayments?.agencyFee || 0;
+  const deedOfAssignmentExecution =
+    offerInfo?.otherPayments?.deedOfAssignmentExecution || 0;
+  const infrastructureDevelopment =
+    offerInfo?.otherPayments?.infrastructureDevelopment || 0;
+  const powerConnectionFee = offerInfo?.otherPayments?.powerConnectionFee || 0;
+  const surveyPlan = offerInfo?.otherPayments?.surveyPlan || 0;
+
+  const totalSellingPrice =
+    offerInfo.totalAmountPayable +
+    legalFee +
+    agencyFee +
+    deedOfAssignmentExecution +
+    infrastructureDevelopment +
+    powerConnectionFee +
+    surveyPlan;
 
   return (
     <Card className="mt-4 p-5 offer-letter-template">
-      <Image
-        src={vendorInfo?.vendor?.companyLogo}
-        width="150"
-        className="img-fluid"
-        name={`${companyName} Logo`}
-      />
-      <p className="mt-4">
-        Our Ref: {offerInfo.referenceCode || ''}
-        <span className="float-right">{getDate(Date.now())}</span>
-      </p>
+      <div className="text-right">
+        <Image
+          src={vendorInfo?.vendor?.companyLogo}
+          width="150"
+          name={`${companyName} Logo`}
+        />
+      </div>
+
+      <p className="mt-4">Our Ref: {offerInfo.referenceCode || ''}</p>
+      <div className="mb-3">{getDate(offerInfo.createdAt || Date.now())}</div>
 
       <strong>
         {buyerName}
@@ -66,13 +83,13 @@ const OfferLetterTemplate = ({
       <p className="">Dear {getUserTitle(enquiryInfo.title)},</p>
 
       <strong>
-        RE: {propertyInfo.name} - LETTER OF OFFER FOR {houseType}
+        {propertyInfo.name} - LETTER OF OFFER FOR {houseType}
       </strong>
 
       <p className="">
-        We refer to your application to purchase a unit in {propertyName} on{' '}
-        {getLocationFromAddress(enquiryInfo.address)} and are pleased to offer
-        you a {houseType} on the following terms and conditions:
+        We refer to your application to purchase an apartment in {propertyName}{' '}
+        located on {getLocationFromAddress(enquiryInfo.address)} and are pleased
+        to offer you a {houseType} on the following terms and conditions:
       </p>
       <div className="table-responsive">
         <table className="table table-md table-borderless">
@@ -107,20 +124,131 @@ const OfferLetterTemplate = ({
             </tr>
             <tr>
               <td>
-                <strong>5. SELLING PRICE:</strong>{' '}
+                <strong>5. FACILITIES/SERVICES PROVIDED:</strong>{' '}
               </td>
               <td>
-                {`${moneyFormatInNaira(
-                  offerInfo.totalAmountPayable
-                )} (${numToWords(
-                  offerInfo.totalAmountPayable
-                )} Naira only), payable as
-            provided in clause 6 below.`}
+                <ul>
+                  {propertyInfo.features.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
               </td>
             </tr>
             <tr>
               <td>
-                <strong>6. PAYMENT TERMS</strong>{' '}
+                <strong>6. COMPLETION DATE </strong>{' '}
+              </td>
+              <td>
+                ****************************************************************
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>7. DELIVERY STATE:</strong>{' '}
+              </td>
+              <td>{offerInfo.deliveryState}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>8. SELLING PRICE:</strong>{' '}
+              </td>
+              <td>
+                {`${moneyFormatInNaira(totalSellingPrice)} (${numToWords(
+                  totalSellingPrice
+                )} Naira only)`}
+              </td>
+            </tr>
+            {totalSellingPrice !== offerInfo.totalAmountPayable && (
+              <tr>
+                <td colSpan="2">
+                  <div className="table-responsive table-sm">
+                    <table className="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Description</th>
+                          <th className="text-right">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Property Price</td>
+                          <td className="text-right">
+                            {moneyFormatInNaira(offerInfo.totalAmountPayable)}
+                          </td>
+                        </tr>
+                        {legalFee !== 0 && (
+                          <tr>
+                            <td>Legal Fee ({legalFee} %)</td>
+                            <td className="text-right">
+                              {moneyFormatInNaira(
+                                offerInfo.totalAmountPayable * (legalFee / 100)
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                        {agencyFee !== 0 && (
+                          <tr>
+                            <td>Agency Fee ({agencyFee} %)</td>
+                            <td className="text-right">
+                              {moneyFormatInNaira(
+                                offerInfo.totalAmountPayable * (agencyFee / 100)
+                              )}
+                            </td>
+                          </tr>
+                        )}
+
+                        {powerConnectionFee !== 0 && (
+                          <tr>
+                            <td>Power Connection Fee</td>
+                            <td className="text-right">
+                              {moneyFormatInNaira(powerConnectionFee)}
+                            </td>
+                          </tr>
+                        )}
+
+                        {surveyPlan !== 0 && (
+                          <tr>
+                            <td>Survey Plan</td>
+                            <td className="text-right">
+                              {moneyFormatInNaira(surveyPlan)}
+                            </td>
+                          </tr>
+                        )}
+
+                        {deedOfAssignmentExecution !== 0 && (
+                          <tr>
+                            <td>Deed of Assignment Execution</td>
+                            <td className="text-right">
+                              {moneyFormatInNaira(deedOfAssignmentExecution)}
+                            </td>
+                          </tr>
+                        )}
+
+                        {infrastructureDevelopment !== 0 && (
+                          <tr>
+                            <td>Infrastructure Development</td>
+                            <td className="text-right">
+                              {moneyFormatInNaira(infrastructureDevelopment)}
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th>Total</th>
+                          <th className="text-right">
+                            <h5> {moneyFormatInNaira(totalSellingPrice)}</h5>
+                          </th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            )}
+            <tr>
+              <td>
+                <strong>9. PAYMENT PLAN BREAKDOWN</strong>{' '}
               </td>
               <td>Spread payment, see breakdown below;</td>
             </tr>
@@ -162,26 +290,16 @@ const OfferLetterTemplate = ({
             </tr>
             <tr>
               <td>
-                <strong>7. FACILITIES / SERVICES PROVIDED:</strong>
+                <strong>10. ALLOCATION:</strong>
               </td>
               <td>
-                <ul>
-                  {propertyInfo.features.map((feature, index) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                </ul>
+                May be selected after initial deposit is made but is only
+                guaranteed upon full payment.
               </td>
-            </tr>
-
-            <tr>
-              <td>
-                <strong>8. DELIVERY STATE:</strong>{' '}
-              </td>
-              <td>{offerInfo.deliveryState}</td>
             </tr>
             <tr>
               <td>
-                <strong>9. PAYMENT ACCOUNT:</strong>
+                <strong>11. PAYMENT ACCOUNT:</strong>
               </td>
               <td>
                 Highrachy Investment and Technology Ltd <br />
@@ -190,7 +308,8 @@ const OfferLetterTemplate = ({
                 Account Number: 2032997125
               </td>
             </tr>
-            <tr>
+
+            {/* <tr>
               <td>
                 <strong>10. ALLOCATION:</strong>
               </td>
@@ -198,97 +317,81 @@ const OfferLetterTemplate = ({
                 Due after the {offerInfo.allocationInPercentage}% of payment
                 received.
               </td>
+            </tr> */}
+            <tr>
+              <td>
+                <strong>11. PAYMENT ACCOUNT:</strong>
+              </td>
+              <td>
+                Highrachy Investment and Technology Ltd <br />
+                Bank: FIRST BANK OF NIGERIA PLC
+                <br />
+                Account Number: 2032997125
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <strong>11. OTHER TERMS AND CONDITIONS: </strong>
+      <strong>12. OTHER TERMS AND CONDITIONS: </strong>
       <ol type="a">
         <li>
           <p>
-            If the Buyer fails, refuses or neglects to pay any installment
-            within 21 days after the due date, the Buyer shall pay interest on
-            the amount due at the prevailing bank interest rate. If the Buyer
-            fails to pay the amount due (plus applicable interest) within 45
-            days after the due date, the sale shall be deemed rescinded and the
-            deposit already made shall be refunded to the Buyer. An
-            administrative charge of 5% will be deducted from the amount
-            received from the buyer and the balance will be refunded in line
-            with the terms and conditions. The Buyer shall execute or facilitate
-            the execution of the Deed of Assignment of the property ONLY upon
-            full payment of the consideration.
+            If the Buyer fails, refuses or neglects to pay any instalment within
+            ***** days of its falling due,the Buyer shall pay the amount due and
+            interest on the amount due at the prevailing bank interest rate. If
+            the Buyer fails to pay the amount due (plus applicable interest)
+            within ***** days after the due date, the Vendor shall have the
+            right to rescind the sale and the deposit already made shall be
+            refunded to the Buyer, less of an administrative charge of **10%**
+            which will be deducted from the amount received from the buyer and
+            the balance will be refunded in line with the terms and conditions.
           </p>
         </li>
         <li>
           <p>
-            Where the subject unit is not completed within the said{' '}
-            {`${numToWords(noOfMonths)} (${noOfMonths}`}
-            months’ time frame, due to the negligence or fault of the Vendor, a
-            grace period of two (2) months will be granted to complete all works
-            after which the Vendor shall pay to the Buyer, an amount to be
-            determined by 50% of the average annual rental value of similar
-            types of units within the area for the unit, this is subject to the
-            Buyer meeting up the periodic payment as at when due and completing
-            payment within six (6) Months. The determined amount shall be paid
-            by the Vendor at a pro-rated monthly rate for each month of delay
-            after the agreed seven (7) months plus the grace period and shall
-            become due and payable within the first ten (10) working days of the
-            month.
+            Where the subject unit is not completed within the stipulated time
+            frame, due to the negligence or fault of the Vendor, with no
+            outstanding defaults on the part of the buyer, a grace period of **6
+            months** will be granted to the Developer to complete all works
+            after which the Buyer shall be entitled to terminate this sale and
+            receive a refund of the paid sum. The Vendor shall pay to the Buyer
+            an annual compensation of **4% of the total amount** paid to be
+            prorated and payable in monthly tranches.
           </p>
         </li>
         <li>
           <p>
-            The Vendor shall ensure the execution of a Deed of Assignment for
-            the subject unit of Blissville on the land covered by Governors
-            consented Deed of Assignment dated the 20th day of May, 2016 and
-            registered as No. 87 on page 87 in volume 2547v at the office of the
-            Lagos State Land Registry, Ikeja, in favour of the Buyer.
+            The Vendor shall execute or facilitate the execution of the Deed of
+            Assignment of the property in favour of the buyer ONLY upon full
+            payment of the consideration.
           </p>
         </li>
         <li>
           <p>
             The vendor shall support the buyer within her power to undertake the
-            survey and perfection of title including obtaining the Governor’s
-            consent thereto. The Buyer shall bear all costs and expenses of
-            survey and title perfection.
-          </p>
-        </li>
-        <li>
-          <p>
-            The Vendor shall be responsible to handle the maintenance of the
-            common facilities within “Blissville” including plant and machinery
-            provided by the vendor and the cost of such services shall be borne
-            proportionately by all property owners/ residents of “Blissville”
-            benefiting from the services. The cost of replacement of major
-            facilities shall also be borne by all Property owners /residents.
+            survey and perfection of title. The Buyer shall bear all costs and
+            expenses of survey and title perfection.
           </p>
         </li>
         <li>
           <p>
             The Buyer shall perform and observe the covenants, terms and
-            conditions of Lagos State imposed on the property including payment
-            of Land Use Charge, tenement rates and any other charges imposed on
-            the property by the Local, State or Federal Government of Nigeria
-            and any increment thereto. The Buyer shall also pay and discharge
-            any service charge including electricity bill and any other charges
-            set out in the Deed of Assignment and/or service management
-            agreement and any increment thereto.
-          </p>
-        </li>
-        <li>
-          <p>
-            The Buyer shall enter into a service Management Agreement with the
-            Vendor’s nominated Facility Managers on agreed terms and conditions
-            for management of common facilities provided in “Blissville
-            buildings”, which the property forms part of.
+            conditions of **Lagos State** imposed on the property including
+            payment of Land Use Charge, tenement rates and any other charges
+            imposed on the property by the Local, State or Federal Government of
+            Nigeria and any increment thereto. The Buyer shall also be
+            responsible for paying and discharging any service charge including
+            electricity bill and any other charges set out in the Deed of
+            Assignment and/or service management agreement and any increment
+            thereto.
           </p>
         </li>
         <li>
           <p>
             The Buyer shall make and rely upon its own inquiries and shall
             satisfy itself in all respects in relation to the title details
-            including all related documentation;
+            including all related documentation.
           </p>
         </li>
         <li>
@@ -298,21 +401,32 @@ const OfferLetterTemplate = ({
             sole discretion accepts to refund the purchase price or any part
             thereof, the property shall first be offered to another buyer and
             the refund shall be made from the purchase price received from the
-            subsequent buyer less administrative fees in line with terms and
-            conditions captured herein.
+            subsequent buyer less administrative fees of **5%**.
           </p>
         </li>
+        <li>
+          <p>
+            The buyer is aware that the unit is a part of an estate and buyers
+            shall be subject to estate rules, levy and service charges that are
+            not included in this offer letter.
+          </p>
+        </li>
+
+        {/* additional clause */}
       </ol>
 
       <p className="">
         If the above terms and conditions are acceptable to you, kindly send in
-        your Bank draft or evidence of payment of the sum of{' '}
+        your Bank draft or evidence of payment of the initial deposit sum of{' '}
         {` ${moneyFormatInNaira(offerInfo.initialPayment)} (${numToWords(
           offerInfo.initialPayment
         )} Naira only)`}
-        , being {initialPercentage}% of the purchase price to {companyName}{' '}
-        within 5 working days (Details of bank account in clause 11). We are
-        delighted that you have decided to access this opportunity being
+        , within **5** working days (Details of bank account in clause 11) from
+        the receipt of this letter.
+      </p>
+
+      <p className="">
+        We are delighted that you have decided to access this opportunity being
         offered.
       </p>
 
@@ -345,8 +459,12 @@ const OfferLetterTemplate = ({
             <span className="memo-border">
               {enquiryInfo.firstName} {enquiryInfo.lastName}
             </span>{' '}
-            hereby accepts the above terms and conditions on{' '}
-            <span className="memo-border">{getDate(Date.now())}</span>.
+            having read and understood the content of this offer letter, hereby
+            accept the above terms and conditions on June 28, 2021.{' '}
+            <span className="memo-border">
+              {getDate(offerInfo?.responseDate || Date.now())}
+            </span>
+            .
           </strong>
 
           <h6 className="mt-5 mb-2">Signature</h6>
