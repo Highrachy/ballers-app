@@ -19,6 +19,7 @@ import {
   storeToken,
   storeUserRole,
   getUserFirstName,
+  clearStorage,
 } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
 import store from 'store2';
@@ -131,6 +132,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
           .then(function (response) {
             const { status, data } = response;
             if (status === 200) {
+              clearStorage();
               storeToken(data.user.token);
               storeUserRole(data.user.role);
               userDispatch({ type: 'user-login', user: data.user });

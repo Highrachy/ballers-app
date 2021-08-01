@@ -254,6 +254,18 @@ export const PAYMENT_FREQUENCY = {
   180: '180 days',
 };
 
+export const PAYMENT_OPTION = {
+  INITIAL_DEPOSIT: 'INITIAL DEPOSIT',
+  EVENLY_DISTRIBUTED: 'EVENLY DISTRIBUTED',
+  FINAL_DEPOSIT: 'FINAL DEPOSIT',
+};
+
+export const PAYMENT_OPTIONS_BREAKDOWN = {
+  [PAYMENT_OPTION.INITIAL_DEPOSIT]: 'Additional charges at initial deposit',
+  [PAYMENT_OPTION.EVENLY_DISTRIBUTED]: 'Additional payment evenly distributed',
+  [PAYMENT_OPTION.FINAL_DEPOSIT]: 'Additional payment at final deposit',
+};
+
 export const NOTIFICATION_TYPE = {
   0: 'danger',
   1: 'text',

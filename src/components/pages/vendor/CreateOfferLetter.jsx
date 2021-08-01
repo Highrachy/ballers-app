@@ -5,7 +5,11 @@ import {
   DisplayFormikState,
 } from 'components/forms/form-helper';
 import Axios from 'axios';
-import { BASE_API_URL, PAYMENT_FREQUENCY } from 'utils/constants';
+import {
+  BASE_API_URL,
+  PAYMENT_FREQUENCY,
+  PAYMENT_OPTIONS_BREAKDOWN,
+} from 'utils/constants';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getTokenFromStore } from 'utils/localStorage';
 import Button from 'components/forms/Button';
@@ -37,22 +41,23 @@ const CreateOfferLetter = ({ enquiry }) => {
     expires: '7',
     title: enquiry.propertyInfo.titleDocument,
     deliveryState: 'testing 123',
+    handOverDate: Date.now(),
     otherPayments: {
-      agencyFee: 0,
+      agencyFee: 5,
       deedOfAssignmentExecution: 0,
       infrastructureDevelopment: 0,
-      legalFee: 0,
+      legalFee: 5,
       powerConnectionFee: 0,
       surveyPlan: 0,
     },
     otherTerms: {
-      administrativeCharge: 0,
-      bankDraftDue: 0,
-      dateDue: 0,
-      deductibleRefundPercentage: 0,
-      gracePeriod: 0,
-      terminationInterest: 0,
-      terminationPeriod: 0,
+      administrativeCharge: 10,
+      bankDraftDue: 5,
+      dateDue: 21,
+      deductibleRefundPercentage: 5,
+      gracePeriod: 6 * 30,
+      terminationInterest: 4,
+      terminationPeriod: 6 * 30,
     },
   };
   const [value, setValue] = React.useState(defaultValue);
@@ -95,7 +100,7 @@ const CreateOfferLetterForm = ({
             otherPaymentsSchema,
             value?.otherPayments
           ),
-          otherTerms: setInitialValues(otherTermsSchema),
+          otherTerms: setInitialValues(otherTermsSchema, value?.otherTerms),
         }}
         onSubmit={(values) => {
           handleValue({
@@ -156,11 +161,20 @@ const OfferFormContainer = ({ title, children }) => (
 const OfferLetterForm = () => {
   return (
     <>
-      <InputFormat
-        label="Total Amount Payable"
-        name="totalAmountPayable"
-        placeholder="Total Amount Payable"
-      />
+      <div className="form-row">
+        <InputFormat
+          formGroupClassName="col-md-6"
+          label="Total Amount Payable"
+          name="totalAmountPayable"
+          placeholder="Total Amount Payable"
+        />
+        <DatePicker
+          formGroupClassName="col-md-6"
+          label="Hand Over Date"
+          name="handOverDate"
+          minDate={new Date()}
+        />
+      </div>
       <div className="form-row">
         <InputFormat
           formGroupClassName="col-md-6"
@@ -222,24 +236,33 @@ const OfferLetterForm = () => {
   );
 };
 const OtherPaymentsForm = () => {
+  const paymentOptions = objectToOptions(PAYMENT_OPTIONS_BREAKDOWN, null, true);
   return (
     <>
+      <Select
+        label="Payment Breakdown"
+        name="otherPayments.paymentBreakdown"
+        options={paymentOptions}
+        defaultValue={paymentOptions[0]}
+      />
       <div className="form-row">
-        <Input
+        <InputFormat
           formGroupClassName="col-md-6"
-          label="Legal Fee"
+          label="Legal Fee (in percentage)"
           name="otherPayments.legalFee"
           type="number"
-          max={20}
-          min={0}
+          suffix="%"
+          prefix=""
+          tooltipText="Between 0 - 20%"
         />
-        <Input
+        <InputFormat
           formGroupClassName="col-md-6"
-          label="Agency Fee"
+          label="Agency Fee (in percentage)"
           name="otherPayments.agencyFee"
           type="number"
-          max={20}
-          min={0}
+          suffix="%"
+          prefix=""
+          tooltipText="Between 0 - 20%"
         />
       </div>
 
@@ -277,67 +300,73 @@ const OtherTermsForm = () => {
   return (
     <>
       <div className="form-row">
-        <Input
+        <InputFormat
           formGroupClassName="col-md-6"
-          label="Administrative Charge"
+          label="Administrative Charge (in percentage)"
           name="otherTerms.administrativeCharge"
           type="number"
-          max={20}
-          min={0}
+          suffix="%"
+          prefix=""
+          tooltipText="Between 0 - 10%"
         />
-        <Input
+        <InputFormat
           formGroupClassName="col-md-6"
-          label="Bank Draft Due"
+          label="Bank Draft Due (in days)"
           name="otherTerms.bankDraftDue"
           type="number"
-          max={20}
-          min={0}
+          suffix=" days"
+          prefix=""
+          tooltipText="Between 2 - 7 days"
         />
       </div>
       <div className="form-row">
-        <Input
+        <InputFormat
           formGroupClassName="col-md-6"
-          label="Date Due"
+          label="Date Due (in days)"
           name="otherTerms.dateDue"
           type="number"
-          max={20}
-          min={0}
+          suffix=" days"
+          prefix=""
+          tooltipText="Between 14 - 30 days"
         />
-        <Input
+        <InputFormat
           formGroupClassName="col-md-6"
           label="Deductible Refund Percentage"
           name="otherTerms.deductibleRefundPercentage"
           type="number"
-          max={20}
-          min={0}
+          suffix="%"
+          prefix=""
+          tooltipText="Between 0 - 10%"
         />
       </div>
       <div className="form-row">
-        <Input
+        <InputFormat
           formGroupClassName="col-md-6"
-          label="Grace Period"
+          label="Grace Period (in days)"
           name="otherTerms.gracePeriod"
           type="number"
-          max={20}
-          min={0}
+          suffix=" days"
+          prefix=""
+          tooltipText="Between 0 - 365 days"
         />
-        <Input
+        <InputFormat
           formGroupClassName="col-md-6"
-          label="Termination Interest"
+          label="Termination Interest (in percentage)"
           name="otherTerms.terminationInterest"
-          type="number"
-          max={20}
-          min={0}
+          suffix="%"
+          prefix=""
+          tooltipText="Between 0 - 10%"
         />
       </div>
-      <div className="form-row">
-        <Input
+      <div className="form-row ml-n3">
+        <InputFormat
           formGroupClassName="col-md-6"
-          label="Termination Period"
+          label="Termination Period (in days)"
           name="otherTerms.terminationPeriod"
           type="number"
-          max={20}
-          min={0}
+          suffix=" days"
+          prefix=""
+          tooltipText="Between 0 - 1000 days"
         />
       </div>
     </>

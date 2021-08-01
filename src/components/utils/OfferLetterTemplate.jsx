@@ -10,11 +10,12 @@ import {
   getLocationFromAddress,
   isValidURL,
   getUserTitle,
+  formatInDays,
 } from 'utils/helpers';
 import { getDate } from 'utils/date-helpers';
 import Image from './Image';
 import DirectorSignature from 'assets/img/placeholder/signature.png';
-import { ACTIVE_OFFER_STATUS } from 'utils/constants';
+import { ACTIVE_OFFER_STATUS, PAYMENT_OPTION } from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
 
 const OfferLetterTemplate = ({
@@ -29,37 +30,76 @@ const OfferLetterTemplate = ({
   const companyName = vendorInfo?.vendor?.companyName;
   const shownSignature = signature || offerInfo.signature;
 
-  const { totalAmountPayable, initialPayment, periodicPayment } = offerInfo;
-  const rangePrice = totalAmountPayable - initialPayment;
-  const noOfMonths =
-    rangePrice / periodicPayment > 1
-      ? Math.floor(rangePrice / periodicPayment)
-      : 1;
-  const lastPayment = rangePrice - periodicPayment * noOfMonths;
-  // const initialPercentage = moneyFormat(
-  //   (initialPayment / totalAmountPayable) * 100
-  // );
-  const buyerName = `${enquiryInfo.title} ${enquiryInfo.firstName} ${enquiryInfo.lastName} ${enquiryInfo.otherName}`;
-  const houseType = propertyInfo.houseType.toUpperCase();
-  const propertyName = propertyInfo.name;
-  const isUser = useCurrentRole().isUser;
-  const legalFee = offerInfo?.otherPayments?.legalFee || 0;
-  const agencyFee = offerInfo?.otherPayments?.agencyFee || 0;
-  const deedOfAssignmentExecution =
-    offerInfo?.otherPayments?.deedOfAssignmentExecution || 0;
-  const infrastructureDevelopment =
-    offerInfo?.otherPayments?.infrastructureDevelopment || 0;
-  const powerConnectionFee = offerInfo?.otherPayments?.powerConnectionFee || 0;
-  const surveyPlan = offerInfo?.otherPayments?.surveyPlan || 0;
+  let { totalAmountPayable, initialPayment, periodicPayment } = offerInfo;
 
-  const totalSellingPrice =
-    offerInfo.totalAmountPayable +
-    legalFee +
-    agencyFee +
+  // Payment Breakdown
+  const paymentBreakdown =
+    offerInfo?.otherPayments?.paymentBreakdown ||
+    PAYMENT_OPTION.INITIAL_DEPOSIT;
+
+  // Other payments
+  const legalFee = parseInt(offerInfo?.otherPayments?.legalFee || 0, 10);
+  const agencyFee = parseInt(offerInfo?.otherPayments?.agencyFee || 0, 10);
+  const deedOfAssignmentExecution = parseInt(
+    offerInfo?.otherPayments?.deedOfAssignmentExecution || 0,
+    10
+  );
+  const infrastructureDevelopment = parseInt(
+    offerInfo?.otherPayments?.infrastructureDevelopment || 0,
+    10
+  );
+  const powerConnectionFee = parseInt(
+    offerInfo?.otherPayments?.powerConnectionFee || 0,
+    10
+  );
+  const surveyPlan = parseInt(offerInfo?.otherPayments?.surveyPlan || 0, 10);
+
+  const otherPaymentsTotal =
+    (legalFee / 100) * offerInfo.totalAmountPayable +
+    (agencyFee / 100) * offerInfo.totalAmountPayable +
     deedOfAssignmentExecution +
     infrastructureDevelopment +
     powerConnectionFee +
     surveyPlan;
+
+  // total selling price
+  const totalSellingPrice = offerInfo.totalAmountPayable + otherPaymentsTotal;
+
+  // PAYMENT OPTION 1: INITIAL PAYMENT
+  if (paymentBreakdown === PAYMENT_OPTION.INITIAL_DEPOSIT) {
+    initialPayment += otherPaymentsTotal;
+  }
+
+  // PAYMENT BREAKDOWN FOR TABLE
+  // TODO: Replace this with payment schedule from database
+  let rangePrice = totalAmountPayable - initialPayment;
+
+  const noOfMonths =
+    rangePrice / periodicPayment > 1
+      ? Math.floor(rangePrice / periodicPayment)
+      : 1;
+
+  //TODO: fix last payment if last payment is not 0
+  let lastPayment = rangePrice - periodicPayment * noOfMonths;
+
+  // PAYMENT OPTION 2: EVENLY DISTRIBUTED
+  if (paymentBreakdown === PAYMENT_OPTION.EVENLY_DISTRIBUTED) {
+    const otherPaymentsEachMonth = otherPaymentsTotal / (noOfMonths + 1);
+    initialPayment += otherPaymentsEachMonth;
+    periodicPayment += otherPaymentsEachMonth;
+    lastPayment =
+      lastPayment > 0 ? lastPayment + otherPaymentsEachMonth : lastPayment;
+  }
+
+  // PAYMENT OPTION 3: FINAL DEPOSIT
+  if (paymentBreakdown === PAYMENT_OPTION.FINAL_DEPOSIT) {
+    lastPayment += otherPaymentsTotal;
+  }
+
+  const buyerName = `${enquiryInfo.title} ${enquiryInfo.firstName} ${enquiryInfo.lastName} ${enquiryInfo.otherName}`;
+  const houseType = propertyInfo.houseType.toUpperCase();
+  const propertyName = propertyInfo.name;
+  const isUser = useCurrentRole().isUser;
 
   return (
     <Card className="mt-4 p-5 offer-letter-template">
@@ -138,9 +178,7 @@ const OfferLetterTemplate = ({
               <td>
                 <strong>6. COMPLETION DATE </strong>{' '}
               </td>
-              <td>
-                ****************************************************************
-              </td>
+              <td>{getDate(offerInfo.handOverDate)}</td>
             </tr>
             <tr>
               <td>
@@ -250,7 +288,7 @@ const OfferLetterTemplate = ({
               <td>
                 <strong>9. PAYMENT PLAN BREAKDOWN</strong>{' '}
               </td>
-              <td>Spread payment, see breakdown below;</td>
+              <td>&nbsp;</td>
             </tr>
             <tr>
               <td colSpan="2">
@@ -337,27 +375,31 @@ const OfferLetterTemplate = ({
       <ol type="a">
         <li>
           <p>
-            If the Buyer fails, refuses or neglects to pay any instalment within
-            ***** days of its falling due,the Buyer shall pay the amount due and
-            interest on the amount due at the prevailing bank interest rate. If
-            the Buyer fails to pay the amount due (plus applicable interest)
-            within ***** days after the due date, the Vendor shall have the
-            right to rescind the sale and the deposit already made shall be
-            refunded to the Buyer, less of an administrative charge of **10%**
-            which will be deducted from the amount received from the buyer and
-            the balance will be refunded in line with the terms and conditions.
+            If the Buyer fails, refuses or neglects to pay any instalment within{' '}
+            {formatInDays(offerInfo?.otherTerms?.dateDue)} of its falling
+            due,the Buyer shall pay the amount due and interest on the amount
+            due at the prevailing bank interest rate. If the Buyer fails to pay
+            the amount due (plus applicable interest) within{' '}
+            {formatInDays(offerInfo?.otherTerms?.gracePeriod)} after the due
+            date, the Vendor shall have the right to rescind the sale and the
+            deposit already made shall be refunded to the Buyer, less of an
+            administrative charge of{' '}
+            {offerInfo?.otherTerms?.administrativeCharge}% which will be
+            deducted from the amount received from the buyer and the balance
+            will be refunded in line with the terms and conditions.
           </p>
         </li>
         <li>
           <p>
             Where the subject unit is not completed within the stipulated time
             frame, due to the negligence or fault of the Vendor, with no
-            outstanding defaults on the part of the buyer, a grace period of **6
-            months** will be granted to the Developer to complete all works
-            after which the Buyer shall be entitled to terminate this sale and
-            receive a refund of the paid sum. The Vendor shall pay to the Buyer
-            an annual compensation of **4% of the total amount** paid to be
-            prorated and payable in monthly tranches.
+            outstanding defaults on the part of the buyer, a grace period of{' '}
+            {formatInDays(offerInfo?.otherTerms?.terminationPeriod)} will be
+            granted to the Developer to complete all works after which the Buyer
+            shall be entitled to terminate this sale and receive a refund of the
+            paid sum. The Vendor shall pay to the Buyer an annual compensation
+            of {offerInfo?.otherTerms?.terminationInterest}% of the total amount
+            paid to be prorated and payable in monthly tranches.
           </p>
         </li>
         <li>
@@ -377,14 +419,14 @@ const OfferLetterTemplate = ({
         <li>
           <p>
             The Buyer shall perform and observe the covenants, terms and
-            conditions of **Lagos State** imposed on the property including
-            payment of Land Use Charge, tenement rates and any other charges
-            imposed on the property by the Local, State or Federal Government of
-            Nigeria and any increment thereto. The Buyer shall also be
-            responsible for paying and discharging any service charge including
-            electricity bill and any other charges set out in the Deed of
-            Assignment and/or service management agreement and any increment
-            thereto.
+            conditions of {propertyInfo?.address?.state || 'Lagos'} State
+            imposed on the property including payment of Land Use Charge,
+            tenement rates and any other charges imposed on the property by the
+            Local, State or Federal Government of Nigeria and any increment
+            thereto. The Buyer shall also be responsible for paying and
+            discharging any service charge including electricity bill and any
+            other charges set out in the Deed of Assignment and/or service
+            management agreement and any increment thereto.
           </p>
         </li>
         <li>
@@ -401,7 +443,8 @@ const OfferLetterTemplate = ({
             sole discretion accepts to refund the purchase price or any part
             thereof, the property shall first be offered to another buyer and
             the refund shall be made from the purchase price received from the
-            subsequent buyer less administrative fees of **5%**.
+            subsequent buyer less administrative fees of{' '}
+            {offerInfo?.otherTerms?.deductibleRefundPercentage}%.
           </p>
         </li>
         <li>
@@ -421,8 +464,8 @@ const OfferLetterTemplate = ({
         {` ${moneyFormatInNaira(offerInfo.initialPayment)} (${numToWords(
           offerInfo.initialPayment
         )} Naira only)`}
-        , within **5** working days (Details of bank account in clause 11) from
-        the receipt of this letter.
+        , within {offerInfo?.otherTerms?.expectedBankDraftDue} working days
+        (Details of bank account in clause 11) from the receipt of this letter.
       </p>
 
       <p className="">

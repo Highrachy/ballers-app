@@ -275,3 +275,5 @@ export const getReferralStatus = (referralStatus, rewardStatus) => {
 
   return REFERRAL_STATUS.Sent;
 };
+
+export const formatInDays = (num) => `${num} ${Humanize.pluralize(num, 'day')}`;

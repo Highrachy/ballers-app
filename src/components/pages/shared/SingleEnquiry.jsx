@@ -10,6 +10,8 @@ import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import CardTableSection from 'components/common/CardTableSection';
 import { useCurrentRole } from 'hooks/useUser';
+import { PAYMENT_FREQUENCY } from 'utils/constants';
+import Humanize from 'humanize-plus';
 
 const pageOptions = {
   key: 'enquiry',
@@ -123,19 +125,37 @@ const EnquiryDetail = ({ enquiry, showOfferLetter, toast }) => (
         <td>
           <strong>Units</strong>
         </td>
-        <td>{enquiry.propertyInfo.units}</td>
+        <td>
+          {enquiry.propertyInfo.units}{' '}
+          {Humanize.pluralize(enquiry.propertyInfo.units, 'unit')}
+        </td>
       </tr>
       <tr>
         <td>
           <strong>Bedrooms</strong>
         </td>
-        <td>{enquiry.propertyInfo.bedrooms}</td>
+        <td>
+          {enquiry.propertyInfo.bedrooms}{' '}
+          {Humanize.pluralize(enquiry.propertyInfo.bedrooms, 'bedroom')}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Bathrooms</strong>
+        </td>
+        <td>
+          {enquiry.propertyInfo.bathrooms}{' '}
+          {Humanize.pluralize(enquiry.propertyInfo.bathrooms, 'bathrooms')}
+        </td>
       </tr>
       <tr>
         <td>
           <strong>Toilets</strong>
         </td>
-        <td>{enquiry.propertyInfo.toilets}</td>
+        <td>
+          {enquiry.propertyInfo.toilets}{' '}
+          {Humanize.pluralize(enquiry.propertyInfo.toilets, 'toilet')}
+        </td>
       </tr>
       <tr>
         <td>
@@ -155,7 +175,7 @@ const EnquiryDetail = ({ enquiry, showOfferLetter, toast }) => (
         <td>
           <strong>Investment Frequency</strong>
         </td>
-        <td>{enquiry.investmentFrequency}</td>
+        <td>{PAYMENT_FREQUENCY[enquiry.investmentFrequency]} </td>
       </tr>
       <tr>
         <td>

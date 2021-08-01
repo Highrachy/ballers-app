@@ -31,6 +31,7 @@ const Select = ({
   tooltipText,
   tooltipPosition,
   options,
+  ...props
 }) => {
   return (
     <div
@@ -51,7 +52,12 @@ const Select = ({
       <div className={inputSizeClassName}>
         <Field name={name}>
           {({ field, form }) => {
-            let value = isMulti ? [] : '';
+            let value = props.defaultValue
+              ? [props.defaultValue]
+              : isMulti
+              ? []
+              : '';
+
             if (options && field.value) {
               value = options.filter((option) =>
                 isMulti
@@ -86,6 +92,7 @@ const Select = ({
                 placeholder={placeholder || `Select ${label}...`}
                 styles={customStyles}
                 value={value}
+                {...props}
               />
             );
           }}

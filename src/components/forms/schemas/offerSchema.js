@@ -17,6 +17,7 @@ export const offerLetterSchema = {
   expires: required('Offer Expires'),
   title: stringValidation('Title Document'),
   deliveryState: stringValidation('Delivery State'),
+  handOverDate: minDateValidation('Completion Date', new Date()),
 };
 
 export const otherPaymentsSchema = {
@@ -30,6 +31,7 @@ export const otherPaymentsSchema = {
   legalFee: optionalValidation(required('Legal Fee')),
   powerConnectionFee: optionalValidation(required('Connection Power Fee')),
   surveyPlan: optionalValidation(required('Survey Plan')),
+  paymentBreakdown: optionalValidation(required('Payment Breakdown')),
 };
 
 export const otherTermsSchema = {
