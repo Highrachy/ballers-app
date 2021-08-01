@@ -20,6 +20,8 @@ import { TextSeparator } from 'components/common/Helpers';
 import { Spacing } from 'components/common/Helpers';
 import { FloorPlansList } from './FloorPlans';
 import { AddFloorPlans } from './FloorPlans';
+import { VideosList } from './Video';
+import { AddVideos } from './Video';
 import { AddNeighborhood } from './Neighborhood';
 import { NeighborhoodList } from './Neighborhood';
 import { useGetQuery } from 'hooks/useQuery';
@@ -135,6 +137,12 @@ export const OwnedPropertyCard = ({
           setToast={setToast}
           setProperty={setProperty}
         />
+
+        <VideosList
+          property={property}
+          setToast={setToast}
+          setProperty={setProperty}
+        />
       </Card>
 
       <PropertyMap mapLocation={property.mapLocation} />
@@ -244,6 +252,7 @@ const CaseHistory = ({ property, setToast, setProperty }) => {
             property={property}
             setToast={setToast}
             setProperty={setProperty}
+            key={index}
           />
         ))}
       </>
@@ -591,6 +600,13 @@ const ManagePropertyLink = ({ property, setToast, setProperty }) => (
     >
       {property?.gallery?.length > 0 ? 'Edit Gallery' : 'Add Gallery'}
     </Link>
+    <LinkSeparator />
+    <AddVideos
+      className="text-link text-muted"
+      property={property}
+      setToast={setToast}
+      setProperty={setProperty}
+    />
     <LinkSeparator />
     <AddFloorPlans
       className="text-link text-muted"

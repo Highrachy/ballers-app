@@ -51,6 +51,7 @@ import {
   FaThumbsUp,
   FaHouseDamage,
   FaCertificate,
+  FaPlay,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
@@ -114,6 +115,7 @@ export const PortfolioIcon = () => <BiHomeCircle />;
 export const NotificationIcon = () => <FiBell />;
 export const OfferIcon = () => <FaRegFileAlt />;
 export const OfferSignedIcon = () => <FaFileContract />;
+export const PlayIcon = () => <FaPlay />;
 export const PlusIcon = () => <FiPlus />;
 export const PointOfInterestIcon = () => <FaGrinStars />;
 export const ProfileIcon = () => <FiSettings />;

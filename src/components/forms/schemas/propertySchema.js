@@ -64,6 +64,11 @@ export const addGallerySchema = {
   title: required('Title'),
 };
 
+export const addVideoSchema = {
+  title: required('Title'),
+  url: required('Video URL'),
+};
+
 export const addFloorPlansSchema = {
   name: required('Title'),
 };
