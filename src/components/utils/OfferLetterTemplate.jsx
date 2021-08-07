@@ -15,7 +15,11 @@ import {
 import { getDate } from 'utils/date-helpers';
 import Image from './Image';
 import DirectorSignature from 'assets/img/placeholder/signature.png';
-import { ACTIVE_OFFER_STATUS, PAYMENT_OPTION } from 'utils/constants';
+import {
+  ACTIVE_OFFER_STATUS,
+  PAYMENT_OPTION,
+  PAYMENT_OPTIONS_BREAKDOWN,
+} from 'utils/constants';
 import { useCurrentRole } from 'hooks/useUser';
 
 const OfferLetterTemplate = ({
@@ -65,14 +69,14 @@ const OfferLetterTemplate = ({
   // total selling price
   const totalSellingPrice = offerInfo.totalAmountPayable + otherPaymentsTotal;
 
+  // PAYMENT BREAKDOWN FOR TABLE
+  // TODO: Replace this with payment schedule from database
+  let rangePrice = totalAmountPayable - initialPayment;
+
   // PAYMENT OPTION 1: INITIAL PAYMENT
   if (paymentBreakdown === PAYMENT_OPTION.INITIAL_DEPOSIT) {
     initialPayment += otherPaymentsTotal;
   }
-
-  // PAYMENT BREAKDOWN FOR TABLE
-  // TODO: Replace this with payment schedule from database
-  let rangePrice = totalAmountPayable - initialPayment;
 
   const noOfMonths =
     rangePrice / periodicPayment > 1
@@ -81,19 +85,19 @@ const OfferLetterTemplate = ({
 
   //TODO: fix last payment if last payment is not 0
   let lastPayment = rangePrice - periodicPayment * noOfMonths;
+  let lastPaymentTotal = lastPayment > 0 ? lastPayment : periodicPayment;
 
   // PAYMENT OPTION 2: EVENLY DISTRIBUTED
   if (paymentBreakdown === PAYMENT_OPTION.EVENLY_DISTRIBUTED) {
     const otherPaymentsEachMonth = otherPaymentsTotal / (noOfMonths + 1);
     initialPayment += otherPaymentsEachMonth;
     periodicPayment += otherPaymentsEachMonth;
-    lastPayment =
-      lastPayment > 0 ? lastPayment + otherPaymentsEachMonth : lastPayment;
+    lastPaymentTotal += otherPaymentsEachMonth;
   }
 
   // PAYMENT OPTION 3: FINAL DEPOSIT
   if (paymentBreakdown === PAYMENT_OPTION.FINAL_DEPOSIT) {
-    lastPayment += otherPaymentsTotal;
+    lastPaymentTotal += otherPaymentsTotal;
   }
 
   const buyerName = `${enquiryInfo.title} ${enquiryInfo.firstName} ${enquiryInfo.lastName} ${enquiryInfo.otherName}`;
@@ -123,7 +127,7 @@ const OfferLetterTemplate = ({
       <p className="">Dear {getUserTitle(enquiryInfo.title)},</p>
 
       <strong>
-        {propertyInfo.name} - LETTER OF OFFER FOR {houseType}
+        RE: {propertyInfo.name} - LETTER OF OFFER FOR {houseType}
       </strong>
 
       <p className="">
@@ -280,6 +284,10 @@ const OfferLetterTemplate = ({
                         </tr>
                       </tfoot>
                     </table>
+                    <small className="d-block mt-4">
+                      {otherPaymentsTotal > 0 &&
+                        `* ${PAYMENT_OPTIONS_BREAKDOWN[paymentBreakdown]}`}
+                    </small>
                   </div>
                 </td>
               </tr>
@@ -292,6 +300,9 @@ const OfferLetterTemplate = ({
             </tr>
             <tr>
               <td colSpan="2">
+                <div className="mb-3 mt-n4">
+                  {noOfMonths > 1 && <>Spread payment, see breakdown below; </>}
+                </div>
                 <div className="table-responsive table-sm">
                   <table className="table table-bordered">
                     <thead>
@@ -311,14 +322,20 @@ const OfferLetterTemplate = ({
                         [...Array(noOfMonths).keys()].map((value, index) => (
                           <tr key={index}>
                             <td>{numToOrdinal(index + 2)} Deposit</td>
-                            <td>{moneyFormat(periodicPayment)}</td>
+                            <td>
+                              {moneyFormat(
+                                noOfMonths === index + 1 && lastPayment === 0
+                                  ? lastPaymentTotal
+                                  : periodicPayment
+                              )}
+                            </td>
                           </tr>
                         ))}
                       {lastPayment > 0 && (
                         <tr>
                           <td>Last Deposit</td>
                           {/* <td>May 2019</td> */}
-                          <td>{moneyFormat(lastPayment)}</td>
+                          <td>{moneyFormat(lastPaymentTotal)}</td>
                         </tr>
                       )}
                     </tbody>
@@ -331,31 +348,10 @@ const OfferLetterTemplate = ({
                 <strong>10. ALLOCATION:</strong>
               </td>
               <td>
-                May be selected after initial deposit is made but is only
-                guaranteed upon full payment.
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>11. PAYMENT ACCOUNT:</strong>
-              </td>
-              <td>
-                Highrachy Investment and Technology Ltd <br />
-                Bank: FIRST BANK OF NIGERIA PLC
-                <br />
-                Account Number: 2032997125
-              </td>
-            </tr>
-
-            {/* <tr>
-              <td>
-                <strong>10. ALLOCATION:</strong>
-              </td>
-              <td>
                 Due after the {offerInfo.allocationInPercentage}% of payment
                 received.
               </td>
-            </tr> */}
+            </tr>
             <tr>
               <td>
                 <strong>11. PAYMENT ACCOUNT:</strong>
@@ -464,8 +460,8 @@ const OfferLetterTemplate = ({
         {` ${moneyFormatInNaira(offerInfo.initialPayment)} (${numToWords(
           offerInfo.initialPayment
         )} Naira only)`}
-        , within {offerInfo?.otherTerms?.expectedBankDraftDue} working days
-        (Details of bank account in clause 11) from the receipt of this letter.
+        , within {offerInfo?.otherTerms?.bankDraftDue} working days (Details of
+        bank account in clause 11) from the receipt of this letter.
       </p>
 
       <p className="">
@@ -503,7 +499,7 @@ const OfferLetterTemplate = ({
               {enquiryInfo.firstName} {enquiryInfo.lastName}
             </span>{' '}
             having read and understood the content of this offer letter, hereby
-            accept the above terms and conditions on June 28, 2021.{' '}
+            accept the above terms and conditions on{' '}
             <span className="memo-border">
               {getDate(offerInfo?.responseDate || Date.now())}
             </span>

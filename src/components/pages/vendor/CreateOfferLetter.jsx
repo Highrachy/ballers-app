@@ -40,7 +40,8 @@ const CreateOfferLetter = ({ enquiry }) => {
     paymentFrequency: enquiry.investmentFrequency,
     expires: '7',
     title: enquiry.propertyInfo.titleDocument,
-    deliveryState: 'testing 123',
+    deliveryState:
+      'The property will be delivered as a finished unit inclusive of Wall painting, floor tiling, and POP ceilings, joinery, internal doors, electrical and mechanical fittings and fixtures as prescribed by the project drawings and specification documents.',
     handOverDate: Date.now(),
     otherPayments: {
       agencyFee: 5,
@@ -388,6 +389,8 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
     const expires = addDays(new Date(), value.expires);
     const enquiryId = enquiry._id;
     const payload = { ...value, enquiryId, expires, handOverDate };
+
+    delete payload.otherPayments.paymentBreakdown;
 
     Axios.post(`${BASE_API_URL}/offer/create`, payload, {
       headers: { Authorization: getTokenFromStore() },

@@ -129,7 +129,7 @@ DisplayFormikState.defaultProps = {
 export const setInitialValues = (schema, initialValues = {}) => {
   const values = {};
   Object.keys(schema).forEach((key) => {
-    if (initialValues[key]) {
+    if (initialValues[key] || initialValues[key] === 0) {
       values[key] = initialValues[key];
     } else {
       values[key] = '';
