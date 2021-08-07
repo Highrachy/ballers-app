@@ -23,7 +23,7 @@ const TopTitle = ({ children, buttonText, to }) => {
 TopTitle.propTypes = {
   buttonText: PropTypes.string,
   children: PropTypes.node.isRequired,
-  to: PropTypes.string,
+  to: PropTypes.any,
 };
 
 TopTitle.defaultProps = {

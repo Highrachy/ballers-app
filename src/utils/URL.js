@@ -42,4 +42,6 @@ export const API_ENDPOINT = {
   getAllBadgesByRole: (role) => `${BASE_API_URL}/badge/all/role/${role}`,
 
   getAllAssignedBadges: () => `${BASE_API_URL}/assign-badge/all`,
+
+  getAllBankAccounts: () => `${BASE_API_URL}/bank-account/all`,
 };

@@ -69,7 +69,7 @@ import {
   AiFillSafetyCertificate,
   AiOutlineUserSwitch,
 } from 'react-icons/ai';
-import { MdLocalMall } from 'react-icons/md';
+import { MdLocalMall, MdAccountBalanceWallet } from 'react-icons/md';
 import { GoVerified } from 'react-icons/go';
 
 export const ArrowLeftIcon = () => <FiChevronLeft />;
@@ -82,6 +82,7 @@ export const AssignedPropertyIcon = () => <FiServer />;
 export const BadgesIcon = () => <FaCertificate />;
 export const BanIcon = () => <FaBan />;
 export const BankInfoIcon = () => <FiArchive />;
+export const BankAccountIcon = () => <MdAccountBalanceWallet />;
 export const BathIcon = () => <FaBath />;
 export const BedIcon = () => <FaBed />;
 export const CloseIcon = () => <FiX />;

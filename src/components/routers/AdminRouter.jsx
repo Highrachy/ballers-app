@@ -22,6 +22,7 @@ import Notifications from 'components/pages/shared/Notifications';
 import ReportedProperties from 'components/pages/admin/ReportedProperties';
 import Referrals from 'components/pages/admin/Referrals';
 import Badges from 'components/pages/admin/Badges';
+import BankAccount from 'components/pages/admin/BankAccount';
 import MyBadges from 'components/pages/shared/MyBadges';
 import AddBadges from 'components/pages/admin/AddBadges';
 import SingleBadge from 'components/pages/admin/SingleBadge';
@@ -49,6 +50,7 @@ const AdminRouter = () => (
     <Notifications path="notifications" />
     <Referrals path="referrals" />
     <Badges path="badges" />
+    <BankAccount path="bank-accounts" />
     <MyBadges path="mybadges" />
     <AddBadges path="badges/new" />
     <SingleBadge path="badge/:id" />

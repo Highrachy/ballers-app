@@ -52,17 +52,27 @@ Button.defaultProps = {
   onClick: () => {},
 };
 
-export const AddNewButton = ({ children, to }) => (
-  <div className="text-right">
-    <Link to={to} className="btn btn-dark btn-xs btn-wide">
-      {children}
-    </Link>
-  </div>
-);
+export const AddNewButton = ({ children, to }) => {
+  const isLink = typeof to !== 'function';
+  const btnClassName = 'btn btn-dark btn-xs btn-wide';
+  return (
+    <div className="text-right">
+      {isLink ? (
+        <Link to={to} className={btnClassName}>
+          {children}
+        </Link>
+      ) : (
+        <button className={btnClassName} onClick={to}>
+          {children}
+        </button>
+      )}
+    </div>
+  );
+};
 
 AddNewButton.propTypes = {
   children: PropTypes.any.isRequired,
-  to: PropTypes.string.isRequired,
+  to: PropTypes.any.isRequired,
 };
 
 export default Button;
