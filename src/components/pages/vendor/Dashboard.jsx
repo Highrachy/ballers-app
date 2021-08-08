@@ -243,7 +243,7 @@ const VerificationCard = ({ title, children, icon, index, status }) => (
   </Link>
 );
 
-const NoticeCard = ({ Icon, name, message, type, link }) => (
+export const NoticeCard = ({ Icon, name, message, type, link }) => (
   <Link to={link}>
     <Alert key={name} variant={type} className="notice-card py-0">
       <div className="notice-card__text">

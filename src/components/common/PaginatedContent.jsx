@@ -13,6 +13,7 @@ import Modal from './Modal';
 
 const PaginatedContent = ({
   addNewUrl,
+  childrenKey,
   DataComponent,
   initialFilter = {},
   filter,
@@ -44,7 +45,7 @@ const PaginatedContent = ({
     name: queryName || pageName.toLowerCase(),
     setToast,
     endpoint,
-    childrenKey: queryName,
+    childrenKey: childrenKey || queryName,
   });
 
   const pagination = query?.latestData?.pagination;

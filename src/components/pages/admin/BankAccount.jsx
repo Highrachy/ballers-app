@@ -102,7 +102,7 @@ const BankAccount = () => {
         pageName="Bank Account"
         DataComponent={BankAccountRowList}
         PageIcon={<BankAccountIcon />}
-        queryName="bank-account"
+        queryName="bankAccount"
       />
 
       <Modal

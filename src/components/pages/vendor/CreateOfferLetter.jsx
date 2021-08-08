@@ -17,7 +17,12 @@ import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
 import Select from 'components/forms/Select';
 import Textarea from 'components/forms/Textarea';
-import { generateNumOptions, getError, objectToOptions } from 'utils/helpers';
+import {
+  flattenErrorMessages,
+  generateNumOptions,
+  getError,
+  objectToOptions,
+} from 'utils/helpers';
 import {
   offerLetterSchema,
   otherPaymentsSchema,
@@ -29,6 +34,7 @@ import { addDays, addMonths } from 'date-fns';
 import Modal from 'components/common/Modal';
 import OfferLetterTemplate from 'components/utils/OfferLetterTemplate';
 import DatePicker from 'components/forms/DatePicker';
+import { ErrorIcon } from 'components/utils/Icons';
 
 const CreateOfferLetter = ({ enquiry }) => {
   const defaultValue = {
@@ -64,6 +70,8 @@ const CreateOfferLetter = ({ enquiry }) => {
   const [value, setValue] = React.useState(defaultValue);
   const [showOfferLetter, setShowOfferLetter] = React.useState(false);
 
+  console.log(`value`, value);
+
   return (
     <>
       {showOfferLetter ? (
@@ -90,6 +98,7 @@ const CreateOfferLetterForm = ({
   value,
 }) => {
   const [toast] = useToast();
+  const [additionalClause, setadditionalClause] = React.useState([]);
 
   return (
     <div className="container-fluid">
@@ -106,8 +115,7 @@ const CreateOfferLetterForm = ({
         onSubmit={(values) => {
           handleValue({
             ...values,
-            initialPaymentDate:
-              values.initialPaymentDate.date || values.initialPaymentdate,
+            additionalClause,
           });
           handleShowOfferLetter();
         }}
@@ -117,32 +125,62 @@ const CreateOfferLetterForm = ({
           otherTerms: createSchema(otherTermsSchema),
         })}
       >
-        {({ isSubmitting, handleSubmit, ...props }) => (
-          <Form>
-            <Toast {...toast} />
+        {({ isSubmitting, handleSubmit, ...props }) => {
+          const errors = flattenErrorMessages(props.errors);
+          return (
+            <Form>
+              <Toast {...toast} />
 
-            <OfferFormContainer title="Create Offer Letter">
-              <OfferLetterForm />
-            </OfferFormContainer>
+              <OfferFormContainer title="Create Offer Letter">
+                <OfferLetterForm />
+              </OfferFormContainer>
 
-            <OfferFormContainer title="Other Payments">
-              <OtherPaymentsForm />
-            </OfferFormContainer>
+              <OfferFormContainer title="Other Payments">
+                <OtherPaymentsForm />
+              </OfferFormContainer>
 
-            <OfferFormContainer title="Terms and Condition">
-              <OtherTermsForm />
-            </OfferFormContainer>
+              <OfferFormContainer title="Terms and Condition">
+                <OtherTermsForm />
+              </OfferFormContainer>
 
-            <Button
-              className="btn-secondary mt-4"
-              loading={isSubmitting}
-              onClick={handleSubmit}
-            >
-              View Offer Letter
-            </Button>
-            <DisplayFormikState {...props} showAll />
-          </Form>
-        )}
+              <OfferFormContainer title="Add Terms and Condition">
+                <AddMoreTermsAndConditionsForm
+                  setadditionalClause={setadditionalClause}
+                  additionalClause={value.additionalClause || additionalClause}
+                />
+              </OfferFormContainer>
+
+              {errors.length > 0 ? (
+                <div className="card d-flex flex-row toast-alert error">
+                  <div className="span toast-icon-holder icon-xl">
+                    <ErrorIcon />
+                  </div>
+                  <span className="d-inline-block ml-2 toast-message-content">
+                    <p className="mt-2">
+                      You need to fix the values below to view your offer
+                      letter.
+                    </p>
+                    <ul className="text-danger">
+                      {errors.map((error) => (
+                        <li>{error}</li>
+                      ))}
+                    </ul>
+                  </span>
+                </div>
+              ) : (
+                <Button
+                  className="btn-secondary mt-4"
+                  loading={isSubmitting}
+                  onClick={handleSubmit}
+                >
+                  View Offer Letter
+                </Button>
+              )}
+
+              <DisplayFormikState {...props} showAll />
+            </Form>
+          );
+        }}
       </Formik>
     </div>
   );
@@ -370,6 +408,69 @@ const OtherTermsForm = () => {
           tooltipText="Between 0 - 1000 days"
         />
       </div>
+    </>
+  );
+};
+
+const AddMoreTermsAndConditionsForm = ({
+  setadditionalClause,
+  additionalClause,
+}) => {
+  const [fields, setFields] = React.useState(additionalClause);
+
+  // handle click event of the Remove button
+  const handleChange = (i, event) => {
+    const values = [...fields];
+    values[i] = event.target.value;
+    setFields(values);
+    setadditionalClause(values);
+  };
+
+  // handle click event of the Remove button
+  const handleRemoveClick = (i) => {
+    const values = [...fields];
+    values.splice(i, 1);
+    setFields(values);
+  };
+
+  // handle click event of the Add button
+  const handleAddClick = () => {
+    setFields([...fields, '']);
+  };
+  // allowAddNew: get last array value
+  const allowAddNew = fields.length < 1 || !!fields[fields.length - 1];
+  return (
+    <>
+      {fields.map((_, index) => (
+        <React.Fragment key={index}>
+          <textarea
+            className="form-control"
+            onChange={(e) => handleChange(index, e)}
+            name={`additionalClause[${index}]`}
+            value={fields[index]}
+          />
+
+          <button
+            type="button"
+            className="btn btn-xs btn-wide btn-danger mt-2"
+            onClick={() => handleRemoveClick(index)}
+          >
+            Remove
+          </button>
+        </React.Fragment>
+      ))}
+      <br />
+      {allowAddNew && (
+        <button
+          type="button"
+          className="btn btn-wide mt-4 btn-secondary"
+          onClick={handleAddClick}
+        >
+          Add
+        </button>
+      )}
+
+      <pre className="mt-4 bg-light">{JSON.stringify(fields, null, 2)}</pre>
     </>
   );
 };

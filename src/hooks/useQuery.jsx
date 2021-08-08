@@ -13,45 +13,41 @@ export const getQueryCache = (name) => queryCache.getQueryData(name);
 export const setQueryCache = (name, value) =>
   queryCache.setQueryData(name, value);
 
-const fetchQuery = ({
-  endpoint,
-  key,
-  setResult,
-  setToast,
-  axiosOptions,
-}) => async () => {
-  const source = CancelToken.source();
+const fetchQuery =
+  ({ endpoint, key, setResult, setToast, axiosOptions }) =>
+  async () => {
+    const source = CancelToken.source();
 
-  // await new Promise((resolve) => setTimeout(resolve, 10_000));
-  const promise = Axios.get(endpoint, {
-    cancelToken: source.token,
-    headers: {
-      Authorization: getTokenFromStore(),
-    },
-    ...axiosOptions,
-  })
-    .then((res) => {
-      if (statusIsSuccessful(res.status)) {
-        setResult && setResult(res.data[key]);
-        return res.data;
-      }
-      setToast({
-        message: 'Request was not successful. Please try again later',
-      });
+    // await new Promise((resolve) => setTimeout(resolve, 10_000));
+    const promise = Axios.get(endpoint, {
+      cancelToken: source.token,
+      headers: {
+        Authorization: getTokenFromStore(),
+      },
+      ...axiosOptions,
     })
-    .catch((error) => {
-      setToast({
-        message: getError(error),
+      .then((res) => {
+        if (statusIsSuccessful(res.status)) {
+          setResult && setResult(res.data[key]);
+          return res.data;
+        }
+        setToast({
+          message: 'Request was not successful. Please try again later',
+        });
+      })
+      .catch((error) => {
+        setToast({
+          message: getError(error),
+        });
+        throw new Error(getError(error));
       });
-      throw new Error(getError(error));
-    });
 
-  promise.cancel = () => {
-    setToast({ message: 'Query was cancelled' });
-    source.cancel('Query was cancelled');
+    promise.cancel = () => {
+      setToast({ message: 'Query was cancelled' });
+      source.cancel('Query was cancelled');
+    };
+    return promise;
   };
-  return promise;
-};
 
 const getQueryOptions = (queryOptions = {}) => ({
   retry: 0,
@@ -72,6 +68,7 @@ export const useGetQuery = ({
   axiosOptions = {},
 }) => {
   const [result, setResult] = React.useState(null);
+  console.log(`childrenKey`, childrenKey);
 
   if (refresh && getQueryCache(name)) {
     refreshQuery(name);
@@ -104,6 +101,7 @@ export const usePaginationQuery = ({
   axiosOptions = {},
 }) => {
   let queryName = [name, axiosOptions.params];
+  console.log(`childrenKey`, childrenKey);
 
   if (refresh) {
     refreshQuery(queryName);
@@ -138,7 +136,7 @@ export const usePaginationQuery = ({
 
   if (childrenKey && result?.length > 0) {
     result.forEach((item) =>
-      setQueryCache([name, item._id], { [childrenKey]: item })
+      setQueryCache([childrenKey || name, item._id], { [childrenKey]: item })
     );
   }
 

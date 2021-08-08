@@ -277,3 +277,15 @@ export const getReferralStatus = (referralStatus, rewardStatus) => {
 };
 
 export const formatInDays = (num) => `${num} ${Humanize.pluralize(num, 'day')}`;
+
+export const flattenErrorMessages = (obj, result = []) => {
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key];
+    if (typeof value === 'object') {
+      flattenErrorMessages(value, result);
+    } else {
+      result.push(value);
+    }
+  });
+  return result;
+};

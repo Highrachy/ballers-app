@@ -95,8 +95,11 @@ export const OFFER_STATUS = {
   ASSIGNED: 'Assigned',
   ALLOCATED: 'Allocated',
   REJECTED: 'Rejected',
-  NEGLECTED: 'Neglected',
+  REACTIVATED: 'Reactivated',
   CANCELLED: 'Cancelled',
+  RESOLVED: 'Resolved',
+  PENDING_ADMIN_APPROVAL: 'Pending Admin Approval',
+  PENDING_VENDOR_REVIEW: 'Pending Vendor Review',
 };
 
 export const ACTIVE_OFFER_STATUS = [

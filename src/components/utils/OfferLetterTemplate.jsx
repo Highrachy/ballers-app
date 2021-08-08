@@ -104,6 +104,8 @@ const OfferLetterTemplate = ({
   const houseType = propertyInfo.houseType.toUpperCase();
   const propertyName = propertyInfo.name;
   const isUser = useCurrentRole().isUser;
+  const additionalClauses =
+    offerInfo?.additionalClause?.clauses || offerInfo?.additionalClause;
 
   return (
     <Card className="mt-4 p-5 offer-letter-template">
@@ -451,7 +453,11 @@ const OfferLetterTemplate = ({
           </p>
         </li>
 
-        {/* additional clause */}
+        {additionalClauses?.map((clause, index) => (
+          <li key={index}>
+            <p>{clause}</p>
+          </li>
+        ))}
       </ol>
 
       <p className="">
