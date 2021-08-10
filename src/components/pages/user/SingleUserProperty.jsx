@@ -208,12 +208,14 @@ const PropertySidebar = ({
             ? 'You already made previous enquiries'
             : 'Kindly proceed with property acquisition'}
         </p>
-        <Link
-          to={`/user/property/enquiry/${property._id}`}
-          className="btn btn-block btn-secondary my-3"
-        >
-          {userHasPreviousEnquiry ? 'Make Another Enquiry' : 'Proceed'}
-        </Link>
+        {(enquiryInfo?.approved || !userHasPreviousEnquiry) && (
+          <Link
+            to={`/user/property/enquiry/${property._id}`}
+            className="btn btn-block btn-secondary my-3"
+          >
+            {userHasPreviousEnquiry ? 'Make Another Enquiry' : 'Proceed'}
+          </Link>
+        )}
       </Card>
 
       {userHasScheduledVisit ? (

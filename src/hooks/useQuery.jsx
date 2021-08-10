@@ -68,7 +68,6 @@ export const useGetQuery = ({
   axiosOptions = {},
 }) => {
   const [result, setResult] = React.useState(null);
-  console.log(`childrenKey`, childrenKey);
 
   if (refresh && getQueryCache(name)) {
     refreshQuery(name);
@@ -101,7 +100,6 @@ export const usePaginationQuery = ({
   axiosOptions = {},
 }) => {
   let queryName = [name, axiosOptions.params];
-  console.log(`childrenKey`, childrenKey);
 
   if (refresh) {
     refreshQuery(queryName);

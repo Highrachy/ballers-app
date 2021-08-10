@@ -49,3 +49,10 @@ export const otherTermsSchema = {
 export const raiseAConcernSchema = {
   question: required('Question'),
 };
+
+export const requestTermsReviewSchema = {
+  comment: required('Comment'),
+};
+export const respondTermsReviewSchema = {
+  response: required('Response'),
+};

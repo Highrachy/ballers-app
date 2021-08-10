@@ -35,6 +35,9 @@ import Modal from 'components/common/Modal';
 import OfferLetterTemplate from 'components/utils/OfferLetterTemplate';
 import DatePicker from 'components/forms/DatePicker';
 import { ErrorIcon } from 'components/utils/Icons';
+import { PlusIcon } from 'components/utils/Icons';
+import { CloseIcon } from 'components/utils/Icons';
+import { LinkSeparator } from 'components/common/Helpers';
 
 const CreateOfferLetter = ({ enquiry }) => {
   const defaultValue = {
@@ -98,7 +101,11 @@ const CreateOfferLetterForm = ({
   value,
 }) => {
   const [toast] = useToast();
-  const [additionalClause, setadditionalClause] = React.useState([]);
+  const [additionalClause, setadditionalClause] = React.useState(['']);
+  const [showOtherPaymentsForm, setShowOtherPaymentsForm] =
+    React.useState(false);
+  const [showOtherTermsForm, setShowOtherTermsForm] = React.useState(false);
+  const [showAddMoreTermsForm, setShowAddMoreTermsForm] = React.useState(false);
 
   return (
     <div className="container-fluid">
@@ -113,9 +120,16 @@ const CreateOfferLetterForm = ({
           otherTerms: setInitialValues(otherTermsSchema, value?.otherTerms),
         }}
         onSubmit={(values) => {
+          const clauses = additionalClause.filter((clause) => clause !== '');
           handleValue({
             ...values,
-            additionalClause,
+            additionalClause:
+              clauses.length > 0 ? clauses : value?.additionalClause,
+            initialPaymentDate:
+              values.initialPaymentDate?.date ||
+              values?.initialPaymentDate ||
+              value?.initialPaymentDate,
+            handOverDate: values.handOverDate?.date || values?.handOverDate,
           });
           handleShowOfferLetter();
         }}
@@ -135,20 +149,63 @@ const CreateOfferLetterForm = ({
                 <OfferLetterForm />
               </OfferFormContainer>
 
-              <OfferFormContainer title="Other Payments">
-                <OtherPaymentsForm />
-              </OfferFormContainer>
+              {showOtherPaymentsForm && (
+                <OfferFormContainer title="Other Payments">
+                  <OtherPaymentsForm />
+                </OfferFormContainer>
+              )}
 
-              <OfferFormContainer title="Terms and Condition">
-                <OtherTermsForm />
-              </OfferFormContainer>
+              {showOtherTermsForm && (
+                <OfferFormContainer title="Terms and Condition">
+                  <OtherTermsForm />
+                </OfferFormContainer>
+              )}
 
-              <OfferFormContainer title="Add Terms and Condition">
-                <AddMoreTermsAndConditionsForm
-                  setadditionalClause={setadditionalClause}
-                  additionalClause={value.additionalClause || additionalClause}
-                />
-              </OfferFormContainer>
+              {showAddMoreTermsForm && (
+                <OfferFormContainer title="Add Your Own Terms and Condition">
+                  <AddMoreTermsAndConditionsForm
+                    setadditionalClause={setadditionalClause}
+                    additionalClause={
+                      value?.additionalClause || additionalClause
+                    }
+                  />
+                </OfferFormContainer>
+              )}
+
+              <section className="my-3">
+                {!showOtherPaymentsForm && (
+                  <>
+                    <span
+                      className="text-link  text-muted"
+                      onClick={() => setShowOtherPaymentsForm(true)}
+                    >
+                      Add Other Payments
+                    </span>
+                  </>
+                )}
+                {!showOtherTermsForm && (
+                  <>
+                    <LinkSeparator />
+                    <span
+                      className="text-link  text-muted"
+                      onClick={() => setShowOtherTermsForm(true)}
+                    >
+                      Set Terms and Conditions Values
+                    </span>
+                  </>
+                )}
+                {!showAddMoreTermsForm && (
+                  <>
+                    <LinkSeparator />
+                    <span
+                      className="text-link  text-muted"
+                      onClick={() => setShowAddMoreTermsForm(true)}
+                    >
+                      Add Your Own Terms and Conditions
+                    </span>
+                  </>
+                )}
+              </section>
 
               {errors.length > 0 ? (
                 <div className="card d-flex flex-row toast-alert error">
@@ -450,27 +507,23 @@ const AddMoreTermsAndConditionsForm = ({
             value={fields[index]}
           />
 
-          <button
-            type="button"
-            className="btn btn-xs btn-wide btn-danger mt-2"
+          <strong
+            className="text-danger text-small text-link d-block mb-3"
             onClick={() => handleRemoveClick(index)}
           >
-            Remove
-          </button>
+            <CloseIcon /> Remove this Terms and Conditions
+          </strong>
         </React.Fragment>
       ))}
       <br />
       {allowAddNew && (
         <button
-          type="button"
-          className="btn btn-wide mt-4 btn-secondary"
+          className="btn btn-sm btn-outline-dark"
           onClick={handleAddClick}
         >
-          Add
+          <PlusIcon /> Add more Terms and Conditions
         </button>
       )}
-
-      <pre className="mt-4 bg-light">{JSON.stringify(fields, null, 2)}</pre>
     </>
   );
 };

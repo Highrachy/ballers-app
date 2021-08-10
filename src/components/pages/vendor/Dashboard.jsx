@@ -19,8 +19,9 @@ import { EnquiryIcon } from 'components/utils/Icons';
 import { Alert } from 'react-bootstrap';
 import { useGetQuery } from 'hooks/useQuery';
 import { API_ENDPOINT } from 'utils/URL';
-import { VISITATION_STATUS } from 'utils/constants';
+import { OFFER_STATUS, VISITATION_STATUS } from 'utils/constants';
 import DashboardCards from 'components/common/DashboardCards';
+import { OfferIcon } from 'components/utils/Icons';
 
 const Dashboard = () => (
   <BackendPage>
@@ -171,8 +172,13 @@ const VerifiedVendorContent = () => {
   const axiosOptionForVisitations = {
     params: { limit: 100, status: VISITATION_STATUS.PENDING },
   };
+
   const axiosOptionForEnquiries = {
     params: { limit: 100, approved: false },
+  };
+
+  const axiosOptionForOffers = {
+    params: { limit: 100, status: OFFER_STATUS.PENDING_VENDOR_REVIEW },
   };
   const [visitationsQuery] = useGetQuery({
     axiosOptions: axiosOptionForVisitations,
@@ -189,10 +195,21 @@ const VerifiedVendorContent = () => {
     refresh: true,
   });
 
+  const [offersQuery] = useGetQuery({
+    axiosOptions: axiosOptionForOffers,
+    childrenKey: 'offer',
+    key: 'pendingOffers',
+    name: ['pendingOffers', axiosOptionForOffers],
+    endpoint: API_ENDPOINT.getAllOffers(),
+    refresh: true,
+  });
+
   return (
     <>
-      {visitationsQuery.isLoading || enquiriesQuery.isLoading ? (
-        <Loading size="small" text="Checking for new notifications..." />
+      {visitationsQuery.isLoading ||
+      enquiriesQuery.isLoading ||
+      offersQuery.isLoading ? (
+        <Loading size="small" />
       ) : (
         <>
           {enquiriesQuery?.data?.result?.length > 0 && (
@@ -211,6 +228,15 @@ const VerifiedVendorContent = () => {
               name="Schedule Visitations"
               type="info"
               message={`You have ${visitationsQuery?.data?.result?.length} unresolved Scheduled Visitations`}
+            />
+          )}
+          {offersQuery?.data?.result?.length > 0 && (
+            <NoticeCard
+              Icon={<OfferIcon />}
+              link="/vendor/respond-to-offers"
+              name="Offers"
+              type="warning"
+              message={`You have ${offersQuery?.data?.result?.length} unresolved Offers`}
             />
           )}
         </>
