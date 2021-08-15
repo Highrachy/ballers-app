@@ -274,8 +274,8 @@ const TermsApprovalMessage = ({
   return (
     <section className="row">
       <div className="col-md-12 my-3 text-center">
-        <h5 className="my-2">
-          Are you sure you want to approve this Terms and Conditions
+        <h5 className="my-2 confirmation-text">
+          Are you sure you want to approve this Terms and Conditions?
         </h5>
         <Button
           className="btn btn-secondary mt-4"
@@ -493,8 +493,8 @@ const TermsRemovalMessage = ({
   return (
     <section className="row">
       <div className="col-md-12 my-3 text-center">
-        <h5 className="my-2">
-          Are you sure you want to remove this Terms and Conditions
+        <h5 className="my-2 confirmation-text">
+          Are you sure you want to remove this Terms and Conditions?
         </h5>
         <Button
           className="btn btn-secondary mt-4"

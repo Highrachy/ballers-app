@@ -128,20 +128,13 @@ const SignatoriesInfoForm = ({
       <div className="col-md-10 px-4">
         <h5 className="mb-4">Add a New Director / Signatory</h5>
         <VerificationComments step="3" />
+        <Input label="Director Name" name="name" />
         <div className="form-row">
-          <Input
-            formGroupClassName="col-md-6"
-            label="Director Name"
-            name="name"
-          />
           <Input
             formGroupClassName="col-md-6"
             label="Phone Number"
             name="phone"
           />
-        </div>
-
-        <div className="row">
           <Select
             formGroupClassName="col-md-6"
             label="Signatory"
@@ -180,7 +173,7 @@ const SignatoriesInfoForm = ({
         )}
 
         <Button
-          className="mt-3"
+          className="mt-4 btn-right"
           color="primary"
           loading={isSubmitting}
           onClick={handleSubmit}
@@ -259,13 +252,16 @@ export const ShowDirectorsTable = ({ directors, moveToNextStep, setToast }) => {
                   <Button
                     loading={loading === director._id}
                     onClick={() => deleteSignatory(director._id)}
-                    className="btn btn-sm btn-secondary"
+                    className="btn btn-xs btn-wide btn-danger"
                   >
                     Delete
                   </Button>{' '}
                 </td>
               </tr>
             ))}
+            <tr>
+              <td colSpan="6"></td>
+            </tr>
           </tbody>
         </table>
       </div>

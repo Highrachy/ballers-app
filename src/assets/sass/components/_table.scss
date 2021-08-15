@@ -63,3 +63,12 @@
     @extend .table;
   }
 }
+
+td {
+  .img-youtube-placeholder {
+    height: 10rem;
+  }
+  .icon-video {
+    font-size: 2rem !important;
+  }
+}

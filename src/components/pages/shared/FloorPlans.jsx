@@ -129,9 +129,8 @@ export const AddFloorPlans = ({
   setProperty,
   property,
 }) => {
-  const [showAddFloorPlansModal, setShowAddFloorPlansModal] = React.useState(
-    false
-  );
+  const [showAddFloorPlansModal, setShowAddFloorPlansModal] =
+    React.useState(false);
   return (
     <>
       <span
@@ -165,13 +164,10 @@ const pageOptions = {
 };
 
 export const FloorPlansList = ({ property, setProperty, setToast }) => {
-  const [showEditFloorPlansModal, setShowEditFloorPlansModal] = React.useState(
-    false
-  );
-  const [
-    showDeleteFloorPlansModal,
-    setShowDeleteFloorPlansModal,
-  ] = React.useState(false);
+  const [showEditFloorPlansModal, setShowEditFloorPlansModal] =
+    React.useState(false);
+  const [showDeleteFloorPlansModal, setShowDeleteFloorPlansModal] =
+    React.useState(false);
 
   const [floorPlan, setFloorPlan] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
@@ -293,8 +289,8 @@ export const FloorPlansList = ({ property, setProperty, setToast }) => {
                     options={{ h: 200 }}
                     responsiveImage={true}
                   />
-                  <p className="my-4 font-weight-bold">
-                    Are you sure you want to delete this Floor Plan
+                  <p className="my-4 confirmation-text font-weight-bold">
+                    Are you sure you want to delete this Floor Plan?
                   </p>
                   <Button
                     loading={loading}

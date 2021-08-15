@@ -410,8 +410,8 @@ const SingleGalleryImage = ({
               options={{ h: 200 }}
               responsiveImage={false}
             />
-            <p className="my-4 font-weight-bold">
-              Are you sure you want to delete this image
+            <p className="my-4 font-weight-bold confirmation-text">
+              Are you sure you want to delete this image?
             </p>
             <Button
               loading={loading}

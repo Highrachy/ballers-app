@@ -1,9 +1,9 @@
-$normal-circle-background: lighten($secondary, 20);
-$normal-text-color: $secondary;
+$normal-circle-background: lighten($dark, 20);
+$normal-text-color: $dark;
 $active-circle-background: lighten($primary, 5);
 $active-text-color: $primary;
-$approved-circle-background: lighten($green, 20);
-$approved-text-color: $green;
+$approved-circle-background: darken($green, 20);
+$approved-text-color: darken($green, 30);
 $rejected-circle-background: lighten($red, 20);
 $rejected-text-color: $red;
 

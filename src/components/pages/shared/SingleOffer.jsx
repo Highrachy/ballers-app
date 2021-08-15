@@ -366,7 +366,7 @@ export const UploadSignature = ({ image, setImage, setSignature }) => {
         </div>
       </Modal>
       <button
-        className="btn btn-dark btn-sm hide-print"
+        className="btn btn-outline-dark btn-wide hide-print"
         type="button"
         onClick={() => {
           setShowSignature(true);

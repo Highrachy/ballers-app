@@ -202,7 +202,7 @@ const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
         showFooter={false}
       >
         <section>
-          <h5 className="header-smaller mb-4">
+          <h5 className="confirmation-text mb-4">
             Are you sure you want to approve this payment?
           </h5>
           <table className="table table-sm">

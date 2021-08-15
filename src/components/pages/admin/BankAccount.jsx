@@ -219,8 +219,8 @@ const BankAccountRowList = ({ results, offset, setToast }) => {
                 <h5>{Humanize.titleCase(bankAccount?.accountName)}</h5>
               </>
             )}
-            <p className="my-4 font-weight-bold">
-              Are you sure you want to delete this Bank Account
+            <p className="my-4 confirmation-text">
+              Are you sure you want to delete this Bank Account?
             </p>
             <Button
               loading={loading}

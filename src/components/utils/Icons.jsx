@@ -52,6 +52,7 @@ import {
   FaHouseDamage,
   FaCertificate,
   FaPlay,
+  FaFileVideo,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
@@ -121,6 +122,7 @@ export const PlusIcon = () => <FiPlus />;
 export const PointOfInterestIcon = () => <FaGrinStars />;
 export const ProfileIcon = () => <FiSettings />;
 export const PropertyIcon = () => <BiBuildingHouse />;
+export const PropertyVideosIcon = () => <FaFileVideo />;
 export const QuestionMarkIcon = () => <FiHelpCircle />;
 export const FoodMenuIcon = () => <BiFoodMenu />;
 export const ReferIcon = () => <FiGift />;

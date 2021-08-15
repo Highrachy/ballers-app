@@ -8,11 +8,11 @@ const Tooltip = ({ header, text, position, children }) => {
   }
   return (
     <OverlayTrigger
-      trigger={['hover']}
+      trigger={['hover', 'focus']}
       placement={position}
       overlay={<BTooltip id="button-tooltip">{text}</BTooltip>}
     >
-      {children}
+      <span>{children}</span>
     </OverlayTrigger>
   );
 };

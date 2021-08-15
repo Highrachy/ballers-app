@@ -122,7 +122,7 @@ const ProfileForm = () => {
                   uploadText="Upload Image"
                   changeText="Change Image"
                   afterUpload={setImage}
-                  maxFileSize={500_000}
+                  maxFileSize={512_000}
                   imgOptions={{
                     className: 'avatar-display',
                   }}

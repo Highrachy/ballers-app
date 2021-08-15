@@ -575,8 +575,8 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
     >
       <section className="row">
         <div className="col-md-10">
-          <p className="mb-5">
-            Are you sure you wish to submit the offer letter. Ensure you have
+          <p className="confirmation-text">
+            Are you sure you wish to submit the offer letter? Ensure you have
             confirm all the offer information as this process is irreversible.
           </p>
 

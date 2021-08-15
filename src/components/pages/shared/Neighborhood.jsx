@@ -149,10 +149,8 @@ export const AddNeighborhood = ({
   setProperty,
   property,
 }) => {
-  const [
-    showAddNeighborhoodModal,
-    setShowAddNeighborhoodModal,
-  ] = React.useState(false);
+  const [showAddNeighborhoodModal, setShowAddNeighborhoodModal] =
+    React.useState(false);
   return (
     <>
       <span
@@ -180,14 +178,10 @@ export const AddNeighborhood = ({
 };
 
 export const NeighborhoodList = ({ property, setProperty, setToast }) => {
-  const [
-    showEditNeighborhoodModal,
-    setShowEditNeighborhoodModal,
-  ] = React.useState(false);
-  const [
-    showDeleteNeighborhoodModal,
-    setShowDeleteNeighborhoodModal,
-  ] = React.useState(false);
+  const [showEditNeighborhoodModal, setShowEditNeighborhoodModal] =
+    React.useState(false);
+  const [showDeleteNeighborhoodModal, setShowDeleteNeighborhoodModal] =
+    React.useState(false);
 
   const [neighborhood, setNeighborhood] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
@@ -323,9 +317,9 @@ export const NeighborhoodList = ({ property, setProperty, setToast }) => {
               <h5>
                 {neighborhood?.name} ({neighborhood?.distance} km)
               </h5>
-              <p className="my-4 font-weight-bold">
+              <p className="my-4 confirmation-text">
                 Are you sure you want to delete this neighborhood from{' '}
-                {NEIGHBORHOOD_KEYS[neighborhood?.type]?.name}
+                {NEIGHBORHOOD_KEYS[neighborhood?.type]?.name}?
               </p>
               <Button
                 loading={loading}

@@ -25,7 +25,7 @@ const UserCard = ({ user, hideImage, nameOnly }) => {
   const vendorName = vendor?.companyName || userInitialName;
   const userName = isVendor ? vendorName : userInitialName;
 
-  const image = role === USER_TYPES.user ? profileImage : vendor?.companyLogo;
+  const image = role === USER_TYPES.vendor ? vendor?.companyLogo : profileImage;
 
   const UserInfo = (
     <>

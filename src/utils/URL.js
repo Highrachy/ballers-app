@@ -44,4 +44,6 @@ export const API_ENDPOINT = {
   getAllAssignedBadges: () => `${BASE_API_URL}/assign-badge/all`,
 
   getAllBankAccounts: () => `${BASE_API_URL}/bank-account/all`,
+
+  getAllPropertyVideos: () => `${BASE_API_URL}/property-video/all`,
 };

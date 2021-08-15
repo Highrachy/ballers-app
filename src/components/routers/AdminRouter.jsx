@@ -27,6 +27,7 @@ import BankAccount from 'components/pages/admin/BankAccount';
 import MyBadges from 'components/pages/shared/MyBadges';
 import AddBadges from 'components/pages/admin/AddBadges';
 import SingleBadge from 'components/pages/admin/SingleBadge';
+import PropertyVideos from 'components/pages/admin/PropertyVideos';
 
 const AdminRouter = () => (
   <Router>
@@ -35,6 +36,7 @@ const AdminRouter = () => (
     <SingleUser path="user/:id" />
     <Properties path="properties" />
     <ReportedProperties path="reported-properties" />
+    <PropertyVideos path="property-videos" />
     <SingleProperty path="property/:id" />
     <Portfolios path="portfolios" />
     <SinglePortfolio path="portfolio/:id" />

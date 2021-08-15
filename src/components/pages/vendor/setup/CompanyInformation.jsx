@@ -99,7 +99,8 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
           <Toast {...toast} />
-          <CompanyInfoForm
+          <CompanyInfoForm />
+          <CompanyLogo
             {...props}
             image={logo || userState.vendor?.companyLogo}
             setImage={setLogo}
@@ -120,7 +121,7 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
   );
 };
 
-const CompanyInfoForm = ({ image, setImage, values }) => {
+const CompanyInfoForm = () => {
   return (
     <Card className="card-container">
       <section className="row">
@@ -128,16 +129,6 @@ const CompanyInfoForm = ({ image, setImage, values }) => {
           <h5 className="mb-4">Company Information</h5>
 
           <VerificationComments step="1" />
-
-          <div className="my-4">
-            <Upload
-              afterUpload={(image) => setImage(image)}
-              changeText={`Update Company Logo`}
-              defaultImage={image}
-              imgOptions={{ options: { h: 100 }, className: 'mb-3' }}
-              uploadText={`Upload Company Logo`}
-            />
-          </div>
 
           <Input
             label="Company Name"
@@ -173,6 +164,28 @@ const CompanyInfoForm = ({ image, setImage, values }) => {
               label="Redan Number"
               name="vendor.redanNumber"
               optional
+            />
+          </div>
+        </div>
+      </section>
+    </Card>
+  );
+};
+
+const CompanyLogo = ({ image, setImage }) => {
+  return (
+    <Card className="card-container mt-5 ">
+      <section className="row">
+        <div className="col-md-10 px-4">
+          <h5 className="mb-4">Company Logo</h5>
+
+          <div className="my-4">
+            <Upload
+              afterUpload={(image) => setImage(image)}
+              changeText={`Update Company Logo`}
+              defaultImage={image}
+              imgOptions={{ options: { h: 100 }, className: 'mb-3' }}
+              uploadText={`Upload Company Logo`}
             />
           </div>
         </div>

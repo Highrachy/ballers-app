@@ -17,6 +17,7 @@ export const DASHBOARD_PAGE = {
 };
 
 export const COLOR_STYLE = [
+  'none',
   'primary',
   'secondary',
   'success',

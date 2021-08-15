@@ -47,7 +47,6 @@ import { updateRemittanceSchema } from 'components/forms/schemas/userSchema';
 import InputFormat from 'components/forms/InputFormat';
 import { setQueryCache } from 'hooks/useQuery';
 import Select from 'components/forms/Select';
-import { Spacing } from 'components/common/Helpers';
 import { Link } from '@reach/router';
 import BadgePlaceholderImage from 'assets/img/placeholder/property.png';
 import { BadgesIcon } from 'components/utils/Icons';
@@ -102,7 +101,9 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
     key: 'available-badge',
     name: 'available-badge',
     setToast,
-    endpoint: API_ENDPOINT.getAllBadgesByRole(user?.role || 1),
+    endpoint: API_ENDPOINT.getAllBadgesByRole(
+      user?.role !== USER_TYPES.editor ? user.role || 1 : 1
+    ),
     axiosOptions: {
       params: { assignedRole: `${BADGE_ACCESS_LEVEL.ALL}:${user?._id}` },
     },
@@ -259,10 +260,8 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           }
           return (
             <Form>
-              <p>
-                <strong>
-                  Status: {user.vendor?.verification[step]?.status}
-                </strong>
+              <p className="text-uppercase lead font-weight-bold mt-3">
+                Status: {user.vendor?.verification[step]?.status}
               </p>
 
               {user.vendor?.verification[step]?.comments.length > 0 && (
@@ -313,7 +312,8 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                     onClick={() => {
                       setHideForm(false);
                     }}
-                    className="btn btn-sm btn-primary"
+                    color="info"
+                    className="btn btn-sm btn-info"
                   >
                     Add Comment
                   </button>
@@ -330,8 +330,8 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                 <>
                   <Textarea label="Comment" name="comment" />
                   <Button
-                    color="primary"
-                    className="btn-primary btn-sm mt-3"
+                    color="info"
+                    className="btn-sm btn-info mt-3"
                     loading={isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -342,7 +342,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                     onClick={() => {
                       setHideForm(true);
                     }}
-                    className="btn btn-sm btn-danger mt-3"
+                    className="btn btn-sm btn-outline-dark mt-3"
                   >
                     Close Comment
                   </button>
@@ -372,8 +372,8 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   // const verificationState = getVerificationState(user);
 
   const UserInformation = () => {
-    const [userRole, setUserRole] = React.useState(user.role);
     const [loading, setLoading] = React.useState(false);
+    const userRole = user?.role;
 
     const processRoleChange = () => {
       setLoading(true);
@@ -393,9 +393,10 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
               message: data.message,
               type: 'success',
             });
-            setUserRole(
-              userRole === USER_TYPES.user ? USER_TYPES.editor : USER_TYPES.user
-            );
+            setUser(data.user);
+            setQueryCache([pageOptions.key, user._id], {
+              user: data.user,
+            });
             setLoading(false);
           }
         })
@@ -406,6 +407,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           setLoading(false);
         });
     };
+
     return (
       <>
         <CardTableSection
@@ -509,16 +511,18 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
             </td>
           </tr>
 
-          {user?.badges && (
-            <tr>
-              <td>
-                <strong>Badges</strong>
-              </td>
-              <td colSpan="4">
+          <tr>
+            <td>
+              <strong>Badges</strong>
+            </td>
+            <td colSpan="4">
+              {user?.badges?.length > 0 && (
                 <LoadCurrentUserBadges user={user} badges={user?.badges} />
-              </td>
-            </tr>
-          )}
+              )}
+
+              <AssignBadge badges={badges} user={user} setToast={setToast} />
+            </td>
+          </tr>
 
           <tr>
             <td>
@@ -548,6 +552,23 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
             </tr>
           )}
 
+          {(user.role === USER_TYPES.user ||
+            user.role === USER_TYPES.editor) && (
+            <tr>
+              <td colSpan="5">
+                <Button
+                  color={user.role === USER_TYPES.user ? 'info' : 'danger'}
+                  loading={loading}
+                  className="btn mt-3"
+                  onClick={processRoleChange}
+                >
+                  Change Role to{' '}
+                  {user.role === USER_TYPES.user ? 'a User' : 'an Editor'}
+                </Button>
+              </td>
+            </tr>
+          )}
+
           {isVendor && (
             <tr>
               <td colSpan="5">
@@ -555,32 +576,6 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
               </td>
             </tr>
           )}
-
-          <tr>
-            <td colSpan="5">
-              {user.role === USER_TYPES.user && (
-                <Button
-                  loading={loading}
-                  className="btn btn-sm btn-secondary mt-3"
-                  onClick={processRoleChange}
-                >
-                  Upgrade to an Editor
-                </Button>
-              )}
-              {user.role === USER_TYPES.editor && (
-                <Button
-                  loading={loading}
-                  className="btn btn-sm btn-danger mt-3"
-                  onClick={processRoleChange}
-                >
-                  Downgrade to a User
-                </Button>
-              )}
-              <Spacing />
-              <Spacing />
-              <AssignBadge badges={badges} user={user} setToast={setToast} />
-            </td>
-          </tr>
         </CardTableSection>
       </>
     );
@@ -721,7 +716,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                 </>
               }
             >
-              <div className="card-tab-content py-5">
+              <div className="card-tab-content pt-5">
                 <UserInformation />
               </div>
             </Tab>
@@ -821,9 +816,9 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           >
             <section className="row">
               <div className="col-md-12 my-3 text-center">
-                <h5 className="my-2">
+                <h5 className="my-2 confirmation-text">
                   Are you sure you want to{' '}
-                  {user.vendor?.verified ? 'certify' : 'verify'} this vendor.
+                  {user.vendor?.verified ? 'certify' : 'verify'} this vendor?
                 </h5>
                 <button
                   className="btn btn-secondary mb-5"
@@ -867,9 +862,6 @@ const RemittanceForm = ({ user, setUser, setToast }) => {
               setQueryCache([pageOptions.key, user._id], {
                 user: data.user,
               });
-              // actions.setSubmitting(false);
-              // actions.resetForm();
-              // setShowRemitModal(false);
             }
           })
           .catch(function (error) {
@@ -893,6 +885,7 @@ const RemittanceForm = ({ user, setUser, setToast }) => {
               />
               <div className="input-group-append">
                 <Button
+                  color="dark"
                   onClick={() => setShowRemitModal(true)}
                   disabled={
                     defaultPercentage?.toString() ===
@@ -913,8 +906,8 @@ const RemittanceForm = ({ user, setUser, setToast }) => {
               showFooter={false}
             >
               <section>
-                <h5 className="header-smaller mb-4">
-                  Are you sure you want to update this Remittance
+                <h5 className=" confirmation-text mb-4">
+                  Are you sure you want to update this Remittance?
                 </h5>
                 <table className="table table-sm">
                   <thead>
@@ -1005,6 +998,7 @@ const ReferralBonusForm = ({ user, setUser, setToast }) => {
               />
               <div className="input-group-append">
                 <Button
+                  color="dark"
                   onClick={() => setShowRemitModal(true)}
                   disabled={
                     defaultPercentage?.toString() ===
@@ -1025,8 +1019,8 @@ const ReferralBonusForm = ({ user, setUser, setToast }) => {
               showFooter={false}
             >
               <section>
-                <h5 className="header-smaller mb-4">
-                  Are you sure you want to update this Referral Bonus
+                <h5 className=" confirmation-text mb-4">
+                  Are you sure you want to update this Referral Bonus?
                 </h5>
                 <table className="table table-sm">
                   <thead>
@@ -1070,7 +1064,8 @@ const AssignBadge = ({ user, setToast, badges }) => {
   return (
     <>
       <Button
-        className="btn btn-sm btn-info mt-3"
+        color="none"
+        className="btn btn-sm btn-wide btn-outline-dark"
         onClick={() => setShowFlagModal(true)}
       >
         Assign Badge
@@ -1146,7 +1141,7 @@ const AssignBadge = ({ user, setToast, badges }) => {
   );
 };
 
-export const LoadCurrentUserBadges = ({ badges, user }) => (
+export const LoadCurrentUserBadges = ({ badges }) => (
   <section className="row py-4">
     {badges.map((badge, index) => (
       <SingleUserBadge key={index} {...badge} />

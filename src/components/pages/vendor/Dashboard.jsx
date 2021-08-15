@@ -262,8 +262,7 @@ const VerificationCard = ({ title, children, icon, index, status }) => (
         </div>
       </div>
       <div className="verification-card__action">
-        {status.icon}
-        {status.status}
+        {status.icon} {status.status}
       </div>
     </div>
   </Link>

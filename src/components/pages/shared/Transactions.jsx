@@ -184,8 +184,8 @@ const ModalToRemitPayment = ({
       showFooter={false}
     >
       <section>
-        <h5 className="header-smaller mb-4">
-          Are you sure you have made this payment
+        <h5 className="confirmation-text mb-4">
+          Are you sure you have made this payment?
         </h5>
         <table className="table table-sm">
           <thead>

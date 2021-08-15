@@ -63,7 +63,6 @@ const CheckPendingNotifications = () => {
           )}
         </>
       )}
-      <DashboardCards />
     </>
   );
 };
