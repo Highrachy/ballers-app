@@ -18,6 +18,8 @@ import Input from 'components/forms/Input';
 import { LinkSeparator } from 'components/common/Helpers';
 import { useCurrentRole } from 'hooks/useUser';
 import { PlayIcon } from 'components/utils/Icons';
+import { WarningIcon } from 'components/utils/Icons';
+import Tooltip from 'components/common/Tooltip';
 
 export const VideosForm = ({
   hideForm,
@@ -27,7 +29,16 @@ export const VideosForm = ({
   video,
 }) => {
   const [toast] = useToast();
-  // const [image, setImage] = React.useState(null);
+  const isValidYoutubeLink = (link) => {
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|\?v=)([^#&?]*).*/;
+    const match = link.match(regExp);
+    const youtubeId = match?.[2];
+    return [
+      match && youtubeId?.length === 11,
+      `https://www.youtube.com/embed/${youtubeId}`,
+    ];
+  };
 
   return (
     <Formik
@@ -37,11 +48,8 @@ export const VideosForm = ({
         url: video?.url,
       })}
       onSubmit={({ title, url }, actions) => {
-        const regExp =
-          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|\?v=)([^#&?]*).*/;
-        var match = url.match(regExp);
-        const youtubeId = match?.[2];
-        if (!(match && youtubeId?.length === 11)) {
+        const [isValidVideo, youtubeId] = isValidYoutubeLink(url);
+        if (!isValidVideo) {
           setToast({
             message: 'Youtube link seems invalid. Please check and try again',
           });
@@ -51,7 +59,7 @@ export const VideosForm = ({
 
         const payload = {
           title,
-          url: `https://www.youtube.com/embed/${youtubeId}`,
+          url: youtubeId,
           propertyId: property._id,
         };
 
@@ -72,7 +80,7 @@ export const VideosForm = ({
               });
               hideForm();
 
-              let videos = [];
+              let videos = property?.videos || [];
 
               if (video?._id) {
                 videos = property.videos.filter(
@@ -97,31 +105,54 @@ export const VideosForm = ({
       }}
       validationSchema={createSchema(addVideoSchema)}
     >
-      {({ isSubmitting, handleSubmit, ...props }) => (
-        <Form>
-          <Toast {...toast} showToastOnly />
-          <section className="row">
-            <div className="col-md-10 px-4">
-              <h5>Add Videos</h5>
-              <Input label="Title" name="title" placeholder="Title" />
-              <Input
-                label="Youtube URL"
-                name="url"
-                placeholder="Paste your youtube video url here"
-                type="url"
-              />
-              <Button
-                className="btn-secondary mt-4"
-                loading={isSubmitting}
-                onClick={handleSubmit}
-              >
-                {video?._id ? 'Update' : 'Add'} Video
-              </Button>
-              <DisplayFormikState {...props} showAll />
-            </div>
-          </section>
-        </Form>
-      )}
+      {({ isSubmitting, handleSubmit, ...props }) => {
+        const [isValidYoutubeVideo, youtubeId] = isValidYoutubeLink(
+          props?.values?.url
+        );
+        return (
+          <Form>
+            <Toast {...toast} showToastOnly />
+            <section className="row">
+              <div className="col-md-10 px-4">
+                <h5>Add Videos</h5>
+                <Input label="Title" name="title" placeholder="Title" />
+                <Input
+                  label="Youtube URL"
+                  name="url"
+                  placeholder="Paste your youtube video url here"
+                  type="url"
+                />
+                {props?.values?.url && !isValidYoutubeVideo && (
+                  <div class="invalid-feedback mt-n3">
+                    Youtube Video URL seems invalid
+                  </div>
+                )}
+
+                {props?.values?.url && isValidYoutubeVideo && (
+                  <div className="embed-responsive embed-responsive-16by9">
+                    <iframe
+                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      frameBorder="0"
+                      src={youtubeId}
+                      title={props?.values?.title || 'Youtube video'}
+                    ></iframe>
+                  </div>
+                )}
+
+                <Button
+                  className="btn-secondary mt-4"
+                  loading={isSubmitting}
+                  onClick={handleSubmit}
+                >
+                  {video?._id ? 'Update' : 'Add'} Video
+                </Button>
+                <DisplayFormikState {...props} showAll />
+              </div>
+            </section>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };
@@ -202,27 +233,32 @@ export const VideosList = ({ property, setProperty, setToast }) => {
             {property?.videos?.map((video, index) => (
               <div key={index} className="col-md-4 mb-4">
                 <VideoModal video={video} key={video._id} />
-                <p className="my-3">
-                  <small
-                    className="text-link text-muted"
-                    onClick={() => {
-                      setVideo(video);
-                      setShowEditVideosModal(true);
-                    }}
-                  >
-                    Edit Video
-                  </small>
-                  <LinkSeparator />
-                  <small
-                    className="text-link  text-muted"
-                    onClick={() => {
-                      setVideo(video);
-                      setShowDeleteVideosModal(true);
-                    }}
-                  >
-                    Delete Video
-                  </small>
-                </p>
+                <div className="text-primary text-small py-1 text-truncate">
+                  {video.title}
+                </div>
+                {userIsVendor && (
+                  <div className="mb-3">
+                    <small
+                      className="text-link text-secondary text-muted"
+                      onClick={() => {
+                        setVideo(video);
+                        setShowEditVideosModal(true);
+                      }}
+                    >
+                      Edit Video
+                    </small>
+                    <LinkSeparator />
+                    <small
+                      className="text-link text-danger text-muted"
+                      onClick={() => {
+                        setVideo(video);
+                        setShowDeleteVideosModal(true);
+                      }}
+                    >
+                      Delete Video
+                    </small>
+                  </div>
+                )}
               </div>
             ))}
             {/* Edit Videos Modal */}
@@ -254,8 +290,8 @@ export const VideosList = ({ property, setProperty, setToast }) => {
                   {video?.url && (
                     <VideoYoutubeImage title={video?.title} url={video?.url} />
                   )}
-                  <p className="my-4 font-weight-bold">
-                    Are you sure you want to delete this Video
+                  <p className="my-4 confirmation-text">
+                    Are you sure you want to delete this Video?
                   </p>
                   <Button
                     loading={loading}
@@ -287,14 +323,13 @@ export const VideosList = ({ property, setProperty, setToast }) => {
   );
 };
 
-const VideoYoutubeImage = ({ title, url }) => {
+export const VideoYoutubeImage = ({ title, url }) => {
   // get last 11 characters of the url
   const videoId = url.substr(url.length - 11);
-  console.log(`videoId`, videoId);
   return (
     <img
       alt={title}
-      className="img-fluid"
+      className="img-fluid img-youtube-placeholder"
       src={`https://i1.ytimg.com/vi/${videoId}/0.jpg`}
     />
   );
@@ -305,17 +340,24 @@ VideoYoutubeImage.propTypes = {
   url: PropTypes.any.isRequired,
 };
 
-const VideoYoutubeOverlay = ({ showVideoModal }) => (
+const VideoYoutubeOverlay = ({ showVideoModal, showStatus }) => (
   <div className="card-img-overlay" onClick={showVideoModal}>
     <div className="card-img-overlay__content">
-      <span className="icon icon-video">
+      <span className={`icon icon-play-video ${showStatus ? 'pending' : null}`}>
         <PlayIcon />
       </span>
     </div>
+    {showStatus && (
+      <Tooltip text="Awaiting Admin Approval">
+        <span className="icon-status">
+          <WarningIcon /> Pending
+        </span>
+      </Tooltip>
+    )}
   </div>
 );
 
-const VideoModal = ({ video }) => {
+export const VideoModal = ({ video }) => {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
 
   // const approvalText = (
@@ -331,8 +373,7 @@ const VideoModal = ({ video }) => {
       <div className="card card__with-icon position-relative">
         <VideoYoutubeImage title={video.title} url={video.url} />
         <VideoYoutubeOverlay
-          title={video.title}
-          url={video.url}
+          showStatus={useCurrentRole().isVendor && !video.approved}
           showVideoModal={() => setShowVideoModal(true)}
         />
 

@@ -561,9 +561,20 @@ html {
       }
     }
   }
-  .icon-video {
+  .icon-play-video {
     font-size: 2.5rem;
     color: rgba($white, 0.6);
     transition: color 0.4s ease-in;
+    &.pending {
+      color: rgba($danger, 0.5);
+    }
+  }
+
+  .icon-status {
+    position: absolute;
+    bottom: 0.3rem;
+    right: 0.3rem;
+    font-size: 0.75rem;
+    color: red;
   }
 }

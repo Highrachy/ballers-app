@@ -50,6 +50,7 @@ import { SuccessIcon } from 'components/utils/Icons';
 import { WarningIcon } from 'components/utils/Icons';
 import { FlagProperty } from 'components/pages/admin/ReportedProperties';
 import { getTinyDate } from 'utils/date-helpers';
+import Tooltip from 'components/common/Tooltip';
 
 const pageOptions = {
   key: 'property',
@@ -244,7 +245,9 @@ const CaseHistory = ({ property, setToast, setProperty }) => {
   return (
     <section className="mt-4">
       <>
-        <h5 className="header-small my-5">Case History</h5>
+        {property?.flagged?.case.length > 0 && (
+          <h5 className="header-small my-5">Case History</h5>
+        )}
         {property?.flagged?.case.map((flaggedCase, index) => (
           <CaseComment
             flaggedCase={flaggedCase}
@@ -319,8 +322,8 @@ const ApproveProperty = ({ property, setToast, setProperty }) => {
       >
         <section className="row">
           <div className="col-md-12 my-3 text-center">
-            <h5 className="my-2">
-              Are you sure you want to approve this property
+            <h5 className="my-2 confirmation-text">
+              Are you sure you want to approve this property?
             </h5>
             <Button
               className="btn btn-secondary mb-5"
@@ -727,12 +730,16 @@ export const PropertyHeader = ({ property }) => (
         (property.approved?.status ? (
           <small className="text-success">
             <Spacing />
-            <SuccessIcon />
+            <Tooltip text="Approved">
+              <SuccessIcon />
+            </Tooltip>{' '}
           </small>
         ) : (
           <small className="text-warning">
             <Spacing />
-            <WarningIcon />
+            <Tooltip text="Pending Admin Approval">
+              <WarningIcon />
+            </Tooltip>
           </small>
         ))}
     </h3>
