@@ -350,7 +350,7 @@ const VideoYoutubeOverlay = ({ showVideoModal, showStatus }) => (
     {showStatus && (
       <Tooltip text="Awaiting Admin Approval">
         <span className="icon-status">
-          <WarningIcon /> Pending
+          <WarningIcon /> Pending Approval
         </span>
       </Tooltip>
     )}

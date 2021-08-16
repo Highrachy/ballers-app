@@ -46,7 +46,7 @@ const SingleOffer = ({ id }) => {
       />
       <ReactToPrint
         trigger={() => (
-          <section className="container-fluid mt-5 d-none d-md-block">
+          <section className="container-fluid mt-5 text-right d-none d-md-block">
             <button className="btn btn-info">Print this out!</button>
           </section>
         )}
@@ -314,7 +314,7 @@ export const DigitalSignaturePad = ({ setSignature }) => {
         </section>
       </Modal>
       <button
-        className="btn btn-dark btn-sm hide-print"
+        className="btn btn-outline-secondary btn-sm btn-wide hide-print"
         onClick={() => setShowDigital(true)}
       >
         Sign Digitally
@@ -366,7 +366,7 @@ export const UploadSignature = ({ image, setImage, setSignature }) => {
         </div>
       </Modal>
       <button
-        className="btn btn-outline-dark btn-wide hide-print"
+        className="btn btn-outline-dark btn-sm btn-wide hide-print"
         type="button"
         onClick={() => {
           setShowSignature(true);

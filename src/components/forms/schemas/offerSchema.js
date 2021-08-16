@@ -8,7 +8,7 @@ import {
 } from './schema-helpers';
 
 export const offerLetterSchema = {
-  totalAmountPayable: positiveNumberValidation('Total Amount Payable'),
+  propertySellingPrice: positiveNumberValidation('Total Amount Payable'),
   allocationInPercentage: validPercentage('Allocation'),
   initialPayment: positiveNumberValidation('Initial Payment'),
   initialPaymentDate: minDateValidation('Initial Payment Date', new Date()),

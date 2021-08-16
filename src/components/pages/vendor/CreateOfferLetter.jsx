@@ -38,10 +38,11 @@ import { ErrorIcon } from 'components/utils/Icons';
 import { PlusIcon } from 'components/utils/Icons';
 import { CloseIcon } from 'components/utils/Icons';
 import { LinkSeparator } from 'components/common/Helpers';
+import Label from 'components/forms/Label';
 
 const CreateOfferLetter = ({ enquiry }) => {
   const defaultValue = {
-    totalAmountPayable: enquiry.propertyInfo.price,
+    propertySellingPrice: enquiry.propertyInfo.price,
     allocationInPercentage: 100,
     initialPayment: enquiry.initialInvestmentAmount,
     initialPaymentDate: enquiry.investmentStartDate,
@@ -176,27 +177,27 @@ const CreateOfferLetterForm = ({
                 {!showOtherPaymentsForm && (
                   <>
                     <span
-                      className="text-link  text-muted"
+                      className="text-link text-muted"
                       onClick={() => setShowOtherPaymentsForm(true)}
                     >
                       Add Other Payments
                     </span>
+                    <LinkSeparator />
                   </>
                 )}
                 {!showOtherTermsForm && (
                   <>
-                    <LinkSeparator />
                     <span
                       className="text-link  text-muted"
                       onClick={() => setShowOtherTermsForm(true)}
                     >
                       Set Terms and Conditions Values
                     </span>
+                    <LinkSeparator />
                   </>
                 )}
                 {!showAddMoreTermsForm && (
                   <>
-                    <LinkSeparator />
                     <span
                       className="text-link  text-muted"
                       onClick={() => setShowAddMoreTermsForm(true)}
@@ -260,9 +261,9 @@ const OfferLetterForm = () => {
       <div className="form-row">
         <InputFormat
           formGroupClassName="col-md-6"
-          label="Total Amount Payable"
-          name="totalAmountPayable"
-          placeholder="Total Amount Payable"
+          label="Property Selling Price"
+          name="propertySellingPrice"
+          placeholder="Property Selling Price"
         />
         <DatePicker
           formGroupClassName="col-md-6"
@@ -498,8 +499,16 @@ const AddMoreTermsAndConditionsForm = ({
   const allowAddNew = fields.length < 1 || !!fields[fields.length - 1];
   return (
     <>
+      <p className="text-primary pb-4">
+        Note: Contents added here may be subjected to administrative review
+      </p>
       {fields.map((_, index) => (
         <React.Fragment key={index}>
+          <Label
+            name={`additionalClause[${index}]`}
+            text={`Personalized Terms and Conditions ${index + 1}`}
+            optional
+          />
           <textarea
             className="form-control"
             onChange={(e) => handleChange(index, e)}
@@ -507,12 +516,12 @@ const AddMoreTermsAndConditionsForm = ({
             value={fields[index]}
           />
 
-          <strong
-            className="text-danger text-small text-link d-block mb-3"
+          <p
+            className="text-link text-muted text-danger d-block mb-5 text-small"
             onClick={() => handleRemoveClick(index)}
           >
-            <CloseIcon /> Remove this Terms and Conditions
-          </strong>
+            <CloseIcon /> Remove Terms and Conditions {index + 1}
+          </p>
         </React.Fragment>
       ))}
       <br />
@@ -530,8 +539,8 @@ const AddMoreTermsAndConditionsForm = ({
 
 const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
   const [toast, setToast] = useToast();
-  const { totalAmountPayable, initialPayment, periodicPayment } = value;
-  const rangePrice = totalAmountPayable - initialPayment;
+  const { propertySellingPrice, initialPayment, periodicPayment } = value;
+  const rangePrice = propertySellingPrice - initialPayment;
   const noOfMonths =
     rangePrice / periodicPayment > 1
       ? Math.floor(rangePrice / periodicPayment)
@@ -574,13 +583,16 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
       showFooter={false}
     >
       <section className="row">
-        <div className="col-md-10">
+        <div className="col-md-12">
           <p className="confirmation-text">
             Are you sure you wish to submit the offer letter? Ensure you have
             confirm all the offer information as this process is irreversible.
           </p>
 
-          <button className="btn btn-danger mb-3" onClick={submitOfferLetter}>
+          <button
+            className="btn btn-secondary mb-3"
+            onClick={submitOfferLetter}
+          >
             Submit Offer Letter
           </button>
         </div>

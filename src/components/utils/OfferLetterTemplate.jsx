@@ -34,7 +34,7 @@ const OfferLetterTemplate = ({
   const companyName = vendorInfo?.vendor?.companyName;
   const shownSignature = signature || offerInfo.signature;
 
-  let { totalAmountPayable, initialPayment, periodicPayment } = offerInfo;
+  let { propertySellingPrice, initialPayment, periodicPayment } = offerInfo;
 
   // Payment Breakdown
   const paymentBreakdown =
@@ -59,19 +59,21 @@ const OfferLetterTemplate = ({
   const surveyPlan = parseInt(offerInfo?.otherPayments?.surveyPlan || 0, 10);
 
   const otherPaymentsTotal =
-    (legalFee / 100) * offerInfo.totalAmountPayable +
-    (agencyFee / 100) * offerInfo.totalAmountPayable +
+    (legalFee / 100) * offerInfo.propertySellingPrice +
+    (agencyFee / 100) * offerInfo.propertySellingPrice +
     deedOfAssignmentExecution +
     infrastructureDevelopment +
     powerConnectionFee +
     surveyPlan;
 
   // total selling price
-  const totalSellingPrice = offerInfo.totalAmountPayable + otherPaymentsTotal;
+  const totalAmountPayable =
+    offerInfo?.totalAmountPayable ||
+    offerInfo.propertySellingPrice + otherPaymentsTotal;
 
   // PAYMENT BREAKDOWN FOR TABLE
   // TODO: Replace this with payment schedule from database
-  let rangePrice = totalAmountPayable - initialPayment;
+  let rangePrice = propertySellingPrice - initialPayment;
 
   // PAYMENT OPTION 1: INITIAL PAYMENT
   if (paymentBreakdown === PAYMENT_OPTION.INITIAL_DEPOSIT) {
@@ -197,12 +199,12 @@ const OfferLetterTemplate = ({
                 <strong>8. SELLING PRICE:</strong>{' '}
               </td>
               <td>
-                {`${moneyFormatInNaira(totalSellingPrice)} (${numToWords(
-                  totalSellingPrice
+                {`${moneyFormatInNaira(totalAmountPayable)} (${numToWords(
+                  totalAmountPayable
                 )} Naira only)`}
               </td>
             </tr>
-            {totalSellingPrice !== offerInfo.totalAmountPayable && (
+            {totalAmountPayable !== offerInfo.propertySellingPrice && (
               <tr>
                 <td colSpan="2">
                   <div className="table-responsive table-sm">
@@ -217,25 +219,27 @@ const OfferLetterTemplate = ({
                         <tr>
                           <td>Property Price</td>
                           <td className="text-right">
-                            {moneyFormatInNaira(offerInfo.totalAmountPayable)}
+                            {moneyFormatInNaira(offerInfo.propertySellingPrice)}
                           </td>
                         </tr>
                         {legalFee !== 0 && (
                           <tr>
-                            <td>Legal Fee ({legalFee} %)</td>
+                            <td>Legal Fee ({legalFee} %) *</td>
                             <td className="text-right">
                               {moneyFormatInNaira(
-                                offerInfo.totalAmountPayable * (legalFee / 100)
+                                offerInfo.propertySellingPrice *
+                                  (legalFee / 100)
                               )}
                             </td>
                           </tr>
                         )}
                         {agencyFee !== 0 && (
                           <tr>
-                            <td>Agency Fee ({agencyFee} %)</td>
+                            <td>Agency Fee ({agencyFee} %) *</td>
                             <td className="text-right">
                               {moneyFormatInNaira(
-                                offerInfo.totalAmountPayable * (agencyFee / 100)
+                                offerInfo.propertySellingPrice *
+                                  (agencyFee / 100)
                               )}
                             </td>
                           </tr>
@@ -243,7 +247,7 @@ const OfferLetterTemplate = ({
 
                         {powerConnectionFee !== 0 && (
                           <tr>
-                            <td>Power Connection Fee</td>
+                            <td>Power Connection Fee *</td>
                             <td className="text-right">
                               {moneyFormatInNaira(powerConnectionFee)}
                             </td>
@@ -252,7 +256,7 @@ const OfferLetterTemplate = ({
 
                         {surveyPlan !== 0 && (
                           <tr>
-                            <td>Survey Plan</td>
+                            <td>Survey Plan *</td>
                             <td className="text-right">
                               {moneyFormatInNaira(surveyPlan)}
                             </td>
@@ -261,7 +265,7 @@ const OfferLetterTemplate = ({
 
                         {deedOfAssignmentExecution !== 0 && (
                           <tr>
-                            <td>Deed of Assignment Execution</td>
+                            <td>Deed of Assignment Execution *</td>
                             <td className="text-right">
                               {moneyFormatInNaira(deedOfAssignmentExecution)}
                             </td>
@@ -270,7 +274,7 @@ const OfferLetterTemplate = ({
 
                         {infrastructureDevelopment !== 0 && (
                           <tr>
-                            <td>Infrastructure Development</td>
+                            <td>Infrastructure Development *</td>
                             <td className="text-right">
                               {moneyFormatInNaira(infrastructureDevelopment)}
                             </td>
@@ -281,7 +285,7 @@ const OfferLetterTemplate = ({
                         <tr>
                           <th>Total</th>
                           <th className="text-right">
-                            <h5> {moneyFormatInNaira(totalSellingPrice)}</h5>
+                            <h5> {moneyFormatInNaira(totalAmountPayable)}</h5>
                           </th>
                         </tr>
                       </tfoot>

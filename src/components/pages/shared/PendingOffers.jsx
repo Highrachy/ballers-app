@@ -47,6 +47,7 @@ const PendingOffers = () => (
       DataComponent={OffersRowList}
       PageIcon={<OfferIcon />}
       queryName="pendingOffers"
+      refresh
     />
   </BackendPage>
 );
@@ -363,12 +364,17 @@ const ModalToShowTermsForVendor = ({
 const ShowTermsComments = ({ comments }) => (
   <section className="my-3">
     {comments?.length > 0 && <h6 className="">Comments</h6>}
-    {comments?.map(({ comment }, index) => (
+    {comments?.map(({ comment, response }, index) => (
       <p key={index} className="speech-bubble">
-        {index !== comments?.length - 1 ? (
-          <strike>{comment}</strike>
+        {index !== 0 ? (
+          <strike>
+            {comment} <br /> <small>{response}</small>
+          </strike>
         ) : (
-          <>{comment}</>
+          <>
+            {comment}
+            <br /> <small>{response}</small>
+          </>
         )}
       </p>
     ))}
@@ -381,7 +387,7 @@ const FixReviewCommentForm = ({
   setShowTermsModal,
   setShowFixCommentForm,
 }) => {
-  const lastComment = offer.additionalClause.comments.pop();
+  const lastComment = offer.additionalClause.comments[0];
   return (
     <section className="row">
       <div className="col-md-12 my-3">
