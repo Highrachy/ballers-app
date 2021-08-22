@@ -10,7 +10,7 @@ import {
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, PROPERTY_VIDEO_STATUS } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { addVideoSchema } from 'components/forms/schemas/propertySchema';
 import { getError, statusIsSuccessful } from 'utils/helpers';
@@ -90,7 +90,7 @@ export const VideosForm = ({
 
               setProperty({
                 ...property,
-                videos: [data.video, ...videos],
+                videos: [...videos, data.video],
               });
               actions.setSubmitting(false);
               actions.resetForm();
@@ -340,17 +340,17 @@ VideoYoutubeImage.propTypes = {
   url: PropTypes.any.isRequired,
 };
 
-const VideoYoutubeOverlay = ({ showVideoModal, showStatus }) => (
+const VideoYoutubeOverlay = ({ showVideoModal, status }) => (
   <div className="card-img-overlay" onClick={showVideoModal}>
     <div className="card-img-overlay__content">
-      <span className={`icon icon-play-video ${showStatus ? 'pending' : null}`}>
+      <span className={`icon icon-play-video ${status ? 'pending' : null}`}>
         <PlayIcon />
       </span>
     </div>
-    {showStatus && (
+    {status && (
       <Tooltip text="Awaiting Admin Approval">
         <span className="icon-status">
-          <WarningIcon /> Pending Approval
+          <WarningIcon /> {status}
         </span>
       </Tooltip>
     )}
@@ -359,21 +359,18 @@ const VideoYoutubeOverlay = ({ showVideoModal, showStatus }) => (
 
 export const VideoModal = ({ video }) => {
   const [showVideoModal, setShowVideoModal] = React.useState(false);
-
-  // const approvalText = (
-  //   <small
-  //     className={`badge badge-${approval[status].color} transparent-${approval[status].color}`}
-  //   >
-  //     {approval[status].text}
-  //   </small>
-  // );
+  const isUser = useCurrentRole().isUser;
 
   return (
     <section className="d-block">
       <div className="card card__with-icon position-relative">
         <VideoYoutubeImage title={video.title} url={video.url} />
         <VideoYoutubeOverlay
-          showStatus={useCurrentRole().isVendor && !video.approved}
+          status={
+            !isUser && video.status !== PROPERTY_VIDEO_STATUS.APPROVED
+              ? video.status
+              : null
+          }
           showVideoModal={() => setShowVideoModal(true)}
         />
 
@@ -394,6 +391,17 @@ export const VideoModal = ({ video }) => {
               title={video.title}
             ></iframe>
           </div>
+
+          {!isUser && video?.comments?.length > 0 && (
+            <section className="mt-3">
+              <h6>Comments</h6>
+              {video?.comments.map((comment, index) => (
+                <p key={index} className="speech-bubble">
+                  {comment}
+                </p>
+              ))}
+            </section>
+          )}
         </Modal>
       </div>
     </section>

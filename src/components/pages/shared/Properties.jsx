@@ -239,7 +239,6 @@ const FilterForm = ({ setFilterTerms }) => {
               }}
               values={props?.values}
             />
-
             <FilterRange
               Field={Select}
               name="bathrooms"

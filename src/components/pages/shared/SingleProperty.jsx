@@ -2,7 +2,7 @@ import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
 import { Card } from 'react-bootstrap';
 import Map from 'components/common/Map';
-import { USER_TYPES } from 'utils/constants';
+import { PROPERTY_VIDEO_STATUS, USER_TYPES } from 'utils/constants';
 import { useToast } from 'components/utils/Toast';
 import { moneyFormatInNaira, getLocationFromAddress } from 'utils/helpers';
 import Image from 'components/utils/Image';
@@ -47,10 +47,11 @@ import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, statusIsSuccessful } from 'utils/helpers';
 import { SuccessIcon } from 'components/utils/Icons';
-import { WarningIcon } from 'components/utils/Icons';
 import { FlagProperty } from 'components/pages/admin/ReportedProperties';
 import { getTinyDate } from 'utils/date-helpers';
 import Tooltip from 'components/common/Tooltip';
+import { ErrorIcon } from 'components/utils/Icons';
+import { QuestionMarkIcon } from 'components/utils/Icons';
 
 const pageOptions = {
   key: 'property',
@@ -727,21 +728,32 @@ export const PropertyHeader = ({ property }) => (
     <h3 className="property-holder__big-title">
       {property.name}{' '}
       {!useCurrentRole().isUser &&
-        (property.approved?.status ? (
+        property?.status === PROPERTY_VIDEO_STATUS.APPROVED && (
           <small className="text-success">
             <Spacing />
             <Tooltip text="Approved">
               <SuccessIcon />
             </Tooltip>{' '}
           </small>
-        ) : (
-          <small className="text-warning">
+        )}
+      {!useCurrentRole().isUser &&
+        property?.status === PROPERTY_VIDEO_STATUS.DISAPPROVED && (
+          <small className="text-success">
             <Spacing />
-            <Tooltip text="Pending Admin Approval">
-              <WarningIcon />
+            <Tooltip text="Disapproved">
+              <ErrorIcon />
+            </Tooltip>{' '}
+          </small>
+        )}
+      {!useCurrentRole().isUser &&
+        property?.status === PROPERTY_VIDEO_STATUS.PENDING_ADMIN_REVIEW && (
+          <small className="text-success">
+            <Spacing />
+            <Tooltip text="Pending Admin Review">
+              <QuestionMarkIcon />
             </Tooltip>
           </small>
-        ))}
+        )}
     </h3>
     <h4 className="text-secondary mb-3">
       {moneyFormatInNaira(property.price)}

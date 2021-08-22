@@ -4,16 +4,17 @@ import PaginatedContent from 'components/common/PaginatedContent';
 import { Form, Formik } from 'formik';
 import {
   DisplayFormikState,
+  processFilterValues,
   setInitialValues,
 } from 'components/forms/form-helper';
 import Select from 'components/forms/Select';
-import { generateNumOptions, valuesToOptions } from 'utils/helpers';
+import { formatFilterString, valuesToOptions } from 'utils/helpers';
 import Input from 'components/forms/Input';
 import Button from 'components/forms/Button';
 import BackendPage from 'components/layout/BackendPage';
 import { PropertyVideosIcon } from 'components/utils/Icons';
 import Humanize from 'humanize-plus';
-import { HOUSE_TYPES } from 'utils/constants';
+import { PROPERTY_VIDEO_STATUS } from 'utils/constants';
 import { API_ENDPOINT } from 'utils/URL';
 import { VideoModal } from '../shared/Video';
 import { BASE_API_URL } from 'utils/constants';
@@ -22,8 +23,14 @@ import { getTokenFromStore } from 'utils/localStorage';
 import { getError, statusIsSuccessful } from 'utils/helpers';
 import Modal from 'components/common/Modal';
 import { VideoYoutubeImage } from '../shared/Video';
+import { PropertyAvatar } from 'components/common/PropertyCard';
+import { requestVideoReviewSchema } from 'components/forms/schemas/propertySchema';
+import { createSchema } from 'components/forms/schemas/schema-helpers';
+import Textarea from 'components/forms/Textarea';
+import { LinkSeparator } from 'components/common/Helpers';
 import { SuccessIcon } from 'components/utils/Icons';
-import { QuestionMarkIcon } from 'components/utils/Icons';
+import { ErrorIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 
 const PropertyVideos = () => {
   return (
@@ -41,59 +48,94 @@ const PropertyVideos = () => {
   );
 };
 
-const ModalToShowTermsForAdmin = ({
+const ApprovalModal = ({
   video,
   showApprovalModal,
   setShowApprovalModal,
   setToast,
 }) => {
-  const [loading, setLoading] = React.useState(false);
-  const approveVideo = () => {
-    setLoading(true);
-    Axios.put(
-      `${BASE_API_URL}/property-video/${video._id}/approve`,
-      {},
-      {
-        headers: { Authorization: getTokenFromStore() },
-      }
-    )
-      .then(function (response) {
-        const { status } = response;
-        if (statusIsSuccessful(status)) {
-          setToast({
-            type: 'success',
-            message: `The Video has been successfully approved`,
-          });
-          setShowApprovalModal(false);
-          setLoading(false);
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-        setLoading(false);
-      });
-  };
+  const isApproved = video?.action === PROPERTY_VIDEO_STATUS.APPROVED;
+  const currentAction = isApproved ? 'approve' : 'disapprove';
+  const currentSchema = !isApproved ? requestVideoReviewSchema : {};
+
   return (
     <Modal
-      title="Approve Video"
+      title="Process Video"
       show={showApprovalModal}
       onHide={() => setShowApprovalModal(false)}
       showFooter={false}
     >
-      <section>
-        {video?._id && <VideoYoutubeImage {...video} />}
-        <p className="my-4 text-center confirmation-text">
-          Are you sure you want to approve this video?
-        </p>
-        <Button
-          loading={loading}
-          className="btn-secondary mt-4"
-          onClick={() => approveVideo()}
-        >
-          Approve Video
-        </Button>
+      <section className="row">
+        <div className="col-md-12 my-3">
+          <Formik
+            initialValues={setInitialValues(currentSchema)}
+            onSubmit={(values, actions) => {
+              const payload = {
+                ...values,
+              };
+              Axios.put(
+                `${BASE_API_URL}/property-video/${video._id}/${currentAction}`,
+                { ...payload },
+                {
+                  headers: { Authorization: getTokenFromStore() },
+                }
+              )
+                .then(function (response) {
+                  const { status } = response;
+                  if (statusIsSuccessful(status)) {
+                    setToast({
+                      type: 'success',
+                      message: `The Video has been successfully ${currentAction}d`,
+                    });
+                    actions.setSubmitting(false);
+                    actions.resetForm();
+                    setShowApprovalModal(false);
+                  }
+                })
+                .catch(function (error) {
+                  setToast({
+                    message: getError(error),
+                  });
+                  actions.setSubmitting(false);
+                });
+            }}
+            validationSchema={createSchema(currentSchema)}
+          >
+            {({ isSubmitting, handleSubmit, ...props }) => (
+              <Form>
+                {isApproved && (
+                  <p className="mb-3 text-center confirmation-text">
+                    Are you sure you want to approve this video?
+                  </p>
+                )}
+
+                <div className="mb-4">
+                  {video?._id && <VideoYoutubeImage {...video} />}
+                </div>
+
+                {!isApproved && (
+                  <Textarea
+                    name="comment"
+                    label="Reason for disapproving the Video"
+                    placeholder="Your Comment"
+                    rows="3"
+                  />
+                )}
+
+                <Button
+                  color={isApproved ? 'secondary' : 'danger'}
+                  className="mt-4"
+                  loading={isSubmitting}
+                  onClick={handleSubmit}
+                >
+                  {isApproved ? <SuccessIcon /> : <ErrorIcon />}{' '}
+                  {Humanize.titleCase(currentAction)} Video
+                </Button>
+                <DisplayFormikState {...props} hide showAll />
+              </Form>
+            )}
+          </Formik>
+        </div>
       </section>
     </Modal>
   );
@@ -103,39 +145,66 @@ const PropertyVideosRowList = ({ results, offset, setToast }) => {
   const [video, setVideo] = React.useState(null);
   const [showApprovalModal, setShowApprovalModal] = React.useState(false);
 
-  const showVideoApprovalModal = (video) => {
-    setVideo(video);
+  const showVideoApprovalModal = (video, action) => {
+    setVideo({ ...video, action });
     setShowApprovalModal(true);
   };
 
   return (
     <div className="container-fluid">
-      <Card className="mt-2">
-        <div className="table-responsive">
-          <table className="table table-border table-hover">
-            <thead>
-              <tr>
-                <th>S/N</th>
-                <th className="text-center">Video</th>
-                <th>Title</th>
-                <th>&nbsp;</th>
-                <th width="20%">&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              {results.map((video, index) => (
-                <PropertyVideosRow
-                  key={index}
-                  number={offset + index + 1}
-                  video={video}
-                  showVideoApprovalModal={showVideoApprovalModal}
+      <Card className="mt-2 p-4">
+        <div className="row">
+          {results?.map((video, index) => (
+            <div key={index} className="col-md-4 mb-4">
+              <VideoModal video={video} key={video._id} />
+              <div className="text-primary text-small py-1 text-truncate">
+                {video.title}
+              </div>
+              <div className="text-secondary text-small mb-2">
+                <PropertyIcon />{' '}
+                <PropertyAvatar
+                  property={video?.propertyInfo}
+                  className=""
+                  nameOnly
                 />
-              ))}
-            </tbody>
-          </table>
+              </div>
+              <div className="mb-3">
+                {video.status !== PROPERTY_VIDEO_STATUS.APPROVED && (
+                  <small
+                    className="text-link text-secondary text-muted"
+                    onClick={() =>
+                      showVideoApprovalModal(
+                        video,
+                        PROPERTY_VIDEO_STATUS.APPROVED
+                      )
+                    }
+                  >
+                    <SuccessIcon /> Approve Video
+                  </small>
+                )}
+                {video.status ===
+                  PROPERTY_VIDEO_STATUS.PENDING_ADMIN_REVIEW && (
+                  <LinkSeparator />
+                )}
+                {video.status !== PROPERTY_VIDEO_STATUS.DISAPPROVED && (
+                  <small
+                    className="text-link text-danger text-muted"
+                    onClick={() =>
+                      showVideoApprovalModal(
+                        video,
+                        PROPERTY_VIDEO_STATUS.DISAPPROVED
+                      )
+                    }
+                  >
+                    <ErrorIcon /> Disapprove Video
+                  </small>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
 
-        <ModalToShowTermsForAdmin
+        <ApprovalModal
           video={video}
           showApprovalModal={showApprovalModal}
           setShowApprovalModal={setShowApprovalModal}
@@ -146,98 +215,34 @@ const PropertyVideosRowList = ({ results, offset, setToast }) => {
   );
 };
 
-const PropertyVideosRow = ({ number, video, showVideoApprovalModal }) => {
-  return (
-    <tr>
-      <td>{number}</td>
-      <td>
-        <VideoModal video={video} key={video._id} />
-      </td>
-      <td>
-        <p className="text-normal">{Humanize.titleCase(video.title)}</p>
-      </td>
-      <td>
-        {video.approved ? (
-          <span className="text-success">
-            <SuccessIcon /> Approved
-          </span>
-        ) : (
-          <span className="text-danger">
-            <QuestionMarkIcon /> Pending
-          </span>
-        )}
-      </td>
-      <td>
-        {!video.approved && (
-          <Button
-            className="btn-secondary"
-            onClick={() => showVideoApprovalModal(video)}
-          >
-            Approve Video
-          </Button>
-        )}
-      </td>
-    </tr>
-  );
-};
-
 const FilterForm = ({ setFilterTerms }) => {
   return (
     <Formik
-      initialValues={setInitialValues({})}
-      onSubmit={(values, actions) => {
-        setFilterTerms(
-          { ...values },
-          {
-            houseType: `House Type : ${Humanize.titleCase(values.houseType)}`,
-          }
-        );
+      initialValues={{}}
+      onSubmit={(values) => {
+        const payload = processFilterValues(values);
+        setFilterTerms(payload, {
+          title: formatFilterString('Title', values.title),
+          status: formatFilterString('Status', values.status),
+        });
       }}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
         <Form>
-          <Card className="card-container">
-            <section className="row">
-              <div className="col-md-10 px-4">
-                <h5 className="mb-4">Filter PropertyVideos</h5>
-                <div className="form-row">
-                  <Input
-                    formGroupClassName="col-md-6"
-                    label="PropertyVideo Name"
-                    name="name"
-                  />
-                  <Input
-                    formGroupClassName="col-md-6"
-                    label="Price"
-                    name="price"
-                  />
-                </div>
-                <div className="form-row">
-                  <Select
-                    formGroupClassName="col-md-6"
-                    label="Toilets"
-                    name="toilets"
-                    options={generateNumOptions(9, 'Toilet')}
-                    placeholder="Select Toilets"
-                  />
-                  <Select
-                    formGroupClassName="col-md-6"
-                    label="House Type"
-                    name="houseType"
-                    options={valuesToOptions(HOUSE_TYPES)}
-                    placeholder="House Type"
-                  />
-                </div>
-              </div>
-            </section>
-          </Card>
+          <Input label="Title" name="title" />
+
+          <Select
+            label="Status"
+            name="status"
+            options={valuesToOptions(Object.values(PROPERTY_VIDEO_STATUS))}
+          />
           <DisplayFormikState {...props} showAll />
           <Button
             className="btn-secondary mt-4"
             loading={isSubmitting}
             onClick={handleSubmit}
           >
-            Filter Users
+            Filter Property Video
           </Button>
         </Form>
       )}

@@ -13,6 +13,8 @@ import { useCurrentRole } from 'hooks/useUser';
 import Humanize from 'humanize-plus';
 import { ReportedPropertyIcon } from 'components/utils/Icons';
 import { BadgesIcon } from 'components/utils/Icons';
+import { PropertyVideosIcon } from 'components/utils/Icons';
+import { BankAccountIcon } from 'components/utils/Icons';
 
 const DashboardCards = () => {
   const propertyCard = {
@@ -95,6 +97,26 @@ const DashboardCards = () => {
     footer: null,
   };
 
+  const propertyVideoCard = {
+    name: 'propertyVideos',
+    Icon: <PropertyVideosIcon />,
+    title: 'Property Videos',
+    to: 'property-videos',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  };
+
+  const bankAccountCard = {
+    name: 'bankAccount',
+    Icon: <BankAccountIcon />,
+    title: 'Bank Accounts',
+    to: 'bank-accounts',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  };
+
   const [dashboardCountQuery] = useGetQuery({
     key: 'dashboardCount',
     name: 'dashboardCount',
@@ -119,6 +141,8 @@ const DashboardCards = () => {
     scheduledVisitationCard,
     reportedPropertiesCard,
     badgesCard,
+    propertyVideoCard,
+    bankAccountCard,
   ];
 
   const dashboardCards = useCurrentRole().isAdmin

@@ -294,3 +294,9 @@ export const BADGE_ACCESS_LEVEL = {
   USER: USER_TYPES.user,
   VENDOR: USER_TYPES.vendor,
 };
+
+export const PROPERTY_VIDEO_STATUS = {
+  APPROVED: 'Approved',
+  DISAPPROVED: 'Disapproved',
+  PENDING_ADMIN_REVIEW: 'Pending Admin Review',
+};

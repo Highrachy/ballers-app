@@ -246,6 +246,7 @@ export const PropertyAvatar = ({
   nameOnly,
   portfolioId,
   linkToPage,
+  className,
 }) => {
   const { name = '', houseType = '', mainImage } = property;
   const currentRole = useCurrentRole().name;
@@ -254,7 +255,7 @@ export const PropertyAvatar = ({
     : `/${currentRole}/property/${property._id}`;
 
   const output = nameOnly ? (
-    name
+    <span>{name}</span>
   ) : (
     <>
       <div className="user-avatar user-avatar-sm bg-purple">
@@ -281,7 +282,7 @@ export const PropertyAvatar = ({
   return !linkToPage ? (
     output
   ) : (
-    <Link to={propertyURL} className="user-card">
+    <Link to={propertyURL} className={className}>
       {output}
     </Link>
   );
@@ -292,9 +293,11 @@ PropertyAvatar.propTypes = {
   nameOnly: PropTypes.bool,
   portfolioId: PropTypes.string,
   linkToPage: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 PropertyAvatar.defaultProps = {
+  className: 'user-card',
   nameOnly: false,
   portfolioId: null,
   linkToPage: true,

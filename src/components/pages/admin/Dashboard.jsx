@@ -5,9 +5,10 @@ import DashboardCards from 'components/common/DashboardCards';
 import { OfferIcon } from 'components/utils/Icons';
 import { useGetQuery } from 'hooks/useQuery';
 import { API_ENDPOINT } from 'utils/URL';
-import { OFFER_STATUS } from 'utils/constants';
+import { OFFER_STATUS, PROPERTY_VIDEO_STATUS } from 'utils/constants';
 import { Loading } from 'components/utils/LoadingItems';
 import { NoticeCard } from '../vendor/Dashboard';
+import { PropertyVideosIcon } from 'components/utils/Icons';
 
 const Dashboard = () => (
   <BackendPage>
@@ -37,6 +38,12 @@ const CheckPendingNotifications = () => {
   const axiosOptionForOffers = {
     params: { limit: 100, status: OFFER_STATUS.PENDING_ADMIN_APPROVAL },
   };
+  const axiosOptionForVideos = {
+    params: {
+      limit: 100,
+      status: PROPERTY_VIDEO_STATUS.PENDING_ADMIN_APPROVAL,
+    },
+  };
   const [offersQuery] = useGetQuery({
     axiosOptions: axiosOptionForOffers,
     childrenKey: 'offer',
@@ -46,9 +53,18 @@ const CheckPendingNotifications = () => {
     refresh: true,
   });
 
+  const [videosQuery] = useGetQuery({
+    axiosOptions: axiosOptionForVideos,
+    childrenKey: 'propertyVideos',
+    key: 'propertyVideos',
+    name: ['propertyVideos', axiosOptionForOffers],
+    endpoint: API_ENDPOINT.getAllPropertyVideos(),
+    refresh: true,
+  });
+
   return (
     <>
-      {offersQuery.isLoading ? (
+      {offersQuery.isLoading || videosQuery.isLoading ? (
         <Loading size="small" text="" />
       ) : (
         <>
@@ -59,6 +75,15 @@ const CheckPendingNotifications = () => {
               name="Offers"
               type="warning"
               message={`You have ${offersQuery?.data?.result?.length} unresolved Offers`}
+            />
+          )}
+          {videosQuery?.data?.result?.length > 0 && (
+            <NoticeCard
+              Icon={<PropertyVideosIcon />}
+              link="/admin/property-videos"
+              name="Property Videos"
+              type="success"
+              message={`You have ${videosQuery?.data?.result?.length} unresolved property videos`}
             />
           )}
         </>
