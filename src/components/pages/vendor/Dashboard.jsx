@@ -170,15 +170,15 @@ const UnVerifiedVendorContent = () => {
 
 const VerifiedVendorContent = () => {
   const axiosOptionForVisitations = {
-    params: { limit: 100, status: VISITATION_STATUS.PENDING },
+    params: { limit: 0, status: VISITATION_STATUS.PENDING },
   };
 
   const axiosOptionForEnquiries = {
-    params: { limit: 100, approved: false },
+    params: { limit: 0, approved: false },
   };
 
   const axiosOptionForOffers = {
-    params: { limit: 100, status: OFFER_STATUS.PENDING_VENDOR_REVIEW },
+    params: { limit: 0, status: OFFER_STATUS.PENDING_VENDOR_REVIEW },
   };
   const [visitationsQuery] = useGetQuery({
     axiosOptions: axiosOptionForVisitations,

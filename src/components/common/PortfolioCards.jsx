@@ -81,7 +81,7 @@ export const PortfolioCard = ({
             </strong>
             <Spacing />
             <Spacing />
-            <OverdueBadge date={nextPaymentInfo?.[0]?.expiresOn} />
+            <OverdueBadge date={nextPaymentInfo?.[0]?.dueDate} />
           </div>
         </article>
       </Link>

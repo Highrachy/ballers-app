@@ -29,8 +29,7 @@ export const BankAccountForm = ({ hideForm, setToast, bankAccount }) => {
       enableReinitialize={true}
       initialValues={setInitialValues(addBankAccountSchema, {
         accountName: 'Ballers',
-        accountNumber: '0123456789',
-        bankName: 'Skye',
+        ...bankAccount,
       })}
       onSubmit={(payload, actions) => {
         Axios({
@@ -51,7 +50,7 @@ export const BankAccountForm = ({ hideForm, setToast, bankAccount }) => {
                 }`,
               });
               hideForm();
-              refreshQuery('bank-account', true);
+              refreshQuery('bankAccount', true);
               actions.setSubmitting(false);
               actions.resetForm();
             }
@@ -69,7 +68,6 @@ export const BankAccountForm = ({ hideForm, setToast, bankAccount }) => {
         <Form>
           <section className="row">
             <div className="col-md-10 px-4">
-              <h5>Add Bank Account</h5>
               <Input label="Account Name" name="accountName" />
               <Input label="Account Number" name="accountNumber" />
               <Input label="Bank Name" name="bankName" />
@@ -123,15 +121,21 @@ const BankAccount = () => {
 const BankAccountRowList = ({ results, offset, setToast }) => {
   const [showEditBankAccountModal, setShowEditBankAccountModal] =
     React.useState(false);
+  const [showApproveBankAccountModal, setShowApproveBankAccountModal] =
+    React.useState(false);
+  const [showDeactivateBankAccountModal, setShowDeactivateBankAccountModal] =
+    React.useState(false);
   const [showDeleteBankAccountModal, setShowDeleteBankAccountModal] =
     React.useState(false);
 
   const [bankAccount, setBankAccount] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
+  const currentAction = bankAccount?.action || ' ';
+
   const deleteBankAccount = () => {
     setLoading(true);
-    Axios.delete(`${BASE_API_URL}/property-bankAccount/${bankAccount._id}`, {
+    Axios.delete(`${BASE_API_URL}/bank-account/${bankAccount._id}`, {
       headers: { Authorization: getTokenFromStore() },
       data: { bankAccountId: bankAccount._id },
     })
@@ -145,6 +149,68 @@ const BankAccountRowList = ({ results, offset, setToast }) => {
 
           refreshQuery('bank-account', true);
           setShowDeleteBankAccountModal(false);
+          setLoading(false);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(false);
+      });
+  };
+
+  const approveBankAccount = () => {
+    setLoading(true);
+    Axios.put(
+      `${BASE_API_URL}/bank-account/approve/${bankAccount._id}`,
+      {},
+      {
+        headers: { Authorization: getTokenFromStore() },
+        data: { bankAccountId: bankAccount._id },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (statusIsSuccessful(status)) {
+          setToast({
+            type: 'success',
+            message: `Bank Account has been successfully approved`,
+          });
+
+          refreshQuery('bankAccount', true);
+          setShowApproveBankAccountModal(false);
+          setLoading(false);
+        }
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(false);
+      });
+  };
+
+  const deactivateBankAccount = (currentAction) => {
+    setLoading(true);
+    Axios.put(
+      `${BASE_API_URL}/bank-account/${bankAccount._id}/${currentAction}`,
+      {},
+      {
+        headers: { Authorization: getTokenFromStore() },
+        data: { bankAccountId: bankAccount._id },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (statusIsSuccessful(status)) {
+          setToast({
+            type: 'success',
+            message: `Bank Account has been successfully ${currentAction}d`,
+          });
+
+          refreshQuery('bankAccount', true);
+          setShowDeactivateBankAccountModal(false);
           setLoading(false);
         }
       })
@@ -179,6 +245,12 @@ const BankAccountRowList = ({ results, offset, setToast }) => {
                     bankAccount={bankAccount}
                     setBankAccount={setBankAccount}
                     setShowEditBankAccountModal={setShowEditBankAccountModal}
+                    setShowDeactivateBankAccountModal={
+                      setShowDeactivateBankAccountModal
+                    }
+                    setShowApproveBankAccountModal={
+                      setShowApproveBankAccountModal
+                    }
                     setShowDeleteBankAccountModal={
                       setShowDeleteBankAccountModal
                     }
@@ -191,7 +263,7 @@ const BankAccountRowList = ({ results, offset, setToast }) => {
       </div>
       {/* Edit Bank Account Modal */}
       <Modal
-        title="BankAccount"
+        title="Edit Bank Account"
         show={showEditBankAccountModal}
         onHide={() => setShowEditBankAccountModal(false)}
         showFooter={false}
@@ -205,7 +277,7 @@ const BankAccountRowList = ({ results, offset, setToast }) => {
 
       {/* Delete Bank Account Modal */}
       <Modal
-        title="Verify Vendor"
+        title="Delete Bank"
         show={showDeleteBankAccountModal}
         onHide={() => setShowDeleteBankAccountModal(false)}
         showFooter={false}
@@ -223,11 +295,72 @@ const BankAccountRowList = ({ results, offset, setToast }) => {
               Are you sure you want to delete this Bank Account?
             </p>
             <Button
+              color="danger"
               loading={loading}
-              className="btn btn-secondary mb-5"
+              className="btn mb-5"
               onClick={() => deleteBankAccount()}
             >
               Delete Bank Account
+            </Button>
+          </div>
+        </section>
+      </Modal>
+      {/* Approve Bank Account Modal */}
+      <Modal
+        title="Approve Bank"
+        show={showApproveBankAccountModal}
+        onHide={() => setShowApproveBankAccountModal(false)}
+        showFooter={false}
+      >
+        <section className="row">
+          <div className="col-md-12 my-3 text-center">
+            {bankAccount && (
+              <>
+                <p>{Humanize.titleCase(bankAccount?.bankName)}</p>
+                <h4>{bankAccount?.accountNumber}</h4>
+                <h5>{Humanize.titleCase(bankAccount?.accountName)}</h5>
+              </>
+            )}
+            <p className="my-4 confirmation-text">
+              Are you sure you want to approve this Bank Account?
+            </p>
+            <Button
+              loading={loading}
+              className="btn btn-success mb-5"
+              onClick={() => approveBankAccount()}
+            >
+              Approve Bank Account
+            </Button>
+          </div>
+        </section>
+      </Modal>
+      {/* Approve Bank Account Modal */}
+      <Modal
+        title={`${Humanize.titleCase(currentAction)} Bank`}
+        show={showDeactivateBankAccountModal}
+        onHide={() => setShowDeactivateBankAccountModal(false)}
+        showFooter={false}
+      >
+        <section className="row">
+          <div className="col-md-12 my-3 text-center">
+            {bankAccount && (
+              <>
+                <p>{Humanize.titleCase(bankAccount?.bankName)}</p>
+                <h4>{bankAccount?.accountNumber}</h4>
+                <h5>{Humanize.titleCase(bankAccount?.accountName)}</h5>
+              </>
+            )}
+            <p className="my-4 confirmation-text">
+              Are you sure you want to {currentAction} this Bank Account?
+            </p>
+            <Button
+              loading={loading}
+              className={`btn btn-${
+                currentAction === 'deactivate' ? 'info' : 'success'
+              } mb-5`}
+              onClick={() => deactivateBankAccount(currentAction)}
+            >
+              {Humanize.titleCase(currentAction)} Bank Account
             </Button>
           </div>
         </section>
@@ -241,6 +374,8 @@ const BankAccountRow = ({
   number,
   setBankAccount,
   setShowEditBankAccountModal,
+  setShowApproveBankAccountModal,
+  setShowDeactivateBankAccountModal,
   setShowDeleteBankAccountModal,
 }) => {
   return (
@@ -251,6 +386,52 @@ const BankAccountRow = ({
       <td>{Humanize.titleCase(bankAccount.accountName)}</td>
       <td>
         <p className="my-3">
+          {!bankAccount.approved && (
+            <>
+              <small
+                className="btn btn-xs btn-wide btn-success"
+                onClick={() => {
+                  setBankAccount(bankAccount);
+                  setShowApproveBankAccountModal(true);
+                }}
+              >
+                Approve
+              </small>
+              <Spacing />
+              <Spacing />
+            </>
+          )}
+
+          {bankAccount.approved && bankAccount.deactivated ? (
+            <>
+              <small
+                className="btn btn-xs btn-wide btn-success"
+                onClick={() => {
+                  setBankAccount({ ...bankAccount, action: 'reactivate' });
+                  setShowDeactivateBankAccountModal(true);
+                }}
+              >
+                Reactivate
+              </small>
+              <Spacing />
+              <Spacing />
+            </>
+          ) : (
+            <>
+              <small
+                className="btn btn-xs btn-wide btn-info"
+                onClick={() => {
+                  setBankAccount({ ...bankAccount, action: 'deactivate' });
+                  setShowDeactivateBankAccountModal(true);
+                }}
+              >
+                Deactivate
+              </small>
+              <Spacing />
+              <Spacing />
+            </>
+          )}
+
           <small
             className="btn btn-xs btn-wide btn-secondary"
             onClick={() => {

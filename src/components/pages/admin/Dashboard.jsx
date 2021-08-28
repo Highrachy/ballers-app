@@ -36,12 +36,12 @@ const Welcome = () => {
 
 const CheckPendingNotifications = () => {
   const axiosOptionForOffers = {
-    params: { limit: 100, status: OFFER_STATUS.PENDING_ADMIN_APPROVAL },
+    params: { limit: 0, status: OFFER_STATUS.PENDING_ADMIN_APPROVAL },
   };
   const axiosOptionForVideos = {
     params: {
-      limit: 100,
-      status: PROPERTY_VIDEO_STATUS.PENDING_ADMIN_APPROVAL,
+      limit: 0,
+      status: PROPERTY_VIDEO_STATUS.PENDING_ADMIN_REVIEW,
     },
   };
   const [offersQuery] = useGetQuery({

@@ -242,14 +242,6 @@ export const VISITATION_STATUS = {
   RESOLVED: 'Resolved',
 };
 
-export const BALLERS_BANK_ACCOUNTS = [
-  {
-    accountName: 'Highrachy Investment and Technology Ltd',
-    accountNo: '2032997125',
-    bankName: 'First Bank Of Nigeria Plc',
-  },
-];
-
 export const PAYMENT_FREQUENCY = {
   0: 'Outright Payment',
   7: '7 days',

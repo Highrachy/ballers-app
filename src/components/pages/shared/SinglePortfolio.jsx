@@ -74,7 +74,7 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
     <>
       <Card className="card-container property-holder">
         <h5 className="header-smaller">
-          Next Payment <OverdueBadge date={nextPayment?.expiresOn} />
+          Next Payment <OverdueBadge date={nextPayment?.dueDate} />
         </h5>
         <table className="table table-sm table-borderless table-no-padding">
           <tbody>
@@ -91,7 +91,7 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
                 <small className="ml-n1">Due Date</small>{' '}
               </td>
               <td>
-                <h5>{getTinyDate(nextPayment?.expiresOn)}</h5>
+                <h5>{getTinyDate(nextPayment?.dueDate)}</h5>
               </td>
             </tr>
           </tbody>

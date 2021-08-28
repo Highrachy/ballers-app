@@ -2,7 +2,7 @@ import Axios from 'axios';
 import Modal from 'components/common/Modal';
 import Button from 'components/forms/Button';
 import React from 'react';
-import { BALLERS_BANK_ACCOUNTS, BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
@@ -16,13 +16,19 @@ import {
   setInitialValues,
   DisplayFormikState,
 } from 'components/forms/form-helper';
-import { getError, statusIsSuccessful, valuesToOptions } from 'utils/helpers';
+import {
+  dataToOptions,
+  getError,
+  statusIsSuccessful,
+  valuesToOptions,
+} from 'utils/helpers';
 import DatePicker from 'components/forms/DatePicker';
 import Select from 'components/forms/Select';
 import Upload from 'components/utils/Upload';
 import ImagePlaceholder from 'assets/img/placeholder/image.png';
 import Label from 'components/forms/Label';
 import { refreshQuery } from 'hooks/useQuery';
+import { useBankAccounts } from 'hooks/useBankAccounts';
 
 const KEY = {
   ONLINE: 'online',
@@ -151,6 +157,8 @@ const OnlinePayment = ({ setPaymentType, setToast, portfolio }) => {
 
 const OfflinePayment = ({ setPaymentType, setToast, portfolio, hideForm }) => {
   const [showPaymentForm, setShowPaymentForm] = React.useState(false);
+  const bankAccounts = useBankAccounts();
+
   return showPaymentForm ? (
     <>
       <h5 className="header-small mb-3">Payment Verification</h5>
@@ -165,13 +173,13 @@ const OfflinePayment = ({ setPaymentType, setToast, portfolio, hideForm }) => {
       <div className="my-4">
         <h5 className="header-small mb-4">Bank Transfer/ Deposit</h5>
         <p>1. Pay To:</p>
-        <h5 className="header-smaller">
-          <span>Highrachy Investment and Technology Ltd</span>
-        </h5>
-        {BALLERS_BANK_ACCOUNTS.map(({ accountNo, bankName }, index) => (
-          <p key={index}>
-            {bankName} - {accountNo}
-          </p>
+        {bankAccounts.map(({ accountNumber, bankName, accountName }, index) => (
+          <>
+            <h5 className="header-smaller">{accountName}</h5>
+            <p key={index}>
+              {bankName} - {accountNumber}
+            </p>
+          </>
         ))}
       </div>
 
@@ -228,6 +236,8 @@ export const OfflinePaymentForm = ({
 }) => {
   const [receipt, setReceipt] = React.useState('');
   const isUpdating = !!offlinePayment?._id;
+  const bankAccounts = useBankAccounts();
+  const bankOptions = dataToOptions(bankAccounts, 'bankName');
 
   return (
     <Formik
@@ -295,12 +305,8 @@ export const OfflinePaymentForm = ({
 
                 <Select
                   label="Bank"
-                  name="bank"
-                  options={valuesToOptions(
-                    BALLERS_BANK_ACCOUNTS.map(
-                      ({ accountNo, bankName }) => `${bankName} - ${accountNo}`
-                    )
-                  )}
+                  name="bankId"
+                  options={bankOptions}
                   placeholder="Select Payment type"
                 />
 

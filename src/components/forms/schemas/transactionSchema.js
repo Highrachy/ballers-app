@@ -18,7 +18,7 @@ export const onlinePaymentSchema = {
 
 export const offlinePaymentSchema = {
   amount: positiveNumberValidation('Amount', 'amount'),
-  bank: required('Bank'),
+  bankId: required('Bank'),
   dateOfPayment: requiredDate('Payment Date'),
   receipt: optionalValidation(required('Receipt')),
   type: required('Payment Type'),
