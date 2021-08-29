@@ -101,3 +101,7 @@ export const resolveFlagPropertySchema = {
 export const requestVideoReviewSchema = {
   comment: required('Comment'),
 };
+
+export const addTestimonialSchema = {
+  testimonial: required('Testimonial'),
+};

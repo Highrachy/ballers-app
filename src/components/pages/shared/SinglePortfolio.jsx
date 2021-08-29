@@ -13,6 +13,20 @@ import { getTinyDate } from 'utils/date-helpers';
 import { LinkSeparator } from 'components/common/Helpers';
 import MakePayment from './MakePayment';
 import { OverdueBadge } from 'components/common/PortfolioCards';
+import Button from 'components/forms/Button';
+import Modal from 'components/common/Modal';
+import { Form, Formik } from 'formik';
+import Textarea from 'components/forms/Textarea';
+import { createSchema } from 'components/forms/schemas/schema-helpers';
+import {
+  DisplayFormikState,
+  setInitialValues,
+} from 'components/forms/form-helper';
+import { BASE_API_URL } from 'utils/constants';
+import Axios from 'axios';
+import { getTokenFromStore } from 'utils/localStorage';
+import { getError, statusIsSuccessful } from 'utils/helpers';
+import { addTestimonialSchema } from 'components/forms/schemas/propertySchema';
 
 const pageOptions = {
   key: 'portfolio',
@@ -57,10 +71,6 @@ const SinglePortfolio = ({ id }) => {
     </BackendPage>
   );
 };
-
-// create modal for online payment and offline payment
-// online payment should not exceed 900,000
-// offline payment should have bank details and form to fill for offline payments
 
 const AssignedPropertySidebar = ({ portfolio, setToast }) => {
   const nextPayment = portfolio?.nextPaymentInfo?.[0];
@@ -164,7 +174,115 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
           </Link>
         </div>
       </Card>
+      <LovePropertySidebar portfolio={portfolio} setToast={setToast} />
     </>
+  );
+};
+
+const LovePropertySidebar = ({ portfolio, setToast }) => {
+  const [showTestimonialModal, setShowTestimonialModal] = React.useState(false);
+
+  return (
+    <Card className="card-container property-holder">
+      <h5 className="header-smaller">Love this Property?</h5>
+      <Link
+        to={`/user/property/enquiry/${portfolio?.propertyInfo._id}`}
+        className="btn btn-info btn-block my-3"
+      >
+        Buy Property Again
+      </Link>
+      <Button
+        color="dark"
+        className="btn-block my-2"
+        onClick={() => setShowTestimonialModal(true)}
+      >
+        Leave a Review
+      </Button>
+
+      {/* Testimonial Modal */}
+      <ModalToShowTestimonial
+        portfolio={portfolio}
+        showTestimonialModal={showTestimonialModal}
+        setShowTestimonialModal={setShowTestimonialModal}
+        setToast={setToast}
+      />
+    </Card>
+  );
+};
+
+const ModalToShowTestimonial = ({
+  portfolio,
+  showTestimonialModal,
+  setShowTestimonialModal,
+  setToast,
+}) => {
+  console.log(`portfolio`, portfolio);
+  return (
+    <Modal
+      title="Leave a Review"
+      show={showTestimonialModal}
+      onHide={() => setShowTestimonialModal(false)}
+      showFooter={false}
+    >
+      <section className="row">
+        <div className="col-md-12 my-3">
+          <Formik
+            initialValues={setInitialValues(addTestimonialSchema)}
+            onSubmit={({ testimonial }, actions) => {
+              const payload = {
+                offerId: portfolio._id,
+                testimonial,
+              };
+              Axios.post(
+                `${BASE_API_URL}/property/testimonial`,
+                { ...payload },
+                {
+                  headers: { Authorization: getTokenFromStore() },
+                }
+              )
+                .then((response) => {
+                  const { status } = response;
+                  if (statusIsSuccessful(status)) {
+                    setToast({
+                      type: 'success',
+                      message: `Your Testimonial has been successfully submitted`,
+                    });
+                    actions.setSubmitting(false);
+                    actions.resetForm();
+                    setShowTestimonialModal(false);
+                  }
+                })
+                .catch(function (error) {
+                  setToast({
+                    message: getError(error),
+                  });
+                  actions.setSubmitting(false);
+                });
+            }}
+            validationSchema={createSchema(addTestimonialSchema)}
+          >
+            {({ isSubmitting, handleSubmit, ...props }) => (
+              <Form>
+                <Textarea
+                  name="testimonial"
+                  label="Add Testimonial"
+                  placeholder="Your Comment"
+                  rows="3"
+                />
+                <Button
+                  className="btn-secondary mt-4"
+                  loading={isSubmitting}
+                  onClick={handleSubmit}
+                >
+                  Add Testimonial
+                </Button>
+                <DisplayFormikState {...props} hide showAll />
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </section>
+    </Modal>
   );
 };
 

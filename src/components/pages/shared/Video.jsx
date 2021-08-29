@@ -222,6 +222,7 @@ export const VideosList = ({ property, setProperty, setToast }) => {
   };
   const userIsVendor = useCurrentRole().isVendor;
   const noVideos = property?.videos?.length === 0;
+
   return (
     <>
       <div className="property__floor-plans">
