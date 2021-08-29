@@ -1,0 +1,53 @@
+$testimonial-background: rgba($primary, 0.75);
+$testimonial-text-color: $white;
+.testimonials {
+  .testimonial-card {
+    position: relative;
+    padding: 1.5rem 2rem 1.5rem 4.5rem;
+    background-color: $testimonial-background;
+    border-radius: 0.5rem;
+    color: $testimonial-text-color;
+  }
+
+  .post-txt {
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+
+  .quote-img {
+    position: absolute;
+    top: 0rem;
+    left: 1.5rem;
+    font-size: 2rem;
+    color: $gray-400;
+  }
+
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 0.25rem solid transparent;
+    border-right: 1rem solid transparent;
+    border-top: 0.85rem solid $testimonial-background;
+    margin-left: 2.5rem;
+  }
+
+  .fit-image {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .profile-pic {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 4px;
+    margin-left: 2rem;
+    margin-top: 0.25rem;
+  }
+
+  .profile-name {
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    margin-top: 1rem;
+    color: $text-color;
+  }
+}

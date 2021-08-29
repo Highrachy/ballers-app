@@ -15,6 +15,7 @@ import { ReportedPropertyIcon } from 'components/utils/Icons';
 import { BadgesIcon } from 'components/utils/Icons';
 import { PropertyVideosIcon } from 'components/utils/Icons';
 import { BankAccountIcon } from 'components/utils/Icons';
+import { TestimonialsIcon } from 'components/utils/Icons';
 
 const DashboardCards = () => {
   const propertyCard = {
@@ -117,6 +118,16 @@ const DashboardCards = () => {
     footer: null,
   };
 
+  const testimonialsCard = {
+    name: 'testimonial',
+    Icon: <TestimonialsIcon />,
+    title: 'Testimonials',
+    to: 'testimonials',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  };
+
   const [dashboardCountQuery] = useGetQuery({
     key: 'dashboardCount',
     name: 'dashboardCount',
@@ -143,6 +154,7 @@ const DashboardCards = () => {
     badgesCard,
     propertyVideoCard,
     bankAccountCard,
+    testimonialsCard,
   ];
 
   const dashboardCards = useCurrentRole().isAdmin

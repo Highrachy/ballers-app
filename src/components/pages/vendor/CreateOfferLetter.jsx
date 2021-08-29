@@ -613,7 +613,7 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
         vendorInfo={enquiry.vendorInfo}
       />
       <button
-        className="btn btn-danger btn-wide mt-5"
+        className="btn btn-secondary btn-wide mt-5"
         onClick={() => setShowSubmitOfferModal(true)}
       >
         Submit Offer Letter
@@ -621,7 +621,7 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
       &nbsp;&nbsp;
       <button
         onClick={handleHideOfferLetter}
-        className="btn btn-secondary btn-wide mt-5"
+        className="btn btn-danger btn-wide mt-5"
       >
         Back to Form
       </button>

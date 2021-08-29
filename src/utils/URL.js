@@ -46,4 +46,5 @@ export const API_ENDPOINT = {
   getAllBankAccounts: () => `${BASE_API_URL}/bank-account/all`,
 
   getAllPropertyVideos: () => `${BASE_API_URL}/property-video/all`,
+  getAllPropertyTestimonials: () => `${BASE_API_URL}/property/testimonial/all`,
 };

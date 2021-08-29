@@ -53,6 +53,7 @@ import {
   FaCertificate,
   FaPlay,
   FaFileVideo,
+  FaQuoteLeft,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
@@ -72,6 +73,7 @@ import {
 } from 'react-icons/ai';
 import { MdLocalMall, MdAccountBalanceWallet } from 'react-icons/md';
 import { GoVerified } from 'react-icons/go';
+import { TiMessages } from 'react-icons/ti';
 
 export const ArrowLeftIcon = () => <FiChevronLeft />;
 export const ArrowDownIcon = () => <FiChevronDown />;
@@ -124,6 +126,7 @@ export const ProfileIcon = () => <FiSettings />;
 export const PropertyIcon = () => <BiBuildingHouse />;
 export const PropertyVideosIcon = () => <FaFileVideo />;
 export const QuestionMarkIcon = () => <FiHelpCircle />;
+export const QuotesIcon = () => <FaQuoteLeft />;
 export const FoodMenuIcon = () => <BiFoodMenu />;
 export const ReferIcon = () => <FiGift />;
 export const ReferralsIcon = () => <AiOutlineUserSwitch />;
@@ -133,6 +136,7 @@ export const RightChevronIcon = () => <FiChevronRight />;
 export const SchoolIcon = () => <FaBuilding />;
 export const SearchIcon = () => <FiSearch />;
 export const SuccessIcon = () => <FaCheckCircle />;
+export const TestimonialsIcon = () => <TiMessages />;
 export const ThreeDotsIcon = () => <BsThreeDotsVertical />;
 export const ThumbsUpIcon = () => <FaThumbsUp />;
 export const ToiletIcon = () => <FaToilet />;

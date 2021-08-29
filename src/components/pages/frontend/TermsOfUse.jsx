@@ -17,7 +17,7 @@ const TermsOfUse = () => (
 const Content = () => (
   <section>
     <div className="container my-md-5 my-3 py-5 terms-of-use">
-      <h5 className="font-weight-light">
+      {/* <h5 className="font-weight-light">
         Please read these terms and conditions carefully before using Our
         Service.
       </h5>
@@ -130,7 +130,7 @@ const Content = () => (
             such individual is accessing or using the Service, as applicable.
           </p>
         </li>
-      </ul>
+      </ul> */}
       <h5 className="mt-6">TERMS OF USE & PRIVACY</h5>
       <p>
         By proceeding to use the resources on this website, you represent that

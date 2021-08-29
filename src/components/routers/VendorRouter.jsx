@@ -19,6 +19,7 @@ import SinglePortfolio from 'components/pages/shared/SinglePortfolio';
 import Notifications from 'components/pages/shared/Notifications';
 import MyBadges from 'components/pages/shared/MyBadges';
 import PendingOffers from 'components/pages/shared/PendingOffers';
+import Testimonials from 'components/pages/shared/Testimonials';
 
 const VendorRouter = () => (
   <Router>
@@ -42,6 +43,7 @@ const VendorRouter = () => (
     <Gallery path="gallery/:propertyId" />
     <Notifications path="notifications" />
     <MyBadges path="mybadges" />
+    <Testimonials path="testimonials" />
     <Menu path="menu" />
   </Router>
 );

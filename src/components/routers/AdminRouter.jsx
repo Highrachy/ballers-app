@@ -28,6 +28,7 @@ import MyBadges from 'components/pages/shared/MyBadges';
 import AddBadges from 'components/pages/admin/AddBadges';
 import SingleBadge from 'components/pages/admin/SingleBadge';
 import PropertyVideos from 'components/pages/admin/PropertyVideos';
+import Testimonials from 'components/pages/shared/Testimonials';
 
 const AdminRouter = () => (
   <Router>
@@ -58,6 +59,7 @@ const AdminRouter = () => (
     <MyBadges path="mybadges" />
     <AddBadges path="badges/new" />
     <SingleBadge path="badge/:id" />
+    <Testimonials path="testimonials" />
     <Menu path="menu" />
   </Router>
 );

@@ -52,6 +52,7 @@ import { getTinyDate } from 'utils/date-helpers';
 import Tooltip from 'components/common/Tooltip';
 import { ErrorIcon } from 'components/utils/Icons';
 import { QuestionMarkIcon } from 'components/utils/Icons';
+import { TestimonialsList } from './Testimonials';
 
 const pageOptions = {
   key: 'property',
@@ -135,6 +136,12 @@ export const OwnedPropertyCard = ({
         />
 
         <NeighborhoodList
+          property={property}
+          setToast={setToast}
+          setProperty={setProperty}
+        />
+
+        <TestimonialsList
           property={property}
           setToast={setToast}
           setProperty={setProperty}

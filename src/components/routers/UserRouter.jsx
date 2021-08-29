@@ -13,6 +13,7 @@ import Menu from 'components/pages/user/Menu';
 import PropertyEnquiry from 'components/pages/user/PropertyEnquiry';
 import Notifications from 'components/pages/shared/Notifications';
 import MyBadges from 'components/pages/shared/MyBadges';
+import Testimonials from 'components/pages/shared/Testimonials';
 
 const UserRouter = () => (
   <Router>
@@ -28,6 +29,7 @@ const UserRouter = () => (
     <SingleOffer path="offer/:id" />
     <Notifications path="notifications" />
     <MyBadges path="mybadges" />
+    <Testimonials path="testimonials" />
     <Menu path="menu" />
   </Router>
 );

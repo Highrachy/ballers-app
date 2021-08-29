@@ -150,7 +150,7 @@ const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
               <tbody>
                 <tr>
                   <td>Bank</td>
-                  <td>{offlinePayment?.bank}</td>
+                  <td>{offlinePayment?.bankInfo?.bankName}</td>
                 </tr>
                 <tr>
                   <td>Payment Type</td>
@@ -219,7 +219,7 @@ const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
             <tbody>
               <tr>
                 <td>Bank</td>
-                <td>{offlinePayment?.bank}</td>
+                <td>{offlinePayment?.bankInfo?.bankName}</td>
               </tr>
               <tr>
                 <td>User</td>
@@ -270,7 +270,7 @@ const OfflinePaymentsRow = ({
       </td>
       <td>
         {offlinePayment.type}
-        <br /> <small>{offlinePayment.bank}</small>
+        <br /> <small>{offlinePayment?.bankInfo?.bankNme}</small>
       </td>
       <td>{getDate(offlinePayment.createdAt)}</td>
       <td>

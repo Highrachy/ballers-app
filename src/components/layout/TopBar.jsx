@@ -76,6 +76,9 @@ const Header = () => {
                 <Dropdown.Item as={Link} to={`/${currentRole}/mybadges`}>
                   Badges
                 </Dropdown.Item>
+                <Dropdown.Item as={Link} to={`/${currentRole}/testimonials`}>
+                  Testimonials
+                </Dropdown.Item>
                 <Dropdown.Item as={Link} to="/user/settings">
                   Settings
                 </Dropdown.Item>
