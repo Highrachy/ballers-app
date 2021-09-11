@@ -14,6 +14,7 @@ import PropertyEnquiry from 'components/pages/user/PropertyEnquiry';
 import Notifications from 'components/pages/shared/Notifications';
 import MyBadges from 'components/pages/shared/MyBadges';
 import Testimonials from 'components/pages/shared/Testimonials';
+import VendorProfile from 'components/pages/shared/VendorProfile';
 
 const UserRouter = () => (
   <Router>
@@ -30,6 +31,7 @@ const UserRouter = () => (
     <Notifications path="notifications" />
     <MyBadges path="mybadges" />
     <Testimonials path="testimonials" />
+    <VendorProfile path="vendor/:id" />
     <Menu path="menu" />
   </Router>
 );

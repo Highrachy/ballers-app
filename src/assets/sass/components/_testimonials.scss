@@ -1,53 +1,111 @@
-$testimonial-background: rgba($primary, 0.75);
-$testimonial-text-color: $white;
-.testimonials {
-  .testimonial-card {
-    position: relative;
-    padding: 1.5rem 2rem 1.5rem 4.5rem;
-    background-color: $testimonial-background;
-    border-radius: 0.5rem;
-    color: $testimonial-text-color;
-  }
+$testimonial-background-user: lighten($secondary, 31%);
+$testimonial-background-vendor: lighten($warning, 35%);
 
-  .post-txt {
-    font-size: 1rem;
-    margin-bottom: 0;
-  }
+.conversation-list {
+  list-style: none;
+}
 
-  .quote-img {
-    position: absolute;
-    top: 0rem;
-    left: 1.5rem;
-    font-size: 2rem;
-    color: $gray-400;
-  }
+.conversation-list li {
+  margin-bottom: 1.5rem;
+}
 
-  .arrow-down {
-    width: 0;
-    height: 0;
-    border-left: 0.25rem solid transparent;
-    border-right: 1rem solid transparent;
-    border-top: 0.85rem solid $testimonial-background;
-    margin-left: 2.5rem;
-  }
+.conversation-list li .conversation-actions {
+  float: right;
+  display: none;
+}
 
-  .fit-image {
+.conversation-list li:hover .conversation-actions {
+  display: block;
+}
+
+.conversation-list .chat-avatar {
+  float: left;
+  text-align: center;
+  width: 3rem;
+}
+
+.conversation-list .chat-avatar img {
+  width: 100%;
+}
+
+.conversation-list .chat-avatar i {
+  font-size: 1.25rem;
+  font-style: normal;
+}
+
+.conversation-list .ctext-wrap {
+  background: $testimonial-background-user;
+  border-radius: 3px;
+  display: inline-block;
+  padding: 1rem 1.25rem;
+  position: relative;
+  width: 100%;
+}
+
+.conversation-list .ctext-wrap i {
+  display: block;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  position: relative;
+}
+
+.conversation-list .ctext-wrap p {
+  margin: 0;
+  padding-top: 3px;
+}
+
+.conversation-list .ctext-wrap:after {
+  left: -11px;
+  top: 0;
+  border: solid transparent;
+  content: ' ';
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-top-color: $testimonial-background-user;
+  border-width: 6px;
+  margin-right: -1px;
+  border-right-color: $testimonial-background-user;
+}
+
+.conversation-list .conversation-text {
+  float: left;
+  font-size: 13px;
+  margin-left: 12px;
+  width: 70%;
+
+  &.full-width {
     width: 100%;
-    object-fit: cover;
   }
+}
 
-  .profile-pic {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 4px;
-    margin-left: 2rem;
-    margin-top: 0.25rem;
-  }
+.conversation-list .odd .chat-avatar {
+  float: right !important;
+  width: 6rem;
+}
 
-  .profile-name {
-    font-size: 1rem;
-    margin-left: 0.5rem;
-    margin-top: 1rem;
-    color: $text-color;
-  }
+.conversation-list .odd .conversation-text {
+  float: right !important;
+  margin-right: 12px;
+  text-align: right;
+  width: 70% !important;
+}
+
+.conversation-list .odd .ctext-wrap {
+  background-color: $testimonial-background-vendor;
+  width: auto;
+}
+
+.conversation-list .odd .ctext-wrap:after {
+  border-color: transparent;
+  border-left-color: $testimonial-background-vendor;
+  border-top-color: $testimonial-background-vendor;
+  right: -10px;
+  left: auto;
+}
+
+.conversation-list .odd .conversation-actions {
+  float: left;
 }

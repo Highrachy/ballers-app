@@ -54,6 +54,7 @@ import {
   FaPlay,
   FaFileVideo,
   FaQuoteLeft,
+  FaReply,
 } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
@@ -130,6 +131,7 @@ export const QuotesIcon = () => <FaQuoteLeft />;
 export const FoodMenuIcon = () => <BiFoodMenu />;
 export const ReferIcon = () => <FiGift />;
 export const ReferralsIcon = () => <AiOutlineUserSwitch />;
+export const ReplyIcon = () => <FaReply />;
 export const ReportedPropertyIcon = () => <FaHouseDamage />;
 export const RightArrowIcon = () => <FiChevronRight />;
 export const RightChevronIcon = () => <FiChevronRight />;

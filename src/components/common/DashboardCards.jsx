@@ -16,6 +16,7 @@ import { BadgesIcon } from 'components/utils/Icons';
 import { PropertyVideosIcon } from 'components/utils/Icons';
 import { BankAccountIcon } from 'components/utils/Icons';
 import { TestimonialsIcon } from 'components/utils/Icons';
+import { MessageIcon } from 'components/utils/Icons';
 
 const DashboardCards = () => {
   const propertyCard = {
@@ -127,6 +128,15 @@ const DashboardCards = () => {
       'See your profile data and manage your Account to choose what is saved in our system.',
     footer: null,
   };
+  const SMSCard = {
+    name: 'testimonial',
+    Icon: <MessageIcon />,
+    title: 'SMS',
+    to: 'sms-report',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  };
 
   const [dashboardCountQuery] = useGetQuery({
     key: 'dashboardCount',
@@ -155,6 +165,7 @@ const DashboardCards = () => {
     propertyVideoCard,
     bankAccountCard,
     testimonialsCard,
+    SMSCard,
   ];
 
   const dashboardCards = useCurrentRole().isAdmin

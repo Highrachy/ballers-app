@@ -258,11 +258,11 @@ export const PropertyAvatar = ({
     <span>{name}</span>
   ) : (
     <>
-      <div className="user-avatar user-avatar-sm bg-purple">
+      <div className="property-avatar">
         <Image
           alt={name}
           defaultImage={ProfileAvatar}
-          className="img-fluid avatar--medium--small"
+          className="img-fluid img-rounded"
           src={mainImage}
           title={name}
           name={name}

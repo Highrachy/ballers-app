@@ -29,6 +29,8 @@ import AddBadges from 'components/pages/admin/AddBadges';
 import SingleBadge from 'components/pages/admin/SingleBadge';
 import PropertyVideos from 'components/pages/admin/PropertyVideos';
 import Testimonials from 'components/pages/shared/Testimonials';
+import SMSReport from 'components/pages/admin/SMSReport';
+import VendorProfile from 'components/pages/shared/VendorProfile';
 
 const AdminRouter = () => (
   <Router>
@@ -60,6 +62,8 @@ const AdminRouter = () => (
     <AddBadges path="badges/new" />
     <SingleBadge path="badge/:id" />
     <Testimonials path="testimonials" />
+    <SMSReport path="sms-report" />
+    <VendorProfile path="vendor/:id" />
     <Menu path="menu" />
   </Router>
 );

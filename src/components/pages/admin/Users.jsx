@@ -132,7 +132,7 @@ const UsersRow = ({ number, ...user }) => {
   );
 };
 
-const getUserStatus = (user) => {
+export const getUserStatus = (user) => {
   const userStatus = {
     activated: {
       className: 'text-success',

@@ -105,3 +105,7 @@ export const requestVideoReviewSchema = {
 export const addTestimonialSchema = {
   testimonial: required('Testimonial'),
 };
+
+export const replyTestimonialSchema = {
+  response: required('Response'),
+};

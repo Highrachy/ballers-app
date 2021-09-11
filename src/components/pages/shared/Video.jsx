@@ -232,7 +232,7 @@ export const VideosList = ({ property, setProperty, setToast }) => {
         {!noVideos && (
           <div className="row">
             {property?.videos?.map((video, index) => (
-              <div key={index} className="col-md-4 mb-4">
+              <div key={index} className="col-md-6 mb-4">
                 <VideoModal video={video} key={video._id} />
                 <div className="text-primary text-small py-1 text-truncate">
                   {video.title}

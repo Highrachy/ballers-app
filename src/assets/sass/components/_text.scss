@@ -1,4 +1,5 @@
-.header-secondary {
+.header-secondary,
+.tou-header {
   color: $green;
   font-size: 1.12rem;
   margin: 0;
@@ -128,4 +129,16 @@
   color: $gray-600;
   font-weight: normal;
   margin-bottom: 2rem !important;
+}
+
+.tou-header {
+  color: $secondary;
+  padding-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.tou-title {
+  color: $primary;
+  font-size: 1.2rem;
+  margin-top: 3rem;
 }

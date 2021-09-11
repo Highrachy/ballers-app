@@ -16,122 +16,8 @@ const TermsOfUse = () => (
 
 const Content = () => (
   <section>
-    <div className="container my-md-5 my-3 py-5 terms-of-use">
-      {/* <h5 className="font-weight-light">
-        Please read these terms and conditions carefully before using Our
-        Service.
-      </h5>
-      <h5 className="mt-6">Interpretation and Definitions</h5>
-      <h6 className="header-secondary">Interpretation</h6>
-      <p>
-        The words of which the initial letter is capitalized have meanings
-        defined under the following conditions.
-      </p>
-      <p>
-        The following definitions shall have the same meaning regardless of
-        whether they appear in singular or in plural.
-      </p>
-      <h6 className="header-secondary">Definitions</h6>
-      <p>For the purposes of these Terms and Conditions:</p>
-      <ul>
-        <li>
-          <p>
-            <strong>Affiliate</strong> means an entity that controls, is
-            controlled by or is under common control with a party, where
-            "control" means ownership of 50% or more of the shares, equity
-            interest or other securities entitled to vote for election of
-            directors or other managing authority.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Company</strong> (referred to as either "the Company", "We",
-            "Us" or "Our" in this Agreement) refers to Ballers, 5th Floor,
-            Ibukun House, No.70 Adetokunbo Ademola Street, Victoria Island,
-            Lagos.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Content</strong> means any content, writing, images,
-            audiovisual content or other information published on this website.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Country</strong> refers to: Nigeria
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Device</strong> means any device that can access the Service
-            such as a computer, a cell phone or a digital tablet.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Materials</strong> means any materials, information or
-            documentation that we may provide to You in connection with Your use
-            of this website including documentation, data, information developed
-            for any use and other materials which may assist in Your use of the
-            Service.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Parties</strong> shall mean both you (the user) and the
-            Owner of this Service (ballers.ng).
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Products</strong> means the packages, services and products
-            both tangible and intangible offered on the website.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Service</strong> means the website including all pages,
-            sub-pages, all blogs, forums and other connected internet content
-            whatsoever.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Terms and Conditions</strong>(also referred as "Terms") mean
-            these Terms and Conditions that form the entire agreement between
-            You and the Company regarding the use of the Service.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Third-party Social Media Service</strong> means any services
-            or content (including data, information, products or services)
-            provided by a third-party that may be displayed, included or made
-            available by the Service.
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>Website</strong> refers to Ballers, accessible from{' '}
-            <a
-              href="http://www.ballers.ng"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              http://www.ballers.ng
-            </a>
-          </p>
-        </li>
-        <li>
-          <p>
-            <strong>You</strong> means the individual accessing or using the
-            Service, or the company, or other legal entity on behalf of which
-            such individual is accessing or using the Service, as applicable.
-          </p>
-        </li>
-      </ul> */}
-      <h5 className="mt-6">TERMS OF USE & PRIVACY</h5>
+    <div className="container my-md-5 my-3 py-5 px-8 terms-of-use">
+      <h3 className="tou-title">TERMS OF USE &amp; PRIVACY</h3>
       <p>
         By proceeding to use the resources on this website, you represent that
         you have read and are adequately advised on the terms and conditions
@@ -151,7 +37,7 @@ const Content = () => (
         By using this Website and agreeing to these Terms, you represent and
         warrant that you have the legal capacity to accept these Terms.
       </p>
-      <h6 className="header-secondary">1. Definitions</h6>
+      <h6 className="tou-header">1. Definitions</h6>
       <ol>
         <li>
           <p>
@@ -193,7 +79,7 @@ const Content = () => (
           </p>
         </li>
       </ol>
-      <h6 className="header-secondary">2. About the Website</h6>
+      <h6 className="tou-header">2. About the Website</h6>
       <p>
         The BALL Website, is created for the convenience of buyers, investors
         and potential users interested in immovable property, and includes
@@ -202,7 +88,7 @@ const Content = () => (
         display properties up for sale. BALLERS team make no claims on the
         ownership of these properties.
       </p>
-      <h6 className="header-secondary">3. Acceptable Use</h6>
+      <h6 className="tou-header">3. Acceptable Use</h6>
       <ol type="a">
         <li>
           We may provide you with other items in connection with your use of
@@ -226,7 +112,7 @@ const Content = () => (
           granted by this Website.
         </li>
       </ol>
-      <h6 className="header-secondary">4. 4. Prohibited Use</h6>
+      <h6 className="tou-header">4. Prohibited Use</h6>
       <p>You agree not to use the Service in the following manner:</p>
       <ol type="a">
         <li>
@@ -293,7 +179,7 @@ const Content = () => (
           authorisation by the Ballers team.
         </li>
       </ol>
-      <h6 className="header-secondary">5. CONTENT</h6>
+      <h6 className="tou-header">5. CONTENT</h6>
       <p>
         All the content on this web site, including any and all graphics, text,
         icons, hyperlinks, private information, designs, trademarks, software,
@@ -310,7 +196,7 @@ const Content = () => (
         liable for those content or information.
       </p>
 
-      <h6 className="header-secondary">6. PRIVACY</h6>
+      <h6 className="tou-header">6. PRIVACY</h6>
       <p>
         To use our Services, we require that you provide certain personal
         information. By using our Services, you hereby grant us the authority to
@@ -344,11 +230,11 @@ const Content = () => (
         Policy is always protected under the terms of this Privacy Policy.
       </p>
 
-      <h5 className="mt-6">a. Information we collect and use:</h5>
+      <h5 className="tou-title">a. Information we collect and use:</h5>
 
       <p>When you use the Services, we collect information as follows:</p>
 
-      <h5 className="mt-6">Personal Information</h5>
+      <h5 className="tou-title">Personal Information</h5>
       <p>
         While you may use some of the Services without registering, certain
         Services do require that you register with Us for them to function
@@ -360,7 +246,7 @@ const Content = () => (
         the personal information that you submit to Us.
       </p>
 
-      <h5 className="mt-6">Email Newsletters</h5>
+      <h5 className="tou-title">Email Newsletters</h5>
       <p>
         At registration and at various times as you use the Sites, you will be
         given the option of providing us with personal information in order to
@@ -379,7 +265,7 @@ const Content = () => (
         from our database, please use the Contact Us link provided on the site.
       </p>
 
-      <h5 className="mt-6">Market Research</h5>
+      <h5 className="tou-title">Market Research</h5>
       <p>
         From time to time, we may conduct online research surveys on behalf of
         ourselves and third parties through email invitations, pop-up surveys
@@ -391,14 +277,14 @@ const Content = () => (
         age of 18 to participate in market research surveys.
       </p>
 
-      <h5 className="mt-6">Emails You Send to Us</h5>
+      <h5 className="tou-title">Emails You Send to Us</h5>
       <p>
         This Privacy Policy does not apply to information, content, business
         information, ideas, concepts or inventions that you send to us by email.
         If you want to keep content or business information, ideas, concepts or
         inventions private or proprietary, do not send them in an email to us.
       </p>
-      <h5 className="mt-6">Services and Device Information</h5>
+      <h5 className="tou-title">Services and Device Information</h5>
       <p>
         When you access and use the Services, we automatically collect and store
         in server logs information from your browser or mobile device such as
@@ -415,7 +301,7 @@ const Content = () => (
         may disable through the device settings.
       </p>
 
-      <h5 className="mt-6">Cookies</h5>
+      <h5 className="tou-title">Cookies</h5>
       <p>
         We and our partners use cookies to collect information about your use of
         the Services. “Cookies” are small data files assigned to your browser
@@ -445,7 +331,10 @@ const Content = () => (
         your browsing activity and your interests.
       </p>
 
-      <h5 className="mt-6"> How Information Collected About You Is Used</h5>
+      <h5 className="tou-title">
+        {' '}
+        How Information Collected About You Is Used
+      </h5>
       <p>
         Information about your use of the Services may be used for the following
         purposes:
@@ -508,7 +397,7 @@ const Content = () => (
         We will not sell your personal information to third parties for their
         use without your consent.
       </p>
-      <h5 className="mt-6"> Sharing Your Information</h5>
+      <h5 className="tou-title"> Sharing Your Information</h5>
       <p>Our Subsidiaries and Corporate Affiliates</p>
 
       <p>
@@ -522,7 +411,9 @@ const Content = () => (
         in accordance with this Privacy Policy unless any changes to the Privacy
         Policy are made.
       </p>
-      <h5 className="mt-6">Third-Party Advertisers and Third-Party Websites</h5>
+      <h5 className="tou-title">
+        Third-Party Advertisers and Third-Party Websites
+      </h5>
       <p>
         We may share information that we have about you, such as a cookie ID or
         IP address, with third party advertising service providers who may use
@@ -550,12 +441,12 @@ const Content = () => (
         providers whose services are embedded into and/or appear within the
         Services.
       </p>
-      <h5 className="mt-6">
+      <h5 className="tou-title">
         Compliance with Law, Regulation, and Law Enforcement Requests
       </h5>
       <p>To cooperate with government and law enforcement officers.</p>
 
-      <h6 className="header-secondary">6. Indemnification</h6>
+      <h6 className="tou-header">6. Indemnification</h6>
       <p>
         You hereby agree to indemnify Ballers, its employees, agents and
         representatives from and against all liabilities, cost, demands, cause
@@ -565,7 +456,7 @@ const Content = () => (
         regulation.
       </p>
 
-      <h6 className="header-secondary">7. No Warranties</h6>
+      <h6 className="tou-header">7. No Warranties</h6>
       <ul>
         <li>
           You agree that you use this Website solely at your risk as we do not
@@ -590,7 +481,7 @@ const Content = () => (
         </li>
       </ul>
 
-      <h6 className="header-secondary"> 8. Service Interruptions.</h6>
+      <h6 className="tou-header"> 8. Service Interruptions.</h6>
       <p>Changes to These Terms and Conditions</p>
       <p>
         We reserve the right, at Our sole discretion, to modify or replace these
@@ -606,7 +497,7 @@ const Content = () => (
         website and the Service.
       </p>
 
-      <h6 className="header-secondary">9. Termination/Restriction of Access</h6>
+      <h6 className="tou-header">9. Termination/Restriction of Access</h6>
       <ul>
         <li>
           BALLERS reserve the right to, at its sole discretion, terminate your
@@ -624,7 +515,7 @@ const Content = () => (
         </li>
       </ul>
 
-      <h5 className="mt-6">Termination</h5>
+      <h5 className="tou-title">Termination</h5>
       <p>
         We may terminate or suspend Your access immediately, without prior
         notice or liability, for any reason whatsoever, including without
@@ -634,7 +525,7 @@ const Content = () => (
         Upon termination, Your right to use the Service will cease immediately.
       </p>
 
-      <h5 className="mt-6">Limitation of Liability</h5>
+      <h5 className="tou-title">Limitation of Liability</h5>
       <p>
         Notwithstanding any damages that You might incur, the entire liability
         of the Company and any of its suppliers under any provision of this
@@ -662,7 +553,7 @@ const Content = () => (
         by law.
       </p>
 
-      <h5 className="mt-6">"AS IS" and "AS AVAILABLE" Disclaimer</h5>
+      <h5 className="tou-title">"AS IS" and "AS AVAILABLE" Disclaimer</h5>
       <p>
         The Service is provided to You "AS IS" and "AS AVAILABLE" and with all
         faults and defects without warranty of any kind. To the maximum extent
@@ -702,7 +593,7 @@ const Content = () => (
         applicable law.
       </p>
 
-      <h6 className="header-secondary">10. Non-Circumvention. </h6>
+      <h6 className="tou-header">10. Non-Circumvention. </h6>
       <p>
         The Vendor hereby agrees for himself/herself/itself, their officers,
         directors, agents, associates and any related parties, that they will
@@ -714,34 +605,34 @@ const Content = () => (
         the specific written approval of the BALL management.
       </p>
 
-      <h6 className="header-secondary">11. Assignment </h6>
+      <h6 className="tou-header">11. Assignment </h6>
       <p>
         You shall not be permitted to assign, transfer any rights and/or
         obligations under these Term.
       </p>
 
-      <h6 className="header-secondary">12. Entire Agreement</h6>
+      <h6 className="tou-header">12. Entire Agreement</h6>
       <p>
         These Terms, disclaimers any other agreement relating to the use of this
         Website constitutes the entire agreement and shall supersede any other
         agreement.
       </p>
 
-      <h6 className="header-secondary">13. Separate Agreement</h6>
+      <h6 className="tou-header">13. Separate Agreement</h6>
       <p>
         You may have other legal agreements with us. Those agreements are
         separate from these Terms. These Terms are not intended to alter, amend,
         revise or replace the Terms of the other agreements.
       </p>
 
-      <h6 className="header-secondary">14. Applicable Laws</h6>
+      <h6 className="tou-header">14. Applicable Laws</h6>
       <p>
         These Terms may be governed and construed in accordance with the Laws,
         regulations or guidelines of the Federal Republic of Nigeria and other
         treaties, regulations which is applicable in Nigeria.
       </p>
 
-      <h5 className="mt-6">Contact Us</h5>
+      <h5 className="tou-title">Contact Us</h5>
       <p>
         If you have any questions about these Terms and Conditions, You can
         contact us:

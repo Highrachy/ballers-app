@@ -200,6 +200,7 @@ const PropertySidebar = ({
           />
         )}
       </Modal>
+
       <Card className="card-container property-holder bg-gray">
         <h5>Interested in this property?</h5>
 
@@ -281,6 +282,37 @@ const PropertySidebar = ({
         <div className="circle-icon bg-green">
           <RightArrowIcon />
         </div>
+      </Card>
+
+      <Card className="card-container property-holder bg-gray">
+        <h5 className="header-smaller">Investigate Property</h5>
+
+        <ul>
+          <li>Survey plan investigation</li>
+          <li>Title validity checks at the land’s registry.</li>
+          <li>Survey plan investigation + Title validity checks</li>
+        </ul>
+
+        <Link
+          to={`/user/property/enquiry/${property._id}`}
+          className="btn btn-block btn-secondary my-3"
+        >
+          Interested
+        </Link>
+      </Card>
+
+      <h5 className="header-smaller">View Vendor Information</h5>
+      <Card className="card-container property-holder bg-gray">
+        <Link to={`/admin/vendor/6118edc1f6a5aa00186006b6`}>
+          <img
+            src="//images.weserv.nl?h=300&url=https%3A%2F%2Fballers-staging.s3.amazonaws.com%2F6118edc1f6a5aa00186006b6%2Fc984f060-fdb6-11eb-a7ac-65f0ba24a49a.png"
+            alt="vendor"
+            className="img-fluid vendor-img mr-4"
+          />
+          <div className="circle-icon">
+            <RightArrowIcon />
+          </div>
+        </Link>
       </Card>
     </>
   );
