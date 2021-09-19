@@ -27,6 +27,8 @@ import { replyTestimonialSchema } from 'components/forms/schemas/propertySchema'
 import { getTinyDate } from 'utils/date-helpers';
 import { ReplyIcon } from 'components/utils/Icons';
 import { UserContext } from 'context/UserContext';
+import { EditIcon } from 'components/utils/Icons';
+// import { refreshQuery } from 'hooks/useQuery';
 
 const Testimonials = () => {
   return (
@@ -121,14 +123,12 @@ export const TestimonialsList = ({ property, setProperty, setToast }) => {
             {!noTestimonials && (
               <>
                 {property?.testimonials?.map((testimonial, index) => (
-                  <>
-                    <SingleTestimonial
-                      testimonial={testimonial}
-                      vendor={property?.vendorInfo?.vendor}
-                      key={index}
-                      handleTestimonial={() => handleTestimonial(testimonial)}
-                    />
-                  </>
+                  <SingleTestimonial
+                    testimonial={testimonial}
+                    vendor={property?.vendorInfo?.vendor}
+                    key={index}
+                    handleTestimonial={() => handleTestimonial(testimonial)}
+                  />
                 ))}
               </>
             )}
@@ -146,6 +146,7 @@ export const TestimonialsList = ({ property, setProperty, setToast }) => {
           setToast={setToast}
           setShowReplyModal={setShowReplyModal}
           setProperty={setProperty}
+          property={property}
         />
       </Modal>
     </>
@@ -212,6 +213,17 @@ export const SingleTestimonial = ({
                 <div className="text-right text-smaller text-muted">
                   - {getTinyDate(testimonial.createdAt)}
                 </div>
+                {isVendor && handleTestimonial && (
+                  <div className="text-left">
+                    <Button
+                      color="none"
+                      className="btn btn-link btn-outline-primary btn-xs mt-2"
+                      onClick={handleTestimonial}
+                    >
+                      <EditIcon /> Edit
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </li>
@@ -250,7 +262,13 @@ const FilterForm = ({ setFilterTerms }) => {
   );
 };
 
-const ReplyTestimonialForm = ({ testimonial, setToast, setShowReplyModal }) => {
+const ReplyTestimonialForm = ({
+  testimonial,
+  setToast,
+  setShowReplyModal,
+  property,
+  setProperty,
+}) => {
   const testimonialId = testimonial._id;
   if (!testimonialId) {
     return null;
@@ -259,7 +277,10 @@ const ReplyTestimonialForm = ({ testimonial, setToast, setShowReplyModal }) => {
     <section className="row">
       <div className="col-md-12 my-3">
         <Formik
-          initialValues={setInitialValues(replyTestimonialSchema)}
+          enableReinitialize={true}
+          initialValues={setInitialValues(replyTestimonialSchema, {
+            response: testimonial?.response,
+          })}
           onSubmit={({ response }, actions) => {
             const payload = {
               response,
@@ -273,12 +294,30 @@ const ReplyTestimonialForm = ({ testimonial, setToast, setShowReplyModal }) => {
               }
             )
               .then(function (response) {
-                const { status } = response;
+                const { status, data } = response;
                 if (statusIsSuccessful(status)) {
                   setToast({
                     type: 'success',
                     message: `Your response has been successfully submitted`,
                   });
+
+                  console.log(`data`, data);
+                  const testimonials = property.testimonials.map(
+                    (testimonial) => {
+                      if (
+                        testimonial._id.toString() ===
+                        data.testimonial._id.toString()
+                      ) {
+                        return {
+                          ...testimonial,
+                          response: data.testimonial.response,
+                        };
+                      }
+                      return testimonial;
+                    }
+                  );
+                  console.log(`testimonials`, testimonials);
+                  setProperty({ ...property, testimonials });
                   actions.setSubmitting(false);
                   actions.resetForm();
                   setShowReplyModal(false);
@@ -308,7 +347,7 @@ const ReplyTestimonialForm = ({ testimonial, setToast, setShowReplyModal }) => {
                 loading={isSubmitting}
                 onClick={handleSubmit}
               >
-                Reply Testimonial
+                {testimonial.reponse ? 'Edit' : 'Reply'} Testimonial
               </Button>
 
               <DisplayFormikState {...props} hide showAll />

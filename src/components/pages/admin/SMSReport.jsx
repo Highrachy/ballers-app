@@ -2,15 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import BackendPage from 'components/layout/BackendPage';
-import { getDateTime } from 'utils/date-helpers';
+import { getShortDateTime } from 'utils/date-helpers';
 import { buildKudiSMSActionUrl } from 'utils/sms';
 import { getNairaSymbol } from 'utils/helpers';
 import TopTitle from 'components/utils/TopTitle';
 import BallersSpinner from 'components/utils/BallersSpinner';
+import { Card } from 'react-bootstrap';
+import { ClockIcon } from 'components/utils/Icons';
+import Tag from 'components/common/Tag';
 
 const Reports = () => {
   const [loading, setLoading] = React.useState(true);
   const [balance, setBalance] = React.useState(null);
+  const [reports, setReports] = React.useState(null);
 
   React.useEffect(() => {
     setLoading(true);
@@ -30,6 +34,21 @@ const Reports = () => {
       });
   }, []);
 
+  React.useEffect(() => {
+    axios
+      .post(buildKudiSMSActionUrl('reports'))
+      .then(function (response) {
+        const { status, data } = response;
+        // handle success
+        if (status === 200) {
+          setReports(data);
+        }
+      })
+      .catch(function (error) {
+        setReports([]);
+      });
+  }, []);
+
   return (
     <BackendPage>
       <section className="container-fluid">
@@ -43,49 +62,61 @@ const Reports = () => {
             </>
           )}
         </TopTitle>
+
+        {reports && <ReportsRowList reports={reports} />}
       </section>
     </BackendPage>
   );
 };
 
 const ReportsRowList = ({ reports }) => (
-  <div className="table-responsive">
-    <table className="table table-dark table__no-border table__with-bg">
-      <tbody>
-        {reports.map((report, index) => (
-          <ReportsRow key={index} report={report} />
-        ))}
-      </tbody>
-    </table>
-    <br />
-    <br />
+  <div className="container-fluid">
+    <Card>
+      <div className="table-responsive">
+        <table className="table table-border table-hover">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Phone</th>
+              <th>Message</th>
+              <th className="text-center">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reports.map((report, index) => (
+              <ReportsRow key={index} report={report} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
   </div>
 );
 
-ReportsRowList.propTypes = {
-  reports: PropTypes.array.isRequired,
-};
-
-const ReportsRow = ({ report }) => (
+const ReportsRow = ({ report, number }) => (
   <tr>
-    <td className="table__number" width="5%">
-      <span
-        className={`circle ${report.status === 'DELIVERED' ? 'green' : 'gray'}`}
-      ></span>
+    <td width="15%">
+      <Tag
+        color={
+          report.status === 'DELIVERED' || report.status === 'Submitted'
+            ? 'success'
+            : 'danger'
+        }
+        text={report.status}
+      />
     </td>
     <td width="15%">
-      <span className="text-white">{report.status}</span>
+      <div className="text-secondary font-weight-bold ls-1">
+        {report.mobile}
+      </div>
     </td>
     <td width="50%">
-      <span className="text-muted-light-2 small--2">{report.message}</span>
+      <span className="text-gray block-text-small">{report.message}</span>
     </td>
 
-    <td width="15%">
-      <span className="text-white">{report.mobile}</span>
-    </td>
-    <td className="text-right" width="15%">
-      <span>
-        <i className="icon icon-clock" /> {getDateTime(report.date)}
+    <td className="text-right" width="20%">
+      <span className="text-gray block-text-small">
+        <ClockIcon /> {getShortDateTime(report.date)}
       </span>
     </td>
   </tr>

@@ -579,3 +579,24 @@ html {
     color: red;
   }
 }
+
+.tag {
+  position: relative;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0px 10px;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  line-height: 24px;
+  background: $gray-200;
+  border: 1px solid $gray-300;
+
+  &__marker {
+    width: 8px;
+    height: 8px;
+    margin-right: 7px;
+    border-radius: 50%;
+  }
+}

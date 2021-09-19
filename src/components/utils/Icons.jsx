@@ -30,6 +30,7 @@ import {
   FiSearch,
   FiUser,
   FiRepeat,
+  FiClock,
 } from 'react-icons/fi';
 import {
   FaCheckCircle,
@@ -98,6 +99,7 @@ export const CheckSquareIcon = () => <AiFillCheckSquare />;
 export const CheckCircleIcon = () => <BiCheckCircle />;
 export const CompanyInfoIcon = () => <FiFolder />;
 export const CopyToClipBoardIcon = () => <FiClipboard />;
+export const ClockIcon = () => <FiClock />;
 export const DeleteIcon = () => <FiTrash2 />;
 export const DownloadIcon = () => <FiDownload />;
 export const EntertainmentIcon = () => <BiCameraMovie />;

@@ -61,3 +61,12 @@ a {
   visibility: visible;
   transition: all 1s;
 }
+
+.btn-outline {
+  &-primary,
+  &-dark {
+    &:hover {
+      color: $white;
+    }
+  }
+}
