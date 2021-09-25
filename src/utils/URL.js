@@ -47,4 +47,10 @@ export const API_ENDPOINT = {
 
   getAllPropertyVideos: () => `${BASE_API_URL}/property-video/all`,
   getAllPropertyTestimonials: () => `${BASE_API_URL}/property/testimonial/all`,
+
+  getAllVas: () => `${BASE_API_URL}/vas/all`,
+  getAllVasRequests: () => `${BASE_API_URL}/vas/request/all`,
+  getOneVasRequest: (id) => `${BASE_API_URL}/vas/request/${id}`,
+
+  getVendor: (slug) => `${BASE_API_URL}/user/vendor/${slug}`,
 };

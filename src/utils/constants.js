@@ -292,3 +292,10 @@ export const PROPERTY_VIDEO_STATUS = {
   DISAPPROVED: 'Disapproved',
   PENDING_ADMIN_REVIEW: 'Pending Admin Review',
 };
+
+export const VAS_TYPE = {
+  OFFER: 'Offer',
+  PROPERTY: 'Property',
+  USER: 'User',
+  VENDOR: 'Vendor',
+};

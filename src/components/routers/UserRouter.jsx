@@ -14,7 +14,9 @@ import PropertyEnquiry from 'components/pages/user/PropertyEnquiry';
 import Notifications from 'components/pages/shared/Notifications';
 import MyBadges from 'components/pages/shared/MyBadges';
 import Testimonials from 'components/pages/shared/Testimonials';
-import VendorProfile from 'components/pages/shared/VendorProfile';
+import VasRequests from 'components/pages/shared/VasRequests';
+import SingleVasRequest from 'components/pages/shared/SingleVasRequest';
+import PersonalizedVas from 'components/pages/shared/PersonalizedVas';
 
 const UserRouter = () => (
   <Router>
@@ -31,7 +33,9 @@ const UserRouter = () => (
     <Notifications path="notifications" />
     <MyBadges path="mybadges" />
     <Testimonials path="testimonials" />
-    <VendorProfile path="vendor/:id" />
+    <PersonalizedVas path="vas" />
+    <VasRequests path="vas/requests" />
+    <SingleVasRequest path="vas/requests/:id" />
     <Menu path="menu" />
   </Router>
 );

@@ -72,8 +72,13 @@ import {
   AiFillCar,
   AiFillSafetyCertificate,
   AiOutlineUserSwitch,
+  AiOutlineShoppingCart,
 } from 'react-icons/ai';
-import { MdLocalMall, MdAccountBalanceWallet } from 'react-icons/md';
+import {
+  MdLocalMall,
+  MdAccountBalanceWallet,
+  MdAddShoppingCart,
+} from 'react-icons/md';
 import { GoVerified } from 'react-icons/go';
 import { TiMessages } from 'react-icons/ti';
 
@@ -148,6 +153,8 @@ export const TransactionIcon = () => <FiRepeat />;
 export const TwitterIcon = () => <FiTwitter />;
 export const UserIcon = () => <FiUser />;
 export const UploadIcon = () => <FiUploadCloud />;
+export const VasIcon = () => <AiOutlineShoppingCart />;
+export const VasRequestIcon = () => <MdAddShoppingCart />;
 export const VisitationIcon = () => (
   <svg
     stroke="currentColor"

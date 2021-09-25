@@ -17,7 +17,7 @@ export const getDate = (date) => format(parse(date), 'MMMM DD, YYYY');
 export const getDateTime = (date) =>
   format(parse(date), 'ddd, MMM D, YYYY h:mm A');
 export const getShortDateTime = (date) =>
-  format(parse(date), 'Do, MMM YYYY HH:mm');
+  format(parse(date), 'Do MMM YYYY h:mm A');
 export const getShortDate = (date) => format(parse(date), 'ddd, MMM D, YYYY');
 export const getTinyDate = (date) =>
   isValidDate(date) && format(parse(date), 'MMM D, YYYY');

@@ -102,7 +102,7 @@ const OnlinePayment = ({ setPaymentType, setToast, portfolio }) => {
         initialValues={setInitialValues(onlinePaymentSchema, {
           amount: Math.min(
             1_000_000,
-            portfolio?.nextPaymentInfo[0]?.expectedAmount || 10_000
+            portfolio?.nextPaymentInfo?.[0]?.expectedAmount || 10_000
           ),
         })}
         onSubmit={({ amount }, actions) => {

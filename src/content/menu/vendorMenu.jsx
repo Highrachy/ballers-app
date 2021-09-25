@@ -11,6 +11,7 @@ import { FileIcon } from 'components/utils/Icons';
 import {} from 'components/utils/Icons';
 import { OfferIcon } from 'components/utils/Icons';
 import { PropertyIcon } from 'components/utils/Icons';
+import { VasIcon } from 'components/utils/Icons';
 
 export default [
   {
@@ -42,6 +43,12 @@ export default [
     to: '/vendor/transactions',
     icon: <TransactionIcon />,
     footer: true,
+  },
+  {
+    title: 'Services',
+    to: '/vendor/vas',
+    icon: <VasIcon />,
+    footer: false,
   },
   {
     title: 'Settings',

@@ -15,6 +15,10 @@ import { useGetQuery } from 'hooks/useQuery';
 import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { OwnedPropertyCard } from '../shared/SingleProperty';
+import { ProcessVasForm } from './ProcessVas';
+import Button from 'components/forms/Button';
+import { VAS_TYPE } from 'utils/constants';
+import { Loading } from 'components/utils/LoadingItems';
 
 const pageOptions = {
   key: 'property',
@@ -30,6 +34,24 @@ const SingleUserProperty = ({ id }) => {
     endpoint: API_ENDPOINT.getOneProperty(id),
     refresh: true,
   });
+
+  const axiosOptionsForPropertyVas = {
+    params: {
+      limit: 0,
+      type: VAS_TYPE.PROPERTY,
+      sortBy: 'name',
+      sortDirection: 'desc',
+    },
+  };
+  const [vasQuery] = useGetQuery({
+    axiosOptions: axiosOptionsForPropertyVas,
+    key: 'vas',
+    name: 'vas',
+    setToast,
+    endpoint: API_ENDPOINT.getAllVas(),
+    refresh: true,
+  });
+
   return (
     <BackendPage>
       <ContentLoader
@@ -49,6 +71,7 @@ const SingleUserProperty = ({ id }) => {
               visitationInfo={property?.visitationInfo}
               enquiryInfo={property?.enquiryInfo}
               setToast={setToast}
+              vasQuery={vasQuery}
             />
           }
         />
@@ -62,8 +85,10 @@ const PropertySidebar = ({
   visitationInfo,
   enquiryInfo,
   setToast,
+  vasQuery,
 }) => {
   const [showRequestVisitForm, setShowRequestVisitForm] = React.useState(false);
+  const [showVasForm, setShowVasForm] = React.useState(false);
   const [showTitleDocument, setShowTitleDocument] = React.useState(false);
   const userHasScheduledVisit =
     visitationInfo?.length > 0 &&
@@ -200,6 +225,19 @@ const PropertySidebar = ({
           />
         )}
       </Modal>
+      <Modal
+        title="Value Added Services"
+        show={showVasForm}
+        onHide={() => setShowVasForm(false)}
+        showFooter={false}
+      >
+        <ProcessVasForm
+          hideForm={() => setShowVasForm(false)}
+          setToast={setToast}
+          vasInfo={vasQuery.isLoading ? null : vasQuery?.data?.result}
+          propertyId={property._id}
+        />
+      </Modal>
 
       <Card className="card-container property-holder bg-gray">
         <h5>Interested in this property?</h5>
@@ -287,18 +325,22 @@ const PropertySidebar = ({
       <Card className="card-container property-holder bg-gray">
         <h5 className="header-smaller">Investigate Property</h5>
 
-        <ul>
-          <li>Survey plan investigation</li>
-          <li>Title validity checks at the land’s registry.</li>
-          <li>Survey plan investigation + Title validity checks</li>
-        </ul>
+        {vasQuery.isLoading ? (
+          <Loading />
+        ) : (
+          <ul>
+            {vasQuery?.data?.result?.map(({ name }) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+        )}
 
-        <Link
-          to={`/user/property/enquiry/${property._id}`}
+        <Button
+          onClick={() => setShowVasForm(true)}
           className="btn btn-block btn-secondary my-3"
         >
           Interested
-        </Link>
+        </Button>
       </Card>
 
       <h5 className="header-smaller">View Vendor Information</h5>

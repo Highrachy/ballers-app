@@ -28,8 +28,8 @@ const fetchQuery =
     })
       .then((res) => {
         if (statusIsSuccessful(res.status)) {
-          setResult && setResult(res.data[key]);
-          return res.data;
+          setResult && setResult(res?.data?.[key]);
+          return res?.data;
         }
         setToast({
           message: 'Request was not successful. Please try again later',

@@ -6,6 +6,7 @@ import {
   ProfileIcon,
   ReferIcon,
   PropertyIcon,
+  VasIcon,
 } from 'components/utils/Icons';
 
 export default [
@@ -32,6 +33,12 @@ export default [
     to: '/user/just-for-you',
     icon: <PropertyIcon />,
     footer: true,
+  },
+  {
+    title: 'Services',
+    to: '/user/vas',
+    icon: <VasIcon />,
+    footer: false,
   },
   {
     title: 'Settings',

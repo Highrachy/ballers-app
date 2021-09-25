@@ -1,5 +1,6 @@
 import React from 'react';
-import BackendPage from 'components/layout/BackendPage';
+import Header from 'components/layout/Header';
+import Footer from 'components/layout/Footer';
 import { PropertyIcon } from 'components/utils/Icons';
 import { API_ENDPOINT } from 'utils/URL';
 import PaginatedContent from 'components/common/PaginatedContent';
@@ -14,52 +15,69 @@ import { ErrorIcon } from 'components/utils/Icons';
 import { SuccessIcon } from 'components/utils/Icons';
 import { getUserStatus } from '../admin/Users';
 import Tooltip from 'components/common/Tooltip';
+import { EmptyTitleSection } from 'components/common/TitleSection';
 
 const pageOptions = {
   key: 'user',
   pageName: 'User',
 };
 
-const VendorProfile = ({ id }) => {
+const VendorProfile = ({ slug }) => {
   const [toast, setToast] = useToast();
   const [userQuery, user] = useGetQuery({
     key: pageOptions.key,
-    name: [pageOptions.key, id],
+    name: [pageOptions.key, slug],
     setToast,
-    endpoint: API_ENDPOINT.getOneUser(id),
+    endpoint: API_ENDPOINT.getVendor(slug),
     refresh: true,
   });
+
   return (
-    <BackendPage>
-      <Toast {...toast} showToastOnly />
+    <>
+      <Header />
 
-      <ContentLoader
-        hasContent={!!user}
-        Icon={<UserIcon />}
-        query={userQuery}
-        name={pageOptions.pageName}
-        toast={toast}
-      >
-        <Header user={user} />
-      </ContentLoader>
+      <EmptyTitleSection>
+        <Toast {...toast} showToastOnly />
 
-      <PaginatedContent
-        endpoint={API_ENDPOINT.searchProperties()}
-        initialFilter={{ addedBy: id }}
-        pageName="Property"
-        pluralPageName="Properties"
-        DataComponent={PropertiesRowList}
-        PageIcon={<PropertyIcon />}
-        queryName="property"
-      />
-    </BackendPage>
+        <section className="container-fluid">
+          <ContentLoader
+            hasContent={!!user}
+            Icon={<UserIcon />}
+            query={userQuery}
+            name={pageOptions.pageName}
+            toast={toast}
+          >
+            <div className="row">
+              <div className="col-sm-4">
+                <ContentHeader user={user} />
+              </div>
+              <div className="col-sm-8">
+                {user?._id && (
+                  <PaginatedContent
+                    endpoint={API_ENDPOINT.searchProperties()}
+                    initialFilter={{ addedBy: user?._id }}
+                    pageName="Property"
+                    pluralPageName="Properties"
+                    DataComponent={PropertiesRowList}
+                    PageIcon={<PropertyIcon />}
+                    queryName="property"
+                  />
+                )}
+              </div>
+            </div>
+          </ContentLoader>
+        </section>
+      </EmptyTitleSection>
+
+      <Footer />
+    </>
   );
 };
 
-const Header = ({ user }) => {
+const ContentHeader = ({ user }) => {
   const status = getUserStatus(user);
   return (
-    <section className="container-fluid">
+    <section>
       <h4 className="mb-3 text-secondary">Vendor Page</h4>
 
       <CardTableSection name="Company Information">

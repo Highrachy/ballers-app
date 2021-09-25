@@ -30,7 +30,10 @@ import SingleBadge from 'components/pages/admin/SingleBadge';
 import PropertyVideos from 'components/pages/admin/PropertyVideos';
 import Testimonials from 'components/pages/shared/Testimonials';
 import SMSReport from 'components/pages/admin/SMSReport';
-import VendorProfile from 'components/pages/shared/VendorProfile';
+import Vas from 'components/pages/admin/Vas';
+import AddVas from 'components/pages/admin/AddVas';
+import VasRequests from 'components/pages/shared/VasRequests';
+import SingleVasRequest from 'components/pages/shared/SingleVasRequest';
 
 const AdminRouter = () => (
   <Router>
@@ -63,7 +66,10 @@ const AdminRouter = () => (
     <SingleBadge path="badge/:id" />
     <Testimonials path="testimonials" />
     <SMSReport path="sms-report" />
-    <VendorProfile path="vendor/:id" />
+    <Vas path="vas" />
+    <AddVas path="vas/new" />
+    <VasRequests path="vas/requests" />
+    <SingleVasRequest path="vas/requests/:id" />
     <Menu path="menu" />
   </Router>
 );

@@ -20,6 +20,9 @@ import Notifications from 'components/pages/shared/Notifications';
 import MyBadges from 'components/pages/shared/MyBadges';
 import PendingOffers from 'components/pages/shared/PendingOffers';
 import Testimonials from 'components/pages/shared/Testimonials';
+import VasRequests from 'components/pages/shared/VasRequests';
+import SingleVasRequest from 'components/pages/shared/SingleVasRequest';
+import PersonalizedVas from 'components/pages/shared/PersonalizedVas';
 
 const VendorRouter = () => (
   <Router>
@@ -44,6 +47,9 @@ const VendorRouter = () => (
     <Notifications path="notifications" />
     <MyBadges path="mybadges" />
     <Testimonials path="testimonials" />
+    <PersonalizedVas path="vas" />
+    <VasRequests path="vas/requests" />
+    <SingleVasRequest path="vas/requests/:id" />
     <Menu path="menu" />
   </Router>
 );

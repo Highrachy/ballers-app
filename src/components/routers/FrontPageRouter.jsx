@@ -19,6 +19,7 @@ import Invoice from 'components/pages/frontend/Invoice';
 import ReactQuery from 'components/pages/playground/ReactQuery';
 import { isDevEnvironment } from 'utils/helpers';
 import ImagesComponent from 'components/pages/playground/ImagesComponent';
+import VendorProfile from 'components/pages/shared/VendorProfile';
 
 const FrontPageRouter = () => (
   <Router>
@@ -41,6 +42,7 @@ const FrontPageRouter = () => (
     <SearchResult path="search" />
     <Articles path="articles" />
     <Invoice path="payment" />
+    <VendorProfile path="company/:slug" />
     {isDevEnvironment() && (
       <>
         <FormComponents path="forms" />

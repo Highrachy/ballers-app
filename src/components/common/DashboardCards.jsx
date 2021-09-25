@@ -17,6 +17,7 @@ import { PropertyVideosIcon } from 'components/utils/Icons';
 import { BankAccountIcon } from 'components/utils/Icons';
 import { TestimonialsIcon } from 'components/utils/Icons';
 import { MessageIcon } from 'components/utils/Icons';
+import { VasIcon } from 'components/utils/Icons';
 
 const DashboardCards = () => {
   const propertyCard = {
@@ -129,10 +130,19 @@ const DashboardCards = () => {
     footer: null,
   };
   const SMSCard = {
-    name: 'testimonial',
+    name: 'sms',
     Icon: <MessageIcon />,
     title: 'SMS',
     to: 'sms-report',
+    content:
+      'See your profile data and manage your Account to choose what is saved in our system.',
+    footer: null,
+  };
+  const VasCard = {
+    name: 'vas',
+    Icon: <VasIcon />,
+    title: 'Value Added Services',
+    to: 'vas',
     content:
       'See your profile data and manage your Account to choose what is saved in our system.',
     footer: null,
@@ -166,6 +176,7 @@ const DashboardCards = () => {
     bankAccountCard,
     testimonialsCard,
     SMSCard,
+    VasCard,
   ];
 
   const dashboardCards = useCurrentRole().isAdmin
