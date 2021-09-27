@@ -33,6 +33,7 @@ import { formatFilterString, getRange, valuesToOptions } from 'utils/helpers';
 import InputFormat from 'components/forms/InputFormat';
 import FilterRange from 'components/forms/FilterRange';
 import DatePicker from 'components/forms/DatePicker';
+import { Link } from '@reach/router';
 
 const Transactions = () => (
   <BackendPage>
@@ -124,7 +125,7 @@ const TransactionsRowList = ({ results, offset, setToast }) => {
                 <td>Property</td>
                 <td>Type</td>
                 <td className="text-right">Amount (NGN)</td>
-                {!isUser && <td>Remittance</td>}
+                <td> {!isUser && 'Remittance'}</td>
               </tr>
             </thead>
             <tbody>
@@ -318,11 +319,14 @@ const ModalForTransactionDetails = ({
                 <strong>Property</strong>
               </td>
               <td>
-                <PropertyAvatar
-                  property={payment?.propertyInfo}
-                  nameOnly
-                  portfolioId={payment?.offerId}
-                />
+                {payment?.propertyInfo && (
+                  <PropertyAvatar
+                    property={payment?.propertyInfo}
+                    nameOnly
+                    portfolioId={payment?.offerId}
+                  />
+                )}
+                {payment?.vasInfo && payment?.vasInfo.name}
               </td>
             </tr>
             <tr>
@@ -441,6 +445,7 @@ const ModalForTransactionDetails = ({
 
 const TransactionsRow = (transaction) => {
   const {
+    _id,
     paidOn,
     number,
     paymentSource,
@@ -449,11 +454,13 @@ const TransactionsRow = (transaction) => {
     propertyInfo,
     remittance,
     offerId,
+    vasInfo,
     vendorInfo,
   } = transaction;
   const isAdmin = useCurrentRole().isAdmin;
   const isVendor = useCurrentRole().isVendor;
   const isAdminOrVendor = isAdmin || isVendor;
+  const userType = useCurrentRole().name;
 
   const { userState } = React.useContext(UserContext);
 
@@ -478,12 +485,15 @@ const TransactionsRow = (transaction) => {
         <span className="text-muted">{getDate(paidOn)}</span>
       </td>
       <td>
-        <PropertyAvatar
-          property={propertyInfo}
-          nameOnly
-          portfolioId={offerId}
-          linkToPage={false}
-        />
+        {propertyInfo && (
+          <PropertyAvatar
+            property={propertyInfo}
+            nameOnly
+            portfolioId={offerId}
+            linkToPage={false}
+          />
+        )}
+        {vasInfo && vasInfo?.name}
       </td>
       <td>
         <strong className="text-primary">{paymentSource}</strong>
@@ -493,9 +503,9 @@ const TransactionsRow = (transaction) => {
           {moneyFormatInNaira(amountPaid)}
         </h5>
       </td>
-      {isAdminOrVendor && (
-        <td>
-          {remittance?.status ? (
+      <td>
+        {isAdminOrVendor ? (
+          remittance?.status ? (
             <div className="">
               <span className="text-success">
                 <SuccessIcon />
@@ -511,24 +521,19 @@ const TransactionsRow = (transaction) => {
               <Spacing />
               Pending
             </div>
-          )}
-        </td>
-      )}
+          )
+        ) : (
+          <Link
+            to={`/${userType}/transaction/${_id}`}
+            className="btn btn-xs btn-wide btn-dark"
+          >
+            View
+          </Link>
+        )}
+      </td>
     </tr>
   );
 };
-
-// createdAt: { type: FILTER_TYPE.DATE },
-// offerId: { type: FILTER_TYPE.OBJECT_ID }, - get all offers in the database
-// paidOn: { type: FILTER_TYPE.DATE },
-// propertyId: { type: FILTER_TYPE.OBJECT_ID }, - get all properties
-// userId: { type: FILTER_TYPE.OBJECT_ID }, - get all user Id
-// vendorId: { type: FILTER_TYPE.OBJECT_ID }, - get all vendor Ids
-
-// remittedAmount: { key: 'remittance.amount', type: FILTER_TYPE.INTEGER },
-// remittedBy: { key: 'remittance.by', type: FILTER_TYPE.OBJECT_ID },
-// remittedDate: { key: 'remittance.date', type: FILTER_TYPE.DATE },
-// remittedPercentage: { key: 'remittance.percentage', type: FILTER_TYPE.INTEGER },
 
 const FilterForm = ({ setFilterTerms }) => {
   return (

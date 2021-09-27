@@ -36,7 +36,7 @@ export default [
   },
   {
     title: 'Services',
-    to: '/user/vas',
+    to: '/user/service',
     icon: <VasIcon />,
     footer: false,
   },

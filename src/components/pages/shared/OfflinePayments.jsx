@@ -187,6 +187,8 @@ const OfflinePaymentsRowList = ({ results, offset, setToast }) => {
           </>
         ) : (
           <OfflinePaymentForm
+            amount={offlinePayment?.amount}
+            model={offlinePayment?.model}
             offlinePayment={offlinePayment}
             setToast={setToast}
             hideForm={() => setShowOfflinePaymentsModal(false)}

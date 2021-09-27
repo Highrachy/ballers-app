@@ -9,12 +9,16 @@ import { ContentLoader } from 'components/utils/LoadingItems';
 import { VasIcon } from 'components/utils/Icons';
 import { ProcessVasForm } from '../user/ProcessVas';
 import { Card } from 'react-bootstrap';
-import { Link } from '@reach/router';
+// import { Link } from '@reach/router';
+import { VasRequestsList } from './VasRequests';
+import Button from 'components/forms/Button';
+import Modal from 'components/common/Modal';
 
 const PersonalizedVas = () => {
   const [toast, setToast] = useToast();
+  const [showVasForm, setShowVasForm] = React.useState(false);
 
-  const userType = useCurrentRole().name;
+  // const userType = useCurrentRole().name;
   const isUser = useCurrentRole().isUser;
   const axiosOptionsForUserVas = {
     params: {
@@ -33,41 +37,54 @@ const PersonalizedVas = () => {
     refresh: true,
   });
 
-  console.log(`vasQuery`, vasQuery);
-
   return (
     <BackendPage>
       <ContentLoader
         hasContent={!!vasQuery.data?.result}
         Icon={<VasIcon />}
         query={vasQuery}
-        name="Value Added Services"
+        name="Services"
         toast={toast}
       >
         <section className="container-fluid">
+          <h4>Services</h4>
           <Card className="card-container">
             <div className="row">
               <div className="col-sm-12 mt-2">
-                <h5 className="header-smaller">
-                  Personalized Value Added Services
-                </h5>
+                <h5 className="header-smaller">Personalized Services</h5>
 
-                <ProcessVasForm
-                  hideForm={() => {}}
-                  setToast={setToast}
-                  vasInfo={vasQuery?.data?.result || []}
-                />
+                <ul>
+                  {vasQuery?.data?.result?.map((vas) => (
+                    <li key={vas.id}>{vas.name}</li>
+                  ))}
+                </ul>
+
+                <Button
+                  onClick={() => setShowVasForm(true)}
+                  className="btn btn-secondary my-3"
+                >
+                  Order for Service
+                </Button>
               </div>
             </div>
           </Card>
-          <div className="my-5 text-right">
-            <Link
-              className="btn btn-wide btn-dark"
-              to={`/${userType}/vas/requests`}
-            >
-              View All Your Requests
-            </Link>
+
+          <div className="mt-5">
+            <VasRequestsList />
           </div>
+
+          <Modal
+            title="Services"
+            show={showVasForm}
+            onHide={() => setShowVasForm(false)}
+            showFooter={false}
+          >
+            <ProcessVasForm
+              hideForm={() => {}}
+              setToast={setToast}
+              vasInfo={vasQuery?.data?.result || []}
+            />
+          </Modal>
         </section>
       </ContentLoader>
     </BackendPage>

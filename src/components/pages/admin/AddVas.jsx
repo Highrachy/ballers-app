@@ -56,7 +56,7 @@ export const VasForm = ({ vas, setShowEditVasModal }) => {
             if (statusIsSuccessful(status)) {
               setToast({
                 type: 'success',
-                message: `Your Vas has been successfully ${
+                message: `Your Services has been successfully ${
                   vas?._id ? 'updated' : 'added'
                 }`,
               });
@@ -85,7 +85,7 @@ export const VasForm = ({ vas, setShowEditVasModal }) => {
           <Card className="card-container">
             <section className="row">
               <div className="col-md-10 px-4">
-                <h5> {vas?._id ? 'Update' : 'Add'} Vas</h5>
+                <h5> {vas?._id ? 'Update' : 'Add'} Service</h5>
                 <Input label="Name" name="name" placeholder="Name" />
 
                 <div className="form-row">
@@ -115,7 +115,7 @@ export const VasForm = ({ vas, setShowEditVasModal }) => {
                   loading={isSubmitting}
                   onClick={handleSubmit}
                 >
-                  {vas?._id ? 'Update' : 'Add'} Value Added Service
+                  {vas?._id ? 'Update' : 'Add'} Service
                 </Button>
                 <DisplayFormikState {...props} showAll />
               </div>

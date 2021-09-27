@@ -299,3 +299,8 @@ export const VAS_TYPE = {
   USER: 'User',
   VENDOR: 'Vendor',
 };
+
+export const MODEL = {
+  OFFER: 'offers',
+  VAS_REQUEST: 'vasrequests',
+};

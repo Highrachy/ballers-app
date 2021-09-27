@@ -9,6 +9,7 @@ import { ContentLoader } from 'components/utils/LoadingItems';
 import CardTableSection from 'components/common/CardTableSection';
 import Humanize from 'humanize-plus';
 import MakePayment from './MakePayment';
+import { MODEL } from 'utils/constants';
 
 const pageOptions = {
   key: 'vasRequest',
@@ -25,6 +26,8 @@ const SingleVasRequest = ({ id }) => {
     refresh: true,
   });
 
+  console.log(`vasRequest`, vasRequest);
+
   return (
     <BackendPage>
       <ContentLoader
@@ -34,19 +37,23 @@ const SingleVasRequest = ({ id }) => {
         name={pageOptions.pageName}
         toast={toast}
       >
-        <VasRequestDetail vasRequest={vasRequest} toast={toast} />
+        <VasRequestDetail
+          vasRequest={vasRequest}
+          toast={toast}
+          setToast={setToast}
+        />
       </ContentLoader>
     </BackendPage>
   );
 };
 
-const VasRequestDetail = ({ vasRequest, toast }) => (
+const VasRequestDetail = ({ vasRequest, toast, setToast }) => (
   <div className="container-fluid">
     <Toast {...toast} />
     <div className="mt-5 mb-3">
-      <h3>{vasRequest?.vasInfo?.name} Request</h3>
+      {/* <h3>{vasRequest?.vasInfo?.name} Request</h3> */}
     </div>
-    <CardTableSection name="Client Details">
+    <CardTableSection name="Service Information">
       <tr>
         <td>
           <strong>Name</strong>
@@ -140,9 +147,12 @@ const VasRequestDetail = ({ vasRequest, toast }) => (
     <div className="row">
       <div className="col-sm-3">
         <MakePayment
-          portfolio={{
-            ...vasRequest.propertyInfo,
-            nextPaymentInfo: [{ expectedAmount: vasRequest?.vasInfo.price }],
+          setToast={setToast}
+          amount={vasRequest?.vasInfo.price || 0}
+          model={{
+            vasRequestId: vasRequest?._id,
+            type: MODEL.VAS_REQUEST,
+            // propertyId: vasRequest?.propertyInfo?._id,
           }}
         />
       </div>

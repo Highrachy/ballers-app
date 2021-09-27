@@ -66,10 +66,10 @@ const AdminRouter = () => (
     <SingleBadge path="badge/:id" />
     <Testimonials path="testimonials" />
     <SMSReport path="sms-report" />
-    <Vas path="vas" />
-    <AddVas path="vas/new" />
-    <VasRequests path="vas/requests" />
-    <SingleVasRequest path="vas/requests/:id" />
+    <Vas path="service" />
+    <AddVas path="service/new" />
+    <VasRequests path="service/requests" />
+    <SingleVasRequest path="service/requests/:id" />
     <Menu path="menu" />
   </Router>
 );

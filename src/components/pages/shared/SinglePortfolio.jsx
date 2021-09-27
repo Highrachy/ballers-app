@@ -22,7 +22,7 @@ import {
   DisplayFormikState,
   setInitialValues,
 } from 'components/forms/form-helper';
-import { BASE_API_URL } from 'utils/constants';
+import { BASE_API_URL, MODEL } from 'utils/constants';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, statusIsSuccessful } from 'utils/helpers';
@@ -112,7 +112,15 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
           </tbody>
         </table>
 
-        <MakePayment setToast={setToast} portfolio={portfolio} />
+        <MakePayment
+          setToast={setToast}
+          amount={portfolio?.nextPaymentInfo?.[0]?.expectedAmount || 0}
+          model={{
+            offerId: portfolio?._id,
+            type: MODEL.OFFER,
+            // propertyId: portfolio?.propertyInfo._id,
+          }}
+        />
 
         <section className="mt-5 mb-3">
           <div className="text-small">Contribution Progress</div>

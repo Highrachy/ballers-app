@@ -226,7 +226,7 @@ const PropertySidebar = ({
         )}
       </Modal>
       <Modal
-        title="Value Added Services"
+        title="Services"
         show={showVasForm}
         onHide={() => setShowVasForm(false)}
         showFooter={false}

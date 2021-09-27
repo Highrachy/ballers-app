@@ -25,20 +25,24 @@ import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import axios from 'axios';
 import { refreshQuery } from 'hooks/useQuery';
+import { VasRequestsList } from '../shared/VasRequests';
 
 const Vas = () => {
   return (
     <BackendPage>
       <PaginatedContent
-        addNewUrl="/admin/vas/new"
+        addNewUrl="/admin/service/new"
         endpoint={API_ENDPOINT.getAllVas()}
-        pageName="Vas"
-        pluralPageName="Vas"
+        pageName="Service"
+        pluralPageName="Services"
         DataComponent={VasRowList}
         FilterComponent={FilterForm}
         PageIcon={<VasIcon />}
         queryName="vas"
       />
+      <section className="mt-5">
+        <VasRequestsList />
+      </section>
     </BackendPage>
   );
 };
@@ -123,7 +127,7 @@ const VasRowList = ({ results, offset, setToast }) => {
       </Card>
 
       <Modal
-        title="Value Added Services"
+        title="Services"
         show={showVasModal}
         onHide={() => setShowVasModal(false)}
         showFooter={false}
@@ -134,7 +138,7 @@ const VasRowList = ({ results, offset, setToast }) => {
 
       {/* edit vas */}
       <Modal
-        title="Edit Value Added Services"
+        title="Edit Services"
         show={showEditVasModal}
         onHide={() => setShowEditVasModal(false)}
         showFooter={false}
@@ -154,7 +158,7 @@ const VasRowList = ({ results, offset, setToast }) => {
           <div className="col-md-12 my-3 text-center">
             <h4>{vas?.name}</h4>
             <p className="my-4 confirmation-text font-weight-bold">
-              Are you sure you want to delete this Value Added Service?
+              Are you sure you want to delete this Service?
             </p>
 
             <Button
@@ -162,7 +166,7 @@ const VasRowList = ({ results, offset, setToast }) => {
               className="btn btn-secondary mb-5"
               onClick={() => deleteVas()}
             >
-              Delete Value Added Service
+              Delete Service
             </Button>
           </div>
         </section>
@@ -196,12 +200,12 @@ const VasRow = ({ number, vas, setShowVas, setEditVas, setDeleteVas }) => {
           onClick={() => setShowVas(vas)}
           className="btn-xs btn-wide"
         >
-          View Vas
+          View
         </Button>
         <Spacing />
         <Spacing />
         <Button onClick={() => setEditVas(vas)} className="btn-xs btn-wide">
-          Edit Vas
+          Edit
         </Button>
         <Spacing />
         <Spacing />
@@ -210,7 +214,7 @@ const VasRow = ({ number, vas, setShowVas, setEditVas, setDeleteVas }) => {
           onClick={() => setDeleteVas(vas)}
           className="btn-xs btn-wide"
         >
-          Delete Vas
+          Delete
         </Button>
       </td>
     </tr>

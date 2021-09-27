@@ -17,20 +17,22 @@ import { API_ENDPOINT } from 'utils/URL';
 import { Link } from '@reach/router';
 import { useCurrentRole } from 'hooks/useUser';
 
-const VasRequests = () => {
-  return (
-    <BackendPage>
-      <PaginatedContent
-        endpoint={API_ENDPOINT.getAllVasRequests()}
-        pageName="Value Added Services Request"
-        DataComponent={VasRequestsRowList}
-        FilterComponent={FilterForm}
-        PageIcon={<VasRequestIcon />}
-        queryName="vasRequest"
-      />
-    </BackendPage>
-  );
-};
+const VasRequests = () => (
+  <BackendPage>
+    <VasRequestsList />
+  </BackendPage>
+);
+
+export const VasRequestsList = () => (
+  <PaginatedContent
+    endpoint={API_ENDPOINT.getAllVasRequests()}
+    pageName="Service Request"
+    DataComponent={VasRequestsRowList}
+    FilterComponent={FilterForm}
+    PageIcon={<VasRequestIcon />}
+    queryName="vasRequest"
+  />
+);
 
 const VasRequestsRowList = ({ results, offset }) => {
   return (
@@ -42,8 +44,9 @@ const VasRequestsRowList = ({ results, offset }) => {
               <tr>
                 <th>S/N</th>
                 <th>Name</th>
+                <th>Price</th>
                 <th>Status</th>
-                <th>Info</th>
+                <th>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
@@ -72,7 +75,7 @@ const VasRequestsRow = ({ _id, number, status, vasInfo }) => {
       <td>{status}</td>
       <td>
         <Link
-          to={`/${userType}/vas/requests/${_id}`}
+          to={`/${userType}/service/requests/${_id}`}
           className="btn btn-xs btn-secondary btn-wide"
         >
           View Request{' '}

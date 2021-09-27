@@ -40,7 +40,7 @@ const PAYMENT_TYPE = {
   [KEY.OFFLINE]: 'Bank Deposit/Transfer',
 };
 
-const MakePayment = ({ setToast, portfolio }) => {
+const MakePayment = ({ amount, model, setToast }) => {
   const [showPaymentModal, setShowPaymentModal] = React.useState(false);
   const [paymentType, setPaymentType] = React.useState(KEY.ONLINE);
 
@@ -68,15 +68,17 @@ const MakePayment = ({ setToast, portfolio }) => {
 
         {paymentType === KEY.ONLINE ? (
           <OnlinePayment
+            amount={amount}
             hideForm={() => setShowPaymentModal(false)}
-            portfolio={portfolio}
+            model={model}
             setPaymentType={setPaymentType}
             setToast={setToast}
           />
         ) : (
           <OfflinePayment
+            amount={amount}
             hideForm={() => setShowPaymentModal(false)}
-            portfolio={portfolio}
+            model={model}
             setPaymentType={setPaymentType}
             setToast={setToast}
           />
@@ -93,22 +95,19 @@ const MakePayment = ({ setToast, portfolio }) => {
   );
 };
 
-const OnlinePayment = ({ setPaymentType, setToast, portfolio }) => {
+const OnlinePayment = ({ setPaymentType, setToast, amount, model }) => {
   return (
     <div className="mt-5">
       <h5 className="header-small">Online Payment</h5>
       <Formik
         enableReinitialize={true}
         initialValues={setInitialValues(onlinePaymentSchema, {
-          amount: Math.min(
-            1_000_000,
-            portfolio?.nextPaymentInfo?.[0]?.expectedAmount || 10_000
-          ),
+          amount: Math.min(1_000_000, amount),
         })}
         onSubmit={({ amount }, actions) => {
           const payload = {
             amount: amount.toString(),
-            offerId: portfolio._id,
+            model,
           };
 
           Axios.post(`${BASE_API_URL}/payment/initiate`, payload, {
@@ -155,7 +154,13 @@ const OnlinePayment = ({ setPaymentType, setToast, portfolio }) => {
   );
 };
 
-const OfflinePayment = ({ setPaymentType, setToast, portfolio, hideForm }) => {
+const OfflinePayment = ({
+  amount,
+  model,
+  setPaymentType,
+  setToast,
+  hideForm,
+}) => {
   const [showPaymentForm, setShowPaymentForm] = React.useState(false);
   const bankAccounts = useBankAccounts();
 
@@ -163,7 +168,8 @@ const OfflinePayment = ({ setPaymentType, setToast, portfolio, hideForm }) => {
     <>
       <h5 className="header-small mb-3">Payment Verification</h5>
       <OfflinePaymentForm
-        portfolio={portfolio}
+        amount={amount}
+        model={model}
         setToast={setToast}
         hideForm={hideForm}
       />
@@ -229,10 +235,11 @@ const PaystackPaymentForm = ({ isSubmitting, handleSubmit }) => {
 };
 
 export const OfflinePaymentForm = ({
-  setToast,
-  portfolio,
+  amount,
   hideForm,
+  model,
   offlinePayment,
+  setToast,
 }) => {
   const [receipt, setReceipt] = React.useState('');
   const isUpdating = !!offlinePayment?._id;
@@ -243,13 +250,13 @@ export const OfflinePaymentForm = ({
     <Formik
       enableReinitialize={true}
       initialValues={setInitialValues(offlinePaymentSchema, {
-        amount: portfolio?.nextPaymentInfo?.[0]?.expectedAmount || 0,
+        amount,
         ...offlinePayment,
       })}
       onSubmit={(values, actions) => {
         const payload = {
           ...values,
-          offerId: portfolio?._id,
+          model,
           receipt,
           dateOfPayment: values.dateOfPayment.date,
         };

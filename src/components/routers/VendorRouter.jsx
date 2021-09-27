@@ -48,8 +48,8 @@ const VendorRouter = () => (
     <MyBadges path="mybadges" />
     <Testimonials path="testimonials" />
     <PersonalizedVas path="vas" />
-    <VasRequests path="vas/requests" />
-    <SingleVasRequest path="vas/requests/:id" />
+    <VasRequests path="service/requests" />
+    <SingleVasRequest path="service/requests/:id" />
     <Menu path="menu" />
   </Router>
 );

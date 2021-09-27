@@ -17,6 +17,7 @@ import Testimonials from 'components/pages/shared/Testimonials';
 import VasRequests from 'components/pages/shared/VasRequests';
 import SingleVasRequest from 'components/pages/shared/SingleVasRequest';
 import PersonalizedVas from 'components/pages/shared/PersonalizedVas';
+import SingleTransaction from 'components/pages/shared/SingleTransaction';
 
 const UserRouter = () => (
   <Router>
@@ -33,9 +34,10 @@ const UserRouter = () => (
     <Notifications path="notifications" />
     <MyBadges path="mybadges" />
     <Testimonials path="testimonials" />
-    <PersonalizedVas path="vas" />
-    <VasRequests path="vas/requests" />
-    <SingleVasRequest path="vas/requests/:id" />
+    <PersonalizedVas path="service" />
+    <VasRequests path="service/requests" />
+    <SingleVasRequest path="service/requests/:id" />
+    <SingleTransaction path="transaction/:id" />
     <Menu path="menu" />
   </Router>
 );

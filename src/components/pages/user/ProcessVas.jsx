@@ -13,14 +13,17 @@ import { vasRequestSchema } from 'components/forms/schemas/vasSchema';
 import {
   dataToOptions,
   getError,
+  manualWait,
   moneyFormatInNaira,
   statusIsSuccessful,
 } from 'utils/helpers';
 import Select from 'components/forms/Select';
 import { refreshQuery } from 'hooks/useQuery';
+import { useCurrentRole } from 'hooks/useUser';
+import { navigate } from '@reach/router';
 
 export const ProcessVasForm = ({ hideForm, setToast, vasInfo, propertyId }) => {
-  console.log(`vasInfo`, vasInfo);
+  const userType = useCurrentRole().name;
   return (
     <section className="row">
       <div className="col-md-10">
@@ -40,12 +43,13 @@ export const ProcessVasForm = ({ hideForm, setToast, vasInfo, propertyId }) => {
                 if (statusIsSuccessful(status)) {
                   setToast({
                     type: 'success',
-                    message: `Your Value Added Service has been successfully requested.`,
+                    message: `Your Service has been successfully requested.`,
                   });
                   hideForm();
-                  refreshQuery('vasRequest');
+                  refreshQuery('vasRequest', true);
                   actions.setSubmitting(false);
                   actions.resetForm();
+                  manualWait(() => navigate(`/${userType}/service`), 1000);
                 }
               })
               .catch(function (error) {
@@ -65,7 +69,7 @@ export const ProcessVasForm = ({ hideForm, setToast, vasInfo, propertyId }) => {
             return (
               <Form>
                 <Select
-                  label="Select Value Added Service"
+                  label="Select Service"
                   name="vasId"
                   options={dataToOptions(vasInfo, 'name')}
                 />

@@ -141,8 +141,8 @@ const DashboardCards = () => {
   const VasCard = {
     name: 'vas',
     Icon: <VasIcon />,
-    title: 'Value Added Services',
-    to: 'vas',
+    title: 'Services',
+    to: 'service',
     content:
       'See your profile data and manage your Account to choose what is saved in our system.',
     footer: null,
