@@ -198,17 +198,11 @@ export const SingleTestimonial = ({
         {testimonial?.response && (
           <li className="clearfix odd">
             <div className="chat-avatar">
-              <img
-                src={
-                  vendor?.companyLogo ||
-                  '//images.weserv.nl?h=200&url=https%3A%2F%2Fballers-staging.s3.amazonaws.com%2F6118edc1f6a5aa00186006b6%2Fc984f060-fdb6-11eb-a7ac-65f0ba24a49a.png'
-                }
-                alt="vendor"
-              />
+              <img src={vendor?.companyLogo} alt="vendor" />
             </div>
             <div className="conversation-text">
               <div className="ctext-wrap">
-                <i>{vendor?.companyName || 'Blissville'}</i>
+                <i>{vendor?.companyName}</i>
                 <p>{testimonial?.response}</p>
                 <div className="text-right text-smaller text-muted">
                   - {getTinyDate(testimonial.createdAt)}

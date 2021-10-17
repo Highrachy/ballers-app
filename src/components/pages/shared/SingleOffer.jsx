@@ -27,6 +27,9 @@ import { API_ENDPOINT } from 'utils/URL';
 import { useGetQuery } from 'hooks/useQuery';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { OfferIcon } from 'components/utils/Icons';
+import { ReactivateOfferForm } from './ProcessOffer';
+import { AcceptOfferLetter } from './ProcessOffer';
+import { CancelOfferLetter } from './ProcessOffer';
 
 const pageOptions = {
   key: 'offer',
@@ -191,29 +194,6 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
     refresh: true,
   });
 
-  const acceptOffer = () => {
-    const payload = { offerId, signature };
-
-    Axios.put(`${BASE_API_URL}/offer/accept`, payload, {
-      headers: { Authorization: getTokenFromStore() },
-    })
-      .then(function (response) {
-        const { status } = response;
-        if (status === 200) {
-          setToast({
-            message: 'Your offer letter has been accepted',
-            type: 'success',
-          });
-          setOffer({ ...offer, status: OFFER_STATUS.INTERESTED });
-        }
-      })
-      .catch(function (error) {
-        setToast({
-          message: getError(error),
-        });
-      });
-  };
-
   const isUser = useCurrentRole().isUser;
 
   return (
@@ -245,19 +225,21 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
                     setSignature={setSignature}
                   />
                 </div>
-
-                {signature && (
-                  <div className="mt-5">
-                    <button
-                      className="btn btn-success btn-wide hide-print"
-                      onClick={acceptOffer}
-                    >
-                      Accept Offer Letter
-                    </button>
-                  </div>
-                )}
               </>
             )}
+
+            <AcceptOfferLetter
+              setOffer={setOffer}
+              setToast={setToast}
+              offer={offer}
+              signature={signature}
+            />
+            <CancelOfferLetter
+              setOffer={setOffer}
+              setToast={setToast}
+              offer={offer}
+            />
+            <ReactivateOfferForm setToast={setToast} offer={offer} />
           </OfferLetterTemplate>
         )}
       </ContentLoader>

@@ -118,7 +118,6 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
           model={{
             offerId: portfolio?._id,
             type: MODEL.OFFER,
-            // propertyId: portfolio?.propertyInfo._id,
           }}
         />
 
@@ -194,7 +193,9 @@ const AssignedPropertySidebar = ({ portfolio, setToast }) => {
 
 const LovePropertySidebar = ({ portfolio, setToast }) => {
   const [showTestimonialModal, setShowTestimonialModal] = React.useState(false);
-
+  const hasTestimonial = !!portfolio?.testimonials?.find(
+    (testimonial) => testimonial.userId === portfolio?.userId
+  );
   return (
     <Card className="card-container property-holder">
       <h5 className="header-smaller">Love this Property?</h5>
@@ -204,14 +205,18 @@ const LovePropertySidebar = ({ portfolio, setToast }) => {
       >
         Buy Property Again
       </Link>
-      <Button
-        color="dark"
-        className="btn-block my-2"
-        onClick={() => setShowTestimonialModal(true)}
-      >
-        Leave a Review
-      </Button>
 
+      {!hasTestimonial && portfolio?.amountContributed > 0 && (
+        <>
+          <Button
+            color="dark"
+            className="btn-block my-2"
+            onClick={() => setShowTestimonialModal(true)}
+          >
+            Leave a Review
+          </Button>
+        </>
+      )}
       {/* Testimonial Modal */}
       <ModalToShowTestimonial
         portfolio={portfolio}

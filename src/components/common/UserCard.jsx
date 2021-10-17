@@ -4,6 +4,7 @@ import Image from 'components/utils/Image';
 import { USER_TYPES } from 'utils/constants';
 import { Link } from '@reach/router';
 import { useCurrentRole } from 'hooks/useUser';
+import { UserIcon } from 'components/utils/Icons';
 
 const UserCard = ({ user, hideImage, nameOnly }) => {
   const {
@@ -29,7 +30,7 @@ const UserCard = ({ user, hideImage, nameOnly }) => {
 
   const UserInfo = (
     <>
-      {!hideImage && (
+      {!hideImage ? (
         <div className="user-avatar">
           <Image
             alt={firstName}
@@ -40,6 +41,8 @@ const UserCard = ({ user, hideImage, nameOnly }) => {
             width="80"
           />
         </div>
+      ) : (
+        <UserIcon />
       )}
 
       {!nameOnly ? (

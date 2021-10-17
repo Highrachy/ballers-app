@@ -138,7 +138,7 @@ const EnquiryForm = ({ id, setToast }) => {
             loading={isSubmitting}
             onClick={handleSubmit}
           >
-            Submit Form
+            Submit Enquiry
           </Button>
           <DisplayFormikState {...props} hide showAll />
         </Form>

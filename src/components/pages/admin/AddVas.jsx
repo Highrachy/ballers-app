@@ -65,7 +65,9 @@ export const VasForm = ({ vas, setShowEditVasModal }) => {
               actions.setSubmitting(false);
 
               setTimeout(() => {
-                vas?._id ? setShowEditVasModal(false) : navigate('/admin/vas');
+                vas?._id
+                  ? setShowEditVasModal(false)
+                  : navigate('/admin/service');
               }, 1000);
             }
           })

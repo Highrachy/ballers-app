@@ -7,6 +7,30 @@
   min-height: 90vh;
   background-color: white;
 
+  @media print {
+    min-height: auto !important;
+    border: 1px solid $gray-400;
+
+    p {
+      font-size: 14pt;
+      line-height: 1.6;
+    }
+
+    h5 {
+      font-size: 15pt;
+    }
+
+    small,
+    .text-small {
+      font-size: 12pt;
+      line-height: 1.6;
+    }
+
+    .text-smaller {
+      font-size: 10pt;
+    }
+  }
+
   @include media-breakpoint-up(sm) {
     font-size: 1rem;
   }
@@ -26,6 +50,9 @@
     @include media-breakpoint-down(sm) {
       font-size: 0.8rem;
     }
+    @media print {
+      font-size: 13pt;
+    }
   }
 
   .text-amount {
@@ -33,11 +60,23 @@
     font-weight: 600;
   }
 
+  @media print {
+    .invoice__table h4 {
+      font-size: 20pt;
+      padding: 1.5rem 0;
+    }
+  }
+
   .invoice__page {
-    padding: 2rem 0;
+    padding: 2rem;
     @include media-breakpoint-up(sm) {
       padding: 3rem;
     }
+
+    @media print {
+      padding: 3rem;
+    }
+
     background: white;
 
     &.invoice__footer {
@@ -51,11 +90,19 @@
     @include media-breakpoint-up(sm) {
       margin-top: 3.5rem;
     }
+    @media print {
+      margin-top: 4rem;
+    }
   }
 
   .invoice__email {
     font-size: 1.2rem;
     color: darken($secondary, 25);
+
+    @media print {
+      font-size: 14pt;
+      line-height: 1.6;
+    }
   }
 
   .invoice__table {

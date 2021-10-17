@@ -4,15 +4,14 @@ import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
-import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { moneyFormatInNaira } from 'utils/helpers';
 import { ACTIVE_OFFER_STATUS } from 'utils/constants';
 import { SuccessIcon } from 'components/utils/Icons';
 import { InfoIcon } from 'components/utils/Icons';
-import { FileIcon } from 'components/utils/Icons';
 import { useCurrentRole } from 'hooks/useUser';
 import { OfferIcon } from 'components/utils/Icons';
 import UserCard from 'components/common/UserCard';
+import { PropertyAvatar } from 'components/common/PropertyCard';
 
 const Offers = () => (
   <BackendPage>
@@ -58,23 +57,15 @@ const OffersRow = ({
     <tr>
       <td>{number}</td>
       <td>
-        <img
+        {/* <img
           alt={propertyInfo.name}
           className="img-fluid avatar--medium--small rounded"
           src={propertyInfo.mainImage ? propertyInfo.mainImage : ProfileAvatar}
           title={propertyInfo.name}
-        />
+        /> */}
+        <PropertyAvatar property={propertyInfo} />
       </td>
-      <td>
-        <strong>{propertyInfo.name}</strong>
-        <br />
-        <small>
-          {propertyInfo.address.city}, {propertyInfo.address.state}
-        </small>
-      </td>
-      <td>
-        <strong>{moneyFormatInNaira(totalAmountPayable)}</strong>
-      </td>
+
       {useCurrentRole().isUser ? (
         <td>
           <strong>{vendorInfo?.vendor?.companyName}</strong>
@@ -83,26 +74,32 @@ const OffersRow = ({
         </td>
       ) : (
         <td>
-          <UserCard user={userInfo} />
+          <UserCard user={userInfo} hideImage />
         </td>
       )}
       <td>
         {ACTIVE_OFFER_STATUS.includes(status) ? (
-          <span className="text-green">
-            <SuccessIcon />{' '}
-          </span>
+          <small className="text-green">
+            <SuccessIcon /> {status}
+          </small>
         ) : (
-          <span className="text-danger">
-            <InfoIcon />
-          </span>
+          <small className="text-danger">
+            <InfoIcon /> {status}
+          </small>
         )}
       </td>
       <td>
+        <h5 className="text-right text-secondary ls-1">
+          {moneyFormatInNaira(totalAmountPayable)}
+        </h5>
+      </td>
+
+      <td>
         <Link
-          className="btn btn-sm btn-secondary"
+          className="btn btn-xs btn-dark btn-wide"
           to={`/${useCurrentRole().name}/offer/${_id}`}
         >
-          <FileIcon /> View Offer
+          View Offer
         </Link>
       </td>
     </tr>

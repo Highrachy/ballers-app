@@ -61,6 +61,20 @@
       }
     })(document, "script");
   </script> -->
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function () {
+      OneSignal.init({
+        appId: "dd2cb625-dd9e-45fb-9197-ac6e4b369fe0",
+        safari_web_id: "web.onesignal.auto.1f1e5b5b-9f41-4253-8171-f20d7e1a840b",
+        notifyButton: {
+          enable: true,
+        },
+        subdomainName: "ballers",
+      });
+    });
+  </script>
 </body>
 
 </html>

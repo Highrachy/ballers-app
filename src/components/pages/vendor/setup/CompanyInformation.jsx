@@ -45,18 +45,23 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
       enableReinitialize={true}
       initialValues={{
         ...setInitialValues(phoneNumbersSchema, userState),
-        vendor: setInitialValues(companyInfoSchema, userState.vendor),
-        address: setInitialValues(addressSchema, userState.address),
+        vendor: {
+          ...setInitialValues(companyInfoSchema, userState.vendor),
+          companyAddress: setInitialValues(
+            addressSchema,
+            userState?.vendor?.companyAddress
+          ),
+        },
       }}
       onSubmit={(values, actions) => {
         let payload = {
           ...values,
-          address: { ...values.address, country: 'Nigeria' },
+          vendor: {
+            ...values.vendor,
+            companyAddress: { ...values.companyAddress, country: 'Nigeria' },
+          },
         };
 
-        if (!values.redanNumber) delete payload.vendor.redanNumber;
-        if (!values.phone2) delete payload.phone2;
-        if (!values.address.street2) delete payload.address.street2;
         if (logo) {
           payload.vendor.companyLogo = logo;
         }
@@ -92,8 +97,10 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
       }}
       validationSchema={createSchema({
         ...phoneNumbersSchema,
-        vendor: createSchema(companyInfoSchema),
-        address: createSchema(addressSchema),
+        vendor: createSchema({
+          ...companyInfoSchema,
+          companyAddress: createSchema(addressSchema),
+        }),
       })}
     >
       {({ isSubmitting, handleSubmit, ...props }) => (
@@ -200,7 +207,7 @@ const CompanyAddress = () => (
       <div className="col-md-10 px-4">
         <h5 className="mt-2 mb-4">Company Address (Head Office)</h5>
 
-        <Address showCountry={false} />
+        <Address showCountry={false} companyAddress />
       </div>
     </section>
   </Card>

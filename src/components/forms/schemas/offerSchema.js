@@ -56,3 +56,8 @@ export const requestTermsReviewSchema = {
 export const respondTermsReviewSchema = {
   response: required('Response'),
 };
+
+export const reactivateOfferSchema = {
+  initialPaymentDate: minDateValidation('Initial Payment Date', new Date()),
+  expires: required('Offer Expires'),
+};

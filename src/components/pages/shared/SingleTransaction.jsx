@@ -7,6 +7,7 @@ import { API_ENDPOINT } from 'utils/URL';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { InvoiceContent } from '../frontend/Invoice';
 import { generatePaymentInfo } from '../frontend/Invoice';
+import ReactToPrint from 'react-to-print';
 
 const pageOptions = {
   key: 'transaction',
@@ -23,8 +24,6 @@ const SingleTransaction = ({ id }) => {
     refresh: true,
   });
 
-  console.log(`transaction`, transaction);
-
   return (
     <BackendPage>
       <Toast {...toast} showToastOnly />
@@ -35,24 +34,51 @@ const SingleTransaction = ({ id }) => {
         name={pageOptions.pageName}
         toast={toast}
       >
-        <InvoiceContent
-          transaction={transaction}
-          userInfo={transaction?.userInfo}
-          paymentInfo={generatePaymentInfo({
-            offer: {
-              ...transaction?.offerInfo,
-              propertyInfo: transaction?.propertyInfo,
-            },
-            vasRequest: {
-              ...transaction?.vasRequestInfo,
-              vasInfo: transaction?.vasInfo,
-            },
-            type: transaction?.model.type,
-          })}
-        />
+        <ToPrint transaction={transaction} />
       </ContentLoader>
     </BackendPage>
   );
 };
+
+const ToPrint = ({ transaction }) => {
+  const componentRef = React.useRef();
+
+  return (
+    <>
+      <InvoiceContentContainer transaction={transaction} ref={componentRef} />
+      <ReactToPrint
+        trigger={() => (
+          <section className="container-fluid mt-5 text-right d-none d-md-block">
+            <button className="btn btn-info">Print this out!</button>
+          </section>
+        )}
+        content={() => componentRef.current}
+      />
+    </>
+  );
+};
+
+class InvoiceContentContainer extends React.Component {
+  render() {
+    const { transaction } = this.props;
+    return (
+      <InvoiceContent
+        transaction={transaction}
+        userInfo={transaction?.userInfo}
+        paymentInfo={generatePaymentInfo({
+          offer: {
+            ...transaction?.offerInfo,
+            propertyInfo: transaction?.propertyInfo,
+          },
+          vasRequest: {
+            ...transaction?.vasRequestInfo,
+            vasInfo: transaction?.vasInfo,
+          },
+          type: transaction?.model.type,
+        })}
+      />
+    );
+  }
+}
 
 export default SingleTransaction;

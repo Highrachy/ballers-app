@@ -6,39 +6,46 @@ import Select from 'components/forms/Select';
 import { STATES } from 'utils/constants';
 import { countryList } from 'utils/countryList';
 
-const Address = ({ showCountry }) => {
+const Address = ({ showCountry, companyAddress }) => {
   return (
     <>
       <Input
         label="Street Line 1"
-        name="address.street1"
+        name={
+          companyAddress ? 'vendor.companyAddress.street1' : 'address.street1'
+        }
         placeholder="Street Line 1"
       />
       <Input
         label="Street Line 2"
-        name="address.street2"
-        optional
+        name={
+          companyAddress ? 'vendor.companyAddress.street2' : 'address.street2'
+        }
         placeholder="Street Line 2"
       />
       <div className="form-row">
         <Input
           formGroupClassName="col-md-6"
           label="City"
-          name="address.city"
+          name={companyAddress ? 'vendor.companyAddress.city' : 'address.city'}
           placeholder="City"
         />
         {showCountry ? (
           <Input
             formGroupClassName="col-md-6"
             label="State"
-            name="address.state"
+            name={
+              companyAddress ? 'vendor.companyAddress.state' : 'address.state'
+            }
             placeholder="State"
           />
         ) : (
           <Select
             formGroupClassName="col-md-6"
             label="State"
-            name="address.state"
+            name={
+              companyAddress ? 'vendor.companyAddress.state' : 'address.state'
+            }
             options={valuesToOptions(STATES)}
             placeholder="Select State"
           />
@@ -49,7 +56,11 @@ const Address = ({ showCountry }) => {
           <Select
             formGroupClassName="col-md-6 ml-n2"
             label="Country"
-            name="address.country"
+            name={
+              companyAddress
+                ? 'vendor.companyAddress.country'
+                : 'address.country'
+            }
             placeholder="Country"
             options={valuesToOptions(countryList)}
           />
@@ -60,10 +71,12 @@ const Address = ({ showCountry }) => {
 };
 
 Address.propTypes = {
+  companyAddress: PropTypes.bool,
   showCountry: PropTypes.bool,
 };
 
 Address.defaultProps = {
+  companyAddress: false,
   showCountry: true,
 };
 

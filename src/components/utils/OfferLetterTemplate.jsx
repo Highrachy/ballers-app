@@ -532,9 +532,9 @@ const OfferLetterTemplate = ({
               </>
             )}
           </h3>
-          {children}
         </section>
       )}
+      {children}
     </Card>
   );
 };

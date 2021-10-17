@@ -91,22 +91,52 @@ export const REWARD_STATUS = {
 };
 
 export const OFFER_STATUS = {
-  GENERATED: 'Generated',
-  INTERESTED: 'Interested',
-  ASSIGNED: 'Assigned',
-  ALLOCATED: 'Allocated',
-  REJECTED: 'Rejected',
-  REACTIVATED: 'Reactivated',
-  CANCELLED: 'Cancelled',
-  RESOLVED: 'Resolved',
+  GENERATED: 'Generated', // Offer has been created by vendor
+  INTERESTED: 'Interested', // Offer has been signed by the user, no payment has been made yet
+  ASSIGNED: 'Assigned', //  A minimum of first Payment has been made on the Offer
+  ALLOCATED: 'Allocated', // User has reached the allocated threshold
+  REACTIVATED: 'Reactivated', // Same as Expired, just informing us that a new offer was created from this.
+  CANCELLED: 'Cancelled', // Vendor cancels the offer
+  COMPLETED_PAYMENT: 'Completed Payment',
   PENDING_ADMIN_APPROVAL: 'Pending Admin Approval',
   PENDING_VENDOR_REVIEW: 'Pending Vendor Review',
+  EXPIRED: 'Expired', // Newly added for automatically expired offers
 };
 
 export const ACTIVE_OFFER_STATUS = [
   OFFER_STATUS.INTERESTED,
   OFFER_STATUS.ASSIGNED,
   OFFER_STATUS.ALLOCATED,
+];
+
+export const VALID_PORTFOLIO_OFFER = [
+  OFFER_STATUS.INTERESTED,
+  OFFER_STATUS.ASSIGNED,
+  OFFER_STATUS.ALLOCATED,
+  OFFER_STATUS.COMPLETED_PAYMENT,
+];
+
+export const OWNED_PROPERTY_OFFER = [
+  OFFER_STATUS.ASSIGNED,
+  OFFER_STATUS.ALLOCATED,
+  OFFER_STATUS.COMPLETED_PAYMENT,
+];
+
+export const PENDING_OFFER = [
+  OFFER_STATUS.GENERATED,
+  OFFER_STATUS.PENDING_ADMIN_APPROVAL,
+  OFFER_STATUS.PENDING_VENDOR_REVIEW,
+];
+
+export const INVALID_OFFER = [
+  OFFER_STATUS.CANCELLED,
+  OFFER_STATUS.EXPIRED,
+  OFFER_STATUS.REACTIVATED,
+];
+
+export const ACTIVE_PORTFOLIO_OFFER = [
+  OFFER_STATUS.GENERATED,
+  ...VALID_PORTFOLIO_OFFER,
 ];
 
 export const STATES = [

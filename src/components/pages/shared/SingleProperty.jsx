@@ -53,6 +53,7 @@ import Tooltip from 'components/common/Tooltip';
 import { ErrorIcon } from 'components/utils/Icons';
 import { QuestionMarkIcon } from 'components/utils/Icons';
 import { TestimonialsList } from './Testimonials';
+import { AssignedPropertyIcon } from 'components/utils/Icons';
 
 const pageOptions = {
   key: 'property',
@@ -780,9 +781,14 @@ export const PropertyHeader = ({ property }) => (
         {Humanize.pluralize(property.bathrooms, 'bath')}
       </span>
       <TextSeparator />
-      <span className="pl-3">
+      <span className="px-3">
         <ToiletIcon /> <Spacing /> {property.toilets}{' '}
         {Humanize.pluralize(property.toilets, 'toilet')}
+      </span>
+      <TextSeparator />
+      <span className="pl-3">
+        <AssignedPropertyIcon /> <Spacing /> {property.availableUnits}{' '}
+        {Humanize.pluralize(property.availableUnits, 'unit')}
       </span>
     </div>
   </>

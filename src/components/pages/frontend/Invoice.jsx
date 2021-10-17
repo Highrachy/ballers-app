@@ -154,7 +154,7 @@ export const InvoiceContent = ({ paymentInfo, transaction, userInfo }) => {
                       <tr>
                         <td>
                           <p className="mb-0">
-                            Receipt No: <strong>{transaction._id}</strong>
+                            Receipt No: <strong>BA21001</strong>
                           </p>
                         </td>
                         <td className="text-right">
@@ -232,7 +232,7 @@ export const InvoiceContent = ({ paymentInfo, transaction, userInfo }) => {
                   <tr>
                     <td colSpan="3">
                       <span className="text-small mt-3 text-muted">
-                        Ref: {transaction.additionalInfo}
+                        Ref: {transaction.additionalInfo} / {transaction._id}
                       </span>
                     </td>
                   </tr>
