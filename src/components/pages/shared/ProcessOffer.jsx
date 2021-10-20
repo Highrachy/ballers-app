@@ -22,12 +22,15 @@ import Select from 'components/forms/Select';
 import { useCurrentRole } from 'hooks/useUser';
 import { addDays } from 'date-fns';
 import { Spacing } from 'components/common/Helpers';
+import { isPastDate } from 'utils/date-helpers';
 
 export const ReactivateOfferForm = ({ setToast, offer }) => {
   const [showReactivateModal, setShowReactivateModal] = React.useState(false);
   const isVendor = useCurrentRole().isVendor;
+  // TODO: Check expired
   const offerCanBeReactivated =
     isVendor &&
+    isPastDate(offer.expires) &&
     (offer.status === OFFER_STATUS.GENERATED ||
       offer.status === OFFER_STATUS.EXPIRED);
 
@@ -73,7 +76,7 @@ export const ReactivateOfferForm = ({ setToast, offer }) => {
                     message: `Your Offer has been successfully activated`,
                   });
                   setShowReactivateModal(false);
-                  refreshQuery('iffer', true);
+                  refreshQuery('offer', true);
                   actions.setSubmitting(false);
                   actions.resetForm();
                 }
@@ -99,10 +102,10 @@ export const ReactivateOfferForm = ({ setToast, offer }) => {
                   label="Offer Expires in"
                   name="expires"
                   options={generateNumOptions(11, 'Day', { startFrom: 5 })}
-                  placeholder="Allocation Month"
+                  placeholder="Offer Expires in"
                 />
                 <Button
-                  className="btn-secondary mt-4"
+                  className="btn-secondary mb-5"
                   loading={isSubmitting}
                   onClick={handleSubmit}
                 >
@@ -149,6 +152,7 @@ export const AcceptOfferLetter = ({ setToast, offer, setOffer, signature }) => {
             type: 'success',
           });
           setOffer({ ...offer, status: OFFER_STATUS.INTERESTED });
+          setShowAcceptModal(false);
         }
         setLoading(false);
       })
@@ -212,9 +216,14 @@ export const CancelOfferLetter = ({ setToast, offer, setOffer }) => {
 
   const isAdmin = useCurrentRole().isAdmin;
   const isVendor = useCurrentRole().isVendor;
-  const isAdminOrVendor = isAdmin || isVendor;
+  // TODO: Check all conditions here
   const offerCanBeCancelled =
-    isAdminOrVendor && !INVALID_OFFER.includes(offer.status);
+    !(isPastDate(offer.expires) && offer.status === OFFER_STATUS.GENERATED) &&
+    offer.status !== OFFER_STATUS.COMPLETED_PAYMENT &&
+    ((isVendor &&
+      !INVALID_OFFER.includes(offer.status) &&
+      offer.status !== OFFER_STATUS.PRE_CANCELLED) ||
+      (isAdmin && offer.status === OFFER_STATUS.PRE_CANCELLED));
 
   const cancelOffer = () => {
     const payload = { offerId: offer._id };
@@ -231,6 +240,7 @@ export const CancelOfferLetter = ({ setToast, offer, setOffer }) => {
             type: 'success',
           });
           setOffer({ ...offer, status: OFFER_STATUS.CANCELLED });
+          setShowCancelModal(false);
         }
         setLoading(false);
       })
@@ -244,16 +254,19 @@ export const CancelOfferLetter = ({ setToast, offer, setOffer }) => {
 
   return (
     <>
-      {offerCanBeCancelled && (
-        <div className="mt-5">
-          <button
-            className="btn btn-danger btn-wide hide-print"
-            onClick={() => setShowCancelModal(true)}
-          >
-            Cancel Offer Letter
-          </button>
-        </div>
-      )}
+      {/* Check Expired */}
+      {(Date.now() < offer.expires &&
+        offer.status === OFFER_STATUS.GENERATED) ||
+        (offerCanBeCancelled && (
+          <div className="mt-5 text-right">
+            <button
+              className="btn btn-sm btn-outline-danger btn-wide hide-print"
+              onClick={() => setShowCancelModal(true)}
+            >
+              Cancel Offer Letter
+            </button>
+          </div>
+        ))}
       <Modal
         title="Cancel Offer Letter"
         show={showCancelModal}
@@ -278,6 +291,258 @@ export const CancelOfferLetter = ({ setToast, offer, setOffer }) => {
               color="dark"
               className="btn mb-5"
               onClick={() => setShowCancelModal(false)}
+            >
+              Close
+            </Button>
+          </div>
+        </section>
+      </Modal>
+    </>
+  );
+};
+
+export const AssignOfferLetter = ({ setToast, offer, setOffer }) => {
+  const [showAssignModal, setShowAssignModal] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const isVendor = useCurrentRole().isVendor;
+  const offerCanBeAssigned =
+    isVendor && offer.status === OFFER_STATUS.PRE_ASSIGNED;
+
+  const assignOffer = () => {
+    const payload = { offerId: offer._id };
+    setLoading(true);
+
+    Axios.put(
+      `${BASE_API_URL}/offer/${offer._id}/confirm-assignment`,
+      payload,
+      {
+        headers: { Authorization: getTokenFromStore() },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (status === 200) {
+          setToast({
+            message: 'Your offer letter has been assigned',
+            type: 'success',
+          });
+          setOffer({ ...offer, status: OFFER_STATUS.ASSIGNED });
+          setShowAssignModal(false);
+        }
+        setLoading(false);
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(false);
+      });
+  };
+
+  return (
+    <>
+      {offerCanBeAssigned && (
+        <div className="mt-5">
+          <button
+            className="btn btn-secondary btn-wide hide-print"
+            onClick={() => setShowAssignModal(true)}
+          >
+            Assign Property
+          </button>
+        </div>
+      )}
+      <Modal
+        title="Assign Property"
+        show={showAssignModal}
+        onHide={() => setShowAssignModal(false)}
+        showFooter={false}
+      >
+        <section className="row">
+          <div className="col-md-12 my-3 text-center">
+            <p className="my-4 confirmation-text">
+              Are you sure you want to assign this offer?
+            </p>
+            <Button
+              color="secondary"
+              loading={loading}
+              className="btn mb-5"
+              onClick={assignOffer}
+            >
+              Assign Property
+            </Button>
+            <Spacing />
+            <Button
+              color="dark"
+              className="btn mb-5"
+              onClick={() => setShowAssignModal(false)}
+            >
+              Close
+            </Button>
+          </div>
+        </section>
+      </Modal>
+    </>
+  );
+};
+
+export const AllocateOfferLetter = ({ setToast, offer, setOffer }) => {
+  const [showAllocateModal, setShowAllocateModal] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const isVendor = useCurrentRole().isVendor;
+  const offerCanBeAllocated =
+    isVendor && offer.status === OFFER_STATUS.PRE_ALLOCATED;
+
+  const allocateOffer = () => {
+    const payload = { offerId: offer._id };
+    setLoading(true);
+
+    Axios.put(
+      `${BASE_API_URL}/offer/${offer._id}/confirm-allocation`,
+      payload,
+      {
+        headers: { Authorization: getTokenFromStore() },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (status === 200) {
+          setToast({
+            message: 'Your offer letter has been allocated',
+            type: 'success',
+          });
+          setOffer({ ...offer, status: OFFER_STATUS.ALLOCATED });
+          setShowAllocateModal(false);
+        }
+        setLoading(false);
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(false);
+      });
+  };
+
+  return (
+    <>
+      {offerCanBeAllocated && (
+        <div className="mt-5">
+          <button
+            className="btn btn-secondary btn-wide hide-print"
+            onClick={() => setShowAllocateModal(true)}
+          >
+            Allocate Property
+          </button>
+        </div>
+      )}
+      <Modal
+        title="Cancel Property"
+        show={showAllocateModal}
+        onHide={() => setShowAllocateModal(false)}
+        showFooter={false}
+      >
+        <section className="row">
+          <div className="col-md-12 my-3 text-center">
+            <p className="my-4 confirmation-text">
+              Are you sure you want to allocate this offer?
+            </p>
+            <Button
+              color="secondary"
+              loading={loading}
+              className="btn mb-5"
+              onClick={allocateOffer}
+            >
+              Allocate Property
+            </Button>
+            <Spacing />
+            <Button
+              color="dark"
+              className="btn mb-5"
+              onClick={() => setShowAllocateModal(false)}
+            >
+              Close
+            </Button>
+          </div>
+        </section>
+      </Modal>
+    </>
+  );
+};
+
+export const RevertOfferLetter = ({ setToast, offer, setOffer }) => {
+  const [showRevertModal, setShowRevertModal] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const isVendor = useCurrentRole().isVendor;
+  const offerCanBeReverted =
+    isVendor && offer.status === OFFER_STATUS.PRE_CANCELLED;
+
+  const revertOffer = () => {
+    const payload = { offerId: offer._id };
+    setLoading(true);
+
+    Axios.put(
+      `${BASE_API_URL}/offer/${offer._id}/revert-cancellation`,
+      payload,
+      {
+        headers: { Authorization: getTokenFromStore() },
+      }
+    )
+      .then(function (response) {
+        const { status } = response;
+        if (status === 200) {
+          setToast({
+            message: 'Your offer letter has been reverted',
+            type: 'success',
+          });
+          setOffer({ ...offer, status: OFFER_STATUS.ASSIGNED });
+          setShowRevertModal(false);
+        }
+        setLoading(false);
+      })
+      .catch(function (error) {
+        setToast({
+          message: getError(error),
+        });
+        setLoading(false);
+      });
+  };
+
+  return (
+    <>
+      {offerCanBeReverted && (
+        <div className="mt-5">
+          <button
+            className="btn btn-secondary btn-wide hide-print"
+            onClick={() => setShowRevertModal(true)}
+          >
+            Revert Offer Letter
+          </button>
+        </div>
+      )}
+      <Modal
+        title="Revert Offer Letter"
+        show={showRevertModal}
+        onHide={() => setShowRevertModal(false)}
+        showFooter={false}
+      >
+        <section className="row">
+          <div className="col-md-12 my-3 text-center">
+            <p className="my-4 confirmation-text">
+              Are you sure you want to revert this offer?
+            </p>
+            <Button
+              color="secondary"
+              loading={loading}
+              className="btn mb-5"
+              onClick={revertOffer}
+            >
+              Revert Offer Letter
+            </Button>
+            <Spacing />
+            <Button
+              color="dark"
+              className="btn mb-5"
+              onClick={() => setShowRevertModal(false)}
             >
               Close
             </Button>

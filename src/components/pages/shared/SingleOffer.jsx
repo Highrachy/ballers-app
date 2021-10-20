@@ -30,6 +30,9 @@ import { OfferIcon } from 'components/utils/Icons';
 import { ReactivateOfferForm } from './ProcessOffer';
 import { AcceptOfferLetter } from './ProcessOffer';
 import { CancelOfferLetter } from './ProcessOffer';
+import { AssignOfferLetter } from './ProcessOffer';
+import { AllocateOfferLetter } from './ProcessOffer';
+import { RevertOfferLetter } from './ProcessOffer';
 
 const pageOptions = {
   key: 'offer',
@@ -206,41 +209,68 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
         toast={toast}
       >
         {offer && (
-          <OfferLetterTemplate
-            enquiryInfo={offer.enquiryInfo}
-            offerInfo={offer}
-            propertyInfo={offer.propertyInfo}
-            signature={signature}
-            showSignaturePad
-            vendorInfo={offer.vendorInfo}
-          >
-            {offer.status === OFFER_STATUS.GENERATED && isUser && (
-              <>
-                <div className="mt-5">
-                  <DigitalSignaturePad setSignature={setSignature} />
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  <UploadSignature
-                    image={image}
-                    setImage={setImage}
-                    setSignature={setSignature}
-                  />
-                </div>
-              </>
+          <>
+            {/* add current status here for admin / vendor */}
+            {!isUser && (
+              <h6 className="mt-5 hide-print">
+                Current Offer Status: {offer.status}
+              </h6>
             )}
-
-            <AcceptOfferLetter
-              setOffer={setOffer}
-              setToast={setToast}
-              offer={offer}
+            <OfferLetterTemplate
+              enquiryInfo={offer.enquiryInfo}
+              offerInfo={offer}
+              propertyInfo={offer.propertyInfo}
               signature={signature}
-            />
-            <CancelOfferLetter
-              setOffer={setOffer}
-              setToast={setToast}
-              offer={offer}
-            />
-            <ReactivateOfferForm setToast={setToast} offer={offer} />
-          </OfferLetterTemplate>
+              showSignaturePad
+              vendorInfo={offer.vendorInfo}
+            >
+              {offer.status === OFFER_STATUS.GENERATED && isUser && (
+                <>
+                  <div className="mt-5">
+                    <DigitalSignaturePad setSignature={setSignature} />
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <UploadSignature
+                      image={image}
+                      setImage={setImage}
+                      setSignature={setSignature}
+                    />
+                  </div>
+                </>
+              )}
+
+              <AcceptOfferLetter
+                setOffer={setOffer}
+                setToast={setToast}
+                offer={offer}
+                signature={signature}
+              />
+              <AssignOfferLetter
+                setOffer={setOffer}
+                setToast={setToast}
+                offer={offer}
+              />
+              <AllocateOfferLetter
+                setOffer={setOffer}
+                setToast={setToast}
+                offer={offer}
+              />
+              <ReactivateOfferForm
+                setToast={setToast}
+                setOffer={setOffer}
+                offer={offer}
+              />
+              <RevertOfferLetter
+                setToast={setToast}
+                setOffer={setOffer}
+                offer={offer}
+              />
+              <CancelOfferLetter
+                setOffer={setOffer}
+                setToast={setToast}
+                offer={offer}
+              />
+            </OfferLetterTemplate>
+          </>
         )}
       </ContentLoader>
     </>

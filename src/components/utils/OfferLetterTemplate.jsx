@@ -12,11 +12,12 @@ import {
   getUserTitle,
   formatInDays,
 } from 'utils/helpers';
-import { getDate } from 'utils/date-helpers';
+import { getDate, isPastDate } from 'utils/date-helpers';
 import Image from './Image';
 import DirectorSignature from 'assets/img/placeholder/signature.png';
 import {
   ACTIVE_OFFER_STATUS,
+  OFFER_STATUS,
   PAYMENT_OPTION,
   PAYMENT_OPTIONS_BREAKDOWN,
 } from 'utils/constants';
@@ -499,7 +500,10 @@ const OfferLetterTemplate = ({
           </>
         ))}
 
-      {((showSignaturePad && isUser) ||
+      {((showSignaturePad &&
+        isUser &&
+        offerInfo.status === OFFER_STATUS.GENERATED &&
+        !isPastDate(offerInfo.expires)) ||
         ACTIVE_OFFER_STATUS.includes(offerInfo.status)) && (
         <section className="signature mt-5">
           <h6>MEMORANDUM OF ACCEPTANCE</h6>
@@ -534,6 +538,11 @@ const OfferLetterTemplate = ({
           </h3>
         </section>
       )}
+      {/* TODO: Check Expired */}
+      {isPastDate(offerInfo.expires) &&
+        !ACTIVE_OFFER_STATUS.includes(offerInfo.status) && (
+          <h2 className="text-danger">Offer has expired</h2>
+        )}
       {children}
     </Card>
   );

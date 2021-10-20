@@ -46,6 +46,7 @@ const PaginatedContent = ({
     setToast,
     endpoint,
     childrenKey: childrenKey || queryName,
+    refresh: true,
   });
 
   const pagination = query?.latestData?.pagination;

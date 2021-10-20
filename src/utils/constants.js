@@ -94,9 +94,12 @@ export const OFFER_STATUS = {
   GENERATED: 'Generated', // Offer has been created by vendor
   INTERESTED: 'Interested', // Offer has been signed by the user, no payment has been made yet
   ASSIGNED: 'Assigned', //  A minimum of first Payment has been made on the Offer
+  PRE_ASSIGNED: 'Pre Assigned',
   ALLOCATED: 'Allocated', // User has reached the allocated threshold
+  PRE_ALLOCATED: 'Pre Allocated',
   REACTIVATED: 'Reactivated', // Same as Expired, just informing us that a new offer was created from this.
   CANCELLED: 'Cancelled', // Vendor cancels the offer
+  PRE_CANCELLED: 'Pre Cancelled', // Payment has been made on offer, but vendor wants to cancel offer
   COMPLETED_PAYMENT: 'Completed Payment',
   PENDING_ADMIN_APPROVAL: 'Pending Admin Approval',
   PENDING_VENDOR_REVIEW: 'Pending Vendor Review',
@@ -106,17 +109,23 @@ export const OFFER_STATUS = {
 export const ACTIVE_OFFER_STATUS = [
   OFFER_STATUS.INTERESTED,
   OFFER_STATUS.ASSIGNED,
+  OFFER_STATUS.PRE_ASSIGNED,
+  OFFER_STATUS.PRE_ALLOCATED,
   OFFER_STATUS.ALLOCATED,
 ];
 
 export const VALID_PORTFOLIO_OFFER = [
   OFFER_STATUS.INTERESTED,
   OFFER_STATUS.ASSIGNED,
+  OFFER_STATUS.PRE_ASSIGNED,
+  OFFER_STATUS.PRE_ALLOCATED,
   OFFER_STATUS.ALLOCATED,
   OFFER_STATUS.COMPLETED_PAYMENT,
 ];
 
 export const OWNED_PROPERTY_OFFER = [
+  OFFER_STATUS.PRE_ASSIGNED,
+  OFFER_STATUS.PRE_ALLOCATED,
   OFFER_STATUS.ASSIGNED,
   OFFER_STATUS.ALLOCATED,
   OFFER_STATUS.COMPLETED_PAYMENT,
