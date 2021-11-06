@@ -70,6 +70,7 @@ const SingleUserProperty = ({ id }) => {
               property={property}
               visitationInfo={property?.visitationInfo}
               enquiryInfo={property?.enquiryInfo}
+              vendorInfo={property?.vendorInfo}
               setToast={setToast}
               vasQuery={vasQuery}
             />
@@ -86,6 +87,7 @@ const PropertySidebar = ({
   enquiryInfo,
   setToast,
   vasQuery,
+  vendorInfo,
 }) => {
   const [showRequestVisitForm, setShowRequestVisitForm] = React.useState(false);
   const [showVasForm, setShowVasForm] = React.useState(false);
@@ -345,9 +347,12 @@ const PropertySidebar = ({
 
       <h5 className="header-smaller">View Vendor Information</h5>
       <Card className="card-container property-holder bg-gray">
-        <Link to={`/admin/vendor/6118edc1f6a5aa00186006b6`}>
+        <Link to={`/vendors/${vendorInfo?.vendor?.slug}` || 'blissville'}>
           <img
-            src="//images.weserv.nl?h=300&url=https%3A%2F%2Fballers-staging.s3.amazonaws.com%2F6118edc1f6a5aa00186006b6%2Fc984f060-fdb6-11eb-a7ac-65f0ba24a49a.png"
+            src={
+              `${vendorInfo?.vendor?.companyLogo}` ||
+              '//images.weserv.nl?h=300&url=https%3A%2F%2Fballers-staging.s3.amazonaws.com%2F6118edc1f6a5aa00186006b6%2Fc984f060-fdb6-11eb-a7ac-65f0ba24a49a.png'
+            }
             alt="vendor"
             className="img-fluid vendor-img mr-4"
           />

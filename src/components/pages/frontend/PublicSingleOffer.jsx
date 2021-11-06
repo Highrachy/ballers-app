@@ -1,9 +1,8 @@
 import React from 'react';
-import BackendPage from 'components/layout/BackendPage';
 import Toast, { useToast } from 'components/utils/Toast';
 import Modal from 'components/common/Modal';
 import ReactToPrint from 'react-to-print';
-import { BASE_API_URL, OFFER_STATUS } from 'utils/constants';
+import { BASE_API_URL } from 'utils/constants';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
@@ -27,16 +26,8 @@ import { API_ENDPOINT } from 'utils/URL';
 import { useGetQuery } from 'hooks/useQuery';
 import { ContentLoader } from 'components/utils/LoadingItems';
 import { OfferIcon } from 'components/utils/Icons';
-import { ReactivateOfferForm } from './ProcessOffer';
-import { AcceptOfferLetter } from './ProcessOffer';
-import { CancelOfferLetter } from './ProcessOffer';
-import { AssignOfferLetter } from './ProcessOffer';
-import { AllocateOfferLetter } from './ProcessOffer';
-import { RevertOfferLetter } from './ProcessOffer';
-import { Link } from '@reach/router';
-import { CopyToClipBoardIcon } from 'components/utils/Icons';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { CheckIcon } from 'components/utils/Icons';
+import Header from 'components/layout/Header';
+import Footer from 'components/layout/Footer';
 
 const pageOptions = {
   key: 'offer',
@@ -48,7 +39,8 @@ const SingleOffer = ({ id }) => {
   const [concerns, setConcerns] = React.useState(null);
 
   return (
-    <BackendPage>
+    <>
+      <Header />
       <OfferLetterTemplateContainer
         offerId={id}
         ref={componentRef}
@@ -63,7 +55,8 @@ const SingleOffer = ({ id }) => {
         content={() => componentRef.current}
       />
       <RaiseAConcern concerns={concerns} offerId={id} />
-    </BackendPage>
+      <Footer />
+    </>
   );
 };
 
@@ -191,17 +184,13 @@ const RaiseAConcern = ({ offerId, concerns }) => {
 
 const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
   const [toast, setToast] = useToast();
-  const [image, setImage] = React.useState(null);
-  const [signature, setSignature] = React.useState(null);
-  const [offerQuery, offer, setOffer] = useGetQuery({
+  const [offerQuery, offer] = useGetQuery({
     key: pageOptions.key,
     name: [pageOptions.key, offerId],
     setToast,
     endpoint: API_ENDPOINT.getOneOffer(offerId),
     refresh: true,
   });
-
-  const isUser = useCurrentRole().isUser;
 
   return (
     <>
@@ -214,76 +203,14 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
       >
         {offer && (
           <>
-            {/* add current status here for admin / vendor */}
-            {!isUser && (
-              <h6 className="mt-5 hide-print">
-                Current Offer Status: {offer.status}
-              </h6>
-            )}
             <OfferLetterTemplate
               enquiryInfo={offer.enquiryInfo}
               offerInfo={offer}
               propertyInfo={offer.propertyInfo}
-              signature={signature}
+              signature={''}
               showSignaturePad
               vendorInfo={offer.vendorInfo}
-            >
-              {offer.status === OFFER_STATUS.GENERATED && isUser && (
-                <>
-                  <div className="mt-5">
-                    <DigitalSignaturePad setSignature={setSignature} />
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <UploadSignature
-                      image={image}
-                      setImage={setImage}
-                      setSignature={setSignature}
-                    />
-                  </div>
-                </>
-              )}
-
-              <AcceptOfferLetter
-                setOffer={setOffer}
-                setToast={setToast}
-                offer={offer}
-                signature={signature}
-              />
-              <AssignOfferLetter
-                setOffer={setOffer}
-                setToast={setToast}
-                offer={offer}
-              />
-              <AllocateOfferLetter
-                setOffer={setOffer}
-                setToast={setToast}
-                offer={offer}
-              />
-              <ReactivateOfferForm
-                setToast={setToast}
-                setOffer={setOffer}
-                offer={offer}
-              />
-              <RevertOfferLetter
-                setToast={setToast}
-                setOffer={setOffer}
-                offer={offer}
-              />
-              <CancelOfferLetter
-                setOffer={setOffer}
-                setToast={setToast}
-                offer={offer}
-              />
-
-              <div>
-                <SharePublicLink link={`/offer/${offer._id}`} />
-                <Link
-                  to={`http://appstaging.ballers.ng/offer/${offer._id}`}
-                  className="btn btn-outline-dark btn-wide"
-                >
-                  View Public Offer
-                </Link>
-              </div>
-            </OfferLetterTemplate>
+            ></OfferLetterTemplate>
           </>
         )}
       </ContentLoader>
@@ -291,52 +218,6 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
   );
 };
 
-const SharePublicLink = ({ link }) => {
-  const [copied, setCopied] = React.useState(false);
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setCopied(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [copied]);
-
-  return (
-    <>
-      <label htmlFor="offerLink">Share Your Offer Link</label>
-      <div className="input-group">
-        <input
-          type="text"
-          name="offerLink"
-          className="form-control"
-          aria-label="offer code"
-          value={link}
-          readOnly
-        />
-        <div className="input-group-append">
-          <CopyToClipboard text={link} onCopy={() => setCopied(true)}>
-            {copied ? (
-              <span className="input-group-text btn-success text-white disabled">
-                <CheckIcon />
-              </span>
-            ) : (
-              <span className="input-group-text btn btn-light">
-                <CopyToClipBoardIcon />
-              </span>
-            )}
-          </CopyToClipboard>
-        </div>
-      </div>
-      <div className="mt-2">
-        {copied && (
-          <div className="small text-success text-center">
-            Your offer link has been successfully copied!
-          </div>
-        )}
-      </div>
-    </>
-  );
-};
 class OfferLetterTemplateContainer extends React.Component {
   render() {
     const { offerId, setConcerns } = this.props;

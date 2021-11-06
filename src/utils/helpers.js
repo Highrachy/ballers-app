@@ -182,6 +182,7 @@ export const getFormattedAddress = ({
   city,
   state,
   country,
+  hideCountry,
 }) => (
   <address>
     {street1}
@@ -191,8 +192,13 @@ export const getFormattedAddress = ({
         {street2} <br />{' '}
       </>
     )}
-    {city}, {state} <br />
-    {country}.
+    {city}, {state}
+    {!hideCountry && (
+      <>
+        <br />
+        {country}.
+      </>
+    )}
   </address>
 );
 

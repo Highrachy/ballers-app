@@ -20,6 +20,7 @@ import ReactQuery from 'components/pages/playground/ReactQuery';
 import { isDevEnvironment } from 'utils/helpers';
 import ImagesComponent from 'components/pages/playground/ImagesComponent';
 import VendorProfile from 'components/pages/shared/VendorProfile';
+import PublicSingleOffer from 'components/pages/frontend/PublicSingleOffer';
 
 const FrontPageRouter = () => (
   <Router>
@@ -42,7 +43,8 @@ const FrontPageRouter = () => (
     <SearchResult path="search" />
     <Articles path="articles" />
     <Invoice path="payment" />
-    <VendorProfile path="company/:slug" />
+    <PublicSingleOffer path="offer/:id" />
+    <VendorProfile path="vendors/:slug" />
     {isDevEnvironment() && (
       <>
         <FormComponents path="forms" />

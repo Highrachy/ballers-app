@@ -191,10 +191,19 @@ const PropertyCard = (property) => {
                   </strong>
                 </span>
               </div>
-              {/* Price */}
-              <h5 className="property-price property-spacing">
-                {moneyFormatInNaira(price)}
-              </h5>
+              <div className="row">
+                <div className="col-sm-6">
+                  {/* Price */}
+                  <h5 className="property-price property-spacing">
+                    {moneyFormatInNaira(price)}
+                  </h5>
+                </div>
+                <div className="col-sm-6 text-right">
+                  <button className="btn btn-sm btn-secondary">
+                    View Details
+                  </button>
+                </div>
+              </div>
               {/* Info with Icons */}
               <div className="property-holder__separator my-3"></div>
               <div className="property-info property-spacing">

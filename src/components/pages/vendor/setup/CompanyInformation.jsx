@@ -58,7 +58,10 @@ export const CompanyInformationForm = ({ moveToNextStep, setStepToast }) => {
           ...values,
           vendor: {
             ...values.vendor,
-            companyAddress: { ...values.companyAddress, country: 'Nigeria' },
+            companyAddress: {
+              ...values.vendor.companyAddress,
+              country: 'Nigeria',
+            },
           },
         };
 

@@ -540,7 +540,8 @@ const OfferLetterTemplate = ({
       )}
       {/* TODO: Check Expired */}
       {isPastDate(offerInfo.expires) &&
-        !ACTIVE_OFFER_STATUS.includes(offerInfo.status) && (
+        (offerInfo.status === OFFER_STATUS.EXPIRED ||
+          offerInfo.status === OFFER_STATUS.GENERATED) && (
           <h2 className="text-danger">Offer has expired</h2>
         )}
       {children}

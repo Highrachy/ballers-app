@@ -47,7 +47,7 @@ export const ReactivateOfferForm = ({ setToast, offer }) => {
         </div>
       )}
       <Modal
-        title="Bank Account"
+        title="Reactivate Offer Letter"
         show={showReactivateModal}
         onHide={() => setShowReactivateModal(false)}
         showFooter={false}

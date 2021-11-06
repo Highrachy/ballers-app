@@ -72,3 +72,28 @@
   display: inline-block;
   overflow: hidden;
 }
+
+.company-avatar-container {
+  position: relative;
+  .certified-icon {
+    position: absolute;
+    top: -1rem;
+    right: 0;
+
+    svg {
+      height: 2rem;
+      width: 2rem;
+    }
+  }
+}
+.avatar-company {
+  height: 5rem;
+  width: 5rem;
+  object-fit: contain;
+  border-radius: 0.4rem;
+  display: inline-block;
+  overflow: hidden;
+  margin-right: 1rem;
+  border: 1px solid $secondary;
+  padding: 10px;
+}

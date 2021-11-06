@@ -95,13 +95,13 @@ export const BankInfoIcon = () => <FiArchive />;
 export const BankAccountIcon = () => <MdAccountBalanceWallet />;
 export const BathIcon = () => <FaBath />;
 export const BedIcon = () => <FaBed />;
-export const CloseIcon = () => <FiX />;
 export const CameraIcon = () => <FiCamera />;
 export const CarIcon = () => <AiFillCar />;
 export const CertifyIcon = () => <GoVerified />;
 export const CheckIcon = () => <FiCheck />;
 export const CheckSquareIcon = () => <AiFillCheckSquare />;
 export const CheckCircleIcon = () => <BiCheckCircle />;
+export const CloseIcon = () => <FiX />;
 export const CompanyInfoIcon = () => <FiFolder />;
 export const CopyToClipBoardIcon = () => <FiClipboard />;
 export const ClockIcon = () => <FiClock />;
@@ -172,6 +172,26 @@ export const VisitationIcon = () => (
 );
 export const WarningIcon = () => <FaExclamationTriangle />;
 export const VendorIcon = () => <FaUserCircle />;
+
+export const CertifiedIcon = () => (
+  <svg
+    width={50}
+    height={50}
+    viewBox="0 0 50 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M20.4591 13.9754C21.8884 9.57656 28.1116 9.57656 29.5409 13.9754C30.1801 15.9427 32.0133 17.2746 34.0818 17.2746C38.707 17.2746 40.6301 23.1932 36.8882 25.9119C35.2148 27.1277 34.5145 29.2828 35.1537 31.25C36.583 35.6489 31.5483 39.3068 27.8064 36.5881C26.133 35.3723 23.867 35.3723 22.1936 36.5881C18.4517 39.3068 13.417 35.6489 14.8463 31.25C15.4855 29.2828 14.7852 27.1277 13.1118 25.9119C9.36989 23.1932 11.293 17.2746 15.9182 17.2746C17.9867 17.2746 19.8199 15.9427 20.4591 13.9754Z"
+      fill="#5775FA"
+    />
+    <path
+      d="M20 24.8758L23.6765 28.4706L30 22"
+      stroke="white"
+      strokeWidth={2}
+    />
+  </svg>
+);
 
 export const HouseIcon = () => (
   <svg
