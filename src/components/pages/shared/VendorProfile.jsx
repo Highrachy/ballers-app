@@ -38,6 +38,7 @@ const VendorProfile = ({ slug }) => {
         <ContentLoader
           hasContent={!!user}
           Icon={<UserIcon />}
+          loadingText="Loading Vendor Information"
           query={userQuery}
           name={pageOptions.pageName}
           toast={toast}

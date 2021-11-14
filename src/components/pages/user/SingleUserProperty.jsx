@@ -1,10 +1,7 @@
 import React from 'react';
 import BackendPage from 'components/layout/BackendPage';
-import { Card } from 'react-bootstrap';
-import { Link } from '@reach/router';
 import Modal from 'components/common/Modal';
 import { useToast } from 'components/utils/Toast';
-import { RightArrowIcon } from 'components/utils/Icons';
 import { PortfolioIcon } from 'components/utils/Icons';
 import { getLongDate } from 'utils/date-helpers';
 import { VisitationIcon } from 'components/utils/Icons';
@@ -18,7 +15,11 @@ import { OwnedPropertyCard } from '../shared/SingleProperty';
 import { ProcessVasForm } from './ProcessVas';
 import Button from 'components/forms/Button';
 import { VAS_TYPE } from 'utils/constants';
-import { Loading } from 'components/utils/LoadingItems';
+import { useBoolean } from 'hooks/useBoolean';
+import { FileIcon } from 'components/utils/Icons';
+import { SearchIcon } from 'components/utils/Icons';
+import { DoubleSpacing } from 'components/common/Helpers';
+import { Spacing } from 'components/common/Helpers';
 
 const pageOptions = {
   key: 'property',
@@ -43,6 +44,7 @@ const SingleUserProperty = ({ id }) => {
       sortDirection: 'desc',
     },
   };
+
   const [vasQuery] = useGetQuery({
     axiosOptions: axiosOptionsForPropertyVas,
     key: 'vas',
@@ -65,12 +67,12 @@ const SingleUserProperty = ({ id }) => {
           property={property}
           setToast={setToast}
           setProperty={setProperty}
-          Sidebar={
-            <PropertySidebar
+          enquiryInfo={property?.enquiryInfo}
+          vendorInfo={property?.vendorInfo}
+          Actionbar={
+            <Actionbar
               property={property}
               visitationInfo={property?.visitationInfo}
-              enquiryInfo={property?.enquiryInfo}
-              vendorInfo={property?.vendorInfo}
               setToast={setToast}
               vasQuery={vasQuery}
             />
@@ -81,33 +83,98 @@ const SingleUserProperty = ({ id }) => {
   );
 };
 
-const PropertySidebar = ({
+const Actionbar = ({
   property,
   visitationInfo,
-  enquiryInfo,
   setToast,
   vasQuery,
   vendorInfo,
 }) => {
-  const [showRequestVisitForm, setShowRequestVisitForm] = React.useState(false);
-  const [showVasForm, setShowVasForm] = React.useState(false);
-  const [showTitleDocument, setShowTitleDocument] = React.useState(false);
   const userHasScheduledVisit =
     visitationInfo?.length > 0 &&
     visitationInfo?.[visitationInfo.length - 1].status === 'Pending';
-  const userHasPreviousEnquiry = !!enquiryInfo;
+
+  return (
+    <section className="mt-3">
+      <ViewTitleDocumentButton property={property} />
+      <DoubleSpacing />
+      <ScheduleTourButton
+        property={property}
+        visitationInfo={visitationInfo}
+        setToast={setToast}
+        userHasScheduledVisit={userHasScheduledVisit}
+      />
+      <DoubleSpacing />
+      <InvestigatePropertyButton
+        property={property}
+        vasQuery={vasQuery}
+        setToast={setToast}
+      />
+
+      <div className="mt-4">
+        {userHasScheduledVisit && (
+          <span className="alert alert-warning">
+            Your visitation date is on{' '}
+            <strong>
+              {getLongDate(
+                visitationInfo?.[visitationInfo.length - 1].visitDate
+              )}
+            </strong>
+          </span>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export const ViewTitleDocumentButton = ({ property }) => {
+  const [showModal, setShowModalToTrue, setShowModalToFalse] =
+    useBoolean(false);
+
+  return (
+    <>
+      <Modal
+        title="Title Document"
+        show={showModal}
+        onHide={setShowModalToFalse}
+        showFooter={false}
+      >
+        {property.titleDocument}
+      </Modal>
+
+      <Button
+        color="none"
+        className="btn-wide btn-wide-sm btn-sm btn-outline-secondary"
+        onClick={setShowModalToTrue}
+      >
+        View Title Document
+        <Spacing />
+        <span className="icon-md">
+          <FileIcon />
+        </span>
+      </Button>
+    </>
+  );
+};
+
+export const ScheduleTourButton = ({
+  property,
+  visitationInfo,
+  setToast,
+  userHasScheduledVisit,
+}) => {
+  const [showModal, setShowModalToTrue, setShowModalToFalse] = useBoolean();
   const [showReschedule, setShowReschedule] = React.useState(false);
   const [showCancelModal, setShowCancelModal] = React.useState(false);
   const alreadyVisitedProperty = visitationInfo?.some(
     (visit) => visit.status === 'Resolved'
   );
-
   return (
     <>
       <Modal
-        title="Schedule visit"
-        show={showRequestVisitForm}
-        onHide={() => setShowRequestVisitForm(false)}
+        title="Schedula a Tour Today"
+        show={showModal}
+        onHide={setShowModalToFalse}
         showFooter={false}
       >
         {userHasScheduledVisit ? (
@@ -119,7 +186,7 @@ const PropertySidebar = ({
 
                 <CancelVisitForm
                   visitationInfo={visitationInfo?.[visitationInfo.length - 1]}
-                  hideForm={() => setShowRequestVisitForm(false)}
+                  hideForm={setShowModalToFalse}
                   setToast={setToast}
                 />
 
@@ -140,7 +207,7 @@ const PropertySidebar = ({
                 <h6>Reschedule Form</h6>
                 <RescheduleVisitForm
                   visitationInfo={visitationInfo?.[visitationInfo.length - 1]}
-                  hideForm={() => setShowRequestVisitForm(false)}
+                  hideForm={setShowModalToFalse}
                   setToast={setToast}
                 />
                 <div className="text-right">
@@ -211,7 +278,7 @@ const PropertySidebar = ({
                 </button>
                 &nbsp;&nbsp;
                 <button
-                  onClick={() => setShowRequestVisitForm(false)}
+                  onClick={setShowModalToFalse}
                   className="btn btn-sm btn-danger"
                 >
                   Close Modal
@@ -221,146 +288,61 @@ const PropertySidebar = ({
           </>
         ) : (
           <ScheduleVisitForm
-            hideForm={() => setShowRequestVisitForm(false)}
+            hideForm={setShowModalToFalse}
             propertyId={property._id}
             setToast={setToast}
           />
         )}
       </Modal>
+      <Button
+        color="none"
+        className="btn-wide btn-wide-sm btn-sm btn-outline-warning"
+        onClick={setShowModalToTrue}
+      >
+        {alreadyVisitedProperty
+          ? 'Schedule Another Visit'
+          : 'Schedule a Tour Today'}
+        <Spacing />
+        <span className="icon-md">
+          <VisitationIcon />
+        </span>
+      </Button>
+      '{' '}
+    </>
+  );
+};
+
+export const InvestigatePropertyButton = ({ property, setToast, vasQuery }) => {
+  const [showModal, setShowModalToTrue, setShowModalToFalse] =
+    useBoolean(false);
+
+  return (
+    <>
       <Modal
-        title="Services"
-        show={showVasForm}
-        onHide={() => setShowVasForm(false)}
+        title="Investigate Property"
+        show={showModal}
+        onHide={setShowModalToFalse}
         showFooter={false}
       >
         <ProcessVasForm
-          hideForm={() => setShowVasForm(false)}
+          hideForm={setShowModalToFalse}
           setToast={setToast}
           vasInfo={vasQuery.isLoading ? null : vasQuery?.data?.result}
           propertyId={property._id}
         />
       </Modal>
 
-      <Card className="card-container property-holder bg-gray">
-        <h5>Interested in this property?</h5>
-
-        <p className="">
-          {userHasPreviousEnquiry
-            ? 'You already made previous enquiries'
-            : 'Kindly proceed with property acquisition'}
-        </p>
-        {(enquiryInfo?.approved || !userHasPreviousEnquiry) && (
-          <Link
-            to={`/user/property/enquiry/${property._id}`}
-            className="btn btn-block btn-secondary my-3"
-          >
-            {userHasPreviousEnquiry ? 'Make Another Enquiry' : 'Proceed'}
-          </Link>
-        )}
-      </Card>
-
-      {userHasScheduledVisit ? (
-        <>
-          <h5 className="header-smaller">You have an upcoming visit</h5>
-          <Card
-            className="card-container property-holder bg-gray card-link"
-            onClick={() => setShowRequestVisitForm(true)}
-          >
-            <p className="mr-4">
-              Your visitation date is on
-              <br />{' '}
-              <strong className="text-danger">
-                {getLongDate(
-                  visitationInfo?.[visitationInfo.length - 1].visitDate
-                )}
-              </strong>
-            </p>
-            <div className="circle-icon">
-              <VisitationIcon />
-            </div>
-          </Card>
-        </>
-      ) : (
-        <>
-          <h5 className="header-smaller">Schedule a tour</h5>
-          <Card
-            className="card-container property-holder bg-gray card-link"
-            onClick={() => setShowRequestVisitForm(true)}
-          >
-            {alreadyVisitedProperty ? (
-              <p className="mr-4">
-                You have already visited this property
-                <br /> Request another visit.
-              </p>
-            ) : (
-              <p className="mr-4">
-                Want to come check the property?
-                <br /> Request a visit.
-              </p>
-            )}
-            <div className="circle-icon">
-              <RightArrowIcon />
-            </div>
-          </Card>
-        </>
-      )}
-
-      <h5 className="header-smaller">View title document</h5>
-      <Modal
-        title="Title Document"
-        show={showTitleDocument}
-        onHide={() => setShowTitleDocument(false)}
-        showFooter={false}
+      <Button
+        color="none"
+        className="btn-wide btn-wide-sm btn-sm btn-outline-success"
+        onClick={setShowModalToTrue}
       >
-        {property.titleDocument}
-      </Modal>
-      <Card
-        className="card-container property-holder bg-gray card-link"
-        onClick={() => setShowTitleDocument(true)}
-      >
-        <p className="mr-4">View a copy of the property document.</p>
-        <div className="circle-icon bg-green">
-          <RightArrowIcon />
-        </div>
-      </Card>
-
-      <Card className="card-container property-holder bg-gray">
-        <h5 className="header-smaller">Investigate Property</h5>
-
-        {vasQuery.isLoading ? (
-          <Loading />
-        ) : (
-          <ul>
-            {vasQuery?.data?.result?.map(({ name }) => (
-              <li key={name}>{name}</li>
-            ))}
-          </ul>
-        )}
-
-        <Button
-          onClick={() => setShowVasForm(true)}
-          className="btn btn-block btn-secondary my-3"
-        >
-          Interested
-        </Button>
-      </Card>
-
-      <h5 className="header-smaller">View Vendor Information</h5>
-      <Card className="card-container property-holder bg-gray">
-        <Link to={`/vendors/${vendorInfo?.vendor?.slug}` || 'blissville'}>
-          <img
-            src={
-              `${vendorInfo?.vendor?.companyLogo}` ||
-              '//images.weserv.nl?h=300&url=https%3A%2F%2Fballers-staging.s3.amazonaws.com%2F6118edc1f6a5aa00186006b6%2Fc984f060-fdb6-11eb-a7ac-65f0ba24a49a.png'
-            }
-            alt="vendor"
-            className="img-fluid vendor-img mr-4"
-          />
-          <div className="circle-icon">
-            <RightArrowIcon />
-          </div>
-        </Link>
-      </Card>
+        Investigate Property
+        <Spacing />
+        <span className="icon-md">
+          <SearchIcon />
+        </span>
+      </Button>
     </>
   );
 };

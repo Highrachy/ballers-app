@@ -54,6 +54,7 @@ import { ErrorIcon } from 'components/utils/Icons';
 import { QuestionMarkIcon } from 'components/utils/Icons';
 import { TestimonialsList } from './Testimonials';
 import { AssignedPropertyIcon } from 'components/utils/Icons';
+import { VendorIcon } from 'components/utils/Icons';
 
 const pageOptions = {
   key: 'property',
@@ -94,7 +95,10 @@ export const OwnedPropertyCard = ({
   property,
   setToast,
   setProperty,
+  enquiryInfo,
+  vendorInfo,
   Sidebar,
+  Actionbar,
 }) => {
   const isVendor = useCurrentRole().role === USER_TYPES.vendor;
   const isAdmin = useCurrentRole().role === USER_TYPES.admin;
@@ -125,7 +129,12 @@ export const OwnedPropertyCard = ({
 
         <div className="row mt-5">
           <div className={Sidebar ? 'col-sm-7' : 'col-sm-12'}>
-            <PropertyDescription property={property} />
+            <PropertyDescription
+              property={property}
+              enquiryInfo={enquiryInfo}
+              vendorInfo={vendorInfo}
+              Actionbar={Actionbar}
+            />
           </div>
           {Sidebar && <div className="col-sm-5">{Sidebar}</div>}
         </div>
@@ -664,7 +673,13 @@ export const PropertyImage = ({ property, hideGallery }) => {
   );
 };
 
-export const PropertyDescription = ({ property, isPortfolioPage }) => {
+export const PropertyDescription = ({
+  property,
+  isPortfolioPage,
+  enquiryInfo,
+  vendorInfo,
+  Actionbar,
+}) => {
   const [showDescription, setShowDescription] = React.useState(false);
   const DESCRIPTION_LENGTH = 600;
   const hideSomePropertyDescription =
@@ -672,7 +687,11 @@ export const PropertyDescription = ({ property, isPortfolioPage }) => {
 
   return (
     <>
-      <PropertyHeader property={property} />
+      <PropertyHeader
+        property={property}
+        enquiryInfo={enquiryInfo}
+        vendorInfo={vendorInfo}
+      />
 
       <h5 className="mt-5 header-smaller">About Property</h5>
       <div className="position-relative">
@@ -690,6 +709,9 @@ export const PropertyDescription = ({ property, isPortfolioPage }) => {
           </div>
         )}
       </div>
+
+      {/* action bar */}
+      <section className="actionbar">{Actionbar}</section>
 
       <h5 className="mt-5 header-smaller">Features</h5>
       <ul className="list-unstyled row lh-2">
@@ -731,68 +753,108 @@ export const PropertyDescription = ({ property, isPortfolioPage }) => {
   );
 };
 
-export const PropertyHeader = ({ property }) => (
-  <>
-    <h3 className="property-holder__big-title">
-      {property.name}{' '}
-      {!useCurrentRole().isUser &&
-        property?.status === PROPERTY_VIDEO_STATUS.APPROVED && (
-          <small className="text-success">
-            <Spacing />
-            <Tooltip text="Approved">
-              <SuccessIcon />
-            </Tooltip>{' '}
-          </small>
-        )}
-      {!useCurrentRole().isUser &&
-        property?.status === PROPERTY_VIDEO_STATUS.DISAPPROVED && (
-          <small className="text-success">
-            <Spacing />
-            <Tooltip text="Disapproved">
-              <ErrorIcon />
-            </Tooltip>{' '}
-          </small>
-        )}
-      {!useCurrentRole().isUser &&
-        property?.status === PROPERTY_VIDEO_STATUS.PENDING_ADMIN_REVIEW && (
-          <small className="text-success">
-            <Spacing />
-            <Tooltip text="Pending Admin Review">
-              <QuestionMarkIcon />
-            </Tooltip>
-          </small>
-        )}
-    </h3>
-    <h4 className="text-secondary mb-3">
-      {moneyFormatInNaira(property.price)}
-    </h4>
+export const PropertyHeader = ({ property, enquiryInfo, vendorInfo }) => {
+  const userHasPreviousEnquiry = !!enquiryInfo;
+  const isUser = useCurrentRole().isUser;
+  return (
+    <>
+      <div className="row mb-3">
+        <div className="col-sm-8">
+          <h3 className="property-holder__big-title">
+            {property.name}{' '}
+            {!isUser && <ShowPropertyStatus property={property} />}
+          </h3>
+        </div>
+        <div className="col-sm-4 text-right">
+          <Link
+            className="text-muted"
+            to={`/vendors/${vendorInfo?.vendor?.slug}`}
+          >
+            <VendorIcon /> {vendorInfo?.vendor?.companyName}
+          </Link>
+        </div>
+      </div>
 
-    <p className="mb-2 text-muted">
-      {getLocationFromAddress(property.address)}
-    </p>
-    <div className="property-info-details">
-      <span className="pr-3">
-        <BedIcon /> <Spacing /> {property.bedrooms}{' '}
-        {Humanize.pluralize(property.bedrooms, 'bed')}
-      </span>
-      <TextSeparator />
-      <span className="px-3">
-        <BathIcon /> <Spacing /> {property.bathrooms}{' '}
-        {Humanize.pluralize(property.bathrooms, 'bath')}
-      </span>
-      <TextSeparator />
-      <span className="px-3">
-        <ToiletIcon /> <Spacing /> {property.toilets}{' '}
-        {Humanize.pluralize(property.toilets, 'toilet')}
-      </span>
-      <TextSeparator />
-      <span className="pl-3">
-        <AssignedPropertyIcon /> <Spacing /> {property.availableUnits}{' '}
-        {Humanize.pluralize(property.availableUnits, 'unit')}
-      </span>
-    </div>
-  </>
-);
+      <div className="row">
+        <div className="col-sm-8">
+          <h4 className="text-secondary mb-3">
+            {moneyFormatInNaira(property.price)}
+          </h4>
+        </div>
+        <div className="col-sm-4 text-right">
+          {isUser && (
+            <>
+              {(enquiryInfo?.approved || !userHasPreviousEnquiry) && (
+                <Link
+                  to={`/user/property/enquiry/${property._id}`}
+                  className="btn btn-sm btn-wide btn-secondary"
+                >
+                  {userHasPreviousEnquiry ? 'Buy Property Again' : 'Buy Now'}
+                </Link>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+
+      <p className="mb-2 text-muted">
+        {getLocationFromAddress(property.address)}
+      </p>
+      <div className="property-info-details">
+        <span className="pr-3">
+          <BedIcon /> <Spacing /> {property.bedrooms}{' '}
+          {Humanize.pluralize(property.bedrooms, 'bed')}
+        </span>
+        <TextSeparator />
+        <span className="px-3">
+          <BathIcon /> <Spacing /> {property.bathrooms}{' '}
+          {Humanize.pluralize(property.bathrooms, 'bath')}
+        </span>
+        <TextSeparator />
+        <span className="px-3">
+          <ToiletIcon /> <Spacing /> {property.toilets}{' '}
+          {Humanize.pluralize(property.toilets, 'toilet')}
+        </span>
+        <TextSeparator />
+        <span className="pl-3">
+          <AssignedPropertyIcon /> <Spacing /> {property.availableUnits}{' '}
+          {Humanize.pluralize(property.availableUnits, 'unit')}
+        </span>
+      </div>
+    </>
+  );
+};
+
+export const ShowPropertyStatus = ({ property }) => {
+  return (
+    <>
+      {property?.status === PROPERTY_VIDEO_STATUS.APPROVED && (
+        <small className="text-success">
+          <Spacing />
+          <Tooltip text="Approved">
+            <SuccessIcon />
+          </Tooltip>{' '}
+        </small>
+      )}
+      {property?.status === PROPERTY_VIDEO_STATUS.DISAPPROVED && (
+        <small className="text-success">
+          <Spacing />
+          <Tooltip text="Disapproved">
+            <ErrorIcon />
+          </Tooltip>{' '}
+        </small>
+      )}
+      {property?.status === PROPERTY_VIDEO_STATUS.PENDING_ADMIN_REVIEW && (
+        <small className="text-success">
+          <Spacing />
+          <Tooltip text="Pending Admin Review">
+            <QuestionMarkIcon />
+          </Tooltip>
+        </small>
+      )}
+    </>
+  );
+};
 
 export const PropertyMap = ({ mapLocation }) =>
   mapLocation ? (
