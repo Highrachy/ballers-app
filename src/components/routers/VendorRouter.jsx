@@ -6,6 +6,9 @@ import Menu from 'components/pages/user/Menu';
 import Properties from 'components/pages/shared/Properties';
 import SingleProperty from 'components/pages/shared/SingleProperty';
 import ScheduledVisits from 'components/pages/vendor/ScheduledVisits';
+import CreateOfferTemplate from 'components/pages/vendor/CreateOfferTemplate';
+import OfferTemplates from 'components/pages/vendor/OfferTemplates';
+import SingleOfferTemplate from 'components/pages/vendor/SingleOfferTemplate';
 import Transactions from 'components/pages/shared/Transactions';
 import PropertyForm from 'components/pages/vendor/PropertyForm';
 import Enquiries from 'components/pages/shared/Enquiries';
@@ -50,6 +53,9 @@ const VendorRouter = () => (
     <PersonalizedVas path="vas" />
     <VasRequests path="service/requests" />
     <SingleVasRequest path="service/requests/:id" />
+    <CreateOfferTemplate path="offer/template/:id" />
+    <OfferTemplates path="offer-templates" />
+    <SingleOfferTemplate path="offer-template/:id" />
     <Menu path="menu" />
   </Router>
 );

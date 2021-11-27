@@ -83,13 +83,7 @@ const SingleUserProperty = ({ id }) => {
   );
 };
 
-const Actionbar = ({
-  property,
-  visitationInfo,
-  setToast,
-  vasQuery,
-  vendorInfo,
-}) => {
+const Actionbar = ({ property, visitationInfo, setToast, vasQuery }) => {
   const userHasScheduledVisit =
     visitationInfo?.length > 0 &&
     visitationInfo?.[visitationInfo.length - 1].status === 'Pending';

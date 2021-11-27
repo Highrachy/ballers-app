@@ -126,13 +126,17 @@ DisplayFormikState.defaultProps = {
   hide: false,
 };
 
-export const setInitialValues = (schema, initialValues = {}) => {
+export const setInitialValues = (
+  schema,
+  initialValues = {},
+  keepInitial = false
+) => {
   const values = {};
   Object.keys(schema).forEach((key) => {
     if (initialValues?.[key] || initialValues?.[key] === 0) {
       values[key] = initialValues[key];
     } else {
-      values[key] = '';
+      values[key] = keepInitial ? schema[key] : '';
     }
   });
   return values;

@@ -5,6 +5,10 @@ import { COLOR_STYLE } from 'utils/constants';
 import BallersSpinner from 'components/utils/BallersSpinner';
 import { Link } from '@reach/router';
 
+export const BUTTON_TYPES = {
+  SMALL: 'small',
+};
+
 const Button = ({
   className,
   loading,
@@ -13,10 +17,16 @@ const Button = ({
   children,
   onClick,
   color,
+  type,
   ...props
 }) => (
   <button
-    className={classNames('btn', `btn-${color}`, className)}
+    className={classNames(
+      'btn',
+      `btn-${color}`,
+      { 'btn-xs btn-wide': type === BUTTON_TYPES.SMALL },
+      className
+    )}
     onClick={onClick}
     type="button"
     {...props}

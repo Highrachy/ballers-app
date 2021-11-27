@@ -17,6 +17,9 @@ export const API_ENDPOINT = {
   getOneOffer: (id) => `${BASE_API_URL}/offer/${id}`,
   getAllOffers: () => `${BASE_API_URL}/offer/all`,
 
+  getOneOfferTemplate: (id) => `${BASE_API_URL}/offer/template/${id}`,
+  getAllOfferTemplates: () => `${BASE_API_URL}/offer/template/all`,
+
   getOneTransaction: (id) => `${BASE_API_URL}/transaction/${id}`,
   getAllTransactions: () => `${BASE_API_URL}/transaction/all`,
 

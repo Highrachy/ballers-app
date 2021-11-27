@@ -7,6 +7,7 @@ import {
 import Axios from 'axios';
 import {
   BASE_API_URL,
+  OFFER_TEMPLATE_STATUS,
   PAYMENT_FREQUENCY,
   PAYMENT_OPTIONS_BREAKDOWN,
 } from 'utils/constants';
@@ -39,6 +40,9 @@ import { PlusIcon } from 'components/utils/Icons';
 import { CloseIcon } from 'components/utils/Icons';
 import { LinkSeparator } from 'components/common/Helpers';
 import Label from 'components/forms/Label';
+import { useGetQuery } from 'hooks/useQuery';
+import { API_ENDPOINT } from 'utils/URL';
+import { useCurrentRole } from 'hooks/useUser';
 
 const CreateOfferLetter = ({ enquiry }) => {
   const defaultValue = {
@@ -74,8 +78,6 @@ const CreateOfferLetter = ({ enquiry }) => {
   const [value, setValue] = React.useState(defaultValue);
   const [showOfferLetter, setShowOfferLetter] = React.useState(false);
 
-  console.log(`value`, value);
-
   return (
     <>
       {showOfferLetter ? (
@@ -88,7 +90,17 @@ const CreateOfferLetter = ({ enquiry }) => {
         <CreateOfferLetterForm
           enquiry={enquiry}
           handleShowOfferLetter={() => setShowOfferLetter(true)}
-          handleValue={(value) => setValue(value)}
+          handleValue={(newValue) => {
+            const filteredValues = setInitialValues(value, newValue, true);
+            setValue({
+              ...value,
+              ...filteredValues,
+              additionalClause:
+                newValue?.additionalClause?.clauses ||
+                newValue?.additionalClause ||
+                [],
+            });
+          }}
           value={value}
         />
       )}
@@ -101,12 +113,14 @@ const CreateOfferLetterForm = ({
   handleValue,
   value,
 }) => {
-  const [toast] = useToast();
-  const [additionalClause, setadditionalClause] = React.useState(['']);
+  const [toast, setToast] = useToast();
+  const [additionalClause, setAdditionalClause] = React.useState(['']);
   const [showOtherPaymentsForm, setShowOtherPaymentsForm] =
     React.useState(false);
   const [showOtherTermsForm, setShowOtherTermsForm] = React.useState(false);
   const [showAddMoreTermsForm, setShowAddMoreTermsForm] = React.useState(false);
+
+  console.log(`value`, value);
 
   return (
     <div className="container-fluid">
@@ -146,6 +160,11 @@ const CreateOfferLetterForm = ({
             <Form>
               <Toast {...toast} />
 
+              <ShowTemplateButton
+                setToast={setToast}
+                handleValue={handleValue}
+              />
+
               <OfferFormContainer title="Create Offer Letter">
                 <OfferLetterForm />
               </OfferFormContainer>
@@ -165,7 +184,7 @@ const CreateOfferLetterForm = ({
               {showAddMoreTermsForm && (
                 <OfferFormContainer title="Add Your Own Terms and Condition">
                   <AddMoreTermsAndConditionsForm
-                    setadditionalClause={setadditionalClause}
+                    setAdditionalClause={setAdditionalClause}
                     additionalClause={
                       value?.additionalClause || additionalClause
                     }
@@ -219,8 +238,8 @@ const CreateOfferLetterForm = ({
                       letter.
                     </p>
                     <ul className="text-danger">
-                      {errors.map((error) => (
-                        <li>{error}</li>
+                      {errors.map((error, index) => (
+                        <li key={index}>{error}</li>
                       ))}
                     </ul>
                   </span>
@@ -244,7 +263,69 @@ const CreateOfferLetterForm = ({
   );
 };
 
-const OfferFormContainer = ({ title, children }) => (
+const ShowTemplateButton = ({ setToast, handleValue }) => {
+  const [showTemplateModal, setShowTemplateModal] = React.useState(false);
+
+  // load all offer templates
+  const axiosOptionForOffers = {
+    params: { limit: 0, status: OFFER_TEMPLATE_STATUS.APPROVED },
+  };
+
+  const [offersQuery] = useGetQuery({
+    axiosOptions: axiosOptionForOffers,
+    childrenKey: 'offerTemplate',
+    key: 'offerTemplates',
+    name: ['offerTemplates', axiosOptionForOffers],
+    endpoint: API_ENDPOINT.getAllOfferTemplates(),
+    refresh: true,
+    setToast,
+  });
+
+  const offerTemplate = offersQuery?.data?.result || [];
+
+  const isVendor = useCurrentRole().isVendor;
+
+  const selectedTemplate = (offerId) => {
+    const selectedTemplate = offerTemplate.find(({ _id }) => offerId === _id);
+    handleValue(selectedTemplate);
+    setShowTemplateModal(false);
+  };
+
+  return (
+    <>
+      {isVendor && offerTemplate?.length > 0 && (
+        <div className="mt-5 text-right">
+          <button
+            type="button"
+            className="btn btn-dark btn-wide"
+            onClick={() => setShowTemplateModal(true)}
+          >
+            Use Offer Template
+          </button>
+        </div>
+      )}
+      <Modal
+        title="Select Offer Template"
+        show={showTemplateModal}
+        onHide={() => setShowTemplateModal(false)}
+        showFooter={false}
+      >
+        {offerTemplate?.map((template, index) => (
+          <button
+            key={index}
+            type="button"
+            className="btn btn-block btn-outline-dark"
+            onClick={() => selectedTemplate(template._id)}
+          >
+            {template.name}
+          </button>
+        ))}
+      </Modal>
+    </>
+  );
+};
+
+export const OfferFormContainer = ({ title, children }) => (
   <Card className="mt-4">
     <section className="row">
       <div className="col-md-10 p-5">
@@ -301,44 +382,51 @@ const OfferLetterForm = () => {
           options={objectToOptions(PAYMENT_FREQUENCY, null, true)}
         />
       </div>
-      <div className="form-row">
-        <Select
-          formGroupClassName="col-md-6"
-          label="Offer Expires in"
-          name="expires"
-          options={generateNumOptions(11, 'Day', { startFrom: 5 })}
-          placeholder="Allocation Month"
-        />
-        <Input
-          formGroupClassName="col-md-6"
-          label="Allocation In Percentage"
-          name="allocationInPercentage"
-          type="number"
-          max={100}
-          min={0}
-          placeholder="Allocation"
-          tooltipText="The number of deposits to be made before prpoerty is allocated"
-        />
-      </div>
-
-      <Textarea label="Title Document" name="title" rows="2" />
-
-      <Textarea
-        label="Delivery State"
-        name="deliveryState"
-        rows="3"
-        tooltipText="The state the property would be delivered to the user"
-      />
+      <OfferLetterSharedForm />
     </>
   );
 };
-const OtherPaymentsForm = () => {
+
+export const OfferLetterSharedForm = () => (
+  <>
+    <div className="form-row">
+      <Select
+        formGroupClassName="col-md-6"
+        label="Offer Expires in"
+        name="expires"
+        options={generateNumOptions(11, 'Day', { startFrom: 5 })}
+        placeholder="Offer Expires in "
+      />
+      <Input
+        formGroupClassName="col-md-6"
+        label="Allocation In Percentage"
+        name="allocationInPercentage"
+        type="number"
+        max={100}
+        min={0}
+        placeholder="Allocation"
+        tooltipText="The number of deposits to be made before prpoerty is allocated"
+      />
+    </div>
+
+    <Textarea label="Title Document" name="title" rows="2" />
+
+    <Textarea
+      label="Delivery State"
+      name="deliveryState"
+      rows="3"
+      tooltipText="The state the property would be delivered to the user"
+    />
+  </>
+);
+
+export const OtherPaymentsForm = () => {
   const paymentOptions = objectToOptions(PAYMENT_OPTIONS_BREAKDOWN, null, true);
   return (
     <>
       <Select
         label="Payment Breakdown"
-        name="otherPayments.paymentBreakdown"
+        name="paymentBreakdown"
         options={paymentOptions}
         defaultValue={paymentOptions[0]}
       />
@@ -393,7 +481,7 @@ const OtherPaymentsForm = () => {
   );
 };
 
-const OtherTermsForm = () => {
+export const OtherTermsForm = () => {
   return (
     <>
       <div className="form-row">
@@ -470,8 +558,8 @@ const OtherTermsForm = () => {
   );
 };
 
-const AddMoreTermsAndConditionsForm = ({
-  setadditionalClause,
+export const AddMoreTermsAndConditionsForm = ({
+  setAdditionalClause,
   additionalClause,
 }) => {
   const [fields, setFields] = React.useState(additionalClause);
@@ -481,7 +569,7 @@ const AddMoreTermsAndConditionsForm = ({
     const values = [...fields];
     values[i] = event.target.value;
     setFields(values);
-    setadditionalClause(values);
+    setAdditionalClause(values);
   };
 
   // handle click event of the Remove button
@@ -552,6 +640,8 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
     const expires = addDays(new Date(), value.expires);
     const enquiryId = enquiry._id;
     const payload = { ...value, enquiryId, expires, handOverDate };
+
+    console.log(payload);
 
     delete payload.otherPayments.paymentBreakdown;
 

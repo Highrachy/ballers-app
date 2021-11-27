@@ -59,6 +59,8 @@ const SinglePortfolio = ({ id }) => {
             videos: portfolio?.videos || [],
             testimonials: portfolio?.testimonials || [],
           }}
+          enquiryInfo={portfolio?.enquiryInfo}
+          vendorInfo={portfolio?.vendorInfo}
           setToast={setToast}
           setProperty={setPortfolio}
           Sidebar={

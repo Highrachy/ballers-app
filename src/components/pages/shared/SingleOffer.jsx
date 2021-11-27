@@ -202,6 +202,7 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
   });
 
   const isUser = useCurrentRole().isUser;
+  const isVendor = useCurrentRole().isVendor;
 
   return (
     <>
@@ -215,6 +216,17 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
         {offer && (
           <>
             {/* add current status here for admin / vendor */}
+            {isVendor && (
+              <div className="my-5 text-right">
+                <Link
+                  className="btn btn-dark btn-wide"
+                  to={`/vendor/offer/template/${offer._id}`}
+                >
+                  Create Template Offer
+                </Link>
+              </div>
+            )}
+
             {!isUser && (
               <h6 className="mt-5 hide-print">
                 Current Offer Status: {offer.status}
@@ -275,9 +287,11 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
               />
 
               <div>
-                <SharePublicLink link={`/offer/${offer._id}`} />
+                <SharePublicLink
+                  link={`${process.env.REACT_APP_HOST}/offer/${offer._id}`}
+                />
                 <Link
-                  to={`http://appstaging.ballers.ng/offer/${offer._id}`}
+                  to={`${process.env.REACT_APP_HOST}/offer/${offer._id}`}
                   className="btn btn-outline-dark btn-wide"
                 >
                   View Public Offer

@@ -23,6 +23,7 @@ const Offers = () => (
       PageIcon={<OfferIcon />}
       queryName="offer"
     />
+    <Link to="/vendor/offer-templates">View Offer Templates</Link>
   </BackendPage>
 );
 

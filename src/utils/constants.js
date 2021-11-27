@@ -90,6 +90,11 @@ export const REWARD_STATUS = {
   },
 };
 
+export const OFFER_TEMPLATE_STATUS = {
+  APPROVED: 'Approved',
+  CREATED: 'Created',
+};
+
 export const OFFER_STATUS = {
   GENERATED: 'Generated', // Offer has been created by vendor
   INTERESTED: 'Interested', // Offer has been signed by the user, no payment has been made yet
