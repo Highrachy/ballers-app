@@ -10,7 +10,6 @@ import Button from 'components/forms/Button';
 import { useBoolean } from 'hooks/useBoolean';
 import Modal from 'components/common/Modal';
 import { BUTTON_TYPES } from 'components/forms/Button';
-import Humanize from 'humanize-plus';
 import Axios from 'axios';
 import { refreshQuery } from 'hooks/useQuery';
 import { BASE_API_URL } from 'utils/constants';
@@ -91,6 +90,7 @@ const ViewOfferTemplateButton = ({ offerTemplate }) => {
         show={showModal}
         onHide={setShowModalToFalse}
         showFooter={false}
+        size="lg"
       >
         <ViewOfferTemplate offerTemplate={offerTemplate} />
       </Modal>
@@ -106,7 +106,63 @@ const ViewOfferTemplateButton = ({ offerTemplate }) => {
   );
 };
 
-const ViewOfferTemplate = ({ offerTemplate }) => <h1>{offerTemplate.name}</h1>;
+const ViewOfferTemplate = ({ offerTemplate }) => (
+  <>
+    <table className="table table-sm">
+      <thead>
+        <tr className="text-secondary">
+          <>
+            <th>
+              <strong>Name</strong>
+            </th>
+            <th>
+              <h5 className="text-secondary">{offerTemplate.name}</h5>
+            </th>
+          </>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            <strong>Status</strong>
+          </td>
+          <td>{offerTemplate.status}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Expires</strong>
+          </td>
+          <td>{offerTemplate.expires}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Payment Breakdown</strong>
+          </td>
+          <td>{offerTemplate.paymentBreakdown}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Allocation (in Percentage)</strong>
+          </td>
+          <td>{offerTemplate.allocationInPercentage}%</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Title</strong>
+          </td>
+          <td>{offerTemplate.title}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Delivery State</strong>
+          </td>
+          <td>{offerTemplate.deliveryState}</td>
+        </tr>
+      </tbody>
+    </table>
+  </>
+);
 
 const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
   const [showModal, setShowModalToTrue, setShowModalToFalse] =
@@ -124,10 +180,10 @@ const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
         if (statusIsSuccessful(status)) {
           setToast({
             type: 'success',
-            message: `Bank Account has been successfully deleted`,
+            message: `Offer Template has been successfully deleted`,
           });
 
-          refreshQuery('bank-account', true);
+          refreshQuery('offerTemplate', true);
           setShowModalToFalse();
           setLoading(false);
         }
@@ -150,8 +206,23 @@ const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
       >
         <section className="row">
           <div className="col-md-12 my-3 text-center">
-            <p>{Humanize.titleCase(offerTemplate?.name)}</p>
-            <h4>{offerTemplate?.status}</h4>
+            <table className="table table-sm">
+              <thead>
+                <tr className="text-secondary">
+                  <>
+                    <th>
+                      <h5 className="text-secondary">{offerTemplate.name}</h5>
+                    </th>
+                  </>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Status: {offerTemplate.status}</td>
+                </tr>
+              </tbody>
+            </table>
             <p className="my-4 confirmation-text">
               Are you sure you want to delete this Offer Template?
             </p>

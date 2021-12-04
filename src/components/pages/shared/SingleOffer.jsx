@@ -222,7 +222,7 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
                   className="btn btn-dark btn-wide"
                   to={`/vendor/offer/template/${offer._id}`}
                 >
-                  Create Template Offer
+                  Create Offer Template
                 </Link>
               </div>
             )}

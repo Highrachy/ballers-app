@@ -10,7 +10,11 @@ import { getTokenFromStore } from 'utils/localStorage';
 import Button from 'components/forms/Button';
 import { Formik, Form } from 'formik';
 import { createSchema } from 'components/forms/schemas/schema-helpers';
-import { flattenErrorMessages, getError } from 'utils/helpers';
+import {
+  flattenErrorMessages,
+  getError,
+  statusIsSuccessful,
+} from 'utils/helpers';
 import {
   offerTemplateSchema,
   otherPaymentsSchema,
@@ -102,14 +106,21 @@ export const CreateOfferTemplateForm = ({
 
           delete payload.otherPayments.paymentBreakdown;
 
-          Axios.post(`${BASE_API_URL}/offer/template/create`, payload, {
+          Axios({
+            method: offerTemplateId ? 'put' : 'post',
+            url: `${BASE_API_URL}/offer/template`,
+            data: offerTemplateId
+              ? { ...payload, id: offerTemplateId }
+              : payload,
             headers: { Authorization: getTokenFromStore() },
           })
             .then(function (response) {
               const { status } = response;
-              if (status === 201) {
+              if (statusIsSuccessful(status)) {
                 setToast({
-                  message: 'Your offer template has been created',
+                  message: `Your offer template has been successfully ${
+                    offerTemplateId ? 'updated' : 'added'
+                  }`,
                   type: 'success',
                 });
               }
@@ -132,7 +143,11 @@ export const CreateOfferTemplateForm = ({
             <Form>
               <Toast {...toast} />
 
-              <OfferFormContainer title="Create Offer Template">
+              <OfferFormContainer
+                title={` ${
+                  offerTemplateId ? 'Update' : 'Create'
+                } Offer Template`}
+              >
                 <Input
                   label="Name of Template"
                   name="name"
@@ -181,7 +196,7 @@ export const CreateOfferTemplateForm = ({
                   loading={isSubmitting}
                   onClick={handleSubmit}
                 >
-                  Create Offer Template
+                  {offerTemplateId ? 'Update' : 'Create'} Offer Template
                 </Button>
               )}
 

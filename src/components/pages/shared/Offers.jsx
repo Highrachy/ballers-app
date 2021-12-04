@@ -23,7 +23,16 @@ const Offers = () => (
       PageIcon={<OfferIcon />}
       queryName="offer"
     />
-    <Link to="/vendor/offer-templates">View Offer Templates</Link>
+    <section className="container-fluid">
+      <div className="text-right">
+        <Link
+          to="/vendor/offer-templates"
+          className="btn btn-sm btn-wide btn-outline-dark"
+        >
+          View Offer Templates
+        </Link>
+      </div>
+    </section>
   </BackendPage>
 );
 
