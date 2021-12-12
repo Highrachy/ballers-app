@@ -26,6 +26,9 @@ import Testimonials from 'components/pages/shared/Testimonials';
 import VasRequests from 'components/pages/shared/VasRequests';
 import SingleVasRequest from 'components/pages/shared/SingleVasRequest';
 import PersonalizedVas from 'components/pages/shared/PersonalizedVas';
+import CreatePropertyTemplate from 'components/pages/vendor/CreatePropertyTemplate';
+import PropertyTemplates from 'components/pages/vendor/PropertyTemplates';
+import SinglePropertyTemplate from 'components/pages/vendor/SinglePropertyTemplate';
 
 const VendorRouter = () => (
   <Router>
@@ -56,6 +59,10 @@ const VendorRouter = () => (
     <CreateOfferTemplate path="offer/template/:id" />
     <OfferTemplates path="offer-templates" />
     <SingleOfferTemplate path="offer-template/:id" />
+
+    <CreatePropertyTemplate path="property/template/:id" />
+    <PropertyTemplates path="property-templates" />
+    <SinglePropertyTemplate path="property-template/:id" />
     <Menu path="menu" />
   </Router>
 );

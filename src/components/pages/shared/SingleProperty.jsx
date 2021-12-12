@@ -106,6 +106,17 @@ export const OwnedPropertyCard = ({
   const isAdminOrVendor = isVendor || isAdmin;
   return (
     <div className="container-fluid">
+      {isVendor && (
+        <div className="my-5 text-right">
+          <Link
+            className="btn btn-dark btn-wide"
+            to={`/vendor/property/template/${property._id}`}
+          >
+            Create Property Template
+          </Link>
+        </div>
+      )}
+
       <Card className="card-container mt-4 h-100 property-holder__big">
         <PropertyImage property={property} />
 

@@ -20,6 +20,9 @@ export const API_ENDPOINT = {
   getOneOfferTemplate: (id) => `${BASE_API_URL}/offer/template/${id}`,
   getAllOfferTemplates: () => `${BASE_API_URL}/offer/template/all`,
 
+  getOnePropertyTemplate: (id) => `${BASE_API_URL}/property/template/${id}`,
+  getAllPropertyTemplates: () => `${BASE_API_URL}/property/template/all`,
+
   getOneTransaction: (id) => `${BASE_API_URL}/transaction/${id}`,
   getAllTransactions: () => `${BASE_API_URL}/transaction/all`,
 
