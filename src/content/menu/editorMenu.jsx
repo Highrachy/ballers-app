@@ -8,7 +8,7 @@ import {
 import { ArticlesIcon } from 'components/utils/Icons';
 // import { ArticlesIcon } from 'components/utils/Icons';
 
-export default [
+const editorMenu = [
   {
     title: 'Home',
     to: '/editor/dashboard',
@@ -41,3 +41,5 @@ export default [
     footer: true,
   },
 ];
+
+export default editorMenu;

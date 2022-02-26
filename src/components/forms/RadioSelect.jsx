@@ -127,7 +127,7 @@ const RadioSelect = ({
   return (
     <>
       {label ? (
-        <RadioSelect.withLabel
+        <RadioSelect.WithLabel
           label={label}
           labelClassName={labelClassName}
           labelSizeClassName={labelSizeClassName}
@@ -139,7 +139,7 @@ const RadioSelect = ({
           tooltipText={tooltipText}
         >
           {radioGroup}
-        </RadioSelect.withLabel>
+        </RadioSelect.WithLabel>
       ) : (
         radioGroup
       )}
@@ -193,7 +193,7 @@ RadioSelect.defaultProps = {
   tooltipText: null,
 };
 
-RadioSelect.withLabel = ({
+RadioSelect.WithLabel = ({
   children,
   label,
   labelClassName,
@@ -225,7 +225,7 @@ RadioSelect.withLabel = ({
   );
 };
 
-RadioSelect.withLabel.propTypes = {
+RadioSelect.WithLabel.propTypes = {
   children: PropTypes.array.isRequired,
   label: PropTypes.string.isRequired,
   labelClassName: PropTypes.string,
@@ -238,7 +238,7 @@ RadioSelect.withLabel.propTypes = {
   tooltipText: PropTypes.string,
 };
 
-RadioSelect.withLabel.defaultProps = {
+RadioSelect.WithLabel.defaultProps = {
   labelClassName: null,
   tooltipText: null,
   tooltipHeader: null,

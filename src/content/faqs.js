@@ -3,8 +3,9 @@ import ProfileIcon from 'assets/img/icons/profile-icon.png';
 import GettingStartedIcon from 'assets/img/icons/geting-started-icon.png';
 import SecurityIcon from 'assets/img/icons/security-icon.png';
 import PaymentIcon from 'assets/img/icons/payment-icon.png';
+import { Link } from '@reach/router';
 
-export default {
+const faqs = {
   gettingStarted: {
     name: 'Getting Started',
     icon: GettingStartedIcon,
@@ -134,8 +135,12 @@ export default {
     faqs: [
       {
         question: <>How Do I Create My Profile</>,
-        answer:
-          'By completing the easy-to-fill application form. Kindly <a href="https://ballers.ng/register">click here',
+        answer: (
+          <>
+            By completing the easy-to-fill application form. Kindly{' '}
+            <Link to="/register">click here</Link>
+          </>
+        ),
         showOnHomePage: false,
       },
       {
@@ -153,3 +158,5 @@ export default {
     ],
   },
 };
+
+export default faqs;

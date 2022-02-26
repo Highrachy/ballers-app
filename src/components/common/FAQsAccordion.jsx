@@ -52,13 +52,13 @@ const FAQsAccordion = ({ faqs }) => {
     <Accordion defaultActiveKey={0}>
       <Fade cascade damping={0.6} delay={1000}>
         {faqs.map((faq, index) => (
-          <Card key={index}>
-            <Accordion.Toggle as={Card.Header} eventKey={index}>
-              <ContextAwareToggle eventKey={index}>
+          <Card key={index + 1}>
+            <Accordion.Toggle as={Card.Header} eventKey={index + 1}>
+              <ContextAwareToggle eventKey={index + 1}>
                 {faq.question}
               </ContextAwareToggle>
             </Accordion.Toggle>
-            <Accordion.Collapse eventKey={index}>
+            <Accordion.Collapse eventKey={index + 1}>
               <Card.Body>{faq.answer}</Card.Body>
             </Accordion.Collapse>
           </Card>

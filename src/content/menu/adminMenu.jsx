@@ -13,7 +13,7 @@ import { PropertyIcon } from 'components/utils/Icons';
 import { ReferralsIcon } from 'components/utils/Icons';
 // import { ArticlesIcon } from 'components/utils/Icons';
 
-export default [
+const adminMenu = [
   {
     title: 'Home',
     to: '/admin/dashboard',
@@ -63,3 +63,5 @@ export default [
     footer: true,
   },
 ];
+
+export default adminMenu;

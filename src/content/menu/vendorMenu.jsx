@@ -13,7 +13,7 @@ import { OfferIcon } from 'components/utils/Icons';
 import { PropertyIcon } from 'components/utils/Icons';
 import { VasIcon } from 'components/utils/Icons';
 
-export default [
+const vendorMenu = [
   {
     title: 'Home',
     to: '/vendor/dashboard',
@@ -108,3 +108,5 @@ export const unVerifiedVendorSideMenu = [
     footer: false,
   },
 ];
+
+export default vendorMenu;

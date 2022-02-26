@@ -37,7 +37,7 @@ const pageOptions = {
   key: 'property',
   pageName: 'Gallery',
 };
-export default ({ propertyId }) => {
+const Gallery = ({ propertyId }) => {
   const [toast, setToast] = useToast();
   const [showGalleryForm, setShowGalleryForm] = React.useState(false);
 
@@ -426,3 +426,5 @@ const SingleGalleryImage = ({
     </article>
   );
 };
+
+export default Gallery;

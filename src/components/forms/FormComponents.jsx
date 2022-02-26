@@ -208,13 +208,8 @@ const Forms = () => {
           <div className="row">
             <div className="col-12">
               <CheckboxGroup
-                inline
-                label="Preference"
                 name="pref"
-                options={[
-                  { label: 'Receive Newsletter' },
-                  { value: 'Love Newsletter' },
-                ]}
+                options={[{ label: 'Receive Newsletter' }]}
                 // options can contain either value or label
               />
             </div>

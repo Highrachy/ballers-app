@@ -9,7 +9,7 @@ import {
   VasIcon,
 } from 'components/utils/Icons';
 
-export default [
+const userMenu = [
   {
     title: 'Home',
     to: '/user/dashboard',
@@ -74,3 +74,4 @@ export const userLoadingMenu = [
     footer: true,
   },
 ];
+export default userMenu;
