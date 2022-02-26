@@ -6,7 +6,7 @@ import ProfileAvatar from 'assets/img/avatar/profile.png';
 import { UserContext } from 'context/UserContext';
 import Image from 'components/utils/Image';
 import { useCurrentRole } from 'hooks/useUser';
-import TimeAgo from 'timeago-react';
+import TimeAgo from 'react-timeago';
 import { NOTIFICATION_ACTION, NOTIFICATION_TYPE } from 'utils/constants';
 import Axios from 'axios';
 import { BASE_API_URL } from 'utils/constants';
@@ -157,7 +157,7 @@ export const NotificationsDropdown = ({ notifications, currentRole }) => {
                     {description}
                   </div>
                   <div className="notification-time">
-                    <TimeAgo datetime={createdAt} />
+                    <TimeAgo date={createdAt} />
                   </div>
                 </div>
               </div>

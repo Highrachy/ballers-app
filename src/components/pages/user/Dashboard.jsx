@@ -15,7 +15,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import { getError } from 'utils/helpers';
 import Toast, { useToast } from 'components/utils/Toast';
 import { getShortDate } from 'utils/date-helpers';
-import TimeAgo from 'timeago-react';
+import TimeAgo from 'react-timeago';
 import { isPast } from 'date-fns';
 import PortfolioCards from 'components/common/PortfolioCards';
 import { FileIcon } from 'components/utils/Icons';
@@ -120,7 +120,7 @@ const OffersRow = ({ _id, expires, status, propertyInfo, vendorInfo }) => {
         <strong>{propertyInfo.name}</strong>
         <br />
         <small className="text-muted">
-          Expires on {getShortDate(expires)} (<TimeAgo datetime={expires} />)
+          Expires on {getShortDate(expires)} (<TimeAgo date={expires} />)
         </small>
       </div>
     </div>

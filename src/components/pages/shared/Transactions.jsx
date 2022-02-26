@@ -18,7 +18,7 @@ import { getTokenFromStore } from 'utils/localStorage';
 import Axios from 'axios';
 import { BASE_API_URL, DEFAULT_VENDOR_PERCENTAGE } from 'utils/constants';
 import { refreshQuery } from 'hooks/useQuery';
-import TimeAgo from 'timeago-react';
+import TimeAgo from 'react-timeago';
 import { PropertyAvatar } from 'components/common/PropertyCard';
 import { SuccessIcon } from 'components/utils/Icons';
 import { WarningIcon } from 'components/utils/Icons';
@@ -341,7 +341,7 @@ const ModalForTransactionDetails = ({
               </td>
               <td>
                 {getDate(payment?.paidOn)} (
-                <TimeAgo datetime={payment?.paidOn} />)
+                <TimeAgo date={payment?.paidOn} />)
               </td>
             </tr>
             <tr>
@@ -382,7 +382,7 @@ const ModalForTransactionDetails = ({
                       </td>
                       <td>
                         {getTinyDate(payment?.remittance?.date)} (
-                        <TimeAgo datetime={payment?.remittance?.date} />)
+                        <TimeAgo date={payment?.remittance?.date} />)
                       </td>
                     </tr>
                   </>

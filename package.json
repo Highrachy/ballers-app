@@ -44,9 +44,9 @@
     "react-slick": "^0.26.1",
     "react-slidedown": "^2.4.7",
     "react-tag-autocomplete": "^6.1.0",
+    "react-timeago": "^6.2.1",
     "react-to-print": "^2.10.0",
     "store2": "^2.11.2",
-    "timeago-react": "^3.0.4",
     "yarn": "^1.22.10",
     "yup": "^0.29.1"
   },

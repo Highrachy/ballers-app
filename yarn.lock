@@ -9597,6 +9597,11 @@ react-tag-autocomplete@^6.1.0:
   resolved "https://registry.yarnpkg.com/react-tag-autocomplete/-/react-tag-autocomplete-6.1.0.tgz#9fb70149a69b33379013e5255bcd7ad97d8ec06b"
   integrity sha512-AMhVqxEEIrOfzH0A9XrpsTaLZCVYgjjxp3DSTuSvx91LBSFI6uYcKe38ltR/H/TQw4aytofVghQ1hR9sKpXRQA==
 
+react-timeago@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-6.2.1.tgz#f19716811156617ceb9c9f9a44315d85197c7fba"
+  integrity sha512-b9EObWO8wy4qwfOzj+g/RQZRrPvtMv1Pz12FCdAWKWCXbDGt0rZLyiyTGEr0Lh1O8w5xa48CtRpl3LI+CtGCyw==
+
 react-to-print@^2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-2.10.0.tgz#b45c3dd37341848c1b42f3d9a00cecbe83785f61"
@@ -10921,18 +10926,6 @@ thunky@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
-
-timeago-react@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/timeago-react/-/timeago-react-3.0.4.tgz#291bc1a0bac4db922b7852e6f858da24dc41fd3a"
-  integrity sha512-cv6Bnm01VKyHoQCBKzk24+L9ycj3jLq3uEFpYILKGJT7UUXWEzC0TBCxforsvL4NSjcwqqHNKdEeqEFMNNoN2A==
-  dependencies:
-    timeago.js "^4.0.0"
-
-timeago.js@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/timeago.js/-/timeago.js-4.0.2.tgz#724e8c8833e3490676c7bb0a75f5daf20e558028"
-  integrity sha512-a7wPxPdVlQL7lqvitHGGRsofhdwtkoSXPGATFuSOA2i1ZNQEPLrGnj68vOp2sOJTCFAQVXPeNMX/GctBaO9L2w==
 
 timsort@^0.3.0:
   version "0.3.0"

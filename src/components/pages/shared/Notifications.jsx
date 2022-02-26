@@ -5,7 +5,7 @@ import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
 import { NotificationIcon } from 'components/utils/Icons';
 import { BASE_API_URL, NOTIFICATION_TYPE } from 'utils/constants';
-import Timeago from 'timeago-react';
+import TimeAgo from 'react-timeago';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, statusIsSuccessful } from 'utils/helpers';
@@ -121,7 +121,7 @@ const NotificationsRow = ({
     </td>
     <td>
       <small className="text-muted">
-        <Timeago datetime={createdAt} />
+        <TimeAgo date={createdAt} />
       </small>
     </td>
     {/* <td className="text-right">
