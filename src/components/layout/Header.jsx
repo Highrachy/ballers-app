@@ -13,7 +13,7 @@ const MENUS = [
 
 const Header = () => (
   <>
-    <Navbar fixed="top" bg="white" expand="lg">
+    <Navbar fixed="top" bg="transparent" expand="lg">
       <div className="container-fluid">
         <Navbar.Brand as={Link} to="/">
           <img

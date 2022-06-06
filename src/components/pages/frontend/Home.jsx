@@ -89,10 +89,10 @@ Home.defaultProps = {
 const HoldingSection = () => (
   <section>
     <div className="row mr-0 ml-0">
-      <section className="col-md-6 pl-lg-6">
+      <section className="col-md-6 pl-lg-6 home-hero-container">
         <div className="home-hero">
           <h1>
-            Become <br className="d-none d-lg-block" /> a LandLord
+            Become <br className="d-none d-lg-block" /> a <span>LandLord</span>
           </h1>
           <p className="mt-4 text-primary">
             We make owning a home simpler and achievable.

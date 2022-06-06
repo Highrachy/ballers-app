@@ -22,6 +22,7 @@ const StepperPage = ({
     currentStep <= MIN_STEP
       ? setCurrentStep(1)
       : setCurrentStep(currentStep - 1);
+
   const moveToNextStep = () =>
     currentStep >= MAX_STEP
       ? setCurrentStep(MAX_STEP)

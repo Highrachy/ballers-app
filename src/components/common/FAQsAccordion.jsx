@@ -24,7 +24,9 @@ export const ContextAwareToggle = ({
   return (
     <>
       {isCurrentEventKey ? (
-        <span className="accordion-icon accordion-icon-open">{iconOpen}</span>
+        <span className="accordion-icon accordion-icon-open pull-right">
+          {iconOpen}
+        </span>
       ) : (
         <span className="accordion-icon accordion-icon-close">{iconClose}</span>
       )}

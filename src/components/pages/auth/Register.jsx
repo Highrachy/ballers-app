@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
-// import { getProxy } from 'utils/helpers';
+
 import { Link } from '@reach/router';
 import { Formik, Form } from 'formik';
 import Axios from 'axios';

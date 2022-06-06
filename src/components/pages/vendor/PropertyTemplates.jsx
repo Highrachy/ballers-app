@@ -4,7 +4,7 @@ import { Card } from 'react-bootstrap';
 import { Link } from '@reach/router';
 import PaginatedContent from 'components/common/PaginatedContent';
 import { API_ENDPOINT } from 'utils/URL';
-import { OfferIcon } from 'components/utils/Icons';
+import { PropertyIcon } from 'components/utils/Icons';
 import { Spacing } from 'components/common/Helpers';
 import Button from 'components/forms/Button';
 import { useBoolean } from 'hooks/useBoolean';
@@ -16,30 +16,30 @@ import { BASE_API_URL } from 'utils/constants';
 import { getTokenFromStore } from 'utils/localStorage';
 import { getError, statusIsSuccessful } from 'utils/helpers';
 
-const OfferTemplates = () => (
+const PropertyTemplates = () => (
   <BackendPage>
     <PaginatedContent
-      endpoint={API_ENDPOINT.getAllOfferTemplates()}
-      pageName="Offer Template"
-      DataComponent={OffersRowList}
-      PageIcon={<OfferIcon />}
-      queryName="offerTemplates"
-      childrenKey="offerTemplate"
+      endpoint={API_ENDPOINT.getAllPropertyTemplates()}
+      pageName="Property Template"
+      DataComponent={PropertysRowList}
+      PageIcon={<PropertyIcon />}
+      queryName="propertyTemplates"
+      childrenKey="propertyTemplate"
     />
   </BackendPage>
 );
 
-export const OffersRowList = ({ results, offset, setToast }) => (
+export const PropertysRowList = ({ results, offset, setToast }) => (
   <div className="container-fluid mb-5">
     <Card>
       <div className="table-responsive">
         <table className="table table-border table-hover mb-0">
           <tbody>
-            {results?.map((offer, index) => (
-              <OffersRow
+            {results?.map((property, index) => (
+              <PropertysRow
                 key={index}
                 number={offset + index + 1}
-                offerTemplate={offer}
+                propertyTemplate={property}
                 setToast={setToast}
               />
             ))}
@@ -50,8 +50,8 @@ export const OffersRowList = ({ results, offset, setToast }) => (
   </div>
 );
 
-const OffersRow = ({ number, offerTemplate, setToast }) => {
-  const { status, _id, name } = offerTemplate;
+const PropertysRow = ({ number, propertyTemplate, setToast }) => {
+  const { status, _id, name } = propertyTemplate;
   return (
     <>
       <tr>
@@ -60,17 +60,17 @@ const OffersRow = ({ number, offerTemplate, setToast }) => {
         <td>{status}</td>
 
         <td>
-          <ViewOfferTemplateButton offerTemplate={offerTemplate} />
+          <ViewPropertyTemplateButton propertyTemplate={propertyTemplate} />
           <Spacing />
           <Link
             className="btn btn-xs btn-dark btn-wide"
-            to={`/vendor/offer-template/${_id}`}
+            to={`/vendor/property-template/${_id}`}
           >
             Edit Template
           </Link>
           <Spacing />
-          <DeleteOfferTemplateButton
-            offerTemplate={offerTemplate}
+          <DeletePropertyTemplateButton
+            propertyTemplate={propertyTemplate}
             setToast={setToast}
           />
         </td>
@@ -79,20 +79,20 @@ const OffersRow = ({ number, offerTemplate, setToast }) => {
   );
 };
 
-const ViewOfferTemplateButton = ({ offerTemplate }) => {
+const ViewPropertyTemplateButton = ({ propertyTemplate }) => {
   const [showModal, setShowModalToTrue, setShowModalToFalse] =
     useBoolean(false);
 
   return (
     <>
       <Modal
-        title="View Offer Template"
+        title="View Property Template"
         show={showModal}
         onHide={setShowModalToFalse}
         showFooter={false}
         size="lg"
       >
-        <ViewOfferTemplate offerTemplate={offerTemplate} />
+        <ViewPropertyTemplate propertyTemplate={propertyTemplate} />
       </Modal>
 
       <Button
@@ -106,7 +106,7 @@ const ViewOfferTemplateButton = ({ offerTemplate }) => {
   );
 };
 
-const ViewOfferTemplate = ({ offerTemplate }) => (
+const ViewPropertyTemplate = ({ propertyTemplate }) => (
   <>
     <table className="table table-sm">
       <thead>
@@ -116,7 +116,7 @@ const ViewOfferTemplate = ({ offerTemplate }) => (
               <strong>Name</strong>
             </th>
             <th>
-              <h5 className="text-secondary">{offerTemplate.name}</h5>
+              <h5 className="text-secondary">{propertyTemplate.name}</h5>
             </th>
           </>
         </tr>
@@ -127,52 +127,52 @@ const ViewOfferTemplate = ({ offerTemplate }) => (
           <td>
             <strong>Status</strong>
           </td>
-          <td>{offerTemplate.status}</td>
+          <td>{propertyTemplate.status}</td>
         </tr>
         <tr>
           <td>
             <strong>Expires</strong>
           </td>
-          <td>{offerTemplate.expires}</td>
+          <td>{propertyTemplate.expires}</td>
         </tr>
         <tr>
           <td>
             <strong>Payment Breakdown</strong>
           </td>
-          <td>{offerTemplate.paymentBreakdown}</td>
+          <td>{propertyTemplate.paymentBreakdown}</td>
         </tr>
         <tr>
           <td>
             <strong>Allocation (in Percentage)</strong>
           </td>
-          <td>{offerTemplate.allocationInPercentage}%</td>
+          <td>{propertyTemplate.allocationInPercentage}%</td>
         </tr>
         <tr>
           <td>
             <strong>Title</strong>
           </td>
-          <td>{offerTemplate.title}</td>
+          <td>{propertyTemplate.title}</td>
         </tr>
         <tr>
           <td>
             <strong>Delivery State</strong>
           </td>
-          <td>{offerTemplate.deliveryState}</td>
+          <td>{propertyTemplate.deliveryState}</td>
         </tr>
       </tbody>
     </table>
   </>
 );
 
-const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
+const DeletePropertyTemplateButton = ({ propertyTemplate, setToast }) => {
   const [showModal, setShowModalToTrue, setShowModalToFalse] =
     useBoolean(false);
 
   const [loading, setLoading] = React.useState(false);
 
-  const deleteOfferTemplate = () => {
+  const deletePropertyTemplate = () => {
     setLoading(true);
-    Axios.delete(`${BASE_API_URL}/offer/template/${offerTemplate._id}`, {
+    Axios.delete(`${BASE_API_URL}/property/template/${propertyTemplate._id}`, {
       headers: { Authorization: getTokenFromStore() },
     })
       .then(function (response) {
@@ -180,10 +180,10 @@ const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
         if (statusIsSuccessful(status)) {
           setToast({
             type: 'success',
-            message: `Offer Template has been successfully deleted`,
+            message: `Property Template has been successfully deleted`,
           });
 
-          refreshQuery('offerTemplate', true);
+          refreshQuery('propertyTemplate', true);
           setShowModalToFalse();
           setLoading(false);
         }
@@ -199,7 +199,7 @@ const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
   return (
     <>
       <Modal
-        title="Delete Offer Template"
+        title="Delete Property Template"
         show={showModal}
         onHide={setShowModalToFalse}
         showFooter={false}
@@ -211,7 +211,9 @@ const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
                 <tr className="text-secondary">
                   <>
                     <th>
-                      <h5 className="text-secondary">{offerTemplate.name}</h5>
+                      <h5 className="text-secondary">
+                        {propertyTemplate.name}
+                      </h5>
                     </th>
                   </>
                 </tr>
@@ -219,20 +221,20 @@ const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
 
               <tbody>
                 <tr>
-                  <td>Status: {offerTemplate.status}</td>
+                  <td>Status: {propertyTemplate.status}</td>
                 </tr>
               </tbody>
             </table>
             <p className="my-4 confirmation-text">
-              Are you sure you want to delete this Offer Template?
+              Are you sure you want to delete this Property Template?
             </p>
             <Button
               color="danger"
               loading={loading}
               className="btn mb-5"
-              onClick={() => deleteOfferTemplate()}
+              onClick={() => deletePropertyTemplate()}
             >
-              Delete Offer Template
+              Delete Property Template
             </Button>
           </div>
         </section>
@@ -249,4 +251,4 @@ const DeleteOfferTemplateButton = ({ offerTemplate, setToast }) => {
   );
 };
 
-export default OfferTemplates;
+export default PropertyTemplates;

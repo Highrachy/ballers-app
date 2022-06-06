@@ -106,7 +106,7 @@ export const OwnedPropertyCard = ({
   const isAdminOrVendor = isVendor || isAdmin;
   return (
     <div className="container-fluid">
-      {isVendor && (
+      {isVendor && false && (
         <div className="my-5 text-right">
           <Link
             className="btn btn-dark btn-wide"

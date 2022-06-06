@@ -115,7 +115,7 @@ const LoginForm = ({ redirectTo, sid, token }) => {
 
   // CHECK IF USER HAS SIGNED IN
   React.useEffect(() => {
-    if (userState && userState.isLoggedIn) {
+    if (userState && userState.isLoggedIn && !token) {
       const dashboardUrl = `/${DASHBOARD_PAGE[userState.role]}/dashboard`;
       navigate(redirectTo || dashboardUrl);
     }
