@@ -160,10 +160,10 @@ const CreateOfferLetterForm = ({
             <Form>
               <Toast {...toast} />
 
-              <ShowTemplateButton
+              {/* <ShowTemplateButton
                 setToast={setToast}
                 handleValue={handleValue}
-              />
+              /> */}
 
               <OfferFormContainer title="Create Offer Letter">
                 <OfferLetterForm />
