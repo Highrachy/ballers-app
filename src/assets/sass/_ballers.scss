@@ -113,6 +113,8 @@ html {
 }
 
 .offer-letter-accordion {
+  border: 1px solid $gray-300;
+  border-radius: 3px;
   .card {
     background: $gray-100 !important;
   }

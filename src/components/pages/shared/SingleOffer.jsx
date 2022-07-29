@@ -6,7 +6,7 @@ import ReactToPrint from 'react-to-print';
 import { BASE_API_URL, OFFER_STATUS } from 'utils/constants';
 import Axios from 'axios';
 import { getTokenFromStore } from 'utils/localStorage';
-import { getError } from 'utils/helpers';
+import { getError, statusIsSuccessful } from 'utils/helpers';
 import OfferLetterTemplate from 'components/utils/OfferLetterTemplate';
 import Image from 'components/utils/Image';
 import UploadImage from 'components/utils/UploadImage';
@@ -17,10 +17,13 @@ import {
   DisplayFormikState,
   setInitialValues,
 } from 'components/forms/form-helper';
-import { raiseAConcernSchema } from 'components/forms/schemas/offerSchema';
+import {
+  raiseAConcernSchema,
+  resolveAConcernSchema,
+} from 'components/forms/schemas/offerSchema';
 import Button from 'components/forms/Button';
 import { Accordion, Card } from 'react-bootstrap';
-import { ArrowDownIcon } from 'components/utils/Icons';
+import { ArrowDownIcon, WarningIcon } from 'components/utils/Icons';
 import { ContextAwareToggle } from 'components/common/FAQsAccordion';
 import { useCurrentRole } from 'hooks/useUser';
 import { API_ENDPOINT } from 'utils/URL';
@@ -67,7 +70,8 @@ const SingleOffer = ({ id }) => {
   );
 };
 
-const ListConcerns = ({ concerns, title }) => {
+const ListConcerns = ({ concerns, offerId, title }) => {
+  const isVendor = useCurrentRole().isVendor;
   if (!concerns || concerns.length === 0) {
     return null;
   }
@@ -75,7 +79,7 @@ const ListConcerns = ({ concerns, title }) => {
     <section className="mb-5">
       <h5 className="secondary-text">{title}</h5>
       <Accordion className="offer-letter-accordion">
-        {concerns.map(({ question, answer, status }, index) => (
+        {concerns.map(({ _id, question, response, dateAsked }, index) => (
           <Card key={index + 1}>
             <Accordion.Toggle
               as={Card.Header}
@@ -92,7 +96,18 @@ const ListConcerns = ({ concerns, title }) => {
             </Accordion.Toggle>
             <Accordion.Collapse eventKey={index + 1}>
               <Card.Body>
-                {answer || 'Awaiting Response from the Vendor'}
+                {response ? (
+                  response
+                ) : isVendor ? (
+                  <div className="text-muted">
+                    <ResolveConcern offerId={offerId} concernId={_id} />
+                  </div>
+                ) : (
+                  <p className="text-danger">
+                    <WarningIcon /> &nbsp;&nbsp; Awaiting Response from the
+                    Vendor
+                  </p>
+                )}
               </Card.Body>
             </Accordion.Collapse>
           </Card>
@@ -122,12 +137,14 @@ const RaiseAConcern = ({ offerId, concerns }) => {
       <div className="container-fluid">
         {allConcerns && (
           <ListConcerns
+            offerId={offerId}
             concerns={allConcerns.pending}
             title="Pending Concerns"
           />
         )}
         {allConcerns && (
           <ListConcerns
+            offerId={offerId}
             concerns={allConcerns.answered}
             title="Answered Concerns"
           />
@@ -177,7 +194,7 @@ const RaiseAConcern = ({ offerId, concerns }) => {
                   loading={isSubmitting}
                   onClick={handleSubmit}
                 >
-                  Submit Question
+                  Submit Concern
                 </Button>
                 <DisplayFormikState {...props} hide showAll />
               </Form>
@@ -186,6 +203,87 @@ const RaiseAConcern = ({ offerId, concerns }) => {
         )}
       </div>
     </section>
+  );
+};
+
+export const ResolveConcern = ({ offerId, concernId }) => {
+  const [toast, setToast] = useToast();
+  const [showFlagModal, setShowFlagModal] = React.useState(false);
+
+  return (
+    <>
+      <Button
+        className="btn-secondary btn-sm mt-4"
+        onClick={() => setShowFlagModal(true)}
+      >
+        Resolve Concern
+      </Button>
+
+      {/* Resolve Concern Modals */}
+      <Modal
+        title="Resolve Concern"
+        show={showFlagModal}
+        onHide={() => setShowFlagModal(false)}
+        showFooter={false}
+      >
+        <section className="row">
+          <div className="col-md-12 my-3">
+            <Formik
+              initialValues={setInitialValues(resolveAConcernSchema)}
+              onSubmit={({ response }, actions) => {
+                const payload = {
+                  offerId,
+                  concernId,
+                  response,
+                };
+                Axios.put(`${BASE_API_URL}/offer/resolve-concern`, payload, {
+                  headers: { Authorization: getTokenFromStore() },
+                })
+                  .then(function (response) {
+                    const { status } = response;
+                    if (statusIsSuccessful(status)) {
+                      setToast({
+                        type: 'success',
+                        message: `The property has been successfully flagged`,
+                      });
+                      actions.setSubmitting(false);
+                      actions.resetForm();
+                      setShowFlagModal(false);
+                    }
+                  })
+                  .catch(function (error) {
+                    setToast({
+                      message: getError(error),
+                    });
+                    actions.setSubmitting(false);
+                  });
+              }}
+              validationSchema={createSchema(resolveAConcernSchema)}
+            >
+              {({ isSubmitting, handleSubmit, ...props }) => (
+                <Form>
+                  <Textarea
+                    name="response"
+                    label="Response"
+                    placeholder="Response to the concern"
+                    rows="3"
+                  />
+
+                  <Button
+                    className="btn-secondary btn-sm mt-4"
+                    loading={isSubmitting}
+                    onClick={handleSubmit}
+                  >
+                    Resolve Concern
+                  </Button>
+                  <DisplayFormikState {...props} hide showAll />
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </section>
+      </Modal>
+    </>
   );
 };
 
@@ -203,6 +301,12 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
 
   const isUser = useCurrentRole().isUser;
   const isVendor = useCurrentRole().isVendor;
+
+  React.useEffect(() => {
+    if (offer?.concern?.length > 0) {
+      setConcerns(offer.concern);
+    }
+  }, [offer, setConcerns]);
 
   return (
     <>
@@ -292,7 +396,7 @@ const DisplayOfferLetterTemplate = ({ offerId, setConcerns }) => {
                 />
                 <Link
                   to={`${process.env.REACT_APP_HOST}/offer/${offer._id}`}
-                  className="btn btn-outline-dark btn-wide"
+                  className="btn btn-sm btn-dark btn-wide"
                 >
                   View Public Offer
                 </Link>
@@ -317,7 +421,10 @@ const SharePublicLink = ({ link }) => {
 
   return (
     <>
-      <label htmlFor="offerLink">Share Your Offer Link</label>
+      <div className="my-6 border-top"></div>
+      <label htmlFor="offerLink mt-5">
+        Share Your Offer Link with other people
+      </label>
       <div className="input-group">
         <input
           type="text"

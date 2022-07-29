@@ -40,6 +40,7 @@ const OfferLetterTemplate = ({
   // Payment Breakdown
   const paymentBreakdown =
     offerInfo?.otherPayments?.paymentBreakdown ||
+    offerInfo?.paymentBreakdown ||
     PAYMENT_OPTION.INITIAL_DEPOSIT;
 
   // Other payments
@@ -468,8 +469,8 @@ const OfferLetterTemplate = ({
       <p className="">
         If the above terms and conditions are acceptable to you, kindly send in
         your Bank draft or evidence of payment of the initial deposit sum of{' '}
-        {` ${moneyFormatInNaira(offerInfo.initialPayment)} (${numToWords(
-          offerInfo.initialPayment
+        {` ${moneyFormatInNaira(initialPayment)} (${numToWords(
+          initialPayment
         )} Naira only)`}
         , within {offerInfo?.otherTerms?.bankDraftDue} working days (Details of
         bank account in clause 11) from the receipt of this letter.

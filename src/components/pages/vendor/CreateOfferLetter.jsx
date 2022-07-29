@@ -426,7 +426,7 @@ export const OtherPaymentsForm = () => {
     <>
       <Select
         label="Payment Breakdown"
-        name="paymentBreakdown"
+        name="otherPayments.paymentBreakdown"
         options={paymentOptions}
         defaultValue={paymentOptions[0]}
       />
@@ -639,7 +639,13 @@ const SubmitOfferLetter = ({ enquiry, handleHideOfferLetter, value }) => {
     const handOverDate = addMonths(new Date(), noOfMonths);
     const expires = addDays(new Date(), value.expires);
     const enquiryId = enquiry._id;
-    const payload = { ...value, enquiryId, expires, handOverDate };
+    const payload = {
+      ...value,
+      enquiryId,
+      expires,
+      handOverDate,
+      paymentBreakdown: value.otherPayments.paymentBreakdown,
+    };
 
     console.log(payload);
 

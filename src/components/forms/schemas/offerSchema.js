@@ -59,6 +59,10 @@ export const raiseAConcernSchema = {
   question: required('Question'),
 };
 
+export const resolveAConcernSchema = {
+  response: required('Response'),
+};
+
 export const requestTermsReviewSchema = {
   comment: required('Comment'),
 };
