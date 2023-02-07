@@ -81,12 +81,12 @@ const Content = () => (
           <h4 className="header-secondary">SAY HELLO</h4>
           <h3>
             <a
-              href="mailto:hello@ballers.ng"
+              href="mailto:info@ballers.ng"
               className="text-primary font-weight-normal"
               target="_blank"
               rel="noopener noreferrer"
             >
-              hello@ballers.ng
+              info@ballers.ng
             </a>
           </h3>
         </div>

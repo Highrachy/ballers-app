@@ -1,82 +1,67 @@
 import React from 'react';
 import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
-import SearchPropertyForm from 'components/common/SearchPropertyForm';
+import SearchPropertyForm2 from 'components/common/SearchPropertyForm2';
 import classNames from 'classnames';
 import Map from 'components/common/Map';
 import { ReactComponent as ApartmentIcon } from 'assets/img/icons/house-gray.svg';
 import { ReactComponent as LocationIcon } from 'assets/img/icons/location-gray.svg';
 import { ReactComponent as RangeLine } from 'assets/img/dashed-line.svg';
 import Slider from 'react-rangeslider';
-import { commaNumber, nearestMillion } from 'utils/helpers';
-import {
-  Tabs,
-  Tab,
-  OverlayTrigger,
-  Popover,
-  Accordion,
-  Card,
-} from 'react-bootstrap';
+import { commaNumber, moneyFormatInNaira, nearestMillion } from 'utils/helpers';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
 import {
   QuestionMarkIcon,
   MapPinIcon,
   ArrowLeftIcon,
-  ArrowDownIcon,
   InfoIcon,
   HouseIcon,
   CloseIcon,
 } from 'components/utils/Icons';
 import NumberFormat from 'react-number-format';
-import {
-  recommendBallersPlan,
-  FREQUENCY_IN_WORDS,
-} from 'utils/search-result-helpers';
-import { ContextAwareToggle } from 'components/common/FAQsAccordion';
-import Axios from 'axios';
-import useWindowSize from 'hooks/useWindowSize';
+import { recommendBallersPlan } from 'utils/search-result-helpers';
 import * as queryString from 'query-string';
 import { Slide } from 'react-awesome-reveal';
-import { BASE_API_URL, MOBILE_WIDTH } from 'utils/constants';
 import { Link } from '@reach/router';
 
 const SearchResult = ({ location }) => {
   const queryParams = queryString.parse(location.search);
-  const { state, area, houseType } = queryParams;
-  const [result, setResult] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
+  const { area, houseType } = queryParams;
+  // const [result, setResult] = React.useState(null);
+  // const [loading, setLoading] = React.useState(false);
+  const loading = false;
 
-  const [defaultInputValue, setDefaultInputValue] = React.useState({
-    state: 'Loading...',
-    area: 'Loading...',
-    houseType: 'Loading...',
-  });
+  const data = {
+    evaluation: {
+      area,
+      type: houseType,
+      minimumPrice: 10_000_000,
+      averagePrice: 30_000_000,
+      maximumPrice: 50_000_000,
+      longitude: 5.11,
+      latitude: 5.11,
+    },
+  };
 
-  React.useEffect(() => {
-    const emptyFormValue = {
-      state: 'Select State...',
-      area: 'Select Area...',
-      houseType: 'House Type...',
-    };
+  const defaultInputValue = { area, houseType };
+  const result = data.evaluation;
 
-    Axios.get(
-      `${BASE_API_URL}/content-property/search/?state=${state}&area=${area}&houseType=${houseType}`
-    ).then(function (response) {
-      const { status, data } = response;
-      if (status === 200) {
-        setLoading(false);
-        setResult(data.evaluation);
-        setDefaultInputValue({
-          state: data.evaluation.stateName,
-          area: data.evaluation.areaName,
-          houseType: data.evaluation.type,
-        });
-      } else {
-        setLoading(false);
-        setResult(null);
-        setDefaultInputValue(emptyFormValue);
-      }
-    });
-  }, [area, houseType, state]);
+  // const [defaultInputValue, setDefaultInputValue] = React.useState({
+  //   area,
+  //   houseType,
+  // });
+
+  // React.useEffect(() => {
+  //   if (area && houseType) {
+  //     setLoading(false);
+  //     setResult(data.evaluation);
+  //     setDefaultInputValue({
+  //       area: data.evaluation.area,
+  //       houseType: data.evaluation.type,
+  //     });
+  //   }
+  // }, [area, data.evaluation, houseType]);
+
   return (
     <>
       <Header />
@@ -96,8 +81,8 @@ const SearchResult = ({ location }) => {
 const SearchForm = ({ defaultInputValue }) => (
   <section className="container-fluid property-search-holder">
     <div className="row">
-      <section className="property-search__page  offset-lg-2 col-lg-8 my-3">
-        <SearchPropertyForm defaultInputValue={defaultInputValue} />
+      <section className="property-search__page  offset-lg-1 col-lg-10 my-3">
+        <SearchPropertyForm2 defaultInputValue={defaultInputValue} />
       </section>
     </div>
   </section>
@@ -123,32 +108,15 @@ const LoadingSearchResult = () => (
 );
 
 const SearchResultContent = ({ result }) => {
-  const [showResultCard, setShowResultCard] = React.useState(false);
-  const [output, setOutput] = React.useState({});
-
-  const findEligibilityResult = ({ initial, frequency, periodic }) => {
-    const averagePropertyCost = 20000000;
-    const recommendations = recommendBallersPlan({
-      initial,
-      frequency,
-      periodic,
-      averagePropertyCost,
-    });
-    setOutput(recommendations);
-    setShowResultCard(true);
-  };
-
-  const WINDOW_SIZE = useWindowSize();
-  const [showMap, setShowMap] = React.useState(
-    WINDOW_SIZE.width > MOBILE_WIDTH
-  );
+  // const WINDOW_SIZE = useWindowSize();
+  const [showMap, setShowMap] = React.useState(false);
 
   return (
     <div className="container-fluid search-result-section">
       <div className="row">
         <div
-          className={classNames('col-lg-8 text-center', {
-            'offset-lg-2': !showMap,
+          className={classNames('col-lg-10 text-center', {
+            'offset-lg-1': !showMap,
           })}
         >
           {!showMap && (
@@ -167,7 +135,7 @@ const SearchResultContent = ({ result }) => {
               <h2>{nearestMillion(result.averagePrice)}</h2>
               <ul className="list-inline">
                 <li className="list-inline-item px-2">
-                  <LocationIcon /> {result.areaName}, {result.stateName}
+                  <LocationIcon /> {result.area}
                 </li>
                 <li className="list-inline-item px-2">
                   <ApartmentIcon /> {result.type}
@@ -189,14 +157,7 @@ const SearchResultContent = ({ result }) => {
               </div>
             </section>
           </Slide>
-          {showResultCard ? (
-            <ResultCard result={output} setShowResultCard={setShowResultCard} />
-          ) : (
-            <DefineYourEligibility
-              findEligibilityResult={findEligibilityResult}
-              result={result}
-            />
-          )}
+          <DefineYourEligibility result={result} />
         </div>
         {showMap && (
           <div className="col-lg-4 search-result-map">
@@ -231,25 +192,22 @@ const SearchResultContent = ({ result }) => {
   );
 };
 
-const RangeInput = ({ name, min, max, step, title, handleChange, inputs }) => (
+const RangeInput = ({
+  name,
+  min,
+  max,
+  step,
+  title,
+  info,
+  handleChange,
+  placeholder,
+  inputs,
+}) => (
   <>
-    <h5>{title}</h5>
-    <p>Use the scroll bar or type in the desired amount</p>
-    <div className="row search-result-range">
-      <div className="col-sm-6 col-12 search-result-range-label">
-        <label htmlFor="initial-investment">
-          NGN {!!inputs[name] && commaNumber(inputs[name])}
-        </label>
-        <Slider
-          min={parseInt(min, 10)}
-          max={parseInt(max, 10)}
-          step={step}
-          tooltip={false}
-          value={inputs[name] || max / 2}
-          onChange={(value) => handleChange(name, value)}
-        />
-      </div>
-      <div className="input-group col-sm-6 col-12 ">
+    <div className="search-result-range">
+      <p className="font-weight-bold mb-0">{title}</p>
+      <div className="text-xs mt-1 mb-3 text-muted">{info}</div>
+      <div className="input-group mb-3 col-12">
         <div className="input-group-prepend">
           <span className="input-group-text">NGN</span>
         </div>
@@ -259,21 +217,58 @@ const RangeInput = ({ name, min, max, step, title, handleChange, inputs }) => (
           name={name}
           value={!!inputs[name] && `NGN ${commaNumber(inputs[name])}`}
           onValueChange={({ value }) => handleChange(name, value)}
-          placeholder="500,000"
+          placeholder={placeholder}
           thousandSeparator={true}
           prefix=""
+        />
+      </div>
+      <div className="w-100 search-result-range-label">
+        <Slider
+          min={parseInt(min, 10)}
+          max={parseInt(max, 10)}
+          step={step}
+          tooltip={false}
+          value={inputs[name] || max / 2}
+          onChange={(value) => handleChange(name, value)}
         />
       </div>
     </div>
   </>
 );
 
-const DefineYourEligibility = ({ findEligibilityResult, result }) => {
-  const [inputs, setInputs] = React.useState({
+const DefineYourEligibility = ({ result }) => {
+  const initialValues = {
     initial: 0,
-    periodic: 0,
-    frequency: 1,
-  });
+    monthly: 0,
+    frequency: 0,
+    comfortLevel: 30,
+  };
+  const [inputs, setInputs] = React.useState(initialValues);
+  const [output, setOutput] = React.useState({});
+  const [showResultCard, setShowResultCard] = React.useState(false);
+
+  const cancelEligibilityStatus = () => {
+    setInputs(initialValues);
+    setShowResultCard(false);
+  };
+
+  const findEligibilityResult = ({
+    initial,
+    frequency,
+    monthly,
+    comfortLevel,
+  }) => {
+    const recommendations = recommendBallersPlan({
+      initial,
+      frequency,
+      monthly,
+      comfortLevel,
+      result,
+    });
+    setOutput(recommendations);
+  };
+
+  console.log('output', output);
 
   const handleChange = (name, value) => {
     setInputs({
@@ -284,7 +279,7 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
 
   const OptionButton = ({ name, value }) => (
     <button
-      className={classNames('col-sm-3 btn btn-sm option-btn', {
+      className={classNames('btn btn-sm option-btn text-xs', {
         active: value === inputs.frequency,
       })}
       onClick={() =>
@@ -298,16 +293,30 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
     </button>
   );
 
-  const enableCalculateButton = !!inputs['initial'] && !!inputs['periodic'];
+  const enableCalculateButton = !!inputs['initial'] && !!inputs['monthly'];
 
   const myRef = React.createRef();
   const handleEligibility = () => {
     findEligibilityResult(inputs);
-    window.scrollTo({ behavior: 'smooth', top: myRef.current.offsetTop - 200 });
+    setShowResultCard(true);
   };
 
+  // 0 - 33 = comfortable
+  // 34 - 50 = stretching
+  // 51 - 100 = risky
+  // get comformLevel from input.comfortLevel
+  const comfortLevel = inputs.comfortLevel;
+  const comfortLevelText =
+    comfortLevel <= 33
+      ? 'Comfortable'
+      : comfortLevel <= 50
+      ? 'Stretching'
+      : 'Getting Risky';
+  const comfortLevelColor =
+    comfortLevel <= 33 ? 'green' : comfortLevel <= 50 ? 'orange' : 'red';
+
   return (
-    <section className="eligibility-section search-result__card" ref={myRef}>
+    <section className="eligibility-section" ref={myRef}>
       <div className="text-center">
         <h3>Define your eligibility</h3>
         <p className="lead-header">
@@ -316,120 +325,170 @@ const DefineYourEligibility = ({ findEligibilityResult, result }) => {
         </p>
       </div>
 
-      <div className="row text-left eligibility-form mt-5">
-        <section className="col-12 bg-orange">
-          <RangeInput
-            min={10000}
-            max={result.averagePrice}
-            name="initial"
-            title="Initial investment amount"
-            step={100000}
-            handleChange={handleChange}
-            inputs={inputs}
-          />
-        </section>
+      <div className="row text-left">
+        <div className="col-sm-4">
+          <div className="text-left eligibility-form mt-5">
+            <section className="col-12 bg-orange">
+              <RangeInput
+                min={1_000_000}
+                max={result.averagePrice}
+                name="initial"
+                title="Initial investment amount"
+                info="The amount you will pay upfront for the property"
+                step={1_000_000}
+                placeholder="10,000,000"
+                handleChange={handleChange}
+                inputs={inputs}
+              />
+            </section>
 
-        <section className="col-12 bg-blue">
-          <h5>Investment Frequency</h5>
-          <p>Select one of the options below</p>
-          <div className="btn-group-toggle row" data-toggle="buttons">
-            <OptionButton name="Bi-Weekly" value={0.5} />
-            <OptionButton name="Monthly" value={1} />
-            <OptionButton name="Quarterly" value={4} />
+            <section className="col-12 bg-green">
+              <RangeInput
+                min={100_000}
+                max={result.averagePrice}
+                name="monthly"
+                title="Monthly Income"
+                info="Your entire monthly income or salary + any extra income"
+                step={100_000}
+                placeholder="1,000,000"
+                handleChange={handleChange}
+                inputs={inputs}
+              />
+            </section>
+
+            <section className="col-12 bg-blue">
+              <strong>Package Type</strong>
+              <p className="text-xs mt-1 mb-2">
+                Select one of the options below
+              </p>
+              <div className="btn-group-toggle d-flex" data-toggle="buttons">
+                <OptionButton name="Any" value={0} />
+                <OptionButton name="Premium" value={1} />
+              </div>
+            </section>
           </div>
-        </section>
+          <div className="row search-calculate">
+            <div className="col-lg-4">
+              <button
+                className="btn btn-secondary"
+                name="calculate-investment"
+                disabled={!enableCalculateButton}
+                onClick={handleEligibility}
+              >
+                Calculate
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="col-sm-8">
+          <div className="card p-5 mt-5">
+            <h3 className="text-left text-price">
+              {moneyFormatInNaira(output.monthlyPayment)}
+            </h3>
+            <p>Your approximate monthly contribution</p>
+            <div className="d-flex justify-content-between mt-4">
+              <p>Location</p>
+              <strong> Lekki, Lagos State</strong>
+            </div>
+            <div className="d-flex justify-content-between mt-4">
+              <p>House Type</p>
+              <strong> Flat</strong>
+            </div>
+            <div className="d-flex justify-content-between mt-4">
+              <p>Average Property Price</p>
+              <strong> {moneyFormatInNaira(result.averagePrice)}</strong>
+            </div>
 
-        <section className="col-12 bg-green">
-          <RangeInput
-            min={10000}
-            max={result.averagePrice}
-            name="periodic"
-            title="Periodic investment amount"
-            step={10000}
-            handleChange={handleChange}
-            inputs={inputs}
-          />
-        </section>
-      </div>
-      <div className="row search-calculate">
-        <div className="col-lg-4 mx-auto">
-          <button
-            className="btn btn-secondary"
-            name="calculate-investment"
-            disabled={!enableCalculateButton}
-            onClick={handleEligibility}
-          >
-            Calculate
-          </button>
+            {showResultCard ? (
+              <>
+                <strong className="mt-4 mb-2">Savings to Payment ratio</strong>
+                <div>
+                  <strong>{inputs.comfortLevel}% </strong>({comfortLevelText})
+                </div>
+
+                <section className={`mt-5 comfort-level ${comfortLevelColor}`}>
+                  <Slider
+                    min={0}
+                    max={90}
+                    step={1}
+                    tooltip={false}
+                    value={inputs.comfortLevel}
+                    onChange={(value) => {
+                      setInputs({
+                        ...inputs,
+                        comfortLevel: value,
+                      });
+                      findEligibilityResult({
+                        ...inputs,
+                        comfortLevel: value,
+                      });
+                    }}
+                  />
+                </section>
+
+                <section className="d-flex justify-content-between mt-5">
+                  <h6>
+                    Recommended Plan
+                    {output?.recommendations?.length > 2 && 's'}{' '}
+                  </h6>
+                  <div>
+                    {output?.recommendations?.map((recommendation) => (
+                      <div className="d-flex justify-content-between mt-1">
+                        <p>&nbsp;</p>
+                        <p className="text-secondary">
+                          <TitleInfo
+                            {...recommendation}
+                            content={recommendation?.advice}
+                          />
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <section>
+                  {showResultCard && (
+                    <RecommendationCard
+                      result={output}
+                      cancelEligibilityStatus={cancelEligibilityStatus}
+                    />
+                  )}
+                </section>
+              </>
+            ) : (
+              <div className="recommendation__card mb-5">
+                <p className="text-muted">
+                  Fill the Eligibility Form to enable us to suggest a home for
+                  you.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-const ResultCard = ({ result, setShowResultCard }) => {
-  const WINDOW_SIZE = useWindowSize();
+const RecommendationCard = ({ result, cancelEligibilityStatus }) => {
   return (
-    <div className="search-result__card result-card mb-5">
-      <h3>Awesome!</h3>
-      <section className="text-center awesome-text mb-5">
-        With an initial investment off{' '}
-        <span>NGN {commaNumber(result.initial)}</span>
-        <br />
-        and a <span>{FREQUENCY_IN_WORDS[result.frequency]}</span> contribution
-        of <span>NGN {commaNumber(result.periodic)}</span>
-        <br />
-        You’re a plan away from owning your home.
-      </section>
-
-      <div className="row">
-        <div className="offset-lg-1 col-lg-10">
-          {WINDOW_SIZE.width <= MOBILE_WIDTH ? (
-            <Accordion
-              className="search-result-tab-accordion"
-              defaultActiveKey={0}
-            >
-              {result.output.map(({ title, advice }, index) => (
-                <Card key={index}>
-                  <Accordion.Toggle
-                    as={Card.Header}
-                    variant="link"
-                    eventKey={index}
-                  >
-                    <ContextAwareToggle
-                      iconOpen={<ArrowDownIcon />}
-                      iconClose={<ArrowDownIcon />}
-                      eventKey={index}
-                    >
-                      <TabTitle title={title} content={advice} />
-                    </ContextAwareToggle>
-                  </Accordion.Toggle>
-                  <Accordion.Collapse eventKey={index}>
-                    <Card.Body>{advice}</Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-              ))}
-            </Accordion>
-          ) : (
-            <Tabs defaultActiveKey={0}>
-              {result.output.map(({ title, advice }, index) => (
-                <Tab
-                  key={index}
-                  eventKey={index}
-                  title={<TabTitle title={title} content={advice} />}
-                >
-                  <div className="search-result-tab-content">{advice}</div>
-                </Tab>
-              ))}
-            </Tabs>
-          )}
+    <section>
+      <div className="recommendation__card mb-5">
+        <p>You can afford a home of up to: </p>
+        <h3 className="text-price">
+          {moneyFormatInNaira(result?.propertyCost)}
+        </h3>
+        <div>
+          with an initial investment of{' '}
+          <strong> {moneyFormatInNaira(result.initial)}</strong> <br />
+          and a monthly payment of{' '}
+          <strong>{moneyFormatInNaira(result.monthlyPayment)} </strong>{' '}
         </div>
       </div>
-
       <div className="button-container mt-5 mb-3">
         <button
           className="btn btn-link"
-          onClick={() => setShowResultCard(false)}
+          onClick={() => cancelEligibilityStatus(false)}
         >
           <ArrowLeftIcon /> Redefine your Eligibility status
         </button>
@@ -441,19 +500,80 @@ const ResultCard = ({ result, setShowResultCard }) => {
       <small className="text-primary">
         Open a free account and own your dream home
       </small>
-    </div>
+    </section>
   );
 };
 
-const TabTitle = ({ title, content }) => (
+// const ResultCard = ({ result, setShowResultCard }) => {
+//   const WINDOW_SIZE = useWindowSize();
+//   return (
+//     <div className="search-result__card result-card mb-5">
+//       <h3>Awesome!</h3>
+//       <section className="text-center awesome-text mb-5">
+//         With an initial investment off{' '}
+//         <span>NGN {commaNumber(result.initial)}</span>
+//         <br />
+//         and a <span>{FREQUENCY_IN_WORDS[result.frequency]}</span> contribution
+//         of <span>NGN {commaNumber(result.monthlyPayment)}</span>
+//         <br />
+//         You’re a plan away from owning your home.
+//       </section>
+
+//       <div className="row">
+//         <div className="offset-lg-1 col-lg-10">
+//           {WINDOW_SIZE.width <= MOBILE_WIDTH ? (
+//             <Accordion
+//               className="search-result-tab-accordion"
+//               defaultActiveKey={0}
+//             >
+//               {result?.recommendations?.map(({ title, advice }, index) => (
+//                 <Card key={index}>
+//                   <Accordion.Toggle
+//                     as={Card.Header}
+//                     variant="link"
+//                     eventKey={index}
+//                   >
+//                     <ContextAwareToggle
+//                       iconOpen={<ArrowDownIcon />}
+//                       iconClose={<ArrowDownIcon />}
+//                       eventKey={index}
+//                     >
+//                       <TabTitle title={title} content={advice} />
+//                     </ContextAwareToggle>
+//                   </Accordion.Toggle>
+//                   <Accordion.Collapse eventKey={index}>
+//                     <Card.Body>{advice}</Card.Body>
+//                   </Accordion.Collapse>
+//                 </Card>
+//               ))}
+//             </Accordion>
+//           ) : (
+//             <Tabs defaultActiveKey={0}>
+//               {result?.recommendations?.map(({ title, advice }, index) => (
+//                 <Tab
+//                   key={index}
+//                   eventKey={index}
+//                   title={<TabTitle title={title} content={advice} />}
+//                 >
+//                   <div className="search-result-tab-content">{advice}</div>
+//                 </Tab>
+//               ))}
+//             </Tabs>
+//           )}
+//         </div>
+//       </div>
+//   );
+// };
+
+const TitleInfo = ({ title, content }) => (
   <>
     {title}
     <OverlayTrigger
       trigger={['hover', 'focus']}
-      placement="right"
+      placement="top"
       overlay={
         <Popover>
-          <Popover.Title as="h6">{title} Package</Popover.Title>
+          <Popover.Title as="h6">{title}</Popover.Title>
           <Popover.Content>{content}</Popover.Content>
         </Popover>
       }

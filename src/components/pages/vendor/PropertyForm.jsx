@@ -192,7 +192,7 @@ const NewPropertyForm = ({ property, toast, setToast }) => {
           />
           <Button
             className="btn-secondary mt-4"
-            loading={isSubmitting}
+          loading={isSubmitting}
             onClick={handleSubmit}
           >
             {property?._id ? 'Update' : 'Add New'} Property

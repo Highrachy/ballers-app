@@ -10,7 +10,6 @@ import BenefitsSection from 'components/common/BenefitsSection';
 import FAQsAccordion from 'components/common/FAQsAccordion';
 import CommunityGallery from 'components/common/CommunityGallery';
 import FAQsContent from 'content/faqs';
-import SearchPropertyForm from 'components/common/SearchPropertyForm';
 import { Flash, Slide } from 'react-awesome-reveal';
 import useWindowSize from 'hooks/useWindowSize';
 import { BASE_API_URL, MOBILE_WIDTH } from 'utils/constants';
@@ -19,6 +18,7 @@ import Modal from 'components/common/Modal';
 import Axios from 'axios';
 import { HouseIcon } from 'components/utils/Icons';
 import { storeReferralInfo } from 'utils/localStorage';
+import SearchPropertyForm2 from 'components/common/SearchPropertyForm2';
 
 const Home = ({ referralCode, inviteCode }) => {
   const [showReferralModal, setShowReferralModal] = React.useState(false);
@@ -100,7 +100,7 @@ const HoldingSection = () => (
         </div>
 
         <section className="property-search__home">
-          <SearchPropertyForm />
+          <SearchPropertyForm2 />
         </section>
         <div className="dotted-polka">
           <PolkaDot width="100" height="150" className="d-none d-lg-block" />

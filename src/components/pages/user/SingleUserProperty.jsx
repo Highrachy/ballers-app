@@ -45,14 +45,15 @@ const SingleUserProperty = ({ id }) => {
     },
   };
 
-  const [vasQuery] = useGetQuery({
-    axiosOptions: axiosOptionsForPropertyVas,
-    key: 'vas',
-    name: 'vas',
-    setToast,
-    endpoint: API_ENDPOINT.getAllVas(),
-    refresh: true,
-  });
+  // const [vasQuery] = useGetQuery({
+  //   axiosOptions: axiosOptionsForPropertyVas,
+  //   key: 'vas',
+  //   name: 'vas',
+  //   setToast,
+  //   endpoint: API_ENDPOINT.getAllVas(),
+  //   refresh: true,
+  // });
+  const vasQuery = {};
 
   return (
     <BackendPage>
@@ -133,7 +134,7 @@ export const ViewTitleDocumentButton = ({ property }) => {
         onHide={setShowModalToFalse}
         showFooter={false}
       >
-        {property.titleDocument}
+        {property.titleDocument || 'Available on request'}
       </Modal>
 
       <Button
@@ -166,7 +167,7 @@ export const ScheduleTourButton = ({
   return (
     <>
       <Modal
-        title="Schedula a Tour Today"
+        title="Schedule a Tour Today"
         show={showModal}
         onHide={setShowModalToFalse}
         showFooter={false}
@@ -293,9 +294,7 @@ export const ScheduleTourButton = ({
         className="btn-wide btn-wide-sm btn-sm btn-outline-warning"
         onClick={setShowModalToTrue}
       >
-        {alreadyVisitedProperty
-          ? 'Schedule Another Visit'
-          : 'Schedule a Tour Today'}
+        {alreadyVisitedProperty ? 'Schedule Another Visit' : 'Schedule a Tour'}
         <Spacing />
         <span className="icon-md">
           <VisitationIcon />
