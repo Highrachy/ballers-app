@@ -176,13 +176,13 @@ const SearchResultContent = ({ result }) => {
               <div className="search-result-price-range">
                 <RangeLine />
                 <div className="row">
-                  <div className="col-lg-3 text-left pl-4 font-weight-bold">
+                  <div className="col-lg-3 text-left ps-4 fw-bold">
                     {nearestMillion(result.minimumPrice)}
                   </div>
                   <div className="col-lg-6 text-center text-secondary">
                     <InfoIcon /> Property price range of the selected location
                   </div>
-                  <div className="col-lg-3 text-right font-weight-bold">
+                  <div className="col-lg-3 text-end fw-bold">
                     {nearestMillion(result.maximumPrice)}
                   </div>
                 </div>

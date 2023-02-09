@@ -9,7 +9,7 @@ import BallersLogo from 'assets/img/logo/ballers-logo.png';
 const Footer = () => (
   <footer className="footer">
     <div className="row">
-      <div className="col-lg-9 col-sm-12 footer-content bg-dark-blue pl-lg-6">
+      <div className="col-lg-9 col-sm-12 footer-content bg-dark-blue ps-lg-6">
         <div className="row m-0">
           <div className="col-lg-3 col-sm-6">
             <h5>Community</h5>
@@ -100,13 +100,13 @@ const Footer = () => (
           </div>
         </div>
       </div>
-      <div className="col-lg-3 col-sm-12 bg-light-blue footer-content pl-lg-5">
+      <div className="col-lg-3 col-sm-12 bg-light-blue footer-content ps-lg-5">
         <img
           src={BallersLogo}
           alt="ballers logo"
           className="ballers-logo-footer"
         />
-        <p className="my-4 px-7 px-lg-0 pr-lg-6 footer-bottom-text">
+        <p className="my-4 px-7 px-lg-0 pe-lg-6 footer-bottom-text">
           We make owning a home simpler and achievable.
         </p>
         <h5 className="highrachy-text">
