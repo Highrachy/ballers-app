@@ -102,7 +102,7 @@ export const TestimonialRow = ({ currentUser, testimonial, number }) => {
 };
 
 export const TestimonialsList = ({ property, setProperty, setToast }) => {
-  const noTestimonials = property?.testimonials?.length === 0;
+  const emptyTestimonial = (property?.testimonials || []).length === 0;
   const [testimonial, setTestimonial] = React.useState(null);
   const [showReplyModal, setShowReplyModal] = React.useState(false);
 
@@ -114,13 +114,13 @@ export const TestimonialsList = ({ property, setProperty, setToast }) => {
   return (
     <>
       <div className="property__testimonial">
-        {!noTestimonials && (
+        {!emptyTestimonial && (
           <h5 className="header-smaller mb-3 mt-5">Testimonials</h5>
         )}
 
         <section className="container-fluid testimonials">
           <div className="row">
-            {!noTestimonials && (
+            {!emptyTestimonial && (
               <>
                 {property?.testimonials?.map((testimonial, index) => (
                   <SingleTestimonial

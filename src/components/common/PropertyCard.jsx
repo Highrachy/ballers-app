@@ -113,8 +113,8 @@ export const OldPropertyCard = (property) => {
   );
 };
 
-const PropertyCard = (property) => {
-  const { name, address, favorites, houseType, mainImage, price, _id } =
+const PropertyCard = ({ isPublic, ...property }) => {
+  const { name, address, favorites, houseType, mainImage, price, _id, slug } =
     property;
   const [loading, setLoading] = React.useState(false);
   const isFavorite = (favorites || []).includes(_id);
@@ -144,6 +144,9 @@ const PropertyCard = (property) => {
       });
   };
   const currentRole = useCurrentRole().name;
+  const propertyLink = isPublic
+    ? `/property/${slug}`
+    : `/${currentRole}/property/${_id}`;
 
   return (
     <section>
@@ -166,7 +169,7 @@ const PropertyCard = (property) => {
             </span>
           </div>
         )}
-        <Link to={`/${currentRole}/property/${_id}`}>
+        <Link to={propertyLink}>
           <article>
             <div className="content-image">
               <img
@@ -230,13 +233,21 @@ const PropertyCard = (property) => {
   );
 };
 
-export const RecommendedPropertyLists = ({ properties, propertyClassName }) => {
+export const RecommendedPropertyLists = ({
+  properties,
+  propertyClassName,
+  isPublic,
+}) => {
   const { userState } = React.useContext(UserContext);
   let favoritePropertyIds = userState.favorites.map((p) => p._id);
 
   return properties.map((property) => (
     <div className={propertyClassName} key={property._id}>
-      <PropertyCard {...property} favorites={favoritePropertyIds} />
+      <PropertyCard
+        {...property}
+        favorites={favoritePropertyIds}
+        isPublic={isPublic}
+      />
     </div>
   ));
 };
@@ -244,10 +255,12 @@ export const RecommendedPropertyLists = ({ properties, propertyClassName }) => {
 RecommendedPropertyLists.propTypes = {
   properties: PropTypes.array.isRequired,
   propertyClassName: PropTypes.string,
+  isPublic: PropTypes.bool,
 };
 
 RecommendedPropertyLists.defaultProps = {
   propertyClassName: '',
+  isPublic: false,
 };
 
 export const PropertyAvatar = ({
@@ -261,7 +274,7 @@ export const PropertyAvatar = ({
   const currentRole = useCurrentRole().name;
   const propertyURL = portfolioId
     ? `/${currentRole}/portfolio/${portfolioId}`
-    : `/${currentRole}/property/${property._id}`;
+    : `/${currentRole}/properties/${property._id}`;
 
   const output = nameOnly ? (
     <span>{name}</span>

@@ -260,7 +260,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           }
           return (
             <Form>
-              <p className="text-uppercase lead fw-bold mt-3">
+              <p className="mt-3 text-uppercase lead fw-bold">
                 Status: {user.vendor?.verification[step]?.status}
               </p>
 
@@ -331,7 +331,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                   <Textarea label="Comment" name="comment" />
                   <Button
                     color="info"
-                    className="btn-sm btn-info mt-3"
+                    className="mt-3 btn-sm btn-info"
                     loading={isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -342,7 +342,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                     onClick={() => {
                       setHideForm(true);
                     }}
-                    className="btn btn-sm btn-outline-dark mt-3"
+                    className="mt-3 btn btn-sm btn-outline-dark"
                   >
                     Close Comment
                   </button>
@@ -446,7 +446,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                   {user.vendor?.companyLogo && (
                     <Image
                       name={user.firstName}
-                      className="img-fluid dashboard-top-nav__company-logo mb-3"
+                      className="mb-3 img-fluid dashboard-top-nav__company-logo"
                       src={user.vendor.companyLogo}
                       title={user.firstName}
                     />
@@ -559,7 +559,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                 <Button
                   color={user.role === USER_TYPES.user ? 'info' : 'danger'}
                   loading={loading}
-                  className="btn mt-3"
+                  className="mt-3 btn"
                   onClick={processRoleChange}
                 >
                   Change Role to{' '}
@@ -621,7 +621,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   );
 
   const Directors = () => (
-    <Card className="card-container my-5 pt-5 border-0">
+    <Card className="pt-5 my-5 border-0 card-container">
       <span className="title">
         Directors / Signatories{' '}
         <span className={verificationState.directorInfo.className}>
@@ -647,7 +647,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
           </span>
         </span>
       }
-      className="border-0 my-5 pt-4"
+      className="pt-4 my-5 border-0"
     >
       <tr>
         <td>
@@ -685,7 +685,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
   );
 
   const Logs = () => (
-    <div className="card h-100 my-5 pt-5 border-0">
+    <div className="pt-5 my-5 border-0 card h-100">
       <div className="card-container">
         <h5 className="title">Logs</h5>
 
@@ -702,7 +702,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
     <Timeline>
       <Toast {...toast} showToastOnly />
       {/* <AlertToast message="Awaiting your Review" /> */}
-      <Card className="card-container mb-5">
+      <Card className="mb-5 card-container">
         {isVendor ? (
           <Tabs defaultActiveKey="0">
             <Tab
@@ -716,7 +716,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                 </>
               }
             >
-              <div className="card-tab-content pt-5">
+              <div className="pt-5 card-tab-content">
                 <UserInformation />
               </div>
             </Tab>
@@ -731,7 +731,7 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
                 </>
               }
             >
-              <div className="card-tab-content py-5">
+              <div className="py-5 card-tab-content">
                 <BankInformation />
               </div>
             </Tab>
@@ -815,13 +815,13 @@ const UserInfoCard = ({ user, setUser, toast, setToast, vendorId }) => {
             showFooter={false}
           >
             <section className="row">
-              <div className="col-md-12 my-3 text-center">
+              <div className="my-3 text-center col-md-12">
                 <h5 className="my-2 confirmation-text">
                   Are you sure you want to{' '}
                   {user.vendor?.verified ? 'certify' : 'verify'} this vendor?
                 </h5>
                 <button
-                  className="btn btn-secondary mb-5"
+                  className="mb-5 btn btn-secondary"
                   onClick={user.vendor?.verified ? certifyVendor : verifyVendor}
                 >
                   {user.vendor?.verified ? 'Certify Vendor' : 'Verify Vendor'}
@@ -906,7 +906,7 @@ const RemittanceForm = ({ user, setUser, setToast }) => {
               showFooter={false}
             >
               <section>
-                <h5 className=" confirmation-text mb-4">
+                <h5 className="mb-4 confirmation-text">
                   Are you sure you want to update this Remittance?
                 </h5>
                 <table className="table table-sm">
@@ -927,9 +927,9 @@ const RemittanceForm = ({ user, setUser, setToast }) => {
                     </tr>
                   </tbody>
                 </table>
-                <div className="col-md-12 text-center">
+                <div className="text-center col-md-12">
                   <Button
-                    className="btn-secondary mt-4"
+                    className="mt-4 btn-secondary"
                     loading={isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -1019,7 +1019,7 @@ const ReferralBonusForm = ({ user, setUser, setToast }) => {
               showFooter={false}
             >
               <section>
-                <h5 className=" confirmation-text mb-4">
+                <h5 className="mb-4 confirmation-text">
                   Are you sure you want to update this Referral Bonus?
                 </h5>
                 <table className="table table-sm">
@@ -1040,9 +1040,9 @@ const ReferralBonusForm = ({ user, setUser, setToast }) => {
                     </tr>
                   </tbody>
                 </table>
-                <div className="col-md-12 text-center">
+                <div className="text-center col-md-12">
                   <Button
-                    className="btn-secondary mt-4"
+                    className="mt-4 btn-secondary"
                     loading={isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -1071,7 +1071,7 @@ const AssignBadge = ({ user, setToast, badges }) => {
         Assign Badge
       </Button>
 
-      {/* Flag Property Modals */}
+      {/* Assign BAdge Modals */}
       <Modal
         title="Assign Badge"
         show={showFlagModal}
@@ -1079,7 +1079,7 @@ const AssignBadge = ({ user, setToast, badges }) => {
         showFooter={false}
       >
         <section className="row">
-          <div className="col-md-12 my-3">
+          <div className="my-3 col-md-12">
             <Formik
               initialValues={setInitialValues({})}
               onSubmit={({ badge }, actions) => {
@@ -1124,7 +1124,7 @@ const AssignBadge = ({ user, setToast, badges }) => {
                     options={dataToOptions(badges, 'name')}
                   />
                   <Button
-                    className="btn-secondary mt-4"
+                    className="mt-4 btn-secondary"
                     loading={isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -1142,7 +1142,7 @@ const AssignBadge = ({ user, setToast, badges }) => {
 };
 
 export const LoadCurrentUserBadges = ({ badges }) => (
-  <section className="row py-4">
+  <section className="py-4 row">
     {badges.map((badge, index) => (
       <SingleUserBadge key={index} {...badge} />
     ))}
@@ -1151,8 +1151,8 @@ export const LoadCurrentUserBadges = ({ badges }) => (
 
 export const SingleUserBadge = ({ image, user, _id, name }) => {
   return (
-    <div className="col-md-4 col-6 text-center mb-4">
-      <div className="icon-xl mb-2 badge-gray">
+    <div className="mb-4 text-center col-md-4 col-6">
+      <div className="mb-2 icon-xl badge-gray">
         {image ? (
           <Link to={`/${DASHBOARD_PAGE[user?.role]}/badge/${_id}`}>
             <Image

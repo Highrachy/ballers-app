@@ -21,6 +21,8 @@ import { isDevEnvironment } from 'utils/helpers';
 import ImagesComponent from 'components/pages/playground/ImagesComponent';
 import VendorProfile from 'components/pages/shared/VendorProfile';
 import PublicSingleOffer from 'components/pages/frontend/PublicSingleOffer';
+import PublicProperties from 'components/pages/frontend/PublicProperties';
+import PublicPropertySingle from 'components/pages/frontend/PublicPropertySingle';
 
 const FrontPageRouter = () => (
   <Router>
@@ -28,6 +30,8 @@ const FrontPageRouter = () => (
     <Home path="/ref/:referralCode" />
     <Home path="/invite/:inviteCode" />
     <AboutUs path="/about-us" />
+    <PublicProperties path="/properties" />
+    <PublicPropertySingle path="/properties/:slug" />
     <AtoZ path="/a-z-of-ball" />
     <FAQs path="/faqs" />
     <ContactUs path="contact-us" />

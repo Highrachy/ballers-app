@@ -84,7 +84,7 @@ const SingleUserProperty = ({ id }) => {
   );
 };
 
-const Actionbar = ({ property, visitationInfo, setToast, vasQuery }) => {
+export const Actionbar = ({ property, visitationInfo, setToast, vasQuery }) => {
   const userHasScheduledVisit =
     visitationInfo?.length > 0 &&
     visitationInfo?.[visitationInfo.length - 1].status === 'Pending';
@@ -188,7 +188,7 @@ export const ScheduleTourButton = ({
                 <div className="text-end">
                   <button
                     onClick={() => setShowCancelModal(false)}
-                    className="btn btn-danger btn-sm mt-5"
+                    className="mt-5 btn btn-danger btn-sm"
                   >
                     Back
                   </button>
@@ -208,7 +208,7 @@ export const ScheduleTourButton = ({
                 <div className="text-end">
                   <button
                     onClick={() => setShowReschedule(false)}
-                    className="btn btn-danger btn-sm mt-5"
+                    className="mt-5 btn btn-danger btn-sm"
                   >
                     Back
                   </button>

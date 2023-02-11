@@ -221,15 +221,15 @@ export const VideosList = ({ property, setProperty, setToast }) => {
       });
   };
   const userIsVendor = useCurrentRole().isVendor;
-  const noVideos = property?.videos?.length === 0;
+  const hasNoVideos = (property?.videos || []).length === 0;
 
   return (
     <>
       <div className="property__floor-plans">
-        {(!noVideos || userIsVendor) && (
+        {(!hasNoVideos || userIsVendor) && (
           <h5 className="header-smaller mb-3 mt-5">Videos</h5>
         )}
-        {!noVideos && (
+        {!hasNoVideos && (
           <div className="row">
             {property?.videos?.map((video, index) => (
               <div key={index} className="col-md-6 mb-4">

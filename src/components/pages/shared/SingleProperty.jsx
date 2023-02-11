@@ -117,7 +117,7 @@ export const OwnedPropertyCard = ({
         </div>
       )}
 
-      <Card className="card-container mt-4 h-100 property-holder__big">
+      <Card className="mt-4 card-container h-100 property-holder__big">
         <PropertyImage property={property} />
 
         {isAdminOrVendor && property?.flagged?.status && (
@@ -138,7 +138,7 @@ export const OwnedPropertyCard = ({
           />
         )}
 
-        <div className="row mt-5">
+        <div className="mt-5 row">
           <div className={Sidebar ? 'col-sm-7' : 'col-sm-12'}>
             <PropertyDescription
               property={property}
@@ -173,9 +173,12 @@ export const OwnedPropertyCard = ({
           setToast={setToast}
           setProperty={setProperty}
         />
-      </Card>
 
-      <PropertyMap mapLocation={property.mapLocation} />
+        <div className="mty-3">
+          <h5 className="header-smaller mb-3 mt-5">Location on Map</h5>
+          <PropertyMap mapLocation={property?.mapLocation || {}} />
+        </div>
+      </Card>
 
       {isUser && (
         <ReportProperty
@@ -275,7 +278,7 @@ const CaseHistory = ({ property, setToast, setProperty }) => {
     <section className="mt-4">
       <>
         {property?.flagged?.case.length > 0 && (
-          <h5 className="header-small my-5">Case History</h5>
+          <h5 className="my-5 header-small">Case History</h5>
         )}
         {property?.flagged?.case.map((flaggedCase, index) => (
           <CaseComment
@@ -350,12 +353,12 @@ const ApproveProperty = ({ property, setToast, setProperty }) => {
         showFooter={false}
       >
         <section className="row">
-          <div className="col-md-12 my-3 text-center">
+          <div className="my-3 text-center col-md-12">
             <h5 className="my-2 confirmation-text">
               Are you sure you want to approve this property?
             </h5>
             <Button
-              className="btn btn-secondary mb-5"
+              className="mb-5 btn btn-secondary"
               onClick={approveProperty}
               loading={loading}
             >
@@ -387,7 +390,7 @@ const ResolveFlaggedProperty = ({ property, setToast, setProperty }) => {
         showFooter={false}
       >
         <section className="row">
-          <div className="col-md-12 my-3">
+          <div className="my-3 col-md-12">
             <Formik
               initialValues={setInitialValues(resolveFlagPropertySchema)}
               onSubmit={({ comment }, actions) => {
@@ -434,7 +437,7 @@ const ResolveFlaggedProperty = ({ property, setToast, setProperty }) => {
                   />
 
                   <Button
-                    className="btn-secondary mt-4"
+                    className="mt-4 btn-secondary"
                     loading={isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -471,7 +474,7 @@ const UnflagProperty = ({ property, setToast, setProperty, caseId }) => {
         showFooter={false}
       >
         <section className="row">
-          <div className="col-md-12 my-3">
+          <div className="my-3 col-md-12">
             <Formik
               initialValues={setInitialValues(unflagPropertySchema)}
               onSubmit={({ reason }, actions) => {
@@ -519,7 +522,7 @@ const UnflagProperty = ({ property, setToast, setProperty, caseId }) => {
                   />
 
                   <Button
-                    className="btn-secondary mt-4"
+                    className="mt-4 btn-secondary"
                     loading={isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -540,7 +543,7 @@ const ReportProperty = ({ property, setToast, setProperty }) => {
   const [showReportModal, setShowReportModal] = React.useState(false);
 
   return (
-    <div className="text-end mt-5">
+    <div className="mt-5 text-end">
       <Button
         className="btn btn-xs btn-dark btn-wide"
         onClick={() => setShowReportModal(true)}
@@ -556,7 +559,7 @@ const ReportProperty = ({ property, setToast, setProperty }) => {
         showFooter={false}
       >
         <section className="row">
-          <div className="col-md-12 my-3">
+          <div className="my-3 col-md-12">
             <Formik
               initialValues={setInitialValues(reportPropertySchema)}
               onSubmit={({ reason }, actions) => {
@@ -600,7 +603,7 @@ const ReportProperty = ({ property, setToast, setProperty }) => {
                   />
 
                   <Button
-                    className="btn-secondary mt-4"
+                    className="mt-4 btn-secondary"
                     loading={isSubmitting}
                     onClick={handleSubmit}
                   >
@@ -628,7 +631,7 @@ const ManagePropertyLink = ({ property, setToast, setProperty }) => (
     <LinkSeparator />
     <Link
       to={`/vendor/gallery/${property._id}`}
-      className="text-link  text-muted"
+      className="text-link text-muted"
     >
       {property?.gallery?.length > 0 ? 'Edit Gallery' : 'Add Gallery'}
     </Link>
@@ -769,7 +772,7 @@ export const PropertyHeader = ({ property, enquiryInfo, vendorInfo }) => {
   const isUser = useCurrentRole().isUser;
   return (
     <>
-      <div className="row mb-3">
+      <div className="mb-3 row">
         <div className="col-sm-8">
           <h3 className="property-holder__big-title">
             {property.name}{' '}
@@ -788,7 +791,7 @@ export const PropertyHeader = ({ property, enquiryInfo, vendorInfo }) => {
 
       <div className="row">
         <div className="col-sm-8">
-          <h4 className="text-secondary mb-3">
+          <h4 className="mb-3 text-secondary">
             {moneyFormatInNaira(property.price)}
           </h4>
         </div>
@@ -871,7 +874,7 @@ export const PropertyMap = ({ mapLocation }) =>
   mapLocation ? (
     mapLocation.latitude &&
     mapLocation.longitude && (
-      <div style={{ height: '15rem', marginTop: '-2px' }}>
+      <div style={{ height: '25rem', marginTop: '-2px' }}>
         <Map
           coordinates={{
             lat: mapLocation.latitude,
