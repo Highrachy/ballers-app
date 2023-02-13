@@ -29,6 +29,12 @@ export const resetPasswordSchema = {
   confirmPassword: confirmPassword,
 };
 
+export const fastTrackVendorSchema = {
+  companyName: stringValidation('Company Name'),
+  companyLogo: optionalValidation(stringValidation('Company Logo')),
+  entity: stringValidation('Entity'),
+};
+
 export const registerSchema = (isUser = true) => {
   let altSchema = {
     firstName: stringValidation('First Name'),
@@ -97,6 +103,7 @@ export const userFilterSchema = {
 };
 
 export const forgotPasswordSchema = { email };
+export const emailSchema = { email };
 
 export const updateRemittanceSchema = {
   percentage: validPercentage('Remittance'),

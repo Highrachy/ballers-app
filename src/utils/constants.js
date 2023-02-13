@@ -16,6 +16,20 @@ export const DASHBOARD_PAGE = {
   [USER_TYPES.editor]: 'editor',
 };
 
+export const PROPERTY_TITLES = {
+  'CERTIFICATE OF OCCUPANCY': 'Certificate of Occupancy',
+  'DEED OF ASSIGNMENT/CONVEYANCE': 'Deed of Assignment/Conveyance',
+  'DEED OF LEASE/SUBLEASE': 'Deed of Lease/Sublease',
+  'LAND CERTIFICATE': 'Land Certificate',
+};
+
+export const FAST_TRACK_VENDOR = {
+  AUTO: 'AUTO',
+  REQUIRE_INFO: 'REQUIRE INFO',
+  COMPLETED: 'COMPLETED',
+  NONE: 'NONE',
+};
+
 export const COLOR_STYLE = [
   'none',
   'primary',

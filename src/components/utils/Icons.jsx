@@ -75,6 +75,7 @@ import {
   AiOutlineShoppingCart,
   AiOutlineCalendar,
 } from 'react-icons/ai';
+import { SiFastapi } from 'react-icons/si';
 import {
   MdLocalMall,
   MdAccountBalanceWallet,
@@ -116,6 +117,7 @@ export const FacebookIcon = () => <FiFacebook />;
 export const FileIcon = () => <FiFileText />;
 export const FilterIcon = () => <BiFilter />;
 export const FlagIcon = () => <FaFlag />;
+export const FastTrackVendorIcon = () => <SiFastapi />;
 export const HomeIcon = () => <FiGrid />;
 export const HospitalIcon = () => <FaAmbulance />;
 export const InfoIcon = () => <FaInfoCircle />;
